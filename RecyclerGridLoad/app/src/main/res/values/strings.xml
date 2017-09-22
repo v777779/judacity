@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RecyclerGridLoad</string>
+    <string name="icon_desc">Icon Image Description</string>
+</resources>
