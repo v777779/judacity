@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="ru.vpcb.secondslide.MainActivity">
+
+
+    <LinearLayout
+        android:id="@+id/linear_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5db8c0"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+
+        >
+
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f9f5f5"
+        android:fadeScrollbars="false">
+
+        <TextView
+            android:id="@+id/slider_text"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:text=""
+            android:textSize="40sp"
+
+
+            />
+    </HorizontalScrollView>
+
+
+    <!--<View-->
+    <!--android:id="@+id/view_bar2"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="2dp"-->
+    <!--android:background="#628dd1"-->
+    <!--android:visibility="visible"-->
+
+    <!--/>-->
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white">
+
+
+    </android.support.v4.view.ViewPager>
+
+
+</LinearLayout>
