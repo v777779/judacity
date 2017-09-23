@@ -1,14 +1,11 @@
-package ru.vpcb.rgdownload.utils;
+package ru.vpcb.rgdownload;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
-import ru.vpcb.rgdownload.MovieData;
+import ru.vpcb.rgdownload.utils.NetworkUtils;
 
 public class MovieTask extends AsyncTask<URL, Void, String> {
 

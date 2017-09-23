@@ -31,16 +31,21 @@ import ru.vpcb.rgdownload.BuildConfig;
  * These utilities will be used to communicate with the network.
  */
 public class NetworkUtils {
-    final static String GITHUB_BASE_URL =
-            "https://api.github.com/search/repositories";
-    private static final String MOVIE_BASE = "https://api.themoviedb.org/3/movie/";
-    private static final String[] MOVIE_QUERY = "popular,now_playing,top_rated".split(",");
+
+    private static final String MOVIE_BASE = "https://api.themoviedb.org/3/";
+    private static final String[] MOVIE_QUERY = (
+                      "movie/popular,"
+                    + "movie/now_playing,"
+                    + "movie/top_rated,"
+                    + "genre/movie/list")
+            .split(",");
     private static final String MOVIE_KEY = "?api_key=" + BuildConfig.MOVIE_DB_API_KEY;
     private static final String MOVIE_LANG = "&language=";
     private static final String MOVIE_PAGE = "&page=";
 
+
     private static Uri getURI(int type, int page, String lang) {
-        if (type < 0 || type >= MOVIE_QUERY.length || page < 0) {
+        if (type < 0 || type >= MOVIE_QUERY.length) {
             throw new IndexOutOfBoundsException();
         }
         if (page < 0) {
@@ -49,13 +54,18 @@ public class NetworkUtils {
         if (lang == null || lang.length() == 0) {
             lang = "en_US";
         }
-        return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
+        if (page > 0) {
+            return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
+        } else {
+            return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang);
+        }
     }
 
+
     /**
-     * @param type search query for MovieData Database
-     * @param page page number for MovieData Database
-     * @param lang language for MovieData Database  for null used default en_US value
+     * @param type search query for MovieItem Database
+     * @param page page number for MovieItem Database
+     * @param lang language for MovieItem Database  for null used default en_US value
      * @return URL object or null
      */
     public static URL buildUrl(int type, int page, String lang) {
@@ -76,15 +86,21 @@ public class NetworkUtils {
      * @return The contents of the HTTP response.
      * @throws IOException Related to network and stream reading
      */
-    public static String getResponseFromHttpUrl(URL url) throws IOException,NetworkOnMainThreadException {
+    public static String getResponseFromHttpUrl(URL url) throws IOException, NetworkOnMainThreadException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
-            InputStream in = urlConnection.getInputStream();
-
+            int code = urlConnection.getResponseCode();
+            InputStream in;
+            if (code == 200) {
+                in = urlConnection.getInputStream();
+            } else {
+                in = urlConnection.getErrorStream();
+            }
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();
+
             if (hasInput) {
                 return scanner.next();
             } else {

@@ -1,7 +1,6 @@
 package ru.vpcb.rgdownload;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,14 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-import ru.vpcb.rgdownload.utils.MovieTask;
+import ru.vpcb.rgdownload.utils.MovieUtils;
 import ru.vpcb.rgdownload.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private final static int MAX_COLUMNS = 6;
     private final static int MIN_COLUMNS = 2;
     private final static int TEMP_MAX_ITEMS = 25;  //size if content
+
+    private static final String ASYNC_MESSAGE = "{\"success\": false,  \"status_code\": 402 }";
+
     private static Random rnd = new Random();
 
     private FlavorAdapter mFlavorAdapter;
@@ -141,44 +143,58 @@ public class MainActivity extends AppCompatActivity {
     private int counter = 1;
 
     private enum MOVIE_TYPE {
-        POPULAR, NOWDAYS, TOPRATED
+        POPULAR, NOWDAYS, TOPRATED, GENRES
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
+        String s;
+        try {
 
+            if (MovieUtils.isMapGenreEmpty()) {  // load MapGenre
+                s = makeSearch(this, MOVIE_TYPE.GENRES, 0, null);  //
+                MovieUtils.setGenres(s);
 
-        if (itemThatWasClickedId == R.id.action_search) {
-            String s = "";
-            try {
-                s = makeSearch(this, MOVIE_TYPE.POPULAR, counter++);
-            } catch (ExecutionException |InterruptedException e) {
-                s = "async task execution error";
-                e.printStackTrace();
             }
 
-            Toast.makeText(this, "POPULAR: "+s, Toast.LENGTH_SHORT).show();
+            if (itemThatWasClickedId == R.id.action_search) {
+                s = makeSearch(this, MOVIE_TYPE.NOWDAYS, counter++, null);
+
+
+                List<MovieItem> list = MovieUtils.getPageList(s);
+                int page = MovieUtils.getPageNumber(s);
+                int total = MovieUtils.getPageTotal(s);
+                int n = MovieUtils.getItemTotal(s);
+                int code = MovieUtils.getStatusCode(s);
+
+                Toast.makeText(this, "POPULAR: " + page + " " + total + " " + n + " "
+                        + " " + code + " " + s, Toast.LENGTH_SHORT).show();
 //            Toast.makeText(this, s, Toast.LENGTH_LONG).show();
 
-            return true;
+                return true;
+            }
+            if (itemThatWasClickedId == R.id.item_menu2) {
+                Toast.makeText(this, "NOWDAYS", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            if (itemThatWasClickedId == R.id.item_menu3) {
+                Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+        } catch (Exception e) {
+            s = ASYNC_MESSAGE;
         }
-        if (itemThatWasClickedId == R.id.item_menu2) {
-            Toast.makeText(this, "NOWDAYS", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        if (itemThatWasClickedId == R.id.item_menu3) {
-            Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
     private String mResult;
 
-    private String makeSearch(Context context, MOVIE_TYPE searchType, int searchPage) throws ExecutionException, InterruptedException {
-        URL url = NetworkUtils.buildUrl(searchType.ordinal(), searchPage, null);
+    private String makeSearch(Context context, MOVIE_TYPE type, int page, String lang) throws Exception {
+        URL url = NetworkUtils.buildUrl(type.ordinal(), page, lang);
         return new MovieTask().execute(url).get();
     }
 
