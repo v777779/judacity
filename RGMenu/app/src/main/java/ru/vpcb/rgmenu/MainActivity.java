@@ -1,21 +1,30 @@
 package ru.vpcb.rgmenu;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private final static float COLUMN_WIDTH_HIGH = 200;
-    private final static float DP_HEIGHT_LOW = 480;
+    private final static float DP_WIDTH_LOW = 400;
+    private final static float DP_WIDTH_MID = 800;
+
     private final static float COLUMN_WIDTH_LOW = 150;
     private final static int MAX_COLUMNS = 6;
     private final static int MIN_COLUMNS = 2;
@@ -40,6 +49,29 @@ public class MainActivity extends AppCompatActivity {
             //  new Flavor("Lollipop", "5.0-5.1.1", R.drawable.lollipop),
     };
 
+    private ClickListener mClickListener;
+    private List<TextView> mTextViewList;
+
+    private class ClickListener implements View.OnClickListener {
+        private Context context;
+
+        private ClickListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String s = "";
+            for (TextView textView : mTextViewList) {
+                if (textView.getId() == v.getId()) {
+                    textView.setTextColor(Color.WHITE);
+                } else {
+                    textView.setTextColor(Color.GRAY);
+                }
+            }
+            Toast.makeText(context, ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +86,45 @@ public class MainActivity extends AppCompatActivity {
         } else {
             listFlavors = savedInstanceState.getParcelableArrayList("flavors");
         }
+
+//menu loader
+        android.support.v7.app.ActionBar abMainMenu = this.getSupportActionBar();
+        abMainMenu.setDisplayShowCustomEnabled(true);
+        LayoutInflater liAddActionBar = LayoutInflater.from(this);
+
+        DisplayMetrics dp = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dp);
+        View customActionBar;
+        int menu_id = R.layout.r_layout_low;
+        int dpWidth = (int)(dp.widthPixels / dp.density);
+        if (dpWidth >= DP_WIDTH_LOW) {
+            menu_id = R.layout.r_layout_mid;
+        }
+        if (dpWidth >= DP_WIDTH_MID) {
+            menu_id = R.layout.r_layout_high;
+        }
+        customActionBar = liAddActionBar.inflate(menu_id, null);
+        abMainMenu.setCustomView(customActionBar);
+
+
+        int[] buttons = new int[]{R.id.button_001, R.id.button_002, R.id.button_003};
+
+        // final TextView actionBarSearch = (TextView) findViewById(R.id.miBluetoothConnection);
+        // actionBarSearch.setText("SEARCH");
+        mTextViewList = new ArrayList<>();
+        mClickListener = new ClickListener(this);
+        for (int i = 0; i < buttons.length; i++) {
+            TextView textView = customActionBar.findViewById(buttons[i]);
+            textView.setOnClickListener(mClickListener);
+            if (i == 0) {
+                textView.setTextColor(Color.WHITE);
+            } else {
+                textView.setTextColor(Color.GRAY);
+            }
+            mTextViewList.add(textView);
+        }
+
+// menu loader
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -96,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics dp = context.getResources().getDisplayMetrics();
         float dpWidth = dp.widthPixels / dp.density;
         int nColumns;
-        if (dp.heightPixels <= DP_HEIGHT_LOW) {
+        if (dpWidth <= DP_WIDTH_LOW) {
             nColumns = (int) (dpWidth / COLUMN_WIDTH_LOW);
         } else {
             nColumns = (int) (dpWidth / COLUMN_WIDTH_HIGH);
