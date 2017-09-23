@@ -11,17 +11,20 @@ public class Flavor implements Parcelable {
     private String mName;
     private String mVersion;
     private int mImageId;
+    private String mImagePath;
 
-    public Flavor(String mVersionName, String mVersionNumber, int imageId) {
+    public Flavor(String mVersionName, String mVersionNumber, int imageId, String mImagePath) {
         this.mName = mVersionName;
         this.mVersion = mVersionNumber;
         this.mImageId = imageId;
+        this.mImagePath = mImagePath;
     }
 
     private Flavor(Parcel in) {
         mName = in.readString();
         mVersion = in.readString();
         mImageId = in.readInt();
+        mImagePath = in.readString();
     }
 
     public static final Creator<Flavor> CREATOR = new Creator<Flavor>() {
@@ -47,18 +50,10 @@ public class Flavor implements Parcelable {
     int getmImageId() {
         return mImageId;
     }
-
-    void setmName(String mName) {
-        this.mName = mName;
+    String getmImagePath() {
+        return mImagePath;
     }
 
-    void setmVersion(String mVersion) {
-        this.mVersion = mVersion;
-    }
-
-    void setmImageId(int mImageId) {
-        this.mImageId = mImageId;
-    }
 
     @Override
     public int describeContents() {
@@ -70,5 +65,6 @@ public class Flavor implements Parcelable {
         parcel.writeString(mName);
         parcel.writeString(mVersion);
         parcel.writeInt(mImageId);
+        parcel.writeString(mImagePath);
     }
 }

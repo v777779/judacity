@@ -25,6 +25,11 @@ public class MovieItem {
     private static final String KEY_ORIGIN_TITLE = "original_title";
     private static final String KEY_GENRE_IDS = "genre_ids";
 
+    private static final String[] POSTER_SIZE = "w92,w154,w185,w342,w500,w780,original".split(",");
+    private static final int KEY_POSTER_LOW = 2;
+    private static final int KEY_POSTER_MID = 4;
+    private static final int KEY_POSTER_HIGH = 5;
+    private static final String POSTER_BASE = "http://image.tmdb.org/t/p/";
 
     private int voteCount;
     private int id;
@@ -55,7 +60,6 @@ public class MovieItem {
      * @param json input JSON object
      * @return result of operation,  true completed successfully
      */
-
     private boolean parser(JSONObject json) {
         try {
             voteCount = json.getInt(KEY_VOTE);
@@ -84,5 +88,75 @@ public class MovieItem {
 
     public boolean isValid() {
         return valid;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public String getPoster(int size) {
+        if(size < 0 || size >= POSTER_SIZE.length) {
+            size = KEY_POSTER_LOW;
+        }
+        return POSTER_BASE+POSTER_SIZE[size]+posterPath;
+    }
+    public String getPosterLow() {
+        return getPoster(KEY_POSTER_LOW);
+    }
+
+    public String getPosterMid() {
+        return getPoster(KEY_POSTER_MID);
+    }
+
+    public String getPosterHigh() {
+        return getPoster(KEY_POSTER_HIGH);
+    }
+
+    public String getOriginLang() {
+        return originLang;
+    }
+
+    public String getOriginTitle() {
+        return originTitle;
+    }
+
+    public List<Integer> getListGenreID() {
+        return listGenreID;
+    }
+
+    public List<String> getListGenres() {
+        return listGenres;
+    }
+
+    public List<Integer> getListReviewID() {
+        return listReviewID;
+    }
+
+    public String getPosterHighRes() {
+        return posterHighRes;
+    }
+
+    public String getPosterLowRes() {
+        return posterLowRes;
     }
 }

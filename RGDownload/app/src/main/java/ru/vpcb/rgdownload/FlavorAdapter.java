@@ -2,6 +2,7 @@ package ru.vpcb.rgdownload;
 
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -38,10 +41,8 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
         View view = mInflater.inflate(R.layout.recycle_item_flavor, parent, false); // распаковать
 
         GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        lp.height = parent.getMeasuredWidth() / mSpan * 2;
+        lp.height = (int) (parent.getMeasuredWidth() / mSpan * 1.5);
         view.setLayoutParams(lp);
-
-
 
 
         return new FlavorViewHolder(view);      // создали holder
@@ -80,7 +81,13 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
         }
 
         void fill(Flavor flavor) {
-            mIcon.setImageResource(flavor.getmImageId());
+
+            if (flavor.getmImagePath() == null) {
+                mIcon.setImageResource(flavor.getmImageId());
+            } else {
+                Picasso.with(itemView.getContext()).load(flavor.getmImagePath()).into(mIcon);
+            }
+
             mName.setText(flavor.getmName());
             mVersion.setText(flavor.getmVersion());
 

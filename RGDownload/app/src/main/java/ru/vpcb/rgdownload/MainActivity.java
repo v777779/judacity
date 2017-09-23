@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -40,17 +41,18 @@ public class MainActivity extends AppCompatActivity {
     private int mSpan;
 
     private Flavor[] arrayFlavors = {
-            new Flavor("Cupcake", "1.5", R.drawable.cupcake),
-            new Flavor("Donut", "1.6", R.drawable.donut),
-            new Flavor("Eclair", "2.0-2.1", R.drawable.eclair),
-            new Flavor("Froyo", "2.2-2.2.3", R.drawable.froyo),
-            new Flavor("GingerBread", "2.3-2.3.7", R.drawable.gingerbread),
-            new Flavor("Honeycomb", "3.0-3.2.6", R.drawable.honeycomb),
-            new Flavor("Ice Cream Sandwich", "4.0-4.0.4", R.drawable.icecream),
-            new Flavor("Jelly Bean", "4.1-4.3.1", R.drawable.jellybean),
-            new Flavor("KitKat", "4.4-4.4.4", R.drawable.kitkat),
+            new Flavor("Cupcake", "1.5", R.drawable.cupcake, null),
+            new Flavor("Donut", "1.6", R.drawable.donut, null),
+            new Flavor("Eclair", "2.0-2.1", R.drawable.eclair, null),
+            new Flavor("Froyo", "2.2-2.2.3", R.drawable.froyo, null),
+            new Flavor("GingerBread", "2.3-2.3.7", R.drawable.gingerbread, null),
+            new Flavor("Honeycomb", "3.0-3.2.6", R.drawable.honeycomb, null),
+            new Flavor("Ice Cream Sandwich", "4.0-4.0.4", R.drawable.icecream, null),
+            new Flavor("Jelly Bean", "4.1-4.3.1", R.drawable.jellybean, null),
+            new Flavor("KitKat", "4.4-4.4.4", R.drawable.kitkat, null),
             //  new Flavor("Lollipop", "5.0-5.1.1", R.drawable.lollipop),
     };
+    private List<MovieItem> listMovie;
 
 
     @Override
@@ -61,8 +63,29 @@ public class MainActivity extends AppCompatActivity {
         mSpan = getNumberOfColumns(this);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("flavors")) {
-            listFlavors = new ArrayList<>(Arrays.asList(arrayFlavors));
-            listFlavors.addAll(Arrays.asList(arrayFlavors)); // 18 сразу
+            listFlavors = new ArrayList<>();
+
+            if (!loadGenreMap()) {
+                Log.v(TAG, "Can't load Genre Map");
+            }
+            listMovie = loadPage(this, MOVIE_TYPE.POPULAR, 1); // load page 1
+            if (listMovie == null || listMovie.size() == 0) {
+                Log.v(TAG, "Can't load Popular Movie page 1");
+            }
+
+            for (int i = 0; i < listMovie.size(); i++) {
+                MovieItem movieItem = listMovie.get(i);
+                String mName = movieItem.getTitle();
+                String mVersion = movieItem.getListGenres().get(0);
+                int mImageId = R.drawable.empty;
+                String mImagePath = movieItem.getPosterLow();
+
+                Flavor flavor = new Flavor(mName, mVersion, mImageId, mImagePath);
+                listFlavors.add(flavor);
+//                listFlavors.add(arrayFlavors[rnd.nextInt(arrayFlavors.length)]);
+            }
+
+
         } else {
             listFlavors = savedInstanceState.getParcelableArrayList("flavors");
         }
@@ -198,5 +221,27 @@ public class MainActivity extends AppCompatActivity {
         return new MovieTask().execute(url).get();
     }
 
+    private boolean loadGenreMap() {
+        if (MovieUtils.isMapGenreEmpty()) {  // load MapGenre
+            String s = null;  //
+            try {
+                s = makeSearch(this, MOVIE_TYPE.GENRES, 0, null);
+            } catch (Exception e) {
+                return false;
+            }
+            MovieUtils.setGenres(s);
+        }
+        return true;
+    }
 
+    private List<MovieItem> loadPage(Context context, MOVIE_TYPE type, int page) {
+        String s;
+        try {
+            s = makeSearch(context, type, page, null);
+        } catch (Exception e) {
+            return null;
+        }
+
+        return MovieUtils.getPageList(s);
+    }
 }

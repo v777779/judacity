@@ -29,22 +29,12 @@ public class MovieTask extends AsyncTask<URL, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String githubSearchResults) {
+    protected void onPostExecute(String s) {
 
-//            mProgressBar.setVisibility(View.INVISIBLE);
-        if (githubSearchResults != null && !githubSearchResults.equals("")) {
-
+        if (s != null && !s.equals("")) {
 //            showJsonDataView();
-//            mSearchResultsTextView.setText(githubSearchResults);
-   //         caller.setPageData(githubSearchResults);
-
         } else {
 //            showErrorMessage();
-   //         caller.setPageData("No Internet access");
-
         }
-
     }
-
-
 }
