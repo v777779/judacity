@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics dp = context.getResources().getDisplayMetrics();
         float dpWidth = dp.widthPixels / dp.density;
         int nColumns;
-        if (dpWidth <= DP_WIDTH_LOW) {
+        if (dpWidth <= DP_WIDTH_MID) {
             nColumns = (int) (dpWidth / COLUMN_WIDTH_LOW);
         } else {
             nColumns = (int) (dpWidth / COLUMN_WIDTH_HIGH);
