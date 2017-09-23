@@ -1,15 +1,25 @@
 package ru.vpcb.rgdownload;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+
+import ru.vpcb.rgdownload.utils.MovieTask;
+import ru.vpcb.rgdownload.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -119,5 +129,58 @@ public class MainActivity extends AppCompatActivity {
             mFlavorAdapter.notifyDataSetChanged();
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    //test!!!
+    private int counter = 1;
+
+    private enum MOVIE_TYPE {
+        POPULAR, NOWDAYS, TOPRATED
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
+
+
+        if (itemThatWasClickedId == R.id.action_search) {
+            String s = "";
+            try {
+                s = makeSearch(this, MOVIE_TYPE.POPULAR, counter++);
+            } catch (ExecutionException |InterruptedException e) {
+                s = "async task execution error";
+                e.printStackTrace();
+            }
+
+            Toast.makeText(this, "POPULAR: "+s, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+        if (itemThatWasClickedId == R.id.item_menu2) {
+            Toast.makeText(this, "NOWDAYS", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (itemThatWasClickedId == R.id.item_menu3) {
+            Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private String mResult;
+
+    private String makeSearch(Context context, MOVIE_TYPE searchType, int searchPage) throws ExecutionException, InterruptedException {
+        URL url = NetworkUtils.buildUrl(searchType.ordinal(), searchPage, null);
+        return new MovieTask().execute(url).get();
+    }
+
 
 }
