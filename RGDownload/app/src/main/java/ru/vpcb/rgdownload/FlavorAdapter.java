@@ -2,6 +2,8 @@ package ru.vpcb.rgdownload;
 
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder> {
+class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder> implements Parcelable {
     private static final String TAG = FlavorAdapter.class.getSimpleName();
     private static final double FRAME_RATIO = 1.8;
 
@@ -36,6 +38,24 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
 
 
     }
+
+    protected FlavorAdapter(Parcel in) {
+        mFlavorList = in.createTypedArrayList(Flavor.CREATOR);
+        mSpan = in.readInt();
+        size = in.readInt();
+    }
+
+    public static final Creator<FlavorAdapter> CREATOR = new Creator<FlavorAdapter>() {
+        @Override
+        public FlavorAdapter createFromParcel(Parcel in) {
+            return new FlavorAdapter(in);
+        }
+
+        @Override
+        public FlavorAdapter[] newArray(int size) {
+            return new FlavorAdapter[size];
+        }
+    };
 
     @Override
     public FlavorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {  // XML >> holder
@@ -75,6 +95,18 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
     @Override
     public int getItemCount() {
         return size;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedList(mFlavorList);
+        parcel.writeInt(mSpan);
+        parcel.writeInt(size);
     }
 
 

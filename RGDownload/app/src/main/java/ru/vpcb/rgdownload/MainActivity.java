@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);                                     // item size fixed
         mFlavorAdapter = new FlavorAdapter(this, listFlavors, mSpan);  //context  and data
         mRecyclerView.setAdapter(mFlavorAdapter);
+
 // scrolled listener
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                }).start();
 
-                sendIntent(movieItem,true);  // new task to work with Toast
+                sendIntent(movieItem, true);  // new task to work with Toast
                 Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
 
                 return true;
