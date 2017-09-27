@@ -2,8 +2,6 @@ package ru.vpcb.rgdownload;
 
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,66 +15,49 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder> implements Parcelable {
-    private static final String TAG = FlavorAdapter.class.getSimpleName();
+class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+    private static final String TAG = MovieAdapter.class.getSimpleName();
     private static final double FRAME_RATIO = 1.8;
 
-    private List<Flavor> mFlavorList;
+    private List<MovieItem> movieList;
     private LayoutInflater mInflater;
     private int mSpan;
     private MainActivity context;
     private int size;
 
 
-    FlavorAdapter(Context context, List<Flavor> flavorList, int span) {
-        mFlavorList = flavorList;
+    MovieAdapter(Context context, List<MovieItem> movieList, int span) {
+        this.movieList = movieList;
 
         mInflater = LayoutInflater.from(context);
         mSpan = span;
         this.context = (MainActivity) context;
-        size = mFlavorList.size();
+        size = this.movieList.size();
 
 
     }
 
-    protected FlavorAdapter(Parcel in) {
-        mFlavorList = in.createTypedArrayList(Flavor.CREATOR);
-        mSpan = in.readInt();
-        size = in.readInt();
-    }
-
-    public static final Creator<FlavorAdapter> CREATOR = new Creator<FlavorAdapter>() {
-        @Override
-        public FlavorAdapter createFromParcel(Parcel in) {
-            return new FlavorAdapter(in);
-        }
-
-        @Override
-        public FlavorAdapter[] newArray(int size) {
-            return new FlavorAdapter[size];
-        }
-    };
 
     @Override
-    public FlavorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {  // XML >> holder
+    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {  // XML >> holder
 //        Context context = parent.getContext();
 //        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = mInflater.inflate(R.layout.recycle_item_flavor, parent, false); // распаковать
+        View view = mInflater.inflate(R.layout.recycle_item, parent, false); // распаковать
 
         GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) view.getLayoutParams();
         lp.height = (int) (parent.getMeasuredWidth() / mSpan * FRAME_RATIO);
         view.setLayoutParams(lp);
 
 
-        return new FlavorViewHolder(view);      // создали holder
+        return new MovieViewHolder(view);      // создали holder
     }
 
     @Override
-    public void onBindViewHolder(FlavorViewHolder holder, final int position) {
+    public void onBindViewHolder(MovieViewHolder holder, final int position) {
         //   context.load();
-        final MovieItem movieItem = mFlavorList.get(position).getMovieItem();
+        final MovieItem movieItem = movieList.get(position);
 
-        holder.fill(mFlavorList.get(position));
+        holder.fill(movieItem);
         Log.v(TAG, " #" + position);  // распечатать
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -97,26 +78,13 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
         return size;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeTypedList(mFlavorList);
-        parcel.writeInt(mSpan);
-        parcel.writeInt(size);
-    }
-
-
-    class FlavorViewHolder extends RecyclerView.ViewHolder {
+    class MovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView mIcon;
         private TextView mRating;
         private TextView mYear;
 
 
-        FlavorViewHolder(View itemView) {
+        MovieViewHolder(View itemView) {
             super(itemView);
 
             mIcon = itemView.findViewById(R.id.list_item_icon);
@@ -124,10 +92,10 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
             mYear = itemView.findViewById(R.id.movie_year_text);
         }
 
-        void fill(Flavor flavor) {
-            MovieItem movieItem = flavor.getMovieItem();
-            if (flavor.getMovieItem() == null) {
-                mIcon.setImageResource(flavor.getImageId());
+        void fill(MovieItem movieItem) {
+
+            if (movieItem == null) {
+                mIcon.setImageResource(R.drawable.empty);
                 mRating.setText("__");
                 mYear.setText("__***___");
             } else {

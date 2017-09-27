@@ -3,6 +3,7 @@ package ru.vpcb.rgdownload;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +15,8 @@ import android.widget.Toast;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
 import ru.vpcb.rgdownload.utils.MovieUtils;
 import ru.vpcb.rgdownload.utils.NetworkUtils;
@@ -38,24 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static Random rnd = new Random();
 
-    private FlavorAdapter mFlavorAdapter;
-    private ArrayList<Flavor> listFlavors;
+    private MovieAdapter mFlavorAdapter;
+
     private RecyclerView mRecyclerView;
     private int mSpan;
 
-    private Flavor[] arrayFlavors = {
-            new Flavor(null, R.drawable.cupcake),
-            new Flavor(null, R.drawable.donut),
-            new Flavor(null, R.drawable.eclair),
-            new Flavor(null, R.drawable.froyo),
-            new Flavor(null, R.drawable.gingerbread),
-            new Flavor(null, R.drawable.honeycomb),
-            new Flavor(null, R.drawable.icecream),
-            new Flavor(null, R.drawable.jellybean),
-            new Flavor(null, R.drawable.kitkat),
-            //  new Flavor("Lollipop", "5.0-5.1.1", R.drawable.lollipop),
-    };
-    private List<MovieItem> listMovie;
+    private List<MovieItem> mListMovie;
 
 
     @Override
@@ -65,30 +52,17 @@ public class MainActivity extends AppCompatActivity {
 
         mSpan = getNumberOfColumns(this);
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey("flavors")) {
-            listFlavors = new ArrayList<>();
-
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
             if (!loadGenreMap()) {
                 Log.v(TAG, "Can't load Genre Map");
             }
-            listMovie = loadPage(this, MOVIE_TYPE.POPULAR, 1); // load page 1
-            if (listMovie == null || listMovie.size() == 0) {
+            mListMovie = loadPage(this, MOVIE_TYPE.POPULAR, 1); // load page 1
+            if (mListMovie == null || mListMovie.size() == 0) {
                 Log.v(TAG, "Can't load Popular Movie page 1");
             }
 
-            for (int i = 0; i < listMovie.size(); i++) {
-                MovieItem movieItem = listMovie.get(i);
-                int mImageId = R.drawable.empty;
-
-
-                Flavor flavor = new Flavor(movieItem, R.drawable.empty);
-                listFlavors.add(flavor);
-//                listFlavors.add(arrayFlavors[rnd.nextInt(arrayFlavors.length)]);
-            }
-
-
         } else {
-            listFlavors = savedInstanceState.getParcelableArrayList("flavors");
+            mListMovie = savedInstanceState.getParcelableArrayList("movies");
         }
 
 
@@ -101,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(mLayoutManager);                          // connect to LayoutManager
         mRecyclerView.setHasFixedSize(true);                                     // item size fixed
-        mFlavorAdapter = new FlavorAdapter(this, listFlavors, mSpan);  //context  and data
+        mFlavorAdapter = new MovieAdapter(this, mListMovie, mSpan);  //context  and data
         mRecyclerView.setAdapter(mFlavorAdapter);
 
 // scrolled listener
@@ -125,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("flavors", listFlavors);
+        outState.putParcelableArrayList("movies", new ArrayList<Parcelable>(mListMovie));
         super.onSaveInstanceState(outState);
     }
 
@@ -151,7 +125,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadPage() {
         if (mFlavorAdapter.getItemCount() < TEMP_MAX_ITEMS) {  // denial of service
-            listFlavors.add(arrayFlavors[rnd.nextInt(arrayFlavors.length)]);
+            //dummy item
+            MovieItem movieItem = mListMovie.get(rnd.nextInt(mListMovie.size()));
+            mListMovie.add(movieItem);
+            // dummy
             mFlavorAdapter.setSize(mFlavorAdapter.getItemCount() + 1);
             mFlavorAdapter.notifyDataSetChanged();
         }
@@ -205,22 +182,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             if (itemThatWasClickedId == R.id.item_menu3) {
-
-                MovieItem movieItem = listMovie.get(rnd.nextInt(listMovie.size()));
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            Thread.sleep(3500);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                        sendIntent(movieItem,false);
 //
-//                    }
-//                }).start();
-
-                sendIntent(movieItem, true);  // new task to work with Toast
+//                MovieItem movieItem = mListMovie.get(rnd.nextInt(mListMovie.size()));
+//                sendIntent(movieItem, true);                    // new task to work with Toast
                 Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
 
                 return true;
