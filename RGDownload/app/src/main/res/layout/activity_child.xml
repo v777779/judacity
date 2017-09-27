@@ -34,7 +34,7 @@
                     android:gravity="left"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:paddingTop="16dp"
+                    android:paddingTop="8dp"
                     android:paddingBottom="16dp"
                     android:text="Spectre"
                     android:fontFamily="sans-serif-light"
@@ -106,6 +106,7 @@
 
                     android:text="Synopsis"
                     android:textStyle="bold"
+                    android:textAllCaps="true"
                     android:padding="8dp"
                     android:layout_gravity="center"
                     android:textColor="#3a3a3a"

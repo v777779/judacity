@@ -64,7 +64,8 @@ public class ChildActivity extends AppCompatActivity {
             if (movieItem != null) {
                 mMovieTitle.setText(movieItem.getTitle());
                 mMovieSynopsisText.setText(movieItem.getId() + " " + movieItem.getOverview());
-                Picasso.with(this).load(movieItem.getBackDropHigh()).into(mMoviePoster);
+                Picasso.with(this).load(movieItem.getBackDropHigh()).error(R.drawable.error_loading)
+                        .placeholder(R.drawable.empty_loading).into(mMoviePoster);
 
 
                 String inputPattern = "yyyy-MM-dd";
