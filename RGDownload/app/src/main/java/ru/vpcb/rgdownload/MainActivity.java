@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendIntent(MovieItem movieItem, boolean flag) {
-        Intent intent = new Intent(this, MovieChild.class);
+        Intent intent = new Intent(this, ChildActivity.class);
         intent.putExtra(MovieItem.class.getCanonicalName(), movieItem);  // как вариант
         if (flag) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
