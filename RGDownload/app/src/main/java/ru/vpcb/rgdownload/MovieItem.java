@@ -215,6 +215,25 @@ public class MovieItem implements Parcelable {
         return backDropPath;
     }
 
+    public String getBackDrop(int size) {
+        if (size < 0 || size >= POSTER_SIZE.length) {
+            size = KEY_POSTER_LOW;
+        }
+        return POSTER_BASE + POSTER_SIZE[size] + backDropPath;
+    }
+
+    public String getBackDropLow() {
+        return getBackDrop(KEY_POSTER_LOW);
+    }
+    public String getBackDropMid() {
+        return getBackDrop(KEY_POSTER_MID);
+    }
+
+    public String getBackDropHigh() {
+        return getBackDrop(KEY_POSTER_HIGH);
+    }
+
+
     public boolean isAdult() {
         return adult;
     }

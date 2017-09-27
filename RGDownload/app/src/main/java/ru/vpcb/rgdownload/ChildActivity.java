@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -34,6 +36,8 @@ public class ChildActivity extends AppCompatActivity {
 
     private Target mTarget;
 
+    private ScrollView mPosterScrollView;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +47,19 @@ public class ChildActivity extends AppCompatActivity {
         mMovieSynopsis = (TextView) findViewById(R.id.movie_synopsis);
         mMovieSynopsisText = (TextView) findViewById(R.id.movie_synopsis_text);
         mMoviePoster = (ImageView) findViewById(R.id.movie_poster);
+        mPosterScrollView = (ScrollView) findViewById(R.id.poster_scrollview);
+
 
         mTarget = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                int START_X = 10;
-                int START_Y = 15;
-                int WIDTH_PX = 100;
-                int HEIGHT_PX = 100;
-
-// Crop bitmap
-
-                Bitmap newBitmap = Bitmap.createBitmap(bitmap, START_X, START_Y, WIDTH_PX, HEIGHT_PX, null, false);
-                mMoviePoster.setImageBitmap(newBitmap);
+                mMoviePoster.setImageBitmap(bitmap);
+                mPosterScrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPosterScrollView.scrollTo(0, 50);
+                    }
+                });
 
             }
 
@@ -78,16 +82,8 @@ public class ChildActivity extends AppCompatActivity {
             if (movieItem != null) {
                 mMovieTitle.setText(movieItem.getTitle());
                 mMovieSynopsisText.setText(movieItem.getId() + " " + movieItem.getOverview());
-
-                Picasso.with(this).load(movieItem.getPosterMid()).into(mTarget);
-
-
-// Assign new bitmap to ImageView
-//                ClipDrawable clip = (ClipDrawable)mMoviePoster.getDrawable();
-//                clip.setLevel(5000);
-
-
-            }
+                Picasso.with(this).load(movieItem.getBackDropMid()).into(mMoviePoster);
+           }
 
         }
 

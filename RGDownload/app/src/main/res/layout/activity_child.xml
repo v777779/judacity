@@ -5,28 +5,41 @@
     android:orientation="vertical">
 
     <ScrollView
+        android:id="@+id/movie_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="false"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/movie_poster"
+            <ScrollView
+                android:id="@+id/poster_scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:contentDescription="@string/icon_desc"
-                android:scaleType="center" />
+                android:layout_height="200dp"
+                android:enabled="false"
+                android:scrollbars="none"
+                >
+
+                <ImageView
+                    android:id="@+id/movie_poster"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:contentDescription="@string/icon_desc"
+                    android:scaleType="centerCrop"
+
+                    />
+            </ScrollView>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
                 android:layout_margin="8dp"
-                />
+                android:background="@android:color/darker_gray" />
 
             <View
                 android:layout_width="match_parent"
@@ -38,26 +51,28 @@
                 android:id="@+id/movie_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.25"
                 android:gravity="center"
                 android:textColor="#000000"
                 android:textSize="22sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
                 android:layout_margin="8dp"
-                />
+                android:background="@android:color/darker_gray" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
                 android:layout_margin="8dp"
-                />
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/movie_synopsis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.25"
                 android:gravity="center"
                 android:text="SYNOPSIS"
                 android:textColor="#000000"
@@ -66,8 +81,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@android:color/darker_gray"
                 android:layout_margin="8dp"
+                android:background="@android:color/darker_gray"
 
                 />
 
@@ -75,14 +90,15 @@
                 android:id="@+id/movie_synopsis_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="No Text"
                 android:textSize="16sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@android:color/darker_gray"
                 android:layout_margin="8dp"
+                android:background="@android:color/darker_gray"
 
                 />
 
