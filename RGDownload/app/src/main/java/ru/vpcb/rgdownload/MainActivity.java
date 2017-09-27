@@ -76,11 +76,12 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < listMovie.size(); i++) {
                 MovieItem movieItem = listMovie.get(i);
                 String mName = movieItem.getTitle();
-                String mVersion = movieItem.getListGenres().get(0);
+                String mRating = movieItem.getRating();
+                String mYear = movieItem.getReleaseYear();
                 int mImageId = R.drawable.empty;
                 String mImagePath = movieItem.getPosterLow();
 
-                Flavor flavor = new Flavor(mName, mVersion, mImageId, mImagePath);
+                Flavor flavor = new Flavor(mRating, mYear, mImageId, mImagePath);
                 listFlavors.add(flavor);
 //                listFlavors.add(arrayFlavors[rnd.nextInt(arrayFlavors.length)]);
             }

@@ -8,23 +8,23 @@ import android.os.Parcelable;
  */
 
 public class Flavor implements Parcelable {
-    private String mName;
-    private String mVersion;
-    private int mImageId;
-    private String mImagePath;
+    private String rating;
+    private String year;
+    private int imageId;
+    private String imagePath;
 
-    public Flavor(String mVersionName, String mVersionNumber, int imageId, String mImagePath) {
-        this.mName = mVersionName;
-        this.mVersion = mVersionNumber;
-        this.mImageId = imageId;
-        this.mImagePath = mImagePath;
+    public Flavor(String rating, String year, int imageId, String mImagePath) {
+        this.rating = rating;
+        this.year = year;
+        this.imageId = imageId;
+        this.imagePath = mImagePath;
     }
 
     private Flavor(Parcel in) {
-        mName = in.readString();
-        mVersion = in.readString();
-        mImageId = in.readInt();
-        mImagePath = in.readString();
+        year = in.readString();
+        rating = in.readString();
+        imageId = in.readInt();
+        imagePath = in.readString();
     }
 
     public static final Creator<Flavor> CREATOR = new Creator<Flavor>() {
@@ -39,19 +39,19 @@ public class Flavor implements Parcelable {
         }
     };
 
-    String getmName() {
-        return mName;
+    String getRating() {
+        return rating;
     }
 
-    String getmVersion() {
-        return mVersion;
+    String getYear() {
+        return year;
     }
 
-    int getmImageId() {
-        return mImageId;
+    int getImageId() {
+        return imageId;
     }
-    String getmImagePath() {
-        return mImagePath;
+    String getImagePath() {
+        return imagePath;
     }
 
 
@@ -62,9 +62,9 @@ public class Flavor implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mName);
-        parcel.writeString(mVersion);
-        parcel.writeInt(mImageId);
-        parcel.writeString(mImagePath);
+        parcel.writeString(year);
+        parcel.writeString(rating);
+        parcel.writeInt(imageId);
+        parcel.writeString(imagePath);
     }
 }

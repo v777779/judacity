@@ -2,7 +2,6 @@ package ru.vpcb.rgdownload;
 
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder> {
+    private static final double FRAME_RATIO = 1.8;
     private static final String TAG = FlavorAdapter.class.getSimpleName();
     private List<Flavor> mFlavorList;
     private LayoutInflater mInflater;
@@ -41,7 +41,7 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
         View view = mInflater.inflate(R.layout.recycle_item_flavor, parent, false); // распаковать
 
         GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        lp.height = (int) (parent.getMeasuredWidth() / mSpan * 1.5);
+        lp.height = (int) (parent.getMeasuredWidth() / mSpan * FRAME_RATIO);
         view.setLayoutParams(lp);
 
 
@@ -68,28 +68,28 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
 
     class FlavorViewHolder extends RecyclerView.ViewHolder {
         private ImageView mIcon;
-        private TextView mName;
-        private TextView mVersion;
+        private TextView mRating;
+        private TextView mYear;
 
 
         FlavorViewHolder(View itemView) {
             super(itemView);
 
             mIcon = itemView.findViewById(R.id.list_item_icon);
-            mName = itemView.findViewById(R.id.list_item_name);
-            mVersion = itemView.findViewById(R.id.list_item_version);
+            mRating = itemView.findViewById(R.id.movie_rating_text);
+            mYear = itemView.findViewById(R.id.movie_year_text);
         }
 
         void fill(Flavor flavor) {
 
-            if (flavor.getmImagePath() == null) {
-                mIcon.setImageResource(flavor.getmImageId());
+            if (flavor.getImagePath() == null) {
+                mIcon.setImageResource(flavor.getImageId());
             } else {
-                Picasso.with(itemView.getContext()).load(flavor.getmImagePath()).into(mIcon);
+                Picasso.with(itemView.getContext()).load(flavor.getImagePath()).into(mIcon);
             }
 
-            mName.setText(flavor.getmName());
-            mVersion.setText(flavor.getmVersion());
+            mRating.setText(flavor.getRating());
+            mYear.setText(flavor.getYear());
 
         }
     }

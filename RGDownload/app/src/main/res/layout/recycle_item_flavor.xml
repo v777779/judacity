@@ -6,8 +6,7 @@
     android:orientation="vertical"
     android:paddingBottom="1dp"
     android:paddingEnd="1dp"
-    android:paddingStart="0dp"
-    >
+    android:paddingStart="0dp">
 
     <ImageView
         android:id="@+id/list_item_icon"
@@ -15,23 +14,48 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@android:color/white"
-        android:scaleType="centerCrop"
         android:contentDescription="@string/icon_desc"
-        />
+        android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/list_item_name"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:gravity="center" />
+        android:background="#525e91">
 
-    <TextView
-        android:id="@+id/list_item_version"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:gravity="center" />
+        <ImageView
+            android:id="@+id/movie_rating_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_star_24dp"
+            android:padding="8dp"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            />
+
+        <TextView
+            android:id="@+id/movie_rating_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+
+            android:textColor="#dadada"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/movie_year_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:textColor="#dadada"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
 
 </LinearLayout>
