@@ -1,5 +1,8 @@
 package ru.vpcb.rgdownload;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +17,7 @@ import ru.vpcb.rgdownload.utils.MovieUtils;
  * Created by V1 on 23-Sep-17.
  */
 
-public class MovieItem {
+public class MovieItem implements Parcelable {
     private static final String KEY_VOTE = "vote_count";
     private static final String KEY_ID = "id";
     private static final String KEY_VIDEO = "video";
@@ -55,14 +58,44 @@ public class MovieItem {
     private boolean adult;
     private String overview;
     private String releaseDate;
-
-
     private boolean valid;
 
     public MovieItem(JSONObject json) {
         valid = parser(json);
 
     }
+
+    protected MovieItem(Parcel in) {
+        voteCount = in.readInt();
+        id = in.readInt();
+        video = in.readByte() != 0;
+        voteAverage = in.readDouble();
+        title = in.readString();
+        popularity = in.readDouble();
+        posterPath = in.readString();
+        originLang = in.readString();
+        originTitle = in.readString();
+        listGenres = in.createStringArrayList();
+        posterHighRes = in.readString();
+        posterLowRes = in.readString();
+        backDropPath = in.readString();
+        adult = in.readByte() != 0;
+        overview = in.readString();
+        releaseDate = in.readString();
+        valid = in.readByte() != 0;
+    }
+
+    public static final Creator<MovieItem> CREATOR = new Creator<MovieItem>() {
+        @Override
+        public MovieItem createFromParcel(Parcel in) {
+            return new MovieItem(in);
+        }
+
+        @Override
+        public MovieItem[] newArray(int size) {
+            return new MovieItem[size];
+        }
+    };
 
     /**
      * Parse JSON object and fills fields of the object
@@ -208,4 +241,29 @@ public class MovieItem {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(voteCount);
+        parcel.writeInt(id);
+        parcel.writeByte((byte) (video ? 1 : 0));
+        parcel.writeDouble(voteAverage);
+        parcel.writeString(title);
+        parcel.writeDouble(popularity);
+        parcel.writeString(posterPath);
+        parcel.writeString(originLang);
+        parcel.writeString(originTitle);
+        parcel.writeStringList(listGenres);
+        parcel.writeString(posterHighRes);
+        parcel.writeString(posterLowRes);
+        parcel.writeString(backDropPath);
+        parcel.writeByte((byte) (adult ? 1 : 0));
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeByte((byte) (valid ? 1 : 0));
+    }
 }

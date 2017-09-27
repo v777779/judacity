@@ -1,6 +1,7 @@
 package ru.vpcb.rgdownload;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -23,6 +24,8 @@ import ru.vpcb.rgdownload.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String SIGNATURE = "ru.vpcb.rgdownload";
+
 
     private final static float COLUMN_WIDTH_HIGH = 200;
     private final static float DP_HEIGHT_LOW = 480;
@@ -204,7 +207,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             if (itemThatWasClickedId == R.id.item_menu3) {
+
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            Thread.sleep(3500);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        sendIntent();
+//
+//                    }
+//                }).start();
+                sendIntent(true);  // new task to work with Toast
                 Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
+
                 return true;
             }
 
@@ -244,5 +262,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return MovieUtils.getPageList(s);
+    }
+
+    private void sendIntent(boolean flag) {
+        MovieItem movie = listMovie.get(rnd.nextInt(listMovie.size()));
+        Intent intent = new Intent(this, MovieChild.class);
+        intent.putExtra(MovieItem.class.getCanonicalName(), movie);  // как вариант
+        if (flag) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        startActivity(intent);
+
+        Log.v(TAG, "sent parcelable movie:" + movie.getTitle());
     }
 }
