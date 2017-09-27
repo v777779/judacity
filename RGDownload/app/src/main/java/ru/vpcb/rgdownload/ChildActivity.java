@@ -20,6 +20,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by V1 on 27-Sep-17.
  */
@@ -31,10 +37,11 @@ public class ChildActivity extends AppCompatActivity {
     private TextView mMovieTitle;
     private TextView mMovieSynopsis;
     private TextView mMovieSynopsisText;
+    private TextView mMovieReleaseDate;
+    private TextView mMovieRating;
     private MovieItem movieItem;
     private ImageView mMoviePoster;
 
-    private Target mTarget;
 
     private ScrollView mPosterScrollView;
 
@@ -47,33 +54,8 @@ public class ChildActivity extends AppCompatActivity {
         mMovieSynopsis = (TextView) findViewById(R.id.movie_synopsis);
         mMovieSynopsisText = (TextView) findViewById(R.id.movie_synopsis_text);
         mMoviePoster = (ImageView) findViewById(R.id.movie_poster);
-        mPosterScrollView = (ScrollView) findViewById(R.id.poster_scrollview);
-
-
-        mTarget = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                mMoviePoster.setImageBitmap(bitmap);
-                mPosterScrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPosterScrollView.scrollTo(0, 50);
-                    }
-                });
-
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-
+        mMovieReleaseDate = (TextView)findViewById(R.id.movie_date);
+        mMovieRating = (TextView)findViewById(R.id.movie_rating);
 
         Intent intent = getIntent();
         if (intent.hasExtra(MovieItem.class.getCanonicalName())) {                        // check if it's our intent
@@ -82,17 +64,29 @@ public class ChildActivity extends AppCompatActivity {
             if (movieItem != null) {
                 mMovieTitle.setText(movieItem.getTitle());
                 mMovieSynopsisText.setText(movieItem.getId() + " " + movieItem.getOverview());
-                Picasso.with(this).load(movieItem.getBackDropMid()).into(mMoviePoster);
+                Picasso.with(this).load(movieItem.getBackDropHigh()).into(mMoviePoster);
+
+
+                String inputPattern = "yyyy-MM-dd";
+                SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.US);
+                String mReleaseDate = movieItem.getReleaseDate();
+                if (mReleaseDate != null && !mReleaseDate.isEmpty()) {
+                    try {
+                        Date date = inputFormat.parse(mReleaseDate);
+                        mReleaseDate = DateFormat.getDateInstance().format(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+
+                    }
+                } else {
+                    mReleaseDate = "unknown release date";
+                }
+                mMovieReleaseDate.setText("Release date: "+mReleaseDate);
+                mMovieRating.setText("TMDb: "+movieItem.getRating());
            }
 
         }
-
-
     }
 
-    @Override
-    protected void onDestroy() {
-        Picasso.with(this).cancelRequest(mTarget);
-        super.onDestroy();
-    }
+
 }
