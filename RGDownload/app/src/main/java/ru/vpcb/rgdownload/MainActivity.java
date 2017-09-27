@@ -2,6 +2,8 @@ package ru.vpcb.rgdownload;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -53,9 +55,15 @@ public class MainActivity extends AppCompatActivity {
         mSpan = getNumberOfColumns(this);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+
+
+
+
             if (!loadGenreMap()) {
                 Log.v(TAG, "Can't load Genre Map");
             }
+
+            // ВНИМАНИЕ ВСТРОИТЬ ЗДЕСЬ ПРОВЕРКУ на наличие Internet
             mListMovie = loadPage(this, MOVIE_TYPE.POPULAR, 1); // load page 1
             if (mListMovie == null || mListMovie.size() == 0) {
                 Log.v(TAG, "Can't load Popular Movie page 1");
@@ -64,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mListMovie = savedInstanceState.getParcelableArrayList("movies");
         }
+
+        // ВНИМАНИЕ ВСТРОИТЬ ОБРАБОТКУ ОШИБОК ИНТЕРНЕТ И ПРОВЕРКУ mListMovie на null
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -212,6 +222,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 return false;
             }
+            if (s == null) {
+                return false;
+            }
             MovieUtils.setGenres(s);
         }
         return true;
@@ -224,7 +237,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             return null;
         }
-
+        if (s == null) {
+            return null;
+        }
         return MovieUtils.getPageList(s);
     }
 
@@ -239,4 +254,11 @@ public class MainActivity extends AppCompatActivity {
 
         Log.v(TAG, "sent parcelable movie:" + movieItem.getTitle());
     }
+
+//    public boolean isOnline() {
+//        ConnectivityManager cm =
+//                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+//        return netInfo != null && netInfo.isConnectedOrConnecting();
+//    }
 }
