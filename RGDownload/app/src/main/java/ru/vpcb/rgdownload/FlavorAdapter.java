@@ -16,13 +16,15 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder> {
-    private static final double FRAME_RATIO = 1.8;
     private static final String TAG = FlavorAdapter.class.getSimpleName();
+    private static final double FRAME_RATIO = 1.8;
+
     private List<Flavor> mFlavorList;
     private LayoutInflater mInflater;
     private int mSpan;
     private MainActivity context;
     private int size;
+
 
     FlavorAdapter(Context context, List<Flavor> flavorList, int span) {
         mFlavorList = flavorList;
@@ -31,6 +33,7 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
         mSpan = span;
         this.context = (MainActivity) context;
         size = mFlavorList.size();
+
 
     }
 
@@ -49,11 +52,20 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(FlavorViewHolder holder, int position) {
+    public void onBindViewHolder(FlavorViewHolder holder, final int position) {
         //   context.load();
+        final MovieItem movieItem = mFlavorList.get(position).getMovieItem();
+
         holder.fill(mFlavorList.get(position));
         Log.v(TAG, " #" + position);  // распечатать
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v(TAG, "clicked on: " + movieItem.getTitle() + " " + movieItem.getRating());
+                context.sendIntent(movieItem, false);
+            }
+        });
     }
 
     void setSize(int size) {
@@ -81,16 +93,16 @@ class FlavorAdapter extends RecyclerView.Adapter<FlavorAdapter.FlavorViewHolder>
         }
 
         void fill(Flavor flavor) {
-
-            if (flavor.getImagePath() == null) {
+            MovieItem movieItem = flavor.getMovieItem();
+            if (flavor.getMovieItem() == null) {
                 mIcon.setImageResource(flavor.getImageId());
+                mRating.setText("__");
+                mYear.setText("__***___");
             } else {
-                Picasso.with(itemView.getContext()).load(flavor.getImagePath()).into(mIcon);
+                Picasso.with(itemView.getContext()).load(movieItem.getPosterLow()).into(mIcon);
+                mRating.setText(movieItem.getRating());
+                mYear.setText(movieItem.getReleaseYear());
             }
-
-            mRating.setText(flavor.getRating());
-            mYear.setText(flavor.getYear());
-
         }
     }
 }

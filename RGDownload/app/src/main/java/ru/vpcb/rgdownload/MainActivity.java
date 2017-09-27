@@ -44,15 +44,15 @@ public class MainActivity extends AppCompatActivity {
     private int mSpan;
 
     private Flavor[] arrayFlavors = {
-            new Flavor("Cupcake", "1.5", R.drawable.cupcake, null),
-            new Flavor("Donut", "1.6", R.drawable.donut, null),
-            new Flavor("Eclair", "2.0-2.1", R.drawable.eclair, null),
-            new Flavor("Froyo", "2.2-2.2.3", R.drawable.froyo, null),
-            new Flavor("GingerBread", "2.3-2.3.7", R.drawable.gingerbread, null),
-            new Flavor("Honeycomb", "3.0-3.2.6", R.drawable.honeycomb, null),
-            new Flavor("Ice Cream Sandwich", "4.0-4.0.4", R.drawable.icecream, null),
-            new Flavor("Jelly Bean", "4.1-4.3.1", R.drawable.jellybean, null),
-            new Flavor("KitKat", "4.4-4.4.4", R.drawable.kitkat, null),
+            new Flavor(null, R.drawable.cupcake),
+            new Flavor(null, R.drawable.donut),
+            new Flavor(null, R.drawable.eclair),
+            new Flavor(null, R.drawable.froyo),
+            new Flavor(null, R.drawable.gingerbread),
+            new Flavor(null, R.drawable.honeycomb),
+            new Flavor(null, R.drawable.icecream),
+            new Flavor(null, R.drawable.jellybean),
+            new Flavor(null, R.drawable.kitkat),
             //  new Flavor("Lollipop", "5.0-5.1.1", R.drawable.lollipop),
     };
     private List<MovieItem> listMovie;
@@ -78,13 +78,10 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < listMovie.size(); i++) {
                 MovieItem movieItem = listMovie.get(i);
-                String mName = movieItem.getTitle();
-                String mRating = movieItem.getRating();
-                String mYear = movieItem.getReleaseYear();
                 int mImageId = R.drawable.empty;
-                String mImagePath = movieItem.getPosterLow();
 
-                Flavor flavor = new Flavor(mRating, mYear, mImageId, mImagePath);
+
+                Flavor flavor = new Flavor(movieItem, R.drawable.empty);
                 listFlavors.add(flavor);
 //                listFlavors.add(arrayFlavors[rnd.nextInt(arrayFlavors.length)]);
             }
@@ -208,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if (itemThatWasClickedId == R.id.item_menu3) {
 
+                MovieItem movieItem = listMovie.get(rnd.nextInt(listMovie.size()));
 //                new Thread(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -216,11 +214,12 @@ public class MainActivity extends AppCompatActivity {
 //                        } catch (InterruptedException e) {
 //                            e.printStackTrace();
 //                        }
-//                        sendIntent();
+//                        sendIntent(movieItem,false);
 //
 //                    }
 //                }).start();
-                sendIntent(true);  // new task to work with Toast
+
+                sendIntent(movieItem,true);  // new task to work with Toast
                 Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
 
                 return true;
@@ -264,15 +263,15 @@ public class MainActivity extends AppCompatActivity {
         return MovieUtils.getPageList(s);
     }
 
-    private void sendIntent(boolean flag) {
-        MovieItem movie = listMovie.get(rnd.nextInt(listMovie.size()));
+    public void sendIntent(MovieItem movieItem, boolean flag) {
         Intent intent = new Intent(this, MovieChild.class);
-        intent.putExtra(MovieItem.class.getCanonicalName(), movie);  // как вариант
+        intent.putExtra(MovieItem.class.getCanonicalName(), movieItem);  // как вариант
         if (flag) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
+
         startActivity(intent);
 
-        Log.v(TAG, "sent parcelable movie:" + movie.getTitle());
+        Log.v(TAG, "sent parcelable movie:" + movieItem.getTitle());
     }
 }

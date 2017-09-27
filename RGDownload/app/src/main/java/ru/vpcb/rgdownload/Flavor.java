@@ -8,23 +8,18 @@ import android.os.Parcelable;
  */
 
 public class Flavor implements Parcelable {
-    private String rating;
-    private String year;
     private int imageId;
-    private String imagePath;
+    private MovieItem movieItem;
 
-    public Flavor(String rating, String year, int imageId, String mImagePath) {
-        this.rating = rating;
-        this.year = year;
+    public Flavor(MovieItem movieItem, int imageId) {
+        this.movieItem = movieItem;
         this.imageId = imageId;
-        this.imagePath = mImagePath;
     }
 
     private Flavor(Parcel in) {
-        year = in.readString();
-        rating = in.readString();
+        movieItem = in.readParcelable(MovieItem.class.getClassLoader());
         imageId = in.readInt();
-        imagePath = in.readString();
+
     }
 
     public static final Creator<Flavor> CREATOR = new Creator<Flavor>() {
@@ -39,19 +34,12 @@ public class Flavor implements Parcelable {
         }
     };
 
-    String getRating() {
-        return rating;
-    }
-
-    String getYear() {
-        return year;
-    }
-
     int getImageId() {
         return imageId;
     }
-    String getImagePath() {
-        return imagePath;
+
+    MovieItem getMovieItem() {
+        return movieItem;
     }
 
 
@@ -62,9 +50,7 @@ public class Flavor implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(year);
-        parcel.writeString(rating);
+        parcel.writeParcelable(movieItem, i);
         parcel.writeInt(imageId);
-        parcel.writeString(imagePath);
     }
 }
