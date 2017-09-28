@@ -58,8 +58,8 @@ public class ChildActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
 
         Intent intent = getIntent();
-        if (intent.hasExtra(MovieItem.class.getCanonicalName())) {                        // check if it's our intent
-            movieItem = intent.getParcelableExtra(MovieItem.class.getCanonicalName());         // check for null already implemented
+        if (intent.hasExtra(MovieItem.class.getCanonicalName())) {                              // check if it's our intent
+            movieItem = intent.getParcelableExtra(MovieItem.class.getCanonicalName());          // check for null already implemented
 
             if (movieItem != null) {
                 mMovieTitle.setText(movieItem.getTitle());
@@ -87,17 +87,12 @@ public class ChildActivity extends AppCompatActivity {
                     review_text.setText(reviewItem.getContent());
                     mLinearLayout.addView(child_review);
                     mLinearLayout.setVisibility(View.VISIBLE);
-                    if(listReview.size() == 1 && reviewItem.getContent().equals("no review")) {
+                    if(listReview.size() == 1 && reviewItem.getContent().equals("no reviews")) {
                         review_author.setHeight(0);
                         review_url.setHeight(0);
                     }
-
-
-
                 }
-
              }
-
         }
     }
 

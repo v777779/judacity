@@ -58,7 +58,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         final MovieItem movieItem = movieList.get(position);
 
         holder.fill(movieItem);
-        Log.v(TAG, " #" + position);  // распечатать
+        Log.v(TAG, " #" + position);        // распечатать
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

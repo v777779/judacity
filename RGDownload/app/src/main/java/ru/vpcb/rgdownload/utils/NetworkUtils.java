@@ -59,14 +59,14 @@ public class NetworkUtils {
             case 0:
             case 1:
             case 2:
-                Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
+                return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
             case 3:
                 return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang);
             case 4:
                 String sMovieQuery = MOVIE_QUERY[type].replace("*id*", "" + networkData.getId());
                 return Uri.parse(MOVIE_BASE + sMovieQuery + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
             case 5:
-                sMovieQuery = MOVIE_BASE.substring(0,MOVIE_BASE.length()-3); // just access to site
+                sMovieQuery = MOVIE_BASE.substring(0, MOVIE_BASE.length() - 3); // just access to site
                 return Uri.parse(sMovieQuery);
             default:
                 return null;
@@ -92,16 +92,15 @@ public class NetworkUtils {
     }
 
     /**
-     *
-     * @param networkData  NetworkData class object with parameters of query
-     * @return  String object if success or null in other case
+     * @param networkData NetworkData class object with parameters of query
+     * @return String object if success or null in other case
      * @throws Exception
      */
     public static String makeSearch(NetworkData networkData) throws Exception {
 
         URL url = NetworkUtils.buildUrl(networkData);
-        if(url == null) {
-            return  null;
+        if (url == null) {
+            return null;
         }
         return new MovieTask(networkData.getContext()).execute(url).get();
     }

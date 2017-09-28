@@ -34,7 +34,7 @@ public class ReviewItem implements Parcelable{
     public ReviewItem() {  // empty
         id = "unknown";
         author = "";
-        content = "no review";
+        content = "no reviews";
         url = "";
         valid = true;
     }

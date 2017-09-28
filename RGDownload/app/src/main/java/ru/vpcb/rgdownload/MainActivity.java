@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -55,7 +56,12 @@ public class MainActivity extends AppCompatActivity {
     private int mSpan;
 
     private List<MovieItem> mListMovie;
-
+    private List<MovieItem> mPopularMovie;
+    private List<MovieItem> mTopRatedMovie;
+    private List<MovieItem> mNowdaysMovie;
+    private QueryType mQueryMode;
+    private List<Integer> mListPage;
+    private List<Integer> mListPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +75,30 @@ public class MainActivity extends AppCompatActivity {
         mFirstText = (TextView) findViewById(R.id.main_first_text);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-            mListMovie = null;
+            mListMovie = new ArrayList<>();
+            mPopularMovie = new ArrayList<>();
+            mTopRatedMovie = new ArrayList<>();
+            mNowdaysMovie = new ArrayList<>();
+            mQueryMode = QueryType.POPULAR;
+            mListPage = new ArrayList<>(Arrays.asList(1, 1, 1));
+            mListPosition = new ArrayList<>(Arrays.asList(0, 0, 0));
+
             if (loadInitList()) {
+                mPopularMovie = mListMovie;
                 loadContent();
             }
 
         } else {
             showRV();
             mListMovie = savedInstanceState.getParcelableArrayList("movies");
+            mPopularMovie = savedInstanceState.getParcelableArrayList("popular");
+            mTopRatedMovie = savedInstanceState.getParcelableArrayList("toprated");
+            ;
+            mNowdaysMovie = savedInstanceState.getParcelableArrayList("nowdays");
+            mListPage = savedInstanceState.getIntegerArrayList("pages");
+            mQueryMode = QueryType.valueOf(savedInstanceState.getString("querymode"));
+            mListPosition = savedInstanceState.getIntegerArrayList("positions");
+
             loadContent();
         }
     }
@@ -84,14 +106,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean loadInitList() {
         if (!loadGenre()) {
             Log.v(TAG, "Can't load Genre Map");
-
             return false;
         }
-
-        mListMovie = loadMovie(QueryType.POPULAR, 1);       // load page 1
+        mListMovie = loadMovie(mQueryMode, mListPage.get(mQueryMode.ordinal()));       // load page 1
         if (mListMovie == null || mListMovie.size() == 0) {
-            Log.v(TAG, "Can't load Popular Movie page 1");
-
             return false;
         }
         return true;
@@ -108,11 +126,17 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);                                     // item size fixed
         mFlavorAdapter = new MovieAdapter(this, mListMovie, mSpan);  //context  and data
         mRecyclerView.setAdapter(mFlavorAdapter);
+        mRecyclerView.scrollToPosition(mListPosition.get(mQueryMode.ordinal()));
+
 
 // scrolled listener
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+//                updatePosition(mLayoutManager.findFirstVisibleItemPosition());
+                updatePosition(mLayoutManager.findFirstCompletelyVisibleItemPosition());
+
                 if (dy > 0) {
                     int v = mLayoutManager.getChildCount();
                     int p = mLayoutManager.findFirstVisibleItemPosition();
@@ -127,10 +151,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void updatePosition(int position) {
+        if(position < 0) {
+            return;
+        }
+       mListPosition.set(mQueryMode.ordinal(),position);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList("movies", new ArrayList<Parcelable>(mListMovie));
+        outState.putParcelableArrayList("popular", new ArrayList<Parcelable>(mPopularMovie));
+        outState.putParcelableArrayList("toprated", new ArrayList<Parcelable>(mTopRatedMovie));
+        outState.putParcelableArrayList("nowdays", new ArrayList<Parcelable>(mNowdaysMovie));
+        outState.putIntegerArrayList("pages", new ArrayList<Integer>(mListPage));
+        outState.putString("querymode", mQueryMode.toString());
+        outState.putIntegerArrayList("positions", new ArrayList<Integer>(mListPosition));
+
+
         super.onSaveInstanceState(outState);
     }
 
@@ -155,14 +193,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void loadMovie() {
-        if (mFlavorAdapter.getItemCount() < TEMP_MAX_ITEMS) {  // denial of service
-            //dummy item
-            MovieItem movieItem = mListMovie.get(rnd.nextInt(mListMovie.size()));
-            mListMovie.add(movieItem);
-            // dummy
-            mFlavorAdapter.setSize(mFlavorAdapter.getItemCount() + 1);
-            mFlavorAdapter.notifyDataSetChanged();
+        int page = mListPage.get(mQueryMode.ordinal()) + 1;
+        List<MovieItem> list = loadMovie(mQueryMode, page);
+        if (list == null || list.size() == 0) {
+            return;
         }
+        mListPage.set(mQueryMode.ordinal(), page);     // next page loaded
+        mListMovie.addAll(list);
+        mFlavorAdapter.setSize(mListMovie.size());
+        mFlavorAdapter.notifyDataSetChanged();
+
     }
 
 
@@ -180,23 +220,43 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             if (itemThatWasClickedId == R.id.action_search) {
-                if (mListMovie == null) {  // first screen
+                mQueryMode = QueryType.POPULAR;
+                if (mPopularMovie == null || mPopularMovie.size() == 0) {  // first screen
                     if (loadInitList()) {
+                        mPopularMovie = mListMovie;
                         loadContent();
                     }
+                } else {
+                    mListMovie = mPopularMovie;
+                    loadContent();
                 }
-
+                return true;
             }
             if (itemThatWasClickedId == R.id.item_menu2) {
-                Toast.makeText(this, "NOWDAYS", Toast.LENGTH_SHORT).show();
+                mQueryMode = QueryType.NOWDAYS;
+                if (mNowdaysMovie == null || mNowdaysMovie.size() == 0) {                    // first screen
+                    if (loadInitList()) {
+                        mNowdaysMovie = mListMovie;
+                        loadContent();
+                    }
+                } else {
+                    mListMovie = mNowdaysMovie;
+                    loadContent();
+
+                }
                 return true;
             }
             if (itemThatWasClickedId == R.id.item_menu3) {
-//
-//                MovieItem movieItem = mListMovie.get(rnd.nextInt(mListMovie.size()));
-//                sendIntent(movieItem, true);                    // new task to work with Toast
-                Toast.makeText(this, "TOP RATED  Mobile data false", Toast.LENGTH_SHORT).show();
-                setMobileDataEnabled2(this, false);
+                mQueryMode = QueryType.TOPRATED;
+                if (mTopRatedMovie == null || mTopRatedMovie.size() == 0) {                    // first screen
+                    if (loadInitList()) {
+                        mTopRatedMovie = mListMovie;
+                        loadContent();
+                    }
+                } else {
+                    mListMovie = mTopRatedMovie;
+                    loadContent();
+                }
 
 
                 return true;
@@ -219,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(this,QueryType.GENRES));
+            String s = NetworkUtils.makeSearch(new NetworkData(this, QueryType.GENRES));
             return ParseUtils.setGenres(s);
         } catch (Exception e) {
             e.printStackTrace();
@@ -233,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
 //            return null;
 //        }
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(this,type, page));
+            String s = NetworkUtils.makeSearch(new NetworkData(this, type, page));
             return ParseUtils.getPageList(s);
 
         } catch (Exception e) {
@@ -248,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
 //            return null;
 //        }
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(this,QueryType.REVIEW, page, id));
+            String s = NetworkUtils.makeSearch(new NetworkData(this, QueryType.REVIEW, page, id));
             return ParseUtils.getReviewList(s);
         } catch (Exception e) {
             e.printStackTrace();
@@ -325,8 +385,8 @@ public class MainActivity extends AppCompatActivity {
         setMobileDataEnabledMethod.invoke(connectivityManager, enabled);
     }
 
-    private void setMobileDataEnabled2(Context context, boolean enabled) throws Exception{
-        final ConnectivityManager conman = (ConnectivityManager)  context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    private void setMobileDataEnabled2(Context context, boolean enabled) throws Exception {
+        final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final Class conmanClass = Class.forName(conman.getClass().getName());
         final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
         iConnectivityManagerField.setAccessible(true);
