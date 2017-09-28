@@ -11,12 +11,15 @@ import java.net.URL;
 import ru.vpcb.rgdownload.utils.NetworkUtils;
 
 public class MovieTask extends AsyncTask<URL, Void, String> {
+    MainActivity context;
+    public MovieTask(Context context) {
+        this.context = (MainActivity)context;
+    }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();                       // метод оставлен
-//            mSearchResultsTextView.setVisibility(View.INVISIBLE);
-//            mProgressBar.setVisibility(View.VISIBLE);
+        context.showPB();
     }
 
     @Override
@@ -35,9 +38,9 @@ public class MovieTask extends AsyncTask<URL, Void, String> {
     protected void onPostExecute(String s) {
 
         if (s != null && !s.equals("")) {
-//            showJsonDataView();
+            context.showRV();
         } else {
-//            showErrorMessage();
+            context.showError();
         }
     }
 

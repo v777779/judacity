@@ -103,7 +103,7 @@ public class NetworkUtils {
         if(url == null) {
             return  null;
         }
-        return new MovieTask().execute(url).get();
+        return new MovieTask(networkData.getContext()).execute(url).get();
     }
 
     /**

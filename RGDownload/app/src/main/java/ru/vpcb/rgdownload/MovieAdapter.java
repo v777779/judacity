@@ -95,16 +95,17 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         void fill(MovieItem movieItem) {
 
             if (movieItem == null) {
-                mIcon.setImageResource(R.drawable.empty);
+                mIcon.setImageResource(R.drawable.empty_loading);
                 mRating.setText("__");
                 mYear.setText("__***___");
             } else {
-                if(context.isOnline()) {
-                    Picasso.with(itemView.getContext())
-                            .load(movieItem.getPosterLow())
-                            .error(R.drawable.error_loading)
-                            .into(mIcon);
-                }
+
+                Picasso.with(itemView.getContext())
+                        .load(movieItem.getPosterLow())
+                        .placeholder(R.drawable.empty_loading)
+                        .error(R.drawable.error_loading)
+                        .into(mIcon);
+
                 mRating.setText(movieItem.getRating());
 
                 mYear.setText(movieItem.getReleaseYear());

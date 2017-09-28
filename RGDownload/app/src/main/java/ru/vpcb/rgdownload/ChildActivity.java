@@ -104,7 +104,7 @@ public class ChildActivity extends AppCompatActivity {
     private List<ReviewItem> loadReview(int page, int id) {
         String s = null;
         try {
-            s = NetworkUtils.makeSearch(new NetworkData(QueryType.REVIEW, page, id));
+            s = NetworkUtils.makeSearch(new NetworkData(this,QueryType.REVIEW, page, id));
         } catch (Exception e) {
             e.printStackTrace();
         }

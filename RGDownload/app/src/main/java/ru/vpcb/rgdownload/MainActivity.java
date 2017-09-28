@@ -70,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
             mListMovie = null;
-            showFirst();
             if (loadInitList()) {
-                showRV();
                 loadContent();
             }
 
@@ -86,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean loadInitList() {
         if (!loadGenre()) {
             Log.v(TAG, "Can't load Genre Map");
-            showError();
+
             return false;
         }
 
         mListMovie = loadMovie(QueryType.POPULAR, 1);       // load page 1
         if (mListMovie == null || mListMovie.size() == 0) {
             Log.v(TAG, "Can't load Popular Movie page 1");
-            showError();
+
             return false;
         }
         return true;
@@ -183,48 +181,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (itemThatWasClickedId == R.id.action_search) {
                 if (mListMovie == null) {  // first screen
-                    showPB();
-                    if (!loadGenre()) {
-                        Log.v(TAG, "Can't load Genre Map");
-                        showError();
-                        return true;
+                    if (loadInitList()) {
+                        loadContent();
                     }
-                    // ВНИМАНИЕ ВСТРОИТЬ ЗДЕСЬ ПРОВЕРКУ на наличие Internet
-                    mListMovie = loadMovie(QueryType.POPULAR, 1);       // load page 1
-                    if (mListMovie == null || mListMovie.size() == 0) {
-                        Log.v(TAG, "Can't load Popular Movie page 1");
-                        showError();
-                        return true;
-
-                    }
-
-                    mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-                    final GridLayoutManager mLayoutManager = new GridLayoutManager(this,
-                            mSpan,
-                            GridLayoutManager.VERTICAL,
-                            false);
-
-                    mRecyclerView.setLayoutManager(mLayoutManager);                          // connect to LayoutManager
-                    mRecyclerView.setHasFixedSize(true);                                     // item size fixed
-                    mFlavorAdapter = new MovieAdapter(this, mListMovie, mSpan);  //context  and data
-                    mRecyclerView.setAdapter(mFlavorAdapter);
-
-// scrolled listener
-                    mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                            if (dy > 0) {
-                                int v = mLayoutManager.getChildCount();
-                                int p = mLayoutManager.findFirstVisibleItemPosition();
-                                int total = mLayoutManager.getItemCount();
-
-                                if (v + p >= total) {
-                                    loadMovie();
-                                }
-                            }
-                        }
-                    });
-                    showRV();
                 }
 
             }
@@ -255,12 +214,12 @@ public class MainActivity extends AppCompatActivity {
         if (!ParseUtils.isMapGenreEmpty()) {     // load MapGenre
             return true;
         }
-        if (!isOnline()) {
-            return false;
-        }
+//        if (!isOnline()) {
+//            return false;
+//        }
 
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(QueryType.GENRES));
+            String s = NetworkUtils.makeSearch(new NetworkData(this,QueryType.GENRES));
             return ParseUtils.setGenres(s);
         } catch (Exception e) {
             e.printStackTrace();
@@ -270,11 +229,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<MovieItem> loadMovie(QueryType type, int page) {
-        if (!isOnline()) {
-            return null;
-        }
+//        if (!isOnline()) {
+//            return null;
+//        }
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(type, page));
+            String s = NetworkUtils.makeSearch(new NetworkData(this,type, page));
             return ParseUtils.getPageList(s);
 
         } catch (Exception e) {
@@ -285,12 +244,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private List<ReviewItem> loadReview(int page, int id) {
-        if (!isOnline()) {
-            return null;
-        }
-
+//        if (!isOnline()) {
+//            return null;
+//        }
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(QueryType.REVIEW, page, id));
+            String s = NetworkUtils.makeSearch(new NetworkData(this,QueryType.REVIEW, page, id));
             return ParseUtils.getReviewList(s);
         } catch (Exception e) {
             e.printStackTrace();
