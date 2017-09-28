@@ -8,12 +8,12 @@ public class NetworkData {
     private static final String DEFAULT_LANGUAGE = "en_US";
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_ID = 0;
-    private final QUERY_TYPE type;
+    private final QueryType type;
     private final int id;
     private final int page;
     private final String lang;
 
-    public NetworkData(QUERY_TYPE type, int page, int id, String lang) {
+    public NetworkData(QueryType type, int page, int id, String lang) {
         if (type == null || page < 0 || id < 0) {
             throw new IllegalArgumentException();
         }
@@ -27,19 +27,19 @@ public class NetworkData {
         this.lang = lang;
     }
 
-    public NetworkData(QUERY_TYPE type, int page, String lang) {
+    public NetworkData(QueryType type, int page, String lang) {
         this(type, page, DEFAULT_ID, lang);
     }
 
-    public NetworkData(QUERY_TYPE type, int page, int id) {
+    public NetworkData(QueryType type, int page, int id) {
         this(type, page, id, DEFAULT_LANGUAGE);
     }
 
-    public NetworkData(QUERY_TYPE type, int page) {
+    public NetworkData(QueryType type, int page) {
         this(type, page, DEFAULT_ID, DEFAULT_LANGUAGE);
     }
 
-    public NetworkData(QUERY_TYPE type) {
+    public NetworkData(QueryType type) {
         this(type, DEFAULT_PAGE, DEFAULT_ID, DEFAULT_LANGUAGE);
     }
 

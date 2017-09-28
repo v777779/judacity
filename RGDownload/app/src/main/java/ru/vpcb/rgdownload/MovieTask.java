@@ -1,5 +1,8 @@
 package ru.vpcb.rgdownload;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import java.io.IOException;
@@ -37,4 +40,5 @@ public class MovieTask extends AsyncTask<URL, Void, String> {
 //            showErrorMessage();
         }
     }
+
 }

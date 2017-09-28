@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,7 +20,7 @@ import java.util.Random;
 import ru.vpcb.rgdownload.utils.NetworkData;
 import ru.vpcb.rgdownload.utils.ParseUtils;
 import ru.vpcb.rgdownload.utils.NetworkUtils;
-import ru.vpcb.rgdownload.utils.QUERY_TYPE;
+import ru.vpcb.rgdownload.utils.QueryType;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // ВНИМАНИЕ ВСТРОИТЬ ЗДЕСЬ ПРОВЕРКУ на наличие Internet
-            mListMovie = loadMovie(QUERY_TYPE.POPULAR, 1);       // load page 1
+            mListMovie = loadMovie(QueryType.POPULAR, 1);       // load page 1
             if (mListMovie == null || mListMovie.size() == 0) {
                 Log.v(TAG, "Can't load Popular Movie page 1");
             }
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             if (itemThatWasClickedId == R.id.action_search) {
-                s = NetworkUtils.makeSearch(new NetworkData(QUERY_TYPE.NOWDAYS, counter++));
+                s = NetworkUtils.makeSearch(new NetworkData(QueryType.NOWDAYS, counter++));
                 List<MovieItem> list = ParseUtils.getPageList(s);
                 int page = ParseUtils.getPageNumber(s);
                 int total = ParseUtils.getPageTotal(s);
@@ -198,7 +197,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(QUERY_TYPE.GENRES));
+
+            boolean isOnline = new CheckTask().execute(this).get();
+            System.out.println(isOnline);
+
+            String sPing = NetworkUtils.makeSearch(new NetworkData(QueryType.PING));
+            System.out.println(sPing);
+
+            String s = NetworkUtils.makeSearch(new NetworkData(QueryType.GENRES));
             return ParseUtils.setGenres(s);
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private List<MovieItem> loadMovie(QUERY_TYPE type, int page) {
+    private List<MovieItem> loadMovie(QueryType type, int page) {
         try {
             String s = NetworkUtils.makeSearch(new NetworkData(type, page));
             return ParseUtils.getPageList(s);
@@ -221,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<ReviewItem> loadReview(int page, int id) {
         try {
-            String s = NetworkUtils.makeSearch(new NetworkData(QUERY_TYPE.REVIEW, page, id));
+            String s = NetworkUtils.makeSearch(new NetworkData(QueryType.REVIEW, page, id));
             return ParseUtils.getReviewList(s);
         } catch (Exception e) {
             e.printStackTrace();

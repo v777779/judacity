@@ -15,6 +15,9 @@
  */
 package ru.vpcb.rgdownload.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.NetworkOnMainThreadException;
 
@@ -38,7 +41,8 @@ public class NetworkUtils {
             "movie/now_playing",
             "movie/top_rated",
             "genre/movie/list",
-            "movie/*id*/reviews"
+            "movie/*id*/reviews",
+            "empty"
 
     };
 
@@ -61,6 +65,9 @@ public class NetworkUtils {
             case 4:
                 String sMovieQuery = MOVIE_QUERY[type].replace("*id*", "" + networkData.getId());
                 return Uri.parse(MOVIE_BASE + sMovieQuery + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
+            case 5:
+                sMovieQuery = MOVIE_BASE.substring(0,MOVIE_BASE.length()-3); // just access to site
+                return Uri.parse(sMovieQuery);
             default:
                 return null;
         }
@@ -91,6 +98,7 @@ public class NetworkUtils {
      * @throws Exception
      */
     public static String makeSearch(NetworkData networkData) throws Exception {
+
         URL url = NetworkUtils.buildUrl(networkData);
         if(url == null) {
             return  null;

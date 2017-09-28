@@ -5,8 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +19,7 @@ import java.util.List;
 import ru.vpcb.rgdownload.utils.NetworkData;
 import ru.vpcb.rgdownload.utils.NetworkUtils;
 import ru.vpcb.rgdownload.utils.ParseUtils;
-import ru.vpcb.rgdownload.utils.QUERY_TYPE;
+import ru.vpcb.rgdownload.utils.QueryType;
 
 /**
  * Created by V1 on 27-Sep-17.
@@ -106,7 +104,7 @@ public class ChildActivity extends AppCompatActivity {
     private List<ReviewItem> loadReview(int page, int id) {
         String s = null;
         try {
-            s = NetworkUtils.makeSearch(new NetworkData(QUERY_TYPE.REVIEW, page, id));
+            s = NetworkUtils.makeSearch(new NetworkData(QueryType.REVIEW, page, id));
         } catch (Exception e) {
             e.printStackTrace();
         }
