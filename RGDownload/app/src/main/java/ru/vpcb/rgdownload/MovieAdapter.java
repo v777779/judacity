@@ -99,7 +99,12 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
                 mRating.setText("__");
                 mYear.setText("__***___");
             } else {
-                Picasso.with(itemView.getContext()).load(movieItem.getPosterLow()).into(mIcon);
+                if(context.isOnline()) {
+                    Picasso.with(itemView.getContext())
+                            .load(movieItem.getPosterLow())
+                            .error(R.drawable.error_loading)
+                            .into(mIcon);
+                }
                 mRating.setText(movieItem.getRating());
 
                 mYear.setText(movieItem.getReleaseYear());

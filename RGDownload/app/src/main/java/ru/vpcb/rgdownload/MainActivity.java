@@ -2,6 +2,8 @@ package ru.vpcb.rgdownload;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +13,14 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,10 +46,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String ASYNC_MESSAGE = "{\"success\": false,  \"status_code\": 402 }";
 
     private static Random rnd = new Random();
-
     private MovieAdapter mFlavorAdapter;
-
     private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
+    private TextView mErrorText;
+    private TextView mFirstText;
+
     private int mSpan;
 
     private List<MovieItem> mListMovie;
@@ -53,29 +63,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mSpan = getNumberOfColumns(this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mProgressBar = (ProgressBar) findViewById(R.id.main_connect_pb);
+        mErrorText = (TextView) findViewById(R.id.main_connect_text);
+        mFirstText = (TextView) findViewById(R.id.main_first_text);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-
-            if (!loadGenre()) {
-                Log.v(TAG, "Can't load Genre Map");
-                return;
-            }
-
-            // ВНИМАНИЕ ВСТРОИТЬ ЗДЕСЬ ПРОВЕРКУ на наличие Internet
-            mListMovie = loadMovie(QueryType.POPULAR, 1);       // load page 1
-            if (mListMovie == null || mListMovie.size() == 0) {
-                Log.v(TAG, "Can't load Popular Movie page 1");
+            mListMovie = null;
+            showFirst();
+            if (loadInitList()) {
+                showRV();
+                loadContent();
             }
 
         } else {
+            showRV();
             mListMovie = savedInstanceState.getParcelableArrayList("movies");
+            loadContent();
+        }
+    }
+
+    private boolean loadInitList() {
+        if (!loadGenre()) {
+            Log.v(TAG, "Can't load Genre Map");
+            showError();
+            return false;
         }
 
-        // ВНИМАНИЕ ВСТРОИТЬ ОБРАБОТКУ ОШИБОК ИНТЕРНЕТ И ПРОВЕРКУ mListMovie на null
+        mListMovie = loadMovie(QueryType.POPULAR, 1);       // load page 1
+        if (mListMovie == null || mListMovie.size() == 0) {
+            Log.v(TAG, "Can't load Popular Movie page 1");
+            showError();
+            return false;
+        }
+        return true;
+    }
 
-
+    private void loadContent() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
         final GridLayoutManager mLayoutManager = new GridLayoutManager(this,
                 mSpan,
                 GridLayoutManager.VERTICAL,
@@ -102,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -149,9 +174,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    //test!!!
-    private int counter = 1;
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -160,16 +182,51 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             if (itemThatWasClickedId == R.id.action_search) {
-                s = NetworkUtils.makeSearch(new NetworkData(QueryType.NOWDAYS, counter++));
-                List<MovieItem> list = ParseUtils.getPageList(s);
-                int page = ParseUtils.getPageNumber(s);
-                int total = ParseUtils.getPageTotal(s);
-                int n = ParseUtils.getItemTotal(s);
-                int code = ParseUtils.getStatusCode(s);
+                if (mListMovie == null) {  // first screen
+                    showPB();
+                    if (!loadGenre()) {
+                        Log.v(TAG, "Can't load Genre Map");
+                        showError();
+                        return true;
+                    }
+                    // ВНИМАНИЕ ВСТРОИТЬ ЗДЕСЬ ПРОВЕРКУ на наличие Internet
+                    mListMovie = loadMovie(QueryType.POPULAR, 1);       // load page 1
+                    if (mListMovie == null || mListMovie.size() == 0) {
+                        Log.v(TAG, "Can't load Popular Movie page 1");
+                        showError();
+                        return true;
 
-                Toast.makeText(this, "POPULAR: " + page + " " + total + " " + n + " "
-                        + " " + code + " " + s, Toast.LENGTH_SHORT).show();
-                return true;
+                    }
+
+                    mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                    final GridLayoutManager mLayoutManager = new GridLayoutManager(this,
+                            mSpan,
+                            GridLayoutManager.VERTICAL,
+                            false);
+
+                    mRecyclerView.setLayoutManager(mLayoutManager);                          // connect to LayoutManager
+                    mRecyclerView.setHasFixedSize(true);                                     // item size fixed
+                    mFlavorAdapter = new MovieAdapter(this, mListMovie, mSpan);  //context  and data
+                    mRecyclerView.setAdapter(mFlavorAdapter);
+
+// scrolled listener
+                    mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            if (dy > 0) {
+                                int v = mLayoutManager.getChildCount();
+                                int p = mLayoutManager.findFirstVisibleItemPosition();
+                                int total = mLayoutManager.getItemCount();
+
+                                if (v + p >= total) {
+                                    loadMovie();
+                                }
+                            }
+                        }
+                    });
+                    showRV();
+                }
+
             }
             if (itemThatWasClickedId == R.id.item_menu2) {
                 Toast.makeText(this, "NOWDAYS", Toast.LENGTH_SHORT).show();
@@ -179,7 +236,9 @@ public class MainActivity extends AppCompatActivity {
 //
 //                MovieItem movieItem = mListMovie.get(rnd.nextInt(mListMovie.size()));
 //                sendIntent(movieItem, true);                    // new task to work with Toast
-                Toast.makeText(this, "TOP RATED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "TOP RATED  Mobile data false", Toast.LENGTH_SHORT).show();
+                setMobileDataEnabled2(this, false);
+
 
                 return true;
             }
@@ -196,14 +255,11 @@ public class MainActivity extends AppCompatActivity {
         if (!ParseUtils.isMapGenreEmpty()) {     // load MapGenre
             return true;
         }
+        if (!isOnline()) {
+            return false;
+        }
+
         try {
-
-            boolean isOnline = new CheckTask().execute(this).get();
-            System.out.println(isOnline);
-
-            String sPing = NetworkUtils.makeSearch(new NetworkData(QueryType.PING));
-            System.out.println(sPing);
-
             String s = NetworkUtils.makeSearch(new NetworkData(QueryType.GENRES));
             return ParseUtils.setGenres(s);
         } catch (Exception e) {
@@ -214,6 +270,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<MovieItem> loadMovie(QueryType type, int page) {
+        if (!isOnline()) {
+            return null;
+        }
         try {
             String s = NetworkUtils.makeSearch(new NetworkData(type, page));
             return ParseUtils.getPageList(s);
@@ -226,6 +285,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private List<ReviewItem> loadReview(int page, int id) {
+        if (!isOnline()) {
+            return null;
+        }
+
         try {
             String s = NetworkUtils.makeSearch(new NetworkData(QueryType.REVIEW, page, id));
             return ParseUtils.getReviewList(s);
@@ -255,11 +318,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    public boolean isOnline() {
-//        ConnectivityManager cm =
-//                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-//        return netInfo != null && netInfo.isConnectedOrConnecting();
-//    }
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
+    public void showPB() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mErrorText.setVisibility(View.INVISIBLE);
+        mFirstText.setVisibility(View.INVISIBLE);
+    }
+
+    public void showError() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mErrorText.setVisibility(View.VISIBLE);
+        mFirstText.setVisibility(View.INVISIBLE);
+    }
+
+    public void showRV() {
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mErrorText.setVisibility(View.INVISIBLE);
+        mFirstText.setVisibility(View.INVISIBLE);
+    }
+
+    public void showFirst() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mErrorText.setVisibility(View.INVISIBLE);
+        mFirstText.setVisibility(View.VISIBLE);
+    }
+
+
+    private void setMobileDataEnabled(Context context, boolean enabled) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final Class conmanClass = Class.forName(conman.getClass().getName());
+        final Field connectivityManagerField = conmanClass.getDeclaredField("mService");
+        connectivityManagerField.setAccessible(true);
+        final Object connectivityManager = connectivityManagerField.get(conman);
+        final Class connectivityManagerClass = Class.forName(connectivityManager.getClass().getName());
+        final Method setMobileDataEnabledMethod = connectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+        setMobileDataEnabledMethod.setAccessible(true);
+
+        setMobileDataEnabledMethod.invoke(connectivityManager, enabled);
+    }
+
+    private void setMobileDataEnabled2(Context context, boolean enabled) throws Exception{
+        final ConnectivityManager conman = (ConnectivityManager)  context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final Class conmanClass = Class.forName(conman.getClass().getName());
+        final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
+        iConnectivityManagerField.setAccessible(true);
+        final Object iConnectivityManager = iConnectivityManagerField.get(conman);
+        final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
+        final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+        setMobileDataEnabledMethod.setAccessible(true);
+        setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
+    }
 }
