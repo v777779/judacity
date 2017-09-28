@@ -1,7 +1,5 @@
 package ru.vpcb.rgdownload.utils;
 
-import android.content.Intent;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,12 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import ru.vpcb.rgdownload.MovieItem;
+import ru.vpcb.rgdownload.ReviewItem;
 
 /**
  * Created by V1 on 23-Sep-17.
  */
 
-public class MovieUtils {
+public class ParseUtils {
     private static final String KEY_STATUS = "status_code";
     private static final String KEY_PAGE = "page";
     private static final String KEY_PAGE_TOTAL = "total_pages";
@@ -51,6 +50,9 @@ public class MovieUtils {
      */
     public static List<MovieItem> getPageList(String jsonPage) {
         List<MovieItem> list = new ArrayList<>();
+        if(jsonPage == null || jsonPage.isEmpty()) {
+            return null;
+        }
         try {
             JSONObject json = new JSONObject(jsonPage);
             if (json.has(KEY_STATUS)) {            // status code
@@ -58,7 +60,7 @@ public class MovieUtils {
             }
 
             if (json.has(KEY_PAGE) && json.has(KEY_RESULT)) {  // parse results
-                int page = json.getInt(KEY_PAGE); // number of page
+//                int page = json.getInt(KEY_PAGE); // number of page
                 JSONArray jsonArray = json.getJSONArray(KEY_RESULT);
                 int n = jsonArray.length();
                 for (int i = 0; i < n; i++) {
@@ -78,6 +80,9 @@ public class MovieUtils {
 
     public static int getPageNumber(String jsonPage) {
         int n = -1;
+        if(jsonPage == null || jsonPage.isEmpty()) {
+            return n;
+        }
         try {
             JSONObject json = new JSONObject(jsonPage);
             if (json.has(KEY_STATUS)) {            // status code
@@ -93,6 +98,9 @@ public class MovieUtils {
 
     public static int getPageTotal(String jsonPage) {
         int n = -1;
+        if(jsonPage == null || jsonPage.isEmpty()) {
+            return n;
+        }
         try {
             JSONObject json = new JSONObject(jsonPage);
             if (json.has(KEY_STATUS) && json.getInt(KEY_STATUS) != 200) {            // status code
@@ -107,6 +115,9 @@ public class MovieUtils {
 
     public static int getItemTotal(String jsonPage) {
         int n = -1;
+        if(jsonPage == null || jsonPage.isEmpty()) {
+            return n;
+        }
         try {
             JSONObject json = new JSONObject(jsonPage);
             if (json.has(KEY_STATUS)) {            // status code
@@ -121,6 +132,9 @@ public class MovieUtils {
 
     public static int getStatusCode(String jsonPage) {
         int n = -1;
+        if(jsonPage == null || jsonPage.isEmpty()) {
+            return n;
+        }
         try {
             JSONObject json = new JSONObject(jsonPage);
             n = json.getInt(KEY_STATUS);
@@ -131,6 +145,9 @@ public class MovieUtils {
     }
 
     public static boolean setGenres(String jsonPage) {
+        if(jsonPage == null || jsonPage.isEmpty()) {
+            return false;
+        }
         mapGenre = new HashMap<>();
         try {
             JSONObject json = new JSONObject(jsonPage);
@@ -142,18 +159,11 @@ public class MovieUtils {
                 JSONObject jsonItem = jsonArray.getJSONObject(i);
                 mapGenre.put(jsonItem.getInt(KEY_ID), jsonItem.getString(KEY_NAME));
             }
+            return true;
         } catch (JSONException e) {
-            return false;
+            e.printStackTrace();
         }
-        return true;
-    }
-
-
-    public static String getGenre(int n) {
-        if (mapGenre == null || mapGenre.size() == 0) {
-            return null;
-        }
-        return mapGenre.get(n);
+        return false;
     }
 
     public static boolean isMapGenreEmpty () {
@@ -161,6 +171,48 @@ public class MovieUtils {
             return true;
         }
         return false;
+    }
+
+    public static String getGenre(int n) {
+        if (isMapGenreEmpty()) {
+            return null;
+        }
+        return mapGenre.get(n);
+    }
+
+    public static List<ReviewItem> getReviewList(String jsonPage) {
+        List<ReviewItem> list = new ArrayList<>();
+        if(jsonPage == null || jsonPage.isEmpty()) {
+            return null;
+        }
+        try {
+            JSONObject json = new JSONObject(jsonPage);
+            if (json.has(KEY_STATUS)) {            // status code
+                return null;
+            }
+
+            if (json.has(KEY_PAGE) && json.has(KEY_RESULT)) {  // parse results
+//                int page = json.getInt(KEY_PAGE); // number of page
+                JSONArray jsonArray = json.getJSONArray(KEY_RESULT);
+                int n = jsonArray.length();
+                for (int i = 0; i < n; i++) {
+                    JSONObject jsonItem = jsonArray.getJSONObject(i);
+                    ReviewItem reviewItem = new ReviewItem(jsonItem);
+                    if (!reviewItem.isValid()) {
+                        continue;
+                    }
+                    list.add(reviewItem);
+                }
+            }
+        } catch (JSONException e) {
+            return null;
+        }
+
+        if(list.isEmpty()) {   // prevent future loading
+            list.add(new ReviewItem());
+        }
+
+        return list;
     }
 
 

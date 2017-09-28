@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/movie_poster"
@@ -12,7 +13,68 @@
         android:contentDescription="@string/icon_desc"
         android:scaleType="center" />
 
-    <clip
+    <LinearLayout
+        android:id="@+id/child_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
 
+        <View
+            android:id="@+id/review_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/review_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-light"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="Synopsis"
+            android:textAllCaps="true"
+            android:textColor="#3a3a3a"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/review_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+
+            android:fontFamily="sans-serif-light"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="No Text"
+            android:textColor="#3a3a3a"
+            android:textSize="14sp" />
         />
+
+        <TextView
+            android:id="@+id/review_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+
+            android:fontFamily="sans-serif-light"
+            android:padding="16dp"
+            android:text="No Text"
+            android:textColor="#3a3a3a"
+            android:textSize="14sp" />
+        />
+
+    </LinearLayout>
 </LinearLayout>

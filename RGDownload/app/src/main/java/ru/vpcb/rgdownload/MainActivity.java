@@ -2,8 +2,6 @@ package ru.vpcb.rgdownload;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import ru.vpcb.rgdownload.utils.MovieUtils;
+import ru.vpcb.rgdownload.utils.NetworkData;
+import ru.vpcb.rgdownload.utils.ParseUtils;
 import ru.vpcb.rgdownload.utils.NetworkUtils;
+import ru.vpcb.rgdownload.utils.QUERY_TYPE;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private final static float COLUMN_WIDTH_LOW = 150;
     private final static int MAX_COLUMNS = 6;
     private final static int MIN_COLUMNS = 2;
-    private final static int TEMP_MAX_ITEMS = 25;  //size if content
+    private final static int TEMP_MAX_ITEMS = 25;
+    private final static int PAGE_FIRST = 1;
 
     private static final String ASYNC_MESSAGE = "{\"success\": false,  \"status_code\": 402 }";
 
@@ -56,15 +57,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
 
-
-
-
-            if (!loadGenreMap()) {
+            if (!loadGenre()) {
                 Log.v(TAG, "Can't load Genre Map");
+                return;
             }
 
             // ВНИМАНИЕ ВСТРОИТЬ ЗДЕСЬ ПРОВЕРКУ на наличие Internet
-            mListMovie = loadPage(this, MOVIE_TYPE.POPULAR, 1); // load page 1
+            mListMovie = loadMovie(QUERY_TYPE.POPULAR, 1);       // load page 1
             if (mListMovie == null || mListMovie.size() == 0) {
                 Log.v(TAG, "Can't load Popular Movie page 1");
             }
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     int total = mLayoutManager.getItemCount();
 
                     if (v + p >= total) {
-                        loadPage();
+                        loadMovie();
                     }
                 }
             }
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void loadPage() {
+    private void loadMovie() {
         if (mFlavorAdapter.getItemCount() < TEMP_MAX_ITEMS) {  // denial of service
             //dummy item
             MovieItem movieItem = mListMovie.get(rnd.nextInt(mListMovie.size()));
@@ -154,10 +153,6 @@ public class MainActivity extends AppCompatActivity {
     //test!!!
     private int counter = 1;
 
-    private enum MOVIE_TYPE {
-        POPULAR, NOWDAYS, TOPRATED, GENRES
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -165,26 +160,16 @@ public class MainActivity extends AppCompatActivity {
         String s;
         try {
 
-            if (MovieUtils.isMapGenreEmpty()) {  // load MapGenre
-                s = makeSearch(this, MOVIE_TYPE.GENRES, 0, null);  //
-                MovieUtils.setGenres(s);
-
-            }
-
             if (itemThatWasClickedId == R.id.action_search) {
-                s = makeSearch(this, MOVIE_TYPE.NOWDAYS, counter++, null);
-
-
-                List<MovieItem> list = MovieUtils.getPageList(s);
-                int page = MovieUtils.getPageNumber(s);
-                int total = MovieUtils.getPageTotal(s);
-                int n = MovieUtils.getItemTotal(s);
-                int code = MovieUtils.getStatusCode(s);
+                s = NetworkUtils.makeSearch(new NetworkData(QUERY_TYPE.NOWDAYS, counter++));
+                List<MovieItem> list = ParseUtils.getPageList(s);
+                int page = ParseUtils.getPageNumber(s);
+                int total = ParseUtils.getPageTotal(s);
+                int n = ParseUtils.getItemTotal(s);
+                int code = ParseUtils.getStatusCode(s);
 
                 Toast.makeText(this, "POPULAR: " + page + " " + total + " " + n + " "
                         + " " + code + " " + s, Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-
                 return true;
             }
             if (itemThatWasClickedId == R.id.item_menu2) {
@@ -207,43 +192,52 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String mResult;
 
-    private String makeSearch(Context context, MOVIE_TYPE type, int page, String lang) throws Exception {
-        URL url = NetworkUtils.buildUrl(type.ordinal(), page, lang);
-        return new MovieTask().execute(url).get();
-    }
-
-    private boolean loadGenreMap() {
-        if (MovieUtils.isMapGenreEmpty()) {  // load MapGenre
-            String s = null;  //
-            try {
-                s = makeSearch(this, MOVIE_TYPE.GENRES, 0, null);
-            } catch (Exception e) {
-                return false;
-            }
-            if (s == null) {
-                return false;
-            }
-            MovieUtils.setGenres(s);
+    private boolean loadGenre() {
+        if (!ParseUtils.isMapGenreEmpty()) {     // load MapGenre
+            return true;
         }
-        return true;
-    }
-
-    private List<MovieItem> loadPage(Context context, MOVIE_TYPE type, int page) {
-        String s;
         try {
-            s = makeSearch(context, type, page, null);
+            String s = NetworkUtils.makeSearch(new NetworkData(QUERY_TYPE.GENRES));
+            return ParseUtils.setGenres(s);
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
         }
-        if (s == null) {
-            return null;
-        }
-        return MovieUtils.getPageList(s);
+        return false;
+
     }
+
+    private List<MovieItem> loadMovie(QUERY_TYPE type, int page) {
+        try {
+            String s = NetworkUtils.makeSearch(new NetworkData(type, page));
+            return ParseUtils.getPageList(s);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private List<ReviewItem> loadReview(int page, int id) {
+        try {
+            String s = NetworkUtils.makeSearch(new NetworkData(QUERY_TYPE.REVIEW, page, id));
+            return ParseUtils.getReviewList(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public void sendIntent(MovieItem movieItem, boolean flag) {
+        // load list review here
+        List<ReviewItem> listReview = movieItem.getListReview();
+        if (listReview == null || listReview.isEmpty()) {
+            listReview = loadReview(PAGE_FIRST, movieItem.getId());  // always first page
+            movieItem.setListReview(listReview);
+        }
+
         Intent intent = new Intent(this, ChildActivity.class);
         intent.putExtra(MovieItem.class.getCanonicalName(), movieItem);  // как вариант
         if (flag) {
@@ -251,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         startActivity(intent);
-
         Log.v(TAG, "sent parcelable movie:" + movieItem.getTitle());
     }
+
 
 //    public boolean isOnline() {
 //        ConnectivityManager cm =
@@ -261,4 +255,5 @@ public class MainActivity extends AppCompatActivity {
 //        NetworkInfo netInfo = cm.getActiveNetworkInfo();
 //        return netInfo != null && netInfo.isConnectedOrConnecting();
 //    }
+
 }

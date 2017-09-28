@@ -101,6 +101,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
             } else {
                 Picasso.with(itemView.getContext()).load(movieItem.getPosterLow()).into(mIcon);
                 mRating.setText(movieItem.getRating());
+
                 mYear.setText(movieItem.getReleaseYear());
             }
         }

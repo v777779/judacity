@@ -7,11 +7,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
-import ru.vpcb.rgdownload.utils.MovieUtils;
+import ru.vpcb.rgdownload.utils.ParseUtils;
 
 /**
  * Created by V1 on 23-Sep-17.
@@ -51,7 +56,7 @@ public class MovieItem implements Parcelable {
     private String originTitle;
     private List<Integer> listGenreID;
     private List<String> listGenres;
-    private List<Integer> listReviewID;
+
     private String posterHighRes;
     private String posterLowRes;
     private String backDropPath;
@@ -59,6 +64,8 @@ public class MovieItem implements Parcelable {
     private String overview;
     private String releaseDate;
     private boolean valid;
+    private List<ReviewItem>  listReview;
+
 
     public MovieItem(JSONObject json) {
         valid = parser(json);
@@ -83,6 +90,8 @@ public class MovieItem implements Parcelable {
         overview = in.readString();
         releaseDate = in.readString();
         valid = in.readByte() != 0;
+        listReview = in.createTypedArrayList(ReviewItem.CREATOR);
+
     }
 
     public static final Creator<MovieItem> CREATOR = new Creator<MovieItem>() {
@@ -121,7 +130,7 @@ public class MovieItem implements Parcelable {
             for (int i = 0; i < jsonArray.length(); i++) {
                 int genreId = jsonArray.getInt(i);
                 listGenreID.add(genreId);
-                listGenres.add(MovieUtils.getGenre(genreId));
+                listGenres.add(ParseUtils.getGenre(genreId));
             }
 
             backDropPath = json.getString(KEY_BACKDROP_PATH);
@@ -199,11 +208,7 @@ public class MovieItem implements Parcelable {
         return listGenres;
     }
 
-    public List<Integer> getListReviewID() {
-        return listReviewID;
-    }
-
-    public String getPosterHighRes() {
+     public String getPosterHighRes() {
         return posterHighRes;
     }
 
@@ -225,6 +230,7 @@ public class MovieItem implements Parcelable {
     public String getBackDropLow() {
         return getBackDrop(KEY_POSTER_LOW);
     }
+
     public String getBackDropMid() {
         return getBackDrop(KEY_POSTER_MID);
     }
@@ -248,15 +254,43 @@ public class MovieItem implements Parcelable {
 
     public String getReleaseYear() {
         String regex = "\\d{4}-\\d{2}-\\d{2}";
-        if (Pattern.compile(regex).matcher(releaseDate).matches()) {
-            return releaseDate.substring(0, 4);
+        if (!Pattern.compile(regex).matcher(releaseDate).matches()) {
+            return "unknown";
+        }
+        return releaseDate.substring(0, 4);
+    }
+
+    public String getReleaseDateVerbose() {
+        String regex = "\\d{4}-\\d{2}-\\d{2}";
+        if (!Pattern.compile(regex).matcher(releaseDate).matches()) {
+            return "unknown";
         }
 
-        return "";
+        if (releaseDate != null && !releaseDate.isEmpty()) {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(releaseDate);
+                return DateFormat.getDateInstance().format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return "unknown";
     }
 
     public String getRating() {
+        if (voteAverage <= 0) {
+            return String.format("%4s", "");
+        }
         return String.format("%2.1f", voteAverage);
+    }
+
+
+    public List<ReviewItem> getListReview() {
+        return listReview;
+    }
+
+    public void setListReview(List<ReviewItem> listReview) {
+        this.listReview = listReview;
     }
 
 
@@ -284,5 +318,6 @@ public class MovieItem implements Parcelable {
         parcel.writeString(overview);
         parcel.writeString(releaseDate);
         parcel.writeByte((byte) (valid ? 1 : 0));
+        parcel.writeTypedList(listReview);
     }
 }

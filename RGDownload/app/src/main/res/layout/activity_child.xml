@@ -97,8 +97,6 @@
                 android:layout_marginRight="8dp"
                 android:background="@android:color/darker_gray" />
 
-
-
                 <TextView
                     android:id="@+id/movie_synopsis"
                     android:layout_width="wrap_content"
@@ -106,16 +104,13 @@
 
                     android:text="Synopsis"
                     android:textStyle="bold"
-                    android:textAllCaps="true"
+                    android:textAllCaps="false"
                     android:padding="8dp"
-                    android:layout_gravity="center"
+                    android:layout_gravity="left"
                     android:textColor="#3a3a3a"
                     android:fontFamily="sans-serif-light"
                     android:textSize="20sp"
                     />
-
-
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -141,12 +136,45 @@
                 />
             />
 
+
+            <LinearLayout
+                android:id="@+id/movie_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@android:color/darker_gray"
+
+                    />
+                <TextView
+                    android:id="@+id/reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="left"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="8dp"
+                    android:text="Reviews"
+                    android:textAllCaps="false"
+                    android:textColor="#3a3a3a"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_margin="8dp"
                 android:background="@android:color/darker_gray"
-
                 />
 
         </LinearLayout>

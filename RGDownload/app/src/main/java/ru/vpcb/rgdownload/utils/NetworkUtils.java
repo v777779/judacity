@@ -26,58 +26,77 @@ import java.net.URL;
 import java.util.Scanner;
 
 import ru.vpcb.rgdownload.BuildConfig;
+import ru.vpcb.rgdownload.MovieTask;
 
 /**
  * These utilities will be used to communicate with the network.
  */
 public class NetworkUtils {
-
     private static final String MOVIE_BASE = "https://api.themoviedb.org/3/";
-    private static final String[] MOVIE_QUERY = (
-                      "movie/popular,"
-                    + "movie/now_playing,"
-                    + "movie/top_rated,"
-                    + "genre/movie/list")
-            .split(",");
+    private static final String[] MOVIE_QUERY = {
+            "movie/popular",
+            "movie/now_playing",
+            "movie/top_rated",
+            "genre/movie/list",
+            "movie/*id*/reviews"
+
+    };
+
     private static final String MOVIE_KEY = "?api_key=" + BuildConfig.MOVIE_DB_API_KEY;
     private static final String MOVIE_LANG = "&language=";
     private static final String MOVIE_PAGE = "&page=";
 
 
-    private static Uri getURI(int type, int page, String lang) {
-        if (type < 0 || type >= MOVIE_QUERY.length) {
-            throw new IndexOutOfBoundsException();
-        }
-        if (page < 0) {
-            throw new IllegalArgumentException();
-        }
-        if (lang == null || lang.length() == 0) {
-            lang = "en_US";
-        }
-        if (page > 0) {
-            return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
-        } else {
-            return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang);
+    private static Uri getURI(NetworkData networkData) {
+        int type = networkData.getType();
+        int page = networkData.getPage();
+        String lang = networkData.getLang();
+        switch (type) {
+            case 0:
+            case 1:
+            case 2:
+                Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
+            case 3:
+                return Uri.parse(MOVIE_BASE + MOVIE_QUERY[type] + MOVIE_KEY + MOVIE_LANG + lang);
+            case 4:
+                String sMovieQuery = MOVIE_QUERY[type].replace("*id*", "" + networkData.getId());
+                return Uri.parse(MOVIE_BASE + sMovieQuery + MOVIE_KEY + MOVIE_LANG + lang + MOVIE_PAGE + page);
+            default:
+                return null;
         }
     }
 
 
     /**
-     * @param type search query for MovieItem Database
-     * @param page page number for MovieItem Database
-     * @param lang language for MovieItem Database  for null used default en_US value
+     * @param networkData NetworkData object with parameters of query
      * @return URL object or null
      */
-    public static URL buildUrl(int type, int page, String lang) {
-        URL url = null;
+    public static URL buildUrl(NetworkData networkData) {
         try {
-            url = new URL(getURI(type, page, lang).toString());
+            Uri uri = getURI(networkData);
+            if (uri == null) {
+                return null;
+            }
+            return new URL(uri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        return url;
+        return null;
     }
 
+    /**
+     *
+     * @param networkData  NetworkData class object with parameters of query
+     * @return  String object if success or null in other case
+     * @throws Exception
+     */
+    public static String makeSearch(NetworkData networkData) throws Exception {
+        URL url = NetworkUtils.buildUrl(networkData);
+        if(url == null) {
+            return  null;
+        }
+        return new MovieTask().execute(url).get();
+    }
 
     /**
      * This method returns the entire result from the HTTP response.
@@ -110,8 +129,6 @@ public class NetworkUtils {
             urlConnection.disconnect();
         }
     }
-
-
 
 
 }
