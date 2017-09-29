@@ -25,22 +25,20 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static Random rnd = new Random();
-    private static int BASE_ID_TEXTVIEW = 8000;
-    private static int BASE_ID_RECYCLEVIEW = 8200;
-    private static int SCALE_SLIDER = 8;
 
-    private static final int TEXT_MARGIN = 16;
+    private static final int BASE_ID_RECYCLEVIEW = 8200;
 
-    private final static float DP_HEIGHT_LOW = 480;
+    private static final int PAGE_NUMBER_MAX = 3;
     private final static float COLUMN_WIDTH_HIGH = 200;
     private final static float DP_WIDTH_LOW = 400;
     private final static float DP_WIDTH_MID = 800;
 
+
     private final static float COLUMN_WIDTH_LOW = 150;
     private final static int MAX_COLUMNS = 6;
     private final static int MIN_COLUMNS = 2;
-    private final static int TEMP_MAX_ITEMS = 25;  //size if content
-    private static final int PAGE_NUMBER_MAX = 3;
+
+
     private static final int[] BUTTON_IDS = new int[]{
             R.id.button_001, R.id.button_002, R.id.button_003
     };
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater liAddActionBar = LayoutInflater.from(this);
         View customActionBar;
         int menu_id = R.layout.r_layout_low;
-        int dpWidth = getDpWidth();
+        int dpWidth = (int) getDpWidth();
         if (dpWidth >= DP_WIDTH_LOW) {
             menu_id = R.layout.r_layout_mid;
         }
@@ -150,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
+
             @Override
             public void onPageSelected(int position) {
                 if (lastPos != position) {
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        recyclerView.setId(View.generateViewId() + BASE_ID_TEXTVIEW);
+        recyclerView.setId(View.generateViewId() + BASE_ID_RECYCLEVIEW);
         recyclerView.setLayoutParams(lp);
 
         List<Flavor> list = getFlavorList(20, arrayFlavors);
@@ -202,17 +201,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private int getDpWidth() {
+    private float getDpWidth() {
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
-        return dp.widthPixels;
+        return dp.widthPixels / dp.density;
     }
 
     private int getNumberOfColumns(Context context) {
-        DisplayMetrics dp = context.getResources().getDisplayMetrics();
-        float dpWidth = dp.widthPixels / dp.density;
+//        DisplayMetrics dp = context.getResources().getDisplayMetrics();
+        float dpWidth = getDpWidth(); // dp.widthPixels / dp.density;
         int nColumns;
-        if (dp.heightPixels <= DP_HEIGHT_LOW) {
+        if (dpWidth <= DP_WIDTH_MID) {
             nColumns = (int) (dpWidth / COLUMN_WIDTH_LOW);
         } else {
             nColumns = (int) (dpWidth / COLUMN_WIDTH_HIGH);

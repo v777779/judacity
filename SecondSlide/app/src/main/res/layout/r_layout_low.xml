@@ -24,12 +24,11 @@
                 android:id="@+id/button_001"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/pop_name"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-
+                android:gravity="center"
                 android:fontFamily="sans-serif-light"
-                android:gravity="center_vertical"
-                android:text="POPULAR"
+                android:background="@android:color/transparent"
                 android:textSize="16sp"
                 android:textStyle="bold"
 
@@ -39,25 +38,24 @@
                 android:id="@+id/button_002"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/now_name"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-
-                android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:text="NOWDAYS"
+                android:fontFamily="sans-serif-light"
+                android:background="@android:color/transparent"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
             <TextView
                 android:id="@+id/button_003"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/top_name"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-
-                android:fontFamily="sans-serif-light"
                 android:gravity="center"
-                android:text="TOPRATED"
+                android:fontFamily="sans-serif-light"
+                android:background="@android:color/transparent"
                 android:textSize="16sp"
                 android:textStyle="bold"
 

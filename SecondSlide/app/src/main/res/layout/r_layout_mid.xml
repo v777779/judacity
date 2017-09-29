@@ -24,24 +24,26 @@
                 android:id="@+id/button_001"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-
                 android:layout_marginRight="48dp"
+                android:text="@string/pop_name"
+                android:gravity="center"
+                android:fontFamily="sans-serif-light"
                 android:background="@android:color/transparent"
-                android:gravity="center|center_vertical"
-                android:text="POPULAR"
                 android:textSize="18sp"
                 android:textStyle="bold"
+
+
                 />
 
             <TextView
                 android:id="@+id/button_002"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-
                 android:layout_marginRight="48dp"
+                android:text="@string/now_name"
+                android:gravity="center"
+                android:fontFamily="sans-serif-light"
                 android:background="@android:color/transparent"
-                android:gravity="center|center_vertical"
-                android:text="NOW DAYS"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />
@@ -51,15 +53,13 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-
-
+                android:text="@string/top_name"
+                android:gravity="center"
+                android:fontFamily="sans-serif-light"
                 android:background="@android:color/transparent"
-                android:gravity="center|center_vertical"
-                android:onClick="switchToBurnOffGraphsFragment"
-
-                android:text="TOP RATED"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                />
 
 
         </LinearLayout>
