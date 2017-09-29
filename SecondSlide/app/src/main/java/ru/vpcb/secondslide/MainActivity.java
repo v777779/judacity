@@ -8,13 +8,10 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PAGE_NUMBER_MAX = 3;
     private final static float COLUMN_WIDTH_HIGH = 200;
     private final static float DP_WIDTH_LOW = 400;
-    private final static float DP_WIDTH_MID = 800;
+    private final static float DP_WIDTH_MID = 720;
 
 
     private final static float COLUMN_WIDTH_LOW = 150;
@@ -64,81 +61,25 @@ public class MainActivity extends AppCompatActivity {
             new Flavor("Lollipop", "5.0-5.1.1", R.drawable.lollipop),
     };
 
-
-    private ClickListener mClickListener;
     private List<TextView> mTextViewList;
 
-    private class ClickListener implements View.OnClickListener {
-        private Context context;
-
-        private ClickListener(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void onClick(View v) {
-            String s = "";
-            for (int i = 0; i < mTextViewList.size(); i++) {
-                TextView textView = mTextViewList.get(i);
-
-                if (textView.getId() == v.getId()) {
-                    textView.setTextColor(Color.WHITE);
-                    viewPager.setCurrentItem(i);
-
-                } else {
-                    textView.setTextColor(Color.GRAY);
-                }
-            }
-            Toast.makeText(context, ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mSpan = getNumberOfColumns(this);
 
+        activeMenuLoader();
+        viewPagerLoader();
+    }
+
+    private void viewPagerLoader() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         List<View> listPager = new ArrayList<>();
         listPager.add(getFlaforRecycleView(viewPager));
         listPager.add(getFlaforRecycleView(viewPager));
         listPager.add(getFlaforRecycleView(viewPager));
-
-
-//menu loader
-        android.support.v7.app.ActionBar abMainMenu = this.getSupportActionBar();
-        abMainMenu.setDisplayShowCustomEnabled(true);
-        LayoutInflater liAddActionBar = LayoutInflater.from(this);
-        View customActionBar;
-        int menu_id = R.layout.r_layout_low;
-        int dpWidth = (int) getDpWidth();
-        if (dpWidth >= DP_WIDTH_LOW) {
-            menu_id = R.layout.r_layout_mid;
-        }
-        if (dpWidth >= DP_WIDTH_MID) {
-            menu_id = R.layout.r_layout_high;
-        }
-        customActionBar = liAddActionBar.inflate(menu_id, null);
-        abMainMenu.setCustomView(customActionBar);
-
-
-        mTextViewList = new ArrayList<>();
-        mClickListener = new ClickListener(this);
-        for (int i = 0; i < BUTTON_IDS.length; i++) {
-            TextView textView = customActionBar.findViewById(BUTTON_IDS[i]);
-            textView.setOnClickListener(mClickListener);
-            if (i == 0) {
-                textView.setTextColor(Color.WHITE);
-            } else {
-                textView.setTextColor(Color.GRAY);
-            }
-            mTextViewList.add(textView);
-        }
-
-// menu loader
-
 
         ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(listPager);
         viewPager.setAdapter(listPagerAdapter);
@@ -164,8 +105,62 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+
     }
 
+    private int getMenuId() {
+        DisplayMetrics dp = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dp);
+        int dpWidth = (int) (dp.widthPixels / dp.density);
+        if (dp.widthPixels > dp.heightPixels) {
+            dpWidth = (int) (dp.heightPixels / dp.density);
+        }
+        int menu_id = R.layout.active_bar_low;
+
+        if (dpWidth >= DP_WIDTH_LOW) {
+            menu_id = R.layout.active_bar_mid;
+        }
+        if (dpWidth >= DP_WIDTH_MID) {
+            menu_id = R.layout.active_bar_high;
+        }
+        return menu_id;
+    }
+
+    private void activeMenuLoader() {
+        //menu loader
+        android.support.v7.app.ActionBar abMainMenu = this.getSupportActionBar();
+        abMainMenu.setDisplayShowCustomEnabled(true);
+        LayoutInflater liAddActionBar = LayoutInflater.from(this);
+        View customActionBar;
+
+        customActionBar = liAddActionBar.inflate(getMenuId(), null);
+        abMainMenu.setCustomView(customActionBar);
+        mTextViewList = new ArrayList<>();
+
+        for (int i = 0; i < BUTTON_IDS.length; i++) {
+            TextView textView = customActionBar.findViewById(BUTTON_IDS[i]);
+            textView.setTextColor(Color.GRAY);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0; i < mTextViewList.size(); i++) {
+                        TextView textView = mTextViewList.get(i);
+                        if (textView.getId() == view.getId()) {
+                            textView.setTextColor(Color.WHITE);
+                            viewPager.setCurrentItem(i);
+
+                        } else {
+                            textView.setTextColor(Color.GRAY);
+                        }
+                    }
+                }
+            });
+            mTextViewList.add(textView);
+        }
+        mTextViewList.get(0).setTextColor(Color.WHITE);
+// menu loader
+    }
 
     private RecyclerView getFlaforRecycleView(View parent) {
 
