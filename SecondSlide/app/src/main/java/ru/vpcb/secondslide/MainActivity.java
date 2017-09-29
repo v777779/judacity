@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int TEXT_MARGIN = 16;
 
-    private final static float COLUMN_WIDTH_HIGH = 200;
     private final static float DP_HEIGHT_LOW = 480;
+    private final static float COLUMN_WIDTH_HIGH = 200;
+    private final static float DP_WIDTH_LOW = 400;
+    private final static float DP_WIDTH_MID = 800;
+
     private final static float COLUMN_WIDTH_LOW = 150;
     private final static int MAX_COLUMNS = 6;
     private final static int MIN_COLUMNS = 2;
@@ -59,20 +63,40 @@ public class MainActivity extends AppCompatActivity {
             new Flavor("KitKat", "4.4-4.4.4", R.drawable.kitkat),
             new Flavor("Lollipop", "5.0-5.1.1", R.drawable.lollipop),
     };
-    private String[] arrayText = "MENU1 MENU2 MENU3".split(" ");
 
+
+    private ClickListener mClickListener;
+    private List<TextView> mTextViewList;
+
+    private class ClickListener implements View.OnClickListener {
+        private Context context;
+
+        private ClickListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String s = "";
+            for (TextView textView : mTextViewList) {
+                if (textView.getId() == v.getId()) {
+                    textView.setTextColor(Color.WHITE);
+                } else {
+                    textView.setTextColor(Color.GRAY);
+                }
+            }
+            Toast.makeText(context, ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mSpan = getNumberOfColumns(this);
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-
         List<View> listPager = new ArrayList<>();
         listPager.add(getFlaforRecycleView(viewPager));
         listPager.add(getFlaforRecycleView(viewPager));
@@ -80,38 +104,67 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-// fill linear view
-        mLinearView = (LinearLayout) findViewById(R.id.linear_view);
-        mListText = addTextViewList(mLinearView, arrayText);
+//menu loader
+        android.support.v7.app.ActionBar abMainMenu = this.getSupportActionBar();
+        abMainMenu.setDisplayShowCustomEnabled(true);
+        LayoutInflater liAddActionBar = LayoutInflater.from(this);
+
+        DisplayMetrics dp = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dp);
+        View customActionBar;
+        int menu_id = R.layout.r_layout_low;
+        int dpWidth = (int) (dp.widthPixels / dp.density);
+        if (dpWidth >= DP_WIDTH_LOW) {
+            menu_id = R.layout.r_layout_mid;
+        }
+        if (dpWidth >= DP_WIDTH_MID) {
+            menu_id = R.layout.r_layout_high;
+        }
+        customActionBar = liAddActionBar.inflate(menu_id, null);
+        abMainMenu.setCustomView(customActionBar);
 
 
 
+        int[] buttons = new int[]{R.id.button_001, R.id.button_002, R.id.button_003};
+
+        // final TextView actionBarSearch = (TextView) findViewById(R.id.miBluetoothConnection);
+        // actionBarSearch.setText("SEARCH");
+        mTextViewList = new ArrayList<>();
+        mClickListener = new ClickListener(this);
+        for (int i = 0; i < buttons.length; i++) {
+            TextView textView = customActionBar.findViewById(buttons[i]);
+            textView.setOnClickListener(mClickListener);
+            if (i == 0) {
+                textView.setTextColor(Color.WHITE);
+            } else {
+                textView.setTextColor(Color.GRAY);
+            }
+            mTextViewList.add(textView);
+        }
+
+// menu loader
 
 
         ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(listPager);
         viewPager.setAdapter(listPagerAdapter);
         viewPager.setCurrentItem(lastPos);
-        mListText.get(lastPos).setTextColor(Color.WHITE);
+
 
         viewPager.setOffscreenPageLimit(3);  //    ATTENTION  Prevents Adapter Exception
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-
-//                Log.v(TAG, " pos:" + position + " off:" + positionOffset + " x:" + mSize);
             }
 
             @Override
             public void onPageSelected(int position) {
                 if (lastPos != position) {
                     if (lastPos >= 0) {
-                        mListText.get(lastPos).setTextColor(Color.BLACK);
+                        mTextViewList.get(lastPos).setTextColor(Color.GRAY);
                     }
-                    mListText.get(position).setTextColor(Color.WHITE);
+                    mTextViewList.get(position).setTextColor(Color.WHITE);
                     lastPos = position;
                 }
-
             }
 
             @Override
@@ -121,19 +174,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    private class ClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            for (int i = 0; i < mLinearView.getChildCount(); i++) {
-                View childView = mLinearView.getChildAt(i);
-                if (childView.equals(view)) {                   // selected view found
-                    viewPager.setCurrentItem(i);                // выбрать заданный
-                }
-            }
-        }
-    }
 
     private RecyclerView getFlaforRecycleView(View parent) {
 
@@ -146,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutParams(lp);
 
         List<Flavor> list = getFlavorList(20, arrayFlavors);
-
 
 
         final GridLayoutManager mLayoutManager = new GridLayoutManager(this,
@@ -165,33 +204,6 @@ public class MainActivity extends AppCompatActivity {
         List<Flavor> list = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             list.add(array[rnd.nextInt(array.length)]);
-        }
-        return list;
-    }
-
-    private List<TextView> addTextViewList(View parent, String[] array) {
-        List<TextView> list = new ArrayList<>();
-
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,                                      // width
-                ViewGroup.LayoutParams.WRAP_CONTENT                                        // height
-        );
-        lp.setMargins(TEXT_MARGIN, TEXT_MARGIN, TEXT_MARGIN, TEXT_MARGIN);
-
-        for (int i = 0; i < array.length; i++) {
-            TextView textView = new TextView(parent.getContext()); // setContentView
-            textView.setId(View.generateViewId() + BASE_ID_TEXTVIEW);  // generate ID
-            textView.setLayoutParams(lp);
-
-            textView.setText(array[i]);
-            textView.setTextColor(Color.BLACK);
-            textView.setClickable(true);
-            textView.setOnClickListener(new ClickListener());
-            textView.setGravity(Gravity.CENTER);
-            textView.setWidth((int) (getDpWidth() / arrayText.length - TEXT_MARGIN * 2));
-//            textView.setPadding(16, 16, 16, 16);
-            list.add(textView);
-            mLinearView.addView(textView);
         }
         return list;
     }
