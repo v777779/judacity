@@ -67,21 +67,24 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);                                     // item size fixed
         mFlavorAdapter = new FlavorAdapter(this, listFlavors, mSpan);  //context  and data
         mRecyclerView.setAdapter(mFlavorAdapter);
-// scrolled listener
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) {
-                    int v = mLayoutManager.getChildCount();
-                    int p = mLayoutManager.findFirstVisibleItemPosition();
-                    int total = mLayoutManager.getItemCount();
 
-                    if (v + p >= total) {
-                        loadPage();
-                    }
-                }
-            }
-        });
+
+
+// scrolled listener
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                if (dy > 0) {
+//                    int v = mLayoutManager.getChildCount();
+//                    int p = mLayoutManager.findFirstVisibleItemPosition();
+//                    int total = mLayoutManager.getItemCount();
+//
+//                    if (v + p >= total) {
+//                        loadPage();
+//                    }
+//                }
+//            }
+//        });
 
 
     }

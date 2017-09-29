@@ -26,9 +26,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.fragment_main);
+        setContentView(R.layout.page_main);
 
 
         LayoutInflater inflater = LayoutInflater.from(this);
+
+
         View pageView = inflater.inflate(R.layout.fragment_main, null);
 
 
@@ -97,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         listPager.add(listView3);
 
 
-        setContentView(R.layout.page_main);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         mListText = new ArrayList<>();

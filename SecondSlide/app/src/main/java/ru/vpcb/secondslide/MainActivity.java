@@ -5,21 +5,19 @@ import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -27,18 +25,27 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static Random rnd = new Random();
     private static int BASE_ID_TEXTVIEW = 8000;
-    private static int BASE_ID_LISTVEW = 8200;
+    private static int BASE_ID_RECYCLEVIEW = 8200;
     private static int SCALE_SLIDER = 8;
-    private static int SIZE_SLIDER_TEXT = 40;
+
     private static final int TEXT_MARGIN = 16;
-    private AdapterFlavor mAdapterFlavor;
-    private AdapterFlavor mAdapterFlavor2;
+
+    private final static float COLUMN_WIDTH_HIGH = 200;
+    private final static float DP_HEIGHT_LOW = 480;
+    private final static float COLUMN_WIDTH_LOW = 150;
+    private final static int MAX_COLUMNS = 6;
+    private final static int MIN_COLUMNS = 2;
+    private final static int TEMP_MAX_ITEMS = 25;  //size if content
+
+
     private List<TextView> mListText;
     private int lastPos;
     private ViewPager viewPager;
     private LinearLayout mLinearView;
-    private HorizontalScrollView mScrollView;
-    private int mSize;
+
+    private RecyclerView mRecyclerView;
+    private int mSpan;
+
 
     private Flavor[] arrayFlavors = {
             new Flavor("Cupcake", "1.5", R.drawable.cupcake),
@@ -58,27 +65,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main_);
+        setContentView(R.layout.activity_main);
+        mSpan = getNumberOfColumns(this);
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View pageView = inflater.inflate(R.layout.fragment_main, null);
+
+
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
 
         List<View> listPager = new ArrayList<>();
-        listPager.add(getFlaforListView(pageView, arrayFlavors));
-        listPager.add(getFlaforListView(pageView, arrayFlavors));
-        listPager.add(getFlaforListView(pageView, arrayFlavors));
+        listPager.add(getFlaforRecycleView(viewPager));
+        listPager.add(getFlaforRecycleView(viewPager));
+        listPager.add(getFlaforRecycleView(viewPager));
 
-        setContentView(R.layout.page_main);
-        View rootView = findViewById(android.R.id.content);
+
 
 // fill linear view
         mLinearView = (LinearLayout) findViewById(R.id.linear_view);
         mListText = addTextViewList(mLinearView, arrayText);
 
-        mScrollView = getScrollView(rootView);
-        mSize = getDpWidth()*SCALE_SLIDER;  // scrollView slider length
 
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+
+
+
         ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(listPager);
         viewPager.setAdapter(listPagerAdapter);
         viewPager.setCurrentItem(lastPos);
@@ -88,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                double scrollX = position * mSize + mSize * positionOffset;
-                mScrollView.smoothScrollTo((int) (scrollX / 4), 0);
+
+
 //                Log.v(TAG, " pos:" + position + " off:" + positionOffset + " x:" + mSize);
             }
 
@@ -102,15 +111,16 @@ public class MainActivity extends AppCompatActivity {
                     mListText.get(position).setTextColor(Color.WHITE);
                     lastPos = position;
                 }
-//                Log.v(this.getClass().getSimpleName(), " sel:" + position);
+
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-//                Log.v(this.getClass().getSimpleName(), " state:" + state);
+
             }
         });
     }
+
 
     private class ClickListener implements View.OnClickListener {
 
@@ -125,20 +135,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private RecyclerView getFlaforRecycleView(View parent) {
 
-    private ListView getFlaforListView(View parent, Flavor[] array) {
-        ListView listView = new ListView(parent.getContext());
+        RecyclerView recyclerView = new RecyclerView(parent.getContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        listView.setId(View.generateViewId() + BASE_ID_TEXTVIEW);
-        listView.setLayoutParams(lp);
-        List<Flavor> list = getFlavorList(rnd.nextInt(20) + 5, array);           //5..25
+        recyclerView.setId(View.generateViewId() + BASE_ID_TEXTVIEW);
+        recyclerView.setLayoutParams(lp);
 
-        AdapterFlavor adapterFlavor = new AdapterFlavor(parent.getContext(), list);
-        listView.setAdapter(adapterFlavor);
-        return listView;
+        List<Flavor> list = getFlavorList(20, arrayFlavors);
+
+
+
+        final GridLayoutManager mLayoutManager = new GridLayoutManager(this,
+                mSpan,
+                GridLayoutManager.VERTICAL,
+                false);
+
+        recyclerView.setLayoutManager(mLayoutManager);                       // connect to LayoutManager
+        recyclerView.setHasFixedSize(true);                                  // item size fixed
+        FlavorAdapter mFlavorAdapter = new FlavorAdapter(this, list, mSpan);  //context  and data
+        recyclerView.setAdapter(mFlavorAdapter);
+        return recyclerView;
     }
 
     private List<Flavor> getFlavorList(int n, Flavor[] array) {
@@ -177,26 +197,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private HorizontalScrollView getScrollView(View parent) {
-        HorizontalScrollView hScrollView = parent.findViewById(R.id.scroll_view);
-
-        TextView sliderText = hScrollView.findViewById(R.id.slider_text);
-        sliderText.setTextSize(SIZE_SLIDER_TEXT);
-
-        int n = (int)( (double) getDpWidth() * SCALE_SLIDER / sliderText.getTextSize()); // n of virtual chars
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < n; i++) {
-            sb.append("#");
-        }
-        sliderText.setText(sb.toString());
-        return hScrollView;
-    }
-
     private int getDpWidth() {
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
         return dp.widthPixels;
     }
 
+    private int getNumberOfColumns(Context context) {
+        DisplayMetrics dp = context.getResources().getDisplayMetrics();
+        float dpWidth = dp.widthPixels / dp.density;
+        int nColumns;
+        if (dp.heightPixels <= DP_HEIGHT_LOW) {
+            nColumns = (int) (dpWidth / COLUMN_WIDTH_LOW);
+        } else {
+            nColumns = (int) (dpWidth / COLUMN_WIDTH_HIGH);
+        }
+        if (nColumns > MAX_COLUMNS) {
+            nColumns = MAX_COLUMNS;
+        }
+        if (nColumns < MIN_COLUMNS) {
+            nColumns = MIN_COLUMNS;
+        }
+        return nColumns;
+
+    }
 }
