@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private final static int MAX_COLUMNS = 6;
     private final static int MIN_COLUMNS = 2;
     private final static int TEMP_MAX_ITEMS = 25;  //size if content
-
-
+    private static final int PAGE_NUMBER_MAX = 3;
+    private static final int[] BUTTON_IDS = new int[]{
+            R.id.button_001, R.id.button_002, R.id.button_003
+    };
     private List<TextView> mListText;
     private int lastPos;
     private ViewPager viewPager;
@@ -78,9 +80,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             String s = "";
-            for (TextView textView : mTextViewList) {
+            for (int i = 0; i < mTextViewList.size(); i++) {
+                TextView textView = mTextViewList.get(i);
+
                 if (textView.getId() == v.getId()) {
                     textView.setTextColor(Color.WHITE);
+                    viewPager.setCurrentItem(i);
+
                 } else {
                     textView.setTextColor(Color.GRAY);
                 }
@@ -103,17 +109,13 @@ public class MainActivity extends AppCompatActivity {
         listPager.add(getFlaforRecycleView(viewPager));
 
 
-
 //menu loader
         android.support.v7.app.ActionBar abMainMenu = this.getSupportActionBar();
         abMainMenu.setDisplayShowCustomEnabled(true);
         LayoutInflater liAddActionBar = LayoutInflater.from(this);
-
-        DisplayMetrics dp = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dp);
         View customActionBar;
         int menu_id = R.layout.r_layout_low;
-        int dpWidth = (int) (dp.widthPixels / dp.density);
+        int dpWidth = getDpWidth();
         if (dpWidth >= DP_WIDTH_LOW) {
             menu_id = R.layout.r_layout_mid;
         }
@@ -124,15 +126,10 @@ public class MainActivity extends AppCompatActivity {
         abMainMenu.setCustomView(customActionBar);
 
 
-
-        int[] buttons = new int[]{R.id.button_001, R.id.button_002, R.id.button_003};
-
-        // final TextView actionBarSearch = (TextView) findViewById(R.id.miBluetoothConnection);
-        // actionBarSearch.setText("SEARCH");
         mTextViewList = new ArrayList<>();
         mClickListener = new ClickListener(this);
-        for (int i = 0; i < buttons.length; i++) {
-            TextView textView = customActionBar.findViewById(buttons[i]);
+        for (int i = 0; i < BUTTON_IDS.length; i++) {
+            TextView textView = customActionBar.findViewById(BUTTON_IDS[i]);
             textView.setOnClickListener(mClickListener);
             if (i == 0) {
                 textView.setTextColor(Color.WHITE);
@@ -148,14 +145,11 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(listPager);
         viewPager.setAdapter(listPagerAdapter);
         viewPager.setCurrentItem(lastPos);
-
-
-        viewPager.setOffscreenPageLimit(3);  //    ATTENTION  Prevents Adapter Exception
+        viewPager.setOffscreenPageLimit(PAGE_NUMBER_MAX);  //    ATTENTION  Prevents Adapter Exception
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
-
             @Override
             public void onPageSelected(int position) {
                 if (lastPos != position) {
@@ -169,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
