@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">SecondSlide</string>
-    <string name="icon_desc">IMage Description</string>
-    <string name="pop_name">POPULAR</string>
-    <string name="now_name">NOWDAYS</string>
-    <string name="top_name">TOPRATED</string>
-</resources>
