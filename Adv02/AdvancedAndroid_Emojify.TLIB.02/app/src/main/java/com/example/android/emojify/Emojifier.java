@@ -24,10 +24,16 @@ public class Emojifier {
         int nFaces = 0;
         String message;
 
+//        FaceDetector detector = new FaceDetector.Builder(context)
+//                .setTrackingEnabled(false)
+//                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+//                .build();
+
         FaceDetector detector = new FaceDetector.Builder(context)
                 .setTrackingEnabled(false)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
+
         Frame frame = new Frame.Builder().setBitmap(bitmap).build();
         SparseArray<Face> faces = detector.detect(frame);
 
