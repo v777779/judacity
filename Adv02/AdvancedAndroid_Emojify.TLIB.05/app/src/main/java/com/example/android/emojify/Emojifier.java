@@ -232,13 +232,12 @@ class Emojifier {
 //        int cx = (int) (faceMinX + (float) (faceMaxX - faceMinX) / 2);
 //        int cy = (int) (faceMinY + (float) (faceMaxY - faceMinY) / 2);
 //        canvas.drawCircle(cx, cy, 5, paint);
-        int cx = -1;
-        int cy = -1;
+
 
         for (Landmark landmark : face.getLandmarks()) {
             if (landmark.getType() == Landmark.NOSE_BASE) {
-                cx = (int) (landmark.getPosition().x - emojiScaled.getWidth() * 0.5);
-                cy = (int) (landmark.getPosition().y - emojiScaled.getHeight() * 0.75);
+                int cx = (int) (landmark.getPosition().x - emojiScaled.getWidth() * 0.5);
+                int cy = (int) (landmark.getPosition().y - emojiScaled.getHeight() * 0.75);
                 canvas.drawBitmap(emojiScaled, cx, cy, null);
             }
         }
@@ -246,8 +245,7 @@ class Emojifier {
 
 //        float cx =   (face.getPosition().x + face.getWidth() / 2) - emojiScaled.getWidth() / 2;
 //        float cy =   (face.getPosition().y + face.getHeight() / 2) - emojiScaled.getHeight() / 3;
-
-        canvas.drawBitmap(emojiScaled, cx, cy, null);
+//        canvas.drawBitmap(emojiScaled, cx, cy, null);
 
         return backCopy;
     }
