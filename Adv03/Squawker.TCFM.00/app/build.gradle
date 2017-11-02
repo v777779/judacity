@@ -19,22 +19,33 @@ android {
         }
     }
 }
+repositories {
+    // ...
+    maven {
+        url "https://maven.google.com" // Google's Maven repository
+    }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
 
     // RecyclerView
-    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.android.support:recyclerview-v7:25.2.0'
 
     // Schematic dependencies for ContentProvider
     apt 'net.simonvt.schematic:schematic-compiler:0.6.3'
     compile 'net.simonvt.schematic:schematic:0.6.3'
 
     // Preferences Dependencies
-    compile 'com.android.support:preference-v7:25.1.0'
+    compile 'com.android.support:preference-v7:25.2.0'
+
+    compile 'com.google.firebase:firebase-core:11.4.0'
+    compile 'com.google.firebase:firebase-messaging:11.4.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
