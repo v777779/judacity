@@ -35,8 +35,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import timber.log.Timber;
+
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static boolean isTimberTree = false;
 
     private static String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID_MESSAGES = 0;
@@ -86,8 +90,22 @@ public class MainActivity extends AppCompatActivity implements
         // Start the loader
         getSupportLoaderManager().initLoader(LOADER_ID_MESSAGES, null, this);
 
+        if(!isTimberTree) {
+            Timber.plant(new Timber.DebugTree());
+            isTimberTree = true;
+        }
+
         // TODO (1) Get the test data here from the extras bundle that came with this intent.
         // To confirm that the data was passed in, make sure to show the data in a log statement.
+//        if(savedInstanceState != null && savedInstanceState.containsKey("test")) {
+//            Timber.d("Contains: "+savedInstanceState.getString("test"));
+//
+//        }
+
+         Bundle  extras = getIntent().getExtras();
+        if(extras!= null && extras.containsKey("test")) {
+            Timber.d("Contains extras: "+extras.getString("test"));
+        }
 
     }
 
@@ -120,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
         // This method generates a selection off of only the current followers
         String selection = SquawkContract.createSelectionForCurrentFollowers(
                 PreferenceManager.getDefaultSharedPreferences(this));
-        Log.d(LOG_TAG, "Selection is " + selection);
+        Timber.d(LOG_TAG, "Selection is " + selection);
         return new CursorLoader(this, SquawkProvider.SquawkMessages.CONTENT_URI,
                 MESSAGES_PROJECTION, selection, null, SquawkContract.COLUMN_DATE + " DESC");
     }

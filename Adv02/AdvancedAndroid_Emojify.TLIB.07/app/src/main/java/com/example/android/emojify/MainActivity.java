@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO (2): Set up Timber
         Timber.plant(new Timber.DebugTree());
+
+        Timber.d("checkOncreate())");
     }
 
     /**
