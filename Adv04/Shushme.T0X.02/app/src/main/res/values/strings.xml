@@ -8,4 +8,8 @@
     <string name="settings_label">Settings</string>
     <string name="location_permissions">Location Permissions</string>
     <string name="enable_geofences">Enable Geofences</string>
+    <string name="google_exception">GoogleException %1$s</string>
+    <string name="google_no_selected">No place selected</string>
+    <string name="google_place">Selected place: %1$s address: %2$s</string>
+    <string name="content_no_inserted">No place inserted to DB</string>
 </resources>
