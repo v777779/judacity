@@ -16,6 +16,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            buildConfigField 'String', 'PLACES_API_KEY', PLACES_API_KEY
+            buildConfigField 'String', 'MOVIE_DB_API_KEY', MOVIE_DB_API_KEY
+            manifestPlaceholders = [
+                    GOOGLE_PLACES_API_KEY:PLACES_API_KEY
+
+            ]
+        }
     }
 }
 
@@ -25,7 +33,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.google.android.gms:play-services-places:9.8.0'
     compile 'com.google.android.gms:play-services-location:9.8.0'
     testCompile 'junit:junit:4.12'
