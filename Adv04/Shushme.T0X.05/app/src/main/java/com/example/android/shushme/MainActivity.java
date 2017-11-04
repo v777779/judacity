@@ -116,9 +116,10 @@ public class MainActivity extends AppCompatActivity implements
                 .addApi(Places.GEO_DATA_API)
                 .enableAutoManage(this, this)
                 .build();
-
         mGeofencing = new Geofencing(this, mClient);
 
+//        Log.d(TAG,BuildConfig.PLACES_API_KEY);
+//        Log.d(TAG,BuildConfig.MOVIE_DB_API_KEY);
     }
 
     /***

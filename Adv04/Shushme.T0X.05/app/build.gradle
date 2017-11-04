@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+def GPS_API_KEY = PLACES_API_KEY
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -20,9 +20,11 @@ android {
             buildConfigField 'String', 'PLACES_API_KEY', PLACES_API_KEY
             buildConfigField 'String', 'MOVIE_DB_API_KEY', MOVIE_DB_API_KEY
             manifestPlaceholders = [
-                    GOOGLE_PLACES_API_KEY:PLACES_API_KEY
-
+                    GOOGLE_PLACES_API_KEY:PLACES_API_KEY,
+                    GPS_API_KEY:GPS_API_KEY,
             ]
+            resValue "string", "places_api_key",PLACES_API_KEY  // выбор для манифеста
+
         }
     }
 }
