@@ -22,4 +22,7 @@
     <string name="notification_text">Press play to hear the piece!</string>
     <string name="sample_list_load_error">Error loading one or more samples!</string>
     <string name="sample_not_found_error">Sample not found!</string>
+    <string name="media_callback_play">Media Session Callback onPlay()</string>
+    <string name="media_callback_pause">Media Session Callback onPause()</string>
+    <string name="media_callback_prev">Media Session Callback onSkipToPrevious()</string>
 </resources>
