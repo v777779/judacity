@@ -31,6 +31,14 @@
         </activity>
         <activity android:name=".QuizActivity"
             android:launchMode="singleTop"/>
+
+        <receiver android:name=".QuizActivity$MediaPlayback">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+
+        </receiver>
+
     </application>
 
 </manifest>
