@@ -22,4 +22,6 @@
     <string name="notification_text">Press play to hear the piece!</string>
     <string name="sample_list_load_error">Error loading one or more samples!</string>
     <string name="sample_not_found_error">Sample not found!</string>
+    <string name="player_state_play">Player is playing</string>
+    <string name="player_state_pause">Player is paused</string>
 </resources>
