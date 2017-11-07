@@ -1,0 +1,39 @@
+rmdir /s /q MyGarden.TWID.00\.git
+rmdir /s /q MyGarden.TWID.00\.gradle
+rmdir /s /q MyGarden.TWID.00\.idea
+rmdir /s /q MyGarden.TWID.00\build
+rmdir /s /q MyGarden.TWID.00\app\build
+
+rmdir /s /q MyGarden.TWID.01\.git
+rmdir /s /q MyGarden.TWID.01\.gradle
+rmdir /s /q MyGarden.TWID.01\.idea
+rmdir /s /q MyGarden.TWID.01\build
+rmdir /s /q MyGarden.TWID.01\app\build
+
+rmdir /s /q MyGarden.TWID.02\.git
+rmdir /s /q MyGarden.TWID.02\.gradle
+rmdir /s /q MyGarden.TWID.02\.idea
+rmdir /s /q MyGarden.TWID.02\build
+rmdir /s /q MyGarden.TWID.02\app\build
+
+rmdir /s /q MyGarden.TWID.03\.git
+rmdir /s /q MyGarden.TWID.03\.gradle
+rmdir /s /q MyGarden.TWID.03\.idea
+rmdir /s /q MyGarden.TWID.03\build
+rmdir /s /q MyGarden.TWID.03\app\build
+
+rmdir /s /q MyGarden.TWID.04\.git
+rmdir /s /q MyGarden.TWID.04\.gradle
+rmdir /s /q MyGarden.TWID.04\.idea
+rmdir /s /q MyGarden.TWID.04\build
+rmdir /s /q MyGarden.TWID.04\app\build
+
+rmdir /s /q MyGarden.TWID.05\.git
+rmdir /s /q MyGarden.TWID.05\.gradle
+rmdir /s /q MyGarden.TWID.05\.idea
+rmdir /s /q MyGarden.TWID.05\build
+rmdir /s /q MyGarden.TWID.05\app\build
+
+
+
+pause
