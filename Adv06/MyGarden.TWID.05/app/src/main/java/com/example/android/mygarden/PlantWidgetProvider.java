@@ -67,7 +67,8 @@ public class PlantWidgetProvider extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, imgRes, plantId, showWater, appWidgetId);
         }
     }
-//TODO additional changes
+
+    //TODO additional changes
     public static RemoteViews getSinglePlantRemoteView(Context context, int imgRes,
                                                        long plantId, boolean showWater) {
         Intent intent;
@@ -101,9 +102,24 @@ public class PlantWidgetProvider extends AppWidgetProvider {
     }
 
     private static RemoteViews getGardenGridRemoteView(Context context) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
+        Intent serviceIntent = new Intent(context, GridWidgetService.class);
+        views.setRemoteAdapter(R.id.widget_grid_view,serviceIntent);
 
-        return null;
+        Intent activityIntent = new Intent(context, PlantDetailActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                activityIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        views.setPendingIntentTemplate(R.id.widget_grid_view, pendingIntent);
+        views.setEmptyView(R.id.widget_grid_view, R.id.empty_view);
+
+        return views;
     }
+
     //TODO additional changes
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
