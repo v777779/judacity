@@ -99,7 +99,7 @@ class ImageDownloader {
                 if (callback != null) {
                     callback.onDone(mTeas);
                     if (idlingResource != null) {
-                        idlingResource.setIdleState(true);
+                        idlingResource.setIdleState(true);  // for test purposes
                     }
                 }
             }
