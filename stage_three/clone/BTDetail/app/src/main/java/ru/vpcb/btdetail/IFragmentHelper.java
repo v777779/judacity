@@ -7,6 +7,6 @@ import java.util.List;
  */
 
 public interface IFragmentHelper {
-    void onCLick(int position);
+    void onCallback(int position);
     List<String> getList();
 }

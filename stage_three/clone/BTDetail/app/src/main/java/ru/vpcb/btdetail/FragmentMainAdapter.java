@@ -27,7 +27,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     @Override
     public FCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = mInflater.inflate(R.layout.fragment_main_recycler_item, parent, false);
+        View itemView = mInflater.inflate(R.layout.fragment_main_item, parent, false);
 
         return new FCViewHolder(itemView);
     }
@@ -44,7 +44,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHelper.onCLick(position);
+                mHelper.onCallback(position);
             }
         });
 

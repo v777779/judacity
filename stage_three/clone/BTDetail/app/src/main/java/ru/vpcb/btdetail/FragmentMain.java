@@ -59,23 +59,27 @@ public class FragmentMain extends Fragment implements IFragmentHelper {
     }
 
     @Override
-    public void onCLick(int position) {
+    public void onCallback(int position) {
 //        Toast.makeText(getContext(),"Clicked position: "+position,Toast.LENGTH_SHORT).show();
-        Snackbar.make(getView(), "Clicked position: "+position, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+
 
         FragmentDetail detailFragment = new FragmentDetail();
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.fragment_middle_container, detailFragment)
+                .replace(R.id.fragment_container, detailFragment)
                 .addToBackStack(null)
                 .commit();
 
+        Snackbar.make(getView(), "Clicked position: " + position + " stack: " +
+                fragmentManager.getBackStackEntryCount(), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override
     public List<String> getList() {
         return new ArrayList<>(mCardList);
     }
+
+
 }

@@ -22,14 +22,14 @@ public class FragmentData {
 
     private static final String[] details = new String[] {
             "Recipe Ingredients",
-            "Recipe Purple Step 1",
-            "Recipe Orange Card 2",
-            "Recipe White  Card 3",
-            "Recipe Red    Card 4",
-            "Recipe Yellow Card 5",
-            "Recipe Green  Card 6",
-            "Recipe Black  Card 7",
-            "Recipe Blue   Card 8"
+            "Details Purple Step 1",
+            "Details Orange Step 2",
+            "Details White  Step 3",
+            "Details Red    Step 4",
+            "Details Yellow Step 5",
+            "Details Green  Step 6",
+            "Details Black  Step 7",
+            "Details Blue   Step 8"
     };
 
 

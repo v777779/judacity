@@ -11,40 +11,55 @@ import java.util.List;
 
 
 public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAdapter.FCViewHolder> {
+
+    private static final int COLLAPSED_TYPE = 0;
+    private static final int EXPANDED_TYPE = 1;
     private List<String> mList;
     private Context mContext;
     private LayoutInflater mInflater;
     private IFragmentHelper mHelper;
+    private boolean isExpanded;
+
 
     public FragmentDetailAdapter(Context context, IFragmentHelper helper) {
         mContext = context;
         mHelper = helper;
         mList = mHelper.getList();
         mInflater = LayoutInflater.from(context);
+        isExpanded = false;
     }
 
 
     @Override
     public FCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = mInflater.inflate(R.layout.fragment_detail_recycler_item, parent, false);
+        int itemLayoutID;
+        if (isExpanded && viewType == EXPANDED_TYPE) {
+            itemLayoutID = R.layout.fragment_detail_item_exp;
+        } else {
+            itemLayoutID = R.layout.fragment_detail_item;
+        }
+//        itemLayoutID = R.layout.fragment_detail_item;
+        View itemView = mInflater.inflate(itemLayoutID, parent, false);
 
-        return new FCViewHolder(itemView);
+        return new FCViewHolder(itemView, viewType);
     }
 
     @Override
     public void onBindViewHolder(FCViewHolder holder, final int position) {
-        String s;
-        if (mList == null || mList.isEmpty() || position < 0 || position > mList.size() - 1) {
-            s = "Empty Card";
-        } else {
-            s = mList.get(position);
-        }
-        holder.fill(s);
+
+
+        holder.fill(position, holder.getItemViewType());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHelper.onCLick(position);
+                if (position == 0) {
+                    isExpanded = !isExpanded;
+                    notifyDataSetChanged();
+                } else {
+
+                    mHelper.onCallback(position);
+                }
             }
         });
 
@@ -56,18 +71,45 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
         return mList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (isExpanded && position == 0) {
+            return EXPANDED_TYPE;
+        } else {
+            return COLLAPSED_TYPE;
+        }
+    }
 
     class FCViewHolder extends RecyclerView.ViewHolder {
         private final TextView mText;
+        private final TextView mText2;
 
-
-        public FCViewHolder(View itemView) {
+        public FCViewHolder(View itemView, int viewType) {
             super(itemView);
-            mText = (TextView) itemView.findViewById(R.id.fc_recycler_text);
+            if (isExpanded && viewType == EXPANDED_TYPE) {
+                mText = itemView.findViewById(R.id.fc_recycler_wide_text);
+                mText2 = null;
+            } else {
+                mText = itemView.findViewById(R.id.fc_recycler_text);
+                mText2 = itemView.findViewById(R.id.fc_recycler_text2);
+            }
         }
 
-        private void fill(String s) {
-            mText.setText(s);
+        private void fill(int position, int viewType) {
+            String s;
+            if (mList == null || mList.isEmpty() || position < 0 || position > mList.size() - 1) {
+                s = "Empty Card";
+            } else {
+                s = mList.get(position);
+            }
+            if (isExpanded && viewType == EXPANDED_TYPE) {
+                mText.setText(s);
+            } else {
+                mText.setText(s);
+                if (position == 0) {
+                    mText2.setText("Click to Expand");
+                }
+            }
         }
 
     }

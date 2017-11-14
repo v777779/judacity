@@ -23,7 +23,7 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
     private List<String> mCardList;
     private RecyclerView mRecyclerView;
-    private FragmentMainAdapter mRecyclerAdapter;
+    private FragmentDetailAdapter mRecyclerAdapter;
     private int mSpan;
 
     public FragmentDetail() {
@@ -44,8 +44,8 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
 
         mRecyclerView.setLayoutManager(layoutManager);                          // connect to LayoutManager
-        mRecyclerView.setHasFixedSize(true);                                    // item size fixed
-        mRecyclerAdapter = new FragmentMainAdapter(rootView.getContext(), this);     //context  and data
+        mRecyclerView.setHasFixedSize(false);                                    // item size fixed
+        mRecyclerAdapter = new FragmentDetailAdapter(rootView.getContext(), this);     //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
 
@@ -59,18 +59,20 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     }
 
     @Override
-    public void onCLick(int position) {
-        Toast.makeText(getContext(),"Clicked position: "+position,Toast.LENGTH_SHORT).show();
+    public void onCallback(int position) {
+//        Toast.makeText(getContext(), "Clicked position: " + position, Toast.LENGTH_SHORT).show();
 //        Snackbar.make(getView(), "Clicked position: "+position, Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
 
-        FragmentMain mainFragment = new FragmentMain();
-
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentPlayer playerFragment = new FragmentPlayer();
         fragmentManager.beginTransaction()
-                .replace(R.id.fragment_bottom_container, mainFragment)
+                .replace(R.id.fragment_container, playerFragment)
                 .addToBackStack(null)
                 .commit();
+
+        Toast.makeText(getContext(), "Clicked position: " + position + " stack: " +
+                fragmentManager.getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
 
     }
 
