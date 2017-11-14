@@ -1,4 +1,4 @@
-package ru.vpcb.btmain;
+package ru.vpcb.btdetail;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,14 +10,16 @@ import android.widget.TextView;
 import java.util.List;
 
 
-public class FCAdapter extends RecyclerView.Adapter<FCAdapter.FCViewHolder> {
+public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapter.FCViewHolder> {
     private List<String> mList;
     private Context mContext;
     private LayoutInflater mInflater;
+    private IFragmentHelper mHelper;
 
-    public FCAdapter(Context context, List<String> list) {
+    public FragmentMainAdapter(Context context, IFragmentHelper helper) {
         mContext = context;
-        mList = list;
+        mHelper = helper;
+        mList = mHelper.getList();
         mInflater = LayoutInflater.from(context);
     }
 
@@ -31,7 +33,7 @@ public class FCAdapter extends RecyclerView.Adapter<FCAdapter.FCViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(FCViewHolder holder, int position) {
+    public void onBindViewHolder(FCViewHolder holder, final int position) {
         String s;
         if (mList == null || mList.isEmpty() || position < 0 || position > mList.size() - 1) {
             s = "Empty Card";
@@ -39,6 +41,12 @@ public class FCAdapter extends RecyclerView.Adapter<FCAdapter.FCViewHolder> {
             s = mList.get(position);
         }
         holder.fill(s);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHelper.onCLick(position);
+            }
+        });
 
     }
 

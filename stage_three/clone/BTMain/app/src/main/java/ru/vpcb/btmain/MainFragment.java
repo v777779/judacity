@@ -33,7 +33,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
 
-        final View rootView = inflater.inflate(R.layout.fc_recycler, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_main_recycler, container, false);
         mCardList = FormatData.loadMockCards(); // load mock data
 
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);

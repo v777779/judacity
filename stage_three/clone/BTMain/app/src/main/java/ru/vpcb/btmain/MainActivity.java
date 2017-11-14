@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         if(isStatic) {
             setContentView(R.layout.fragment_main);  // static version
         }else {
-            setContentView(R.layout.fc_recycler);  // static version
+            setContentView(R.layout.fragment_main_recycler);  // static version
             if(savedInstanceState == null) {
 
                 MainFragment mainFragment = new MainFragment();
