@@ -44,9 +44,7 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
     public FCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView;
-        if (viewType == CHILD_TYPE) {
-            itemView = mInflater.inflate(R.layout.fragment_detail_child, parent, false);
-        } else if (viewType == EXPANDED_TYPE) {
+        if (viewType == EXPANDED_TYPE) {
             itemView = mInflater.inflate(R.layout.fragment_detail_item, parent, false);
             ImageView imageLeft = itemView.findViewById(R.id.circle_expand_left);
             ImageView imageRight = itemView.findViewById(R.id.circle_expand_right);
@@ -57,14 +55,12 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
             if (isExpanded) {
                 imageLeft.setScaleY(-1);  // flip horizontal
                 imageRight.setScaleY(-1);  // flip horizontal
-
-            }
-             else       {
+                itemView.findViewById(R.id.fc_recycler_detail_child).setVisibility(View.VISIBLE);
+            } else {
                 imageLeft.setScaleY(1);  // flip horizontal
                 imageRight.setScaleY(1);
+                itemView.findViewById(R.id.fc_recycler_detail_child).setVisibility(View.GONE);
             }
-
-
         } else {
             itemView = mInflater.inflate(R.layout.fragment_detail_item, parent, false);
         }
@@ -81,16 +77,8 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
                 if (position == 0) {
                     isExpanded = !isExpanded;
-                    if (isExpanded) {  // new state expanded
-                        mItemList.add(position + 1, mItemList.get(position).getChild());
-                        notifyItemRangeInserted(position + 1, 1);
-                    } else {
-                        mItemList.remove(position + 1);
-                        notifyItemRangeRemoved(position + 1, 1);
-                    }
-                    notifyItemRangeChanged(position, mItemList.size());
+                    notifyItemChanged(position);
                 } else {
-                    if (isExpanded && position < 2) return; // skip ingreients
                     mHelper.onCallback(position);
 
                 }
@@ -117,13 +105,9 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
-            if (viewType == CHILD_TYPE) {
-                mText = itemView.findViewById(R.id.fc_recycler_text);
-                mText2 = null;
-            } else {
-                mText = itemView.findViewById(R.id.fc_recycler_text);
-                mText2 = itemView.findViewById(R.id.fc_recycler_text2);
-            }
+            mText = itemView.findViewById(R.id.fc_recycler_text);
+            mText2 = itemView.findViewById(R.id.fc_recycler_text2);
+
         }
 
         private void fill(int position, int viewType) {
