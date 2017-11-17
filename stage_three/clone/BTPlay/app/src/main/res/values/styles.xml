@@ -9,7 +9,7 @@
 
         <item name="colorPrimary">#dda062</item>
         <item name="colorPrimaryDark">#b57021</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">#cbcbce</item>
 
     </style>
 
