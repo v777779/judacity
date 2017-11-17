@@ -16,4 +16,7 @@ public interface IFragmentHelper {
     List<String> getList();
     List<FragmentDetailItem> getItemList();
     RecyclerView getRecycler();
+    int getSpan();
+    int getSpanHeight();
+
 }

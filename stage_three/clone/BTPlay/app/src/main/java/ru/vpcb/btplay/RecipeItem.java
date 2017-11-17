@@ -57,7 +57,7 @@ public class RecipeItem {
     }
 
     public String getName() {
-        return name.trim().toLowerCase();
+        return name;
     }
 
     public String getSource() {

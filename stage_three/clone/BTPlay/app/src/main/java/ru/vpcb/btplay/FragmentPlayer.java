@@ -74,4 +74,14 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     public RecyclerView getRecycler() {
         return null;
     }
+
+    @Override
+    public int getSpan() {
+        return 0;
+    }
+
+    @Override
+    public int getSpanHeight() {
+        return 0;
+    }
 }

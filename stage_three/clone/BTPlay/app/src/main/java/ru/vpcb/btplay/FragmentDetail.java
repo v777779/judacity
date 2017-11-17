@@ -94,4 +94,14 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     public RecyclerView getRecycler() {
         return mRecyclerView;
     }
+
+    @Override
+    public int getSpan() {
+        return 0;
+    }
+
+    @Override
+    public int getSpanHeight() {
+        return 0;
+    }
 }

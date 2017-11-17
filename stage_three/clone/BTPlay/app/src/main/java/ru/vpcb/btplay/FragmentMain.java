@@ -9,8 +9,10 @@ import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +44,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     private List<String> mList;
     private RecyclerView mRecyclerView;
     private FragmentMainAdapter mRecyclerAdapter;
-    private int mSpan;
+
     private LoaderUri mLoader;
     private LoaderDb mLoaderDb;
 
@@ -79,16 +81,78 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         mList = FragmentData.loadMockCards();                               // load mock data
 
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        setDisplayMetrics();
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), mSpan);
         mRecyclerView.setLayoutManager(layoutManager);                          // connect to LayoutManager
         mRecyclerView.setHasFixedSize(true);                                    // item size fixed
+
         mRecyclerAdapter = new FragmentMainAdapter(rootView.getContext(), this);     //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
         return rootView;
     }
 
+    private static final int LOW_WIDTH_PORTRAIT = 400;   //ok
+    private static final int LOW_WIDTH_LANDSCAPE = 550;  //ok
+    private static final int LOW_SCALE_PORTRAIT = 250;   //ok
+    private static final int LOW_SCALE_LANDSCAPE = 200;  // ok
+
+    private static final int MIDDLE_WIDTH_PORTRAIT = 600;
+    private static final int MIDDLE_WIDTH_LANDSCAPE = 850;
+    private static final int MIDDLE_SCALE_PORTRAIT = 200;
+    private static final int MIDDLE_SCALE_LANDSCAPE = 250;
+
+    private static final int HIGH_WIDTH_PORTRAIT = 800;
+    private static final int HIGH_WIDTH_LANDSCAPE = 1200;
+    private static final int HIGH_SCALE_PORTRAIT = 300;
+    private static final int HIGH_SCALE_LANDSCAPE = 350;
+
+    private static final int MAX_SPAN = 6;
+    private static final int MIN_SPAN = 1;
+    private static final int MIN_HEIGHT = 200;
+    private static final double SCALE_RATIO_PORTRAIT = 1.8;  // low_ok
+    private static final double SCALE_RATIO_LANDSCSAPE = 2.3; // low_ok
+
+    private int mSpan;
+    private int mSpanHeight;
+
+    private void setDisplayMetrics() {
+        DisplayMetrics dp = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
+        boolean isLand = dp.widthPixels > dp.heightPixels;
+        int width = (int)(dp.widthPixels/dp.density);
+
+        if(!isLand) {
+            mSpan = 1;
+            if(width > HIGH_WIDTH_PORTRAIT) {
+                mSpanHeight = (int)(HIGH_WIDTH_PORTRAIT/SCALE_RATIO_PORTRAIT);
+                mSpan = (int)(HIGH_WIDTH_PORTRAIT/HIGH_SCALE_PORTRAIT);
+            }else if (width > MIDDLE_WIDTH_PORTRAIT) {
+                mSpanHeight = (int) (MIDDLE_WIDTH_PORTRAIT / SCALE_RATIO_PORTRAIT);
+                mSpan = (int)(MIDDLE_WIDTH_PORTRAIT/MIDDLE_SCALE_PORTRAIT);
+            }else {
+                mSpanHeight = (int) (LOW_WIDTH_PORTRAIT / SCALE_RATIO_PORTRAIT);
+                mSpan = (int)(LOW_WIDTH_PORTRAIT/LOW_SCALE_PORTRAIT);
+            }
+        }else {
+            if(width > HIGH_WIDTH_LANDSCAPE) {
+                mSpanHeight = (int)(HIGH_WIDTH_LANDSCAPE/SCALE_RATIO_LANDSCSAPE);
+                mSpan = (int)(HIGH_WIDTH_LANDSCAPE/HIGH_SCALE_LANDSCAPE);
+            }else if (width > MIDDLE_WIDTH_LANDSCAPE) {
+                mSpanHeight = (int) (MIDDLE_WIDTH_LANDSCAPE / SCALE_RATIO_LANDSCSAPE);
+                mSpan = (int)(MIDDLE_WIDTH_LANDSCAPE/MIDDLE_SCALE_LANDSCAPE);
+            }else {
+                mSpanHeight = (int) (LOW_WIDTH_LANDSCAPE / SCALE_RATIO_LANDSCSAPE);
+                mSpan = (int)(LOW_WIDTH_LANDSCAPE/LOW_SCALE_LANDSCAPE);
+            }
+        }
+
+        if(mSpan < MIN_SPAN) mSpan = MIN_SPAN;
+        if(mSpan >MAX_SPAN)mSpan = MAX_SPAN;
+        if(mSpanHeight < MIN_HEIGHT) mSpanHeight = MIN_HEIGHT;
+
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -133,6 +197,16 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     @Override
     public RecyclerView getRecycler() {
         return null;
+    }
+
+    @Override
+    public int getSpan() {
+        return mSpan;
+    }
+
+    @Override
+    public int getSpanHeight() {
+        return mSpanHeight;
     }
 
 
