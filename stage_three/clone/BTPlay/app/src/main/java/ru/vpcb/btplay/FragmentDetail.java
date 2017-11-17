@@ -26,7 +26,7 @@ import ru.vpcb.btplay.utils.FragmentData;
 
 public class FragmentDetail extends Fragment implements IFragmentHelper {
 
-    private List<String> mCardList;
+    private List<FragmentDetailItem> mList;
     private RecyclerView mRecyclerView;
     private FragmentDetailAdapter mRecyclerAdapter;
     private int mSpan;
@@ -41,8 +41,7 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
 
         final View rootView = inflater.inflate(R.layout.fragment_detail_recycler, container, false);
-        mCardList = FragmentData.loadMockDetails();                               // load mock data
-
+        mList = FragmentData.loadMockDetails();                               // load mock data
 
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -83,6 +82,16 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
     @Override
     public List<String> getList() {
-        return new ArrayList<>(mCardList);
+        return null;
+    }
+
+    @Override
+    public List<FragmentDetailItem> getItemList() {
+        return new ArrayList<>(mList);
+    }
+
+    @Override
+    public RecyclerView getRecycler() {
+        return mRecyclerView;
     }
 }

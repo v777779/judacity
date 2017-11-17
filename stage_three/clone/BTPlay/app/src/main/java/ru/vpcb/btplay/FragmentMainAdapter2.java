@@ -1,7 +1,6 @@
 package ru.vpcb.btplay;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
-
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -19,20 +16,17 @@ import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
  * Email: vadim.v.voronov@gmail.com
  */
 
-public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapter.FCViewHolder> {
-
-
+public class FragmentMainAdapter2 extends RecyclerView.Adapter<FragmentMainAdapter2.FCViewHolder> {
+    private List<String> mList;
     private Context mContext;
     private LayoutInflater mInflater;
     private IFragmentHelper mHelper;
-    private Cursor mCursor;
 
-
-    public FragmentMainAdapter(Context context, IFragmentHelper helper) {
+    public FragmentMainAdapter2(Context context, IFragmentHelper helper) {
         mContext = context;
         mHelper = helper;
+        mList = mHelper.getList();
         mInflater = LayoutInflater.from(context);
-        mCursor = null;
     }
 
 
@@ -46,11 +40,13 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
     @Override
     public void onBindViewHolder(FCViewHolder holder, final int position) {
-
-        if (mCursor == null || position < 0 || position > mCursor.getCount() - 1) return;
-        mCursor.moveToPosition(position);
-
-        holder.fill();
+        String s;
+        if (mList == null || mList.isEmpty() || position < 0 || position > mList.size() - 1) {
+            s = "Empty Card";
+        } else {
+            s = mList.get(position);
+        }
+        holder.fill(s);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,18 +58,10 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
     @Override
     public int getItemCount() {
-        if (mCursor == null) return 0;
-        return mCursor.getCount();
+        if (mList == null) return 0;
+        return mList.size();
     }
 
-    public Cursor swapCursor(Cursor cursor) {
-        Cursor oldCursor = mCursor;
-        mCursor = cursor;
-        if (cursor != null) {
-            notifyDataSetChanged();
-        }
-        return oldCursor;
-    }
 
     class FCViewHolder extends RecyclerView.ViewHolder {
         private final TextView mText;
@@ -81,11 +69,11 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
         public FCViewHolder(View itemView) {
             super(itemView);
-            mText = itemView.findViewById(R.id.fc_recycler_text);
+            mText = (TextView) itemView.findViewById(R.id.fc_recycler_text);
         }
 
-        private void fill() {
-            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
+        private void fill(String s) {
+            mText.setText(s);
         }
 
     }

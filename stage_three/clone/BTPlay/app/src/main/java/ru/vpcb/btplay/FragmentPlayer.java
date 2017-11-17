@@ -64,4 +64,14 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     public List<String> getList() {
         return new ArrayList<>(mCardList);
     }
+
+    @Override
+    public List<FragmentDetailItem> getItemList() {
+        return null;
+    }
+
+    @Override
+    public RecyclerView getRecycler() {
+        return null;
+    }
 }

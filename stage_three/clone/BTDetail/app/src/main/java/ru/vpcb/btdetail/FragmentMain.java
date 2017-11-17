@@ -31,6 +31,12 @@ public class FragmentMain extends Fragment implements IFragmentHelper {
 
     }
 
+// loaders here
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

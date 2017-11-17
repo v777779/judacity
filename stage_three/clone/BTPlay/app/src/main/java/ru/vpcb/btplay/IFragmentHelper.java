@@ -1,5 +1,7 @@
 package ru.vpcb.btplay;
 
+import android.support.v7.widget.RecyclerView;
+
 import java.util.List;
 
 /**
@@ -12,4 +14,6 @@ import java.util.List;
 public interface IFragmentHelper {
     void onCallback(int position);
     List<String> getList();
+    List<FragmentDetailItem> getItemList();
+    RecyclerView getRecycler();
 }

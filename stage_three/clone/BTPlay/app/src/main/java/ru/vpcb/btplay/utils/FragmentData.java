@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ru.vpcb.btplay.FragmentDetailItem;
+
+import static ru.vpcb.btplay.utils.Constants.COLLAPSED_TYPE;
+import static ru.vpcb.btplay.utils.Constants.EXPANDED_TYPE;
+
 /**
  * Created by V1 on 13-Nov-17.
  */
 
 public class FragmentData {
-    private static final String[] cards = new String[] {
+    private static final String[] cards = new String[]{
             "Recipe Green   Card 1",
             "Recipe Blue    Card 2",
             "Recipe Red     Card 3",
@@ -20,7 +25,7 @@ public class FragmentData {
             "Recipe Orange  Card 8"
     };
 
-    private static final String[] details = new String[] {
+    private static final String[] details = new String[]{
             "Recipe Ingredients",
             "Details Purple Step 1",
             "Details Orange Step 2",
@@ -33,14 +38,17 @@ public class FragmentData {
     };
 
 
-
-    public static List<String>  loadMockCards() {
+    public static List<String> loadMockCards() {
 
         return new ArrayList<>(Arrays.asList(cards));
     }
 
-    public static List<String>  loadMockDetails() {
-
-        return new ArrayList<>(Arrays.asList(details));
+    public static List<FragmentDetailItem> loadMockDetails() {
+        List<FragmentDetailItem> list = new ArrayList<>();
+        for (int i = 0; i < details.length; i++) {
+            if (i == 0) list.add(new FragmentDetailItem(details[i], EXPANDED_TYPE));
+            else list.add(new FragmentDetailItem(details[i], COLLAPSED_TYPE));
+        }
+        return list;
     }
 }

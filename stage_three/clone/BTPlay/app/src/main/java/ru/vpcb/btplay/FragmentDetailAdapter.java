@@ -5,9 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+
+import static ru.vpcb.btplay.utils.Constants.CHILD_TYPE;
+import static ru.vpcb.btplay.utils.Constants.COLLAPSED_TYPE;
+import static ru.vpcb.btplay.utils.Constants.EXPANDED_TYPE;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -18,53 +23,82 @@ import java.util.List;
 
 public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAdapter.FCViewHolder> {
 
-    private static final int COLLAPSED_TYPE = 0;
-    private static final int EXPANDED_TYPE = 1;
-    private List<String> mList;
+    private List<FragmentDetailItem> mItemList;
     private Context mContext;
     private LayoutInflater mInflater;
     private IFragmentHelper mHelper;
     private boolean isExpanded;
-
+    private RecyclerView mParent;
 
     public FragmentDetailAdapter(Context context, IFragmentHelper helper) {
         mContext = context;
         mHelper = helper;
-        mList = mHelper.getList();
         mInflater = LayoutInflater.from(context);
         isExpanded = false;
+        mItemList = mHelper.getItemList();
+        mParent = helper.getRecycler();
     }
 
 
     @Override
     public FCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        int itemLayoutID;
-        if (isExpanded && viewType == EXPANDED_TYPE) {
-            itemLayoutID = R.layout.fragment_detail_item_exp;
+        View itemView;
+        if (viewType == CHILD_TYPE) {
+            itemView = mInflater.inflate(R.layout.fragment_detail_child, parent, false);
+        } else if (viewType == EXPANDED_TYPE) {
+            itemView = mInflater.inflate(R.layout.fragment_detail_item, parent, false);
+            ImageView imageLeft = itemView.findViewById(R.id.circle_expand_left);
+            ImageView imageRight = itemView.findViewById(R.id.circle_expand_right);
+
+            imageLeft.setVisibility(View.VISIBLE);
+            imageRight.setVisibility(View.VISIBLE);
+
+            if (isExpanded) {
+                imageLeft.setScaleY(-1);  // flip horizontal
+                imageRight.setScaleY(-1);  // flip horizontal
+
+            }
+             else       {
+                imageLeft.setScaleY(1);  // flip horizontal
+                imageRight.setScaleY(1);
+            }
+
+
         } else {
-            itemLayoutID = R.layout.fragment_detail_item;
+            itemView = mInflater.inflate(R.layout.fragment_detail_item, parent, false);
         }
-//        itemLayoutID = R.layout.fragment_detail_item;
-        View itemView = mInflater.inflate(itemLayoutID, parent, false);
 
         return new FCViewHolder(itemView, viewType);
     }
 
     @Override
-    public void onBindViewHolder(FCViewHolder holder, final int position) {
-
-
+    public void onBindViewHolder(final FCViewHolder holder, final int position) {
         holder.fill(position, holder.getItemViewType());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (position == 0) {
+//                    TransitionManager.beginDelayedTransition(mParent);  // делает пробелы при переходах
+
                     isExpanded = !isExpanded;
-                    notifyDataSetChanged();
+                    if (isExpanded) {  // new state expanded
+                        mItemList.add(position + 1, new FragmentDetailItem("Dummy Text", CHILD_TYPE));
+                        notifyItemRangeInserted(position + 1, 1);
+                    } else {
+                        mItemList.remove(position + 1);
+                        notifyItemRangeRemoved(position + 1, 1);
+                    }
+//                        notifyDataSetChanged();  // мгновенно убирает  и вставляет
+
+                    notifyItemRangeChanged(position, mItemList.size());
                 } else {
+                    if (isExpanded && position < 2) return; // skip ingreients
+
 
                     mHelper.onCallback(position);
+
                 }
             }
         });
@@ -73,17 +107,14 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
     @Override
     public int getItemCount() {
-        if (mList == null) return 0;
-        return mList.size();
+        if (mItemList == null) return 0;
+        return mItemList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (isExpanded && position == 0) {
-            return EXPANDED_TYPE;
-        } else {
-            return COLLAPSED_TYPE;
-        }
+        if (mItemList == null || mItemList.isEmpty()) return COLLAPSED_TYPE;
+        return mItemList.get(position).getType();
     }
 
     class FCViewHolder extends RecyclerView.ViewHolder {
@@ -92,7 +123,7 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
-            if (isExpanded && viewType == EXPANDED_TYPE) {
+            if (isExpanded && viewType == CHILD_TYPE) {
                 mText = itemView.findViewById(R.id.fc_recycler_wide_text);
                 mText2 = null;
             } else {
@@ -103,19 +134,11 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
         private void fill(int position, int viewType) {
             String s;
-            if (mList == null || mList.isEmpty() || position < 0 || position > mList.size() - 1) {
-                s = "Empty Card";
-            } else {
-                s = mList.get(position);
+            if (mItemList == null || mItemList.isEmpty() || position < 0 || position > mItemList.size() - 1) {
+                return;
             }
-            if (isExpanded && viewType == EXPANDED_TYPE) {
-                mText.setText(s);
-            } else {
-                mText.setText(s);
-                if (position == 0) {
-                    mText2.setText("<< Click to Expand >>");
-                }
-            }
+            s = mItemList.get(position).getName();
+            mText.setText(s);
         }
 
     }
