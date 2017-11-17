@@ -63,6 +63,8 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+// loaders here for dynamic fragments
+// loaders for static fragments can be in onViewCreated
         mLoader = new LoaderUri(getContext(), this);
         mLoaderDb = new LoaderDb(getContext(), this);
         if (NetworkData.isOnline(getContext())) {
