@@ -12,15 +12,16 @@ public class FragmentDetailItem {
 
     private final String name;
     private final int type;
+    private final FragmentDetailItem child;
 
-    public FragmentDetailItem(String name, int type) {
+    public FragmentDetailItem(String name, int type, FragmentDetailItem child) {
         this.name = name;
         this.type = type;
+        this.child = child;
     }
 
     public FragmentDetailItem(String name) {
-        this.name = name;
-        this.type = COLLAPSED_TYPE;
+        this(name, COLLAPSED_TYPE, null);
     }
 
     public String getName() {
@@ -29,5 +30,9 @@ public class FragmentDetailItem {
 
     public int getType() {
         return type;
+    }
+
+    public FragmentDetailItem getChild() {
+        return child;
     }
 }

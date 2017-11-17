@@ -80,23 +80,17 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
             public void onClick(View v) {
 
                 if (position == 0) {
-//                    TransitionManager.beginDelayedTransition(mParent);  // делает пробелы при переходах
-
                     isExpanded = !isExpanded;
                     if (isExpanded) {  // new state expanded
-                        mItemList.add(position + 1, new FragmentDetailItem("Dummy Text", CHILD_TYPE));
+                        mItemList.add(position + 1, mItemList.get(position).getChild());
                         notifyItemRangeInserted(position + 1, 1);
                     } else {
                         mItemList.remove(position + 1);
                         notifyItemRangeRemoved(position + 1, 1);
                     }
-//                        notifyDataSetChanged();  // мгновенно убирает  и вставляет
-
                     notifyItemRangeChanged(position, mItemList.size());
                 } else {
                     if (isExpanded && position < 2) return; // skip ingreients
-
-
                     mHelper.onCallback(position);
 
                 }
@@ -123,8 +117,8 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
-            if (isExpanded && viewType == CHILD_TYPE) {
-                mText = itemView.findViewById(R.id.fc_recycler_wide_text);
+            if (viewType == CHILD_TYPE) {
+                mText = itemView.findViewById(R.id.fc_recycler_text);
                 mText2 = null;
             } else {
                 mText = itemView.findViewById(R.id.fc_recycler_text);

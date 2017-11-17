@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ru.vpcb.btplay.FragmentDetail;
 import ru.vpcb.btplay.FragmentDetailItem;
 
+import static ru.vpcb.btplay.utils.Constants.CHILD_TYPE;
 import static ru.vpcb.btplay.utils.Constants.COLLAPSED_TYPE;
 import static ru.vpcb.btplay.utils.Constants.EXPANDED_TYPE;
 
@@ -14,7 +16,7 @@ import static ru.vpcb.btplay.utils.Constants.EXPANDED_TYPE;
  */
 
 public class FragmentData {
-    private static final String[] cards = new String[]{
+    private static String[] cards = new String[]{
             "Recipe Green   Card 1",
             "Recipe Blue    Card 2",
             "Recipe Red     Card 3",
@@ -25,7 +27,7 @@ public class FragmentData {
             "Recipe Orange  Card 8"
     };
 
-    private static final String[] details = new String[]{
+    private static String[] details = new String[]{
             "Recipe Ingredients",
             "Details Purple Step 1",
             "Details Orange Step 2",
@@ -36,7 +38,9 @@ public class FragmentData {
             "Details Black  Step 7",
             "Details Blue   Step 8"
     };
-
+    private static String[] childs = new String[]{
+            "Ingredients:"
+    };
 
     public static List<String> loadMockCards() {
 
@@ -46,8 +50,12 @@ public class FragmentData {
     public static List<FragmentDetailItem> loadMockDetails() {
         List<FragmentDetailItem> list = new ArrayList<>();
         for (int i = 0; i < details.length; i++) {
-            if (i == 0) list.add(new FragmentDetailItem(details[i], EXPANDED_TYPE));
-            else list.add(new FragmentDetailItem(details[i], COLLAPSED_TYPE));
+            if (i == 0) {
+                FragmentDetailItem childItem = new FragmentDetailItem(childs[i], CHILD_TYPE, null);
+                list.add(new FragmentDetailItem(details[i], EXPANDED_TYPE, childItem));
+            } else {
+                list.add(new FragmentDetailItem(details[i]));
+            }
         }
         return list;
     }

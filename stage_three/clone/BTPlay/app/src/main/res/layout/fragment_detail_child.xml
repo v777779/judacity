@@ -10,7 +10,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="0dp"
-
         app:cardBackgroundColor="@android:color/holo_orange_dark"
         >
 
@@ -21,10 +20,11 @@
             android:layout_margin="16dp">
 
             <TextView
-                android:id="@+id/fc_recycler_wide_text"
+                android:id="@+id/fc_recycler_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Header of Recipe"
+                android:gravity="center"
                 android:textAppearance="@style/TextHead"
                 android:layout_marginBottom="16dp"
                 />
