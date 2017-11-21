@@ -1,6 +1,7 @@
 package ru.vpcb.btplay.network;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -59,7 +60,8 @@ public class LoaderUri implements
 // stub for future
                         int type = args.getInt(BUNDLE_LOADER_RECIPE_ID);   //bundle.put()
 // network util
-                    URL url = NetworkData.buildUrl();
+//                    URL url = NetworkData.buildUrl();
+                    URL url = new URL(Uri.parse("http://www.umori.li/api/get?name=bash&num=50").toString());
                     String searchResult = NetworkData.getResponseFromHttpUrl(url);
 
                     Bundle bundle = new Bundle();
