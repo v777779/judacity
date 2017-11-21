@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
-import static ru.vpcb.btplay.utils.Constants.MAIN_IMAGE_IDS;
+//import static ru.vpcb.btplay.utils.Constants.MAIN_IMAGE_IDS;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -97,7 +97,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
         private void fill(int position) {
             mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
-            mImage.setImageResource(MAIN_IMAGE_IDS[position % MAIN_IMAGE_IDS.length]);
+//            mImage.setImageResource(MAIN_IMAGE_IDS[position % MAIN_IMAGE_IDS.length]);
         }
 
     }

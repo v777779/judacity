@@ -22,7 +22,7 @@
             android:id="@+id/fc_recycler_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/cakes_001"
+            android:src="@drawable/cakes_016"
             android:scaleType="centerCrop"
 
             />

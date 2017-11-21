@@ -49,13 +49,13 @@ public class Constants {
     public static final int COLLAPSED_TYPE = 0;
     public static final int EXPANDED_TYPE = 1;
     public static final int CHILD_TYPE = 2;
-    public static final int[] MAIN_IMAGE_IDS = new int[]{
-            R.drawable.cakes_002,
-            R.drawable.cakes_001,
-            R.drawable.cakes_005,
-            R.drawable.cakes_003,
-            R.drawable.cakes_004
-    };
+//    public static final int[] MAIN_IMAGE_IDS = new int[]{
+//            R.drawable.cakes_002,
+//            R.drawable.cakes_001,
+//            R.drawable.cakes_005,
+//            R.drawable.cakes_003,
+//            R.drawable.cakes_004
+//    };
 
 
     // network data

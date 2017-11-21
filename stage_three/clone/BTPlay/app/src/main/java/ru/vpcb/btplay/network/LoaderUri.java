@@ -60,8 +60,7 @@ public class LoaderUri implements
 // stub for future
                         int type = args.getInt(BUNDLE_LOADER_RECIPE_ID);   //bundle.put()
 // network util
-//                    URL url = NetworkData.buildUrl();
-                    URL url = new URL(Uri.parse("http://www.umori.li/api/get?name=bash&num=50").toString());
+                    URL url = NetworkData.buildUrl();
                     String searchResult = NetworkData.getResponseFromHttpUrl(url);
 
                     Bundle bundle = new Bundle();

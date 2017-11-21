@@ -52,7 +52,6 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     private LoaderDb mLoaderDb;
 
 
-
     // test!!!
     private Toast mToast;
 
@@ -97,37 +96,37 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
 // loaders
 
-         if (!NetworkData.isOnline(getContext())) {
-                   showError();
+        if (!NetworkData.isOnline(getContext())) {
+            showError();
         }
 
         return rootView;
     }
 
-    private static final int LOW_WIDTH_PORTRAIT = 350;   //ok
-    private static final int LOW_WIDTH_LANDSCAPE = 550;  //ok
-    private static final int LOW_SCALE_PORTRAIT = 250;   //ok
-    private static final int LOW_SCALE_LANDSCAPE = 200;  // ok
+    private static final int LOW_WIDTH_PORTRAIT = 350;   //
+    private static final int LOW_WIDTH_LANDSCAPE = 550;  //
+    private static final int LOW_SCALE_PORTRAIT = 300;   // dpi
+    private static final int LOW_SCALE_LANDSCAPE = 300;  //
+    private static final double LOW_RATIO_PORTRAIT = 1.8;       //
+    private static final double LOW_RATIO_LANDSCSAPE = 1.8;     //
 
-    private static final int MIDDLE_WIDTH_PORTRAIT = 400;
-    private static final int MIDDLE_WIDTH_LANDSCAPE = 600;
-    private static final int MIDDLE_SCALE_PORTRAIT = 250;
-    private static final int MIDDLE_SCALE_LANDSCAPE = 250;
+//    private static final int MIDDLE_WIDTH_PORTRAIT = 400;
+//    private static final int MIDDLE_WIDTH_LANDSCAPE = 600;
+//    private static final int MIDDLE_SCALE_PORTRAIT = 250;
+//    private static final int MIDDLE_SCALE_LANDSCAPE = 250;
+//    private static final double MIDDLE_RATIO_PORTRAIT = 1.8;    //
+//    private static final double MIDDLE_RATIO_LANDSCSAPE = 1.8;  //
 
-    private static final int HIGH_WIDTH_PORTRAIT = 750;
-    private static final int HIGH_WIDTH_LANDSCAPE = 1200;
-    private static final int HIGH_SCALE_PORTRAIT = 300;
-    private static final int HIGH_SCALE_LANDSCAPE = 300;
+    private static final int HIGH_WIDTH_PORTRAIT = 600;   // dpi
+    private static final int HIGH_WIDTH_LANDSCAPE = 900;  // dpi
+    private static final int HIGH_SCALE_PORTRAIT = 240;   // dpi
+    private static final int HIGH_SCALE_LANDSCAPE = 250;  // dpi
+    private static final double HIGH_RATIO_PORTRAIT = 1.8;      //
+    private static final double HIGH_RATIO_LANDSCSAPE = 1.8;    //
 
     private static final int MAX_SPAN = 6;
     private static final int MIN_SPAN = 1;
-    private static final int MIN_HEIGHT = 200;
-    private static final double LOW_RATIO_PORTRAIT = 1.8;  // low_ok
-    private static final double LOW_RATIO_LANDSCSAPE = 1.8; // low_ok
-    private static final double MIDDLE_RATIO_PORTRAIT = 1.8;  // low_ok
-    private static final double MIDDLE_RATIO_LANDSCSAPE = 1.8; // low_ok
-    private static final double HIGH_RATIO_PORTRAIT = 1.8;  // low_ok
-    private static final double HIGH_RATIO_LANDSCSAPE = 1.8; // low_ok
+    private static final int MIN_HEIGHT = 100;
 
     private int mSpan;
     private int mSpanHeight;
@@ -136,33 +135,29 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         DisplayMetrics dp = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
         boolean isLand = dp.widthPixels > dp.heightPixels;
-        int width = (int) (dp.widthPixels / dp.density);
+        double width = dp.widthPixels / dp.density;
 
         if (!isLand) {
             mSpan = 1;
-            if (width > HIGH_WIDTH_PORTRAIT) {
-                mSpan = (int) (HIGH_WIDTH_PORTRAIT / HIGH_SCALE_PORTRAIT);
+            if (width >= HIGH_WIDTH_PORTRAIT) {
+                mSpan = (int) Math.round(width / HIGH_SCALE_PORTRAIT);
                 mSpanHeight = (int) (dp.widthPixels / mSpan / HIGH_RATIO_PORTRAIT);
-
-            } else if (width > MIDDLE_WIDTH_PORTRAIT) {
-                mSpan = (int) (MIDDLE_WIDTH_PORTRAIT / MIDDLE_SCALE_PORTRAIT);
-                mSpanHeight = (int) (dp.widthPixels / mSpan / MIDDLE_RATIO_PORTRAIT);
-
+//            } else if (width >= MIDDLE_WIDTH_PORTRAIT) {
+//                mSpan = (int) Math.round(width / MIDDLE_SCALE_PORTRAIT);
+//                mSpanHeight = (int) (dp.widthPixels / mSpan / MIDDLE_RATIO_PORTRAIT);
             } else {
-                mSpan = (int) (LOW_WIDTH_PORTRAIT / LOW_SCALE_PORTRAIT);
+                mSpan = (int) Math.round(width / LOW_SCALE_PORTRAIT);
                 mSpanHeight = (int) (dp.widthPixels / mSpan / LOW_RATIO_PORTRAIT);
             }
         } else {
-            if (width > HIGH_WIDTH_LANDSCAPE) {
-                mSpan = (int) (HIGH_WIDTH_LANDSCAPE / HIGH_SCALE_LANDSCAPE);
+            if (width >= HIGH_WIDTH_LANDSCAPE) {
+                mSpan = (int) Math.round(width / HIGH_SCALE_LANDSCAPE);
                 mSpanHeight = (int) (dp.widthPixels / mSpan / HIGH_RATIO_LANDSCSAPE);
-
-            } else if (width > MIDDLE_WIDTH_LANDSCAPE) {
-
-                mSpan = (int) (MIDDLE_WIDTH_LANDSCAPE / MIDDLE_SCALE_LANDSCAPE);
-                mSpanHeight = (int) (dp.widthPixels / mSpan / MIDDLE_RATIO_LANDSCSAPE);
+//            } else if (width >= MIDDLE_WIDTH_LANDSCAPE) {
+//                mSpan = (int) Math.round(width / MIDDLE_SCALE_LANDSCAPE);
+//                mSpanHeight = (int) (dp.widthPixels / mSpan / MIDDLE_RATIO_LANDSCSAPE);
             } else {
-                mSpan = (int) (LOW_WIDTH_LANDSCAPE / LOW_SCALE_LANDSCAPE);
+                mSpan = (int) Math.round(width / LOW_SCALE_LANDSCAPE);
                 mSpanHeight = (int) (dp.widthPixels / mSpan / LOW_RATIO_LANDSCSAPE);
             }
         }
@@ -258,7 +253,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         }
         final List<RecipeItem> listRecipeItem = RecipeItem.getRecipeList(s);
 
-//        showToast("Main Complete");
+//        showToast("Main Completes");
 
         new AsyncTask<Void, Void, Integer>() {
             @Override
@@ -272,13 +267,13 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onComplete(Cursor cursor) {
-        if (cursor == null || cursor.getCount() == 0 || mRecyclerAdapter == null ) {   // нет адаптера выходим
+        if (cursor == null || cursor.getCount() == 0 || mRecyclerAdapter == null) {   // нет адаптера выходим
             return;
         }
         mRecyclerAdapter.swapCursor(cursor);
-       showResult(); // только после загрузки базы данных
-        if(!NetworkData.isOnline(getContext()))  {
-            Snackbar.make(getView(),"No connection. Local database used",
+        showResult(); // только после загрузки базы данных
+        if (!NetworkData.isOnline(getContext())) {
+            Snackbar.make(getView(), "No connection. Local database used",
                     BaseTransientBottomBar.LENGTH_LONG).show();
         }
     }
