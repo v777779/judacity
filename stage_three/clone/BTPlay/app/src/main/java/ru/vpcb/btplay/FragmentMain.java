@@ -1,5 +1,6 @@
 package ru.vpcb.btplay;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -251,7 +253,13 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
-                ContentResolver resolver = getActivity().getContentResolver();
+                FragmentActivity activity = getActivity();
+                if(activity == null) {
+                    Snackbar.make(getView(),"Activity Error",
+                            Snackbar.LENGTH_LONG);
+                    return -1;
+                }
+                ContentResolver resolver = activity.getContentResolver();
                 LoaderManager manager = getLoaderManager();
                 if(resolver == null || manager == null ) {
                     Snackbar.make(getView(),"Database Error  resolver: "+resolver +" manager: "+manager,
