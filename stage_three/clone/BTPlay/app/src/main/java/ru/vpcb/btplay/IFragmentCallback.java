@@ -11,7 +11,7 @@ import java.util.List;
  * Email: vadim.v.voronov@gmail.com
  */
 
-public interface IFragmentHelper {
+public interface IFragmentCallback {
     void onCallback(int position);
     List<RecipeItem> getRecipeList();
     List<FragmentDetailItem> getItemList();
