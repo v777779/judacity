@@ -22,6 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +34,8 @@ import ru.vpcb.btplay.utils.NetworkData;
 import ru.vpcb.btplay.utils.FragmentData;
 import ru.vpcb.btplay.utils.RecipeData;
 
-import static ru.vpcb.btplay.utils.Constants.BUNDLE_LOADER_STRING_ID;
-import static ru.vpcb.btplay.utils.Constants.LOADER_RECIPES_DB_ID;
-import static ru.vpcb.btplay.utils.Constants.LOADER_RECIPES_ID;
+import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
+import static ru.vpcb.btplay.utils.Constants.*;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -45,7 +47,7 @@ import static ru.vpcb.btplay.utils.Constants.LOADER_RECIPES_ID;
 public class FragmentMain extends Fragment implements IFragmentHelper,
         LoaderUri.ICallbackUri, LoaderDb.ICallbackDb {
 
-    private List<String> mList;
+
     private RecyclerView mRecyclerView;
     private FragmentMainAdapter mRecyclerAdapter;
     private ProgressBar mProgressBar;
@@ -53,7 +55,13 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     private LoaderUri mLoader;
     private LoaderDb mLoaderDb;
+    private int mSpan;
+    private int mSpanHeight;
 
+
+    private List<RecipeItem> mList;
+    private IFragmentCallback mFragmentCallback;
+    private Context mContext;
 
     public FragmentMain() {
 
@@ -79,7 +87,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
 
         final View rootView = inflater.inflate(R.layout.fragment_main_recycler, container, false);
-        mList = FragmentData.loadMockCards();                               // load mock data
+        // load mock data
 
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -88,7 +96,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         mRecyclerView.setLayoutManager(layoutManager);                          // connect to LayoutManager
         mRecyclerView.setHasFixedSize(true);                                    // item size fixed
 
-        mRecyclerAdapter = new FragmentMainAdapter(rootView.getContext(), this);     //context  and data
+        mRecyclerAdapter = new FragmentMainAdapter(mContext, this);     //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mProgressBar = rootView.findViewById(R.id.progress_bar);
         mErrorMessage = rootView.findViewById(R.id.error_message);
@@ -102,76 +110,17 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         return rootView;
     }
 
-    private static final int LOW_WIDTH_PORTRAIT = 350;   //
-    private static final int LOW_WIDTH_LANDSCAPE = 550;  //
-    private static final int LOW_SCALE_PORTRAIT = 300;   // dpi
-    private static final int LOW_SCALE_LANDSCAPE = 300;  //
-    private static final double LOW_RATIO_PORTRAIT = 1.8;       //
-    private static final double LOW_RATIO_LANDSCSAPE = 1.8;     //
-
-//    private static final int MIDDLE_WIDTH_PORTRAIT = 400;
-//    private static final int MIDDLE_WIDTH_LANDSCAPE = 600;
-//    private static final int MIDDLE_SCALE_PORTRAIT = 250;
-//    private static final int MIDDLE_SCALE_LANDSCAPE = 250;
-//    private static final double MIDDLE_RATIO_PORTRAIT = 1.8;    //
-//    private static final double MIDDLE_RATIO_LANDSCSAPE = 1.8;  //
-
-    private static final int HIGH_WIDTH_PORTRAIT = 600;   // dpi
-    private static final int HIGH_WIDTH_LANDSCAPE = 900;  // dpi
-    private static final int HIGH_SCALE_PORTRAIT = 240;   // dpi
-    private static final int HIGH_SCALE_LANDSCAPE = 250;  // dpi
-    private static final double HIGH_RATIO_PORTRAIT = 1.8;      //
-    private static final double HIGH_RATIO_LANDSCSAPE = 1.8;    //
-
-    private static final int MAX_SPAN = 6;
-    private static final int MIN_SPAN = 1;
-    private static final int MIN_HEIGHT = 100;
-
-    private int mSpan;
-    private int mSpanHeight;
-
-    private void setDisplayMetrics() {
-        DisplayMetrics dp = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
-        boolean isLand = dp.widthPixels > dp.heightPixels;
-        double width = dp.widthPixels / dp.density;
-
-        if (!isLand) {
-            mSpan = 1;
-            if (width >= HIGH_WIDTH_PORTRAIT) {
-                mSpan = (int) Math.round(width / HIGH_SCALE_PORTRAIT);
-                mSpanHeight = (int) (dp.widthPixels / mSpan / HIGH_RATIO_PORTRAIT);
-//            } else if (width >= MIDDLE_WIDTH_PORTRAIT) {
-//                mSpan = (int) Math.round(width / MIDDLE_SCALE_PORTRAIT);
-//                mSpanHeight = (int) (dp.widthPixels / mSpan / MIDDLE_RATIO_PORTRAIT);
-            } else {
-                mSpan = (int) Math.round(width / LOW_SCALE_PORTRAIT);
-                mSpanHeight = (int) (dp.widthPixels / mSpan / LOW_RATIO_PORTRAIT);
-            }
-        } else {
-            if (width >= HIGH_WIDTH_LANDSCAPE) {
-                mSpan = (int) Math.round(width / HIGH_SCALE_LANDSCAPE);
-                mSpanHeight = (int) (dp.widthPixels / mSpan / HIGH_RATIO_LANDSCSAPE);
-//            } else if (width >= MIDDLE_WIDTH_LANDSCAPE) {
-//                mSpan = (int) Math.round(width / MIDDLE_SCALE_LANDSCAPE);
-//                mSpanHeight = (int) (dp.widthPixels / mSpan / MIDDLE_RATIO_LANDSCSAPE);
-            } else {
-                mSpan = (int) Math.round(width / LOW_SCALE_LANDSCAPE);
-                mSpanHeight = (int) (dp.widthPixels / mSpan / LOW_RATIO_LANDSCSAPE);
-            }
-        }
-
-        if (mSpan < MIN_SPAN) mSpan = MIN_SPAN;
-        if (mSpan > MAX_SPAN) mSpan = MAX_SPAN;
-        if (mSpanHeight < MIN_HEIGHT) mSpanHeight = MIN_HEIGHT;
-
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            mFragmentCallback = (IFragmentCallback) context;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+        mContext = context;
     }
-
 
 //    @Override
 //    public void onResume() {
@@ -179,12 +128,13 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 //        getLoaderManager().restartLoader(LOADER_RECIPES_ID, new Bundle(), mLoader); // empty bundle FFU
 //    }
 
+
     @Override
     public void onCallback(int position) {
-
-
         FragmentDetail detailFragment = new FragmentDetail();
-
+        Bundle detailArgs = new Bundle();
+        detailArgs.putInt(RECIPE_POSITION, position);
+        detailFragment.setArguments(detailArgs);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, detailFragment)
@@ -196,10 +146,6 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 //                .setAction("Action", null).show();
     }
 
-    @Override
-    public List<String> getList() {
-        return new ArrayList<>(mList);
-    }
 
     @Override
     public List<FragmentDetailItem> getItemList() {
@@ -207,20 +153,9 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     }
 
     @Override
-    public RecyclerView getRecycler() {
-        return null;
-    }
-
-    @Override
-    public int getSpan() {
-        return mSpan;
-    }
-
-    @Override
     public int getSpanHeight() {
         return mSpanHeight;
     }
-
 
     @Override
     public void showProgress() {
@@ -254,15 +189,15 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
             @Override
             protected Integer doInBackground(Void... params) {
                 FragmentActivity activity = getActivity();
-                if(activity == null) {
-                    Snackbar.make(getView(),"Activity Error",
+                if (activity == null) {
+                    Snackbar.make(getView(), "Activity Error",
                             Snackbar.LENGTH_LONG);
                     return -1;
                 }
                 ContentResolver resolver = activity.getContentResolver();
                 LoaderManager manager = getLoaderManager();
-                if(resolver == null || manager == null ) {
-                    Snackbar.make(getView(),"Database Error  resolver: "+resolver +" manager: "+manager,
+                if (resolver == null || manager == null) {
+                    Snackbar.make(getView(), "Database Error  resolver: " + resolver + " manager: " + manager,
                             Snackbar.LENGTH_LONG);
                     return -1;
                 }
@@ -279,15 +214,58 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         if (cursor == null || cursor.getCount() == 0 || mRecyclerAdapter == null) {   // нет адаптера выходим
             return;
         }
-        mRecyclerAdapter.swapCursor(cursor);
         showResult(); // только после загрузки базы данных
         if (!NetworkData.isOnline(getContext())) {
             Snackbar.make(getView(), "No connection. Local data used", Snackbar.LENGTH_LONG).show();
         }
+        List<RecipeItem> list = new ArrayList<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            try {
+                JSONObject jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE)));
+                list.add(new RecipeItem(jsonObject));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        mFragmentCallback.setRecipeList(list);
+        mRecyclerAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onReset() {
+
+    }
+
+
+    private void setDisplayMetrics() {
+        DisplayMetrics dp = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
+        boolean isLand = dp.widthPixels > dp.heightPixels;
+        double width = dp.widthPixels / dp.density;
+
+        if (!isLand) {
+            mSpan = 1;
+            if (width >= HIGH_WIDTH_PORTRAIT) {
+                mSpan = (int) Math.round(width / HIGH_SCALE_PORTRAIT);
+                mSpanHeight = (int) (dp.widthPixels / mSpan / SCREEN_RATIO);
+            } else {
+                mSpan = (int) Math.round(width / LOW_SCALE_PORTRAIT);
+                mSpanHeight = (int) (dp.widthPixels / mSpan / SCREEN_RATIO);
+            }
+        } else {
+            if (width >= HIGH_WIDTH_LANDSCAPE) {
+                mSpan = (int) Math.round(width / HIGH_SCALE_LANDSCAPE);
+                mSpanHeight = (int) (dp.widthPixels / mSpan / SCREEN_RATIO);
+            } else {
+                mSpan = (int) Math.round(width / LOW_SCALE_LANDSCAPE);
+                mSpanHeight = (int) (dp.widthPixels / mSpan / SCREEN_RATIO);
+            }
+        }
+
+        if (mSpan < MIN_SPAN) mSpan = MIN_SPAN;
+        if (mSpan > MAX_SPAN) mSpan = MAX_SPAN;
+        if (mSpanHeight < MIN_HEIGHT) mSpanHeight = MIN_HEIGHT;
 
     }
 

@@ -1,5 +1,6 @@
 package ru.vpcb.btplay;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -12,9 +13,7 @@ import java.util.List;
  */
 
 public interface IFragmentCallback {
-    void onCallback(int position);
-    List<RecipeItem> getRecipeList();
-    List<FragmentDetailItem> getItemList();
-    int getSpanHeight();
+    RecipeItem getRecipe(int position);
+    void setRecipeList(List<RecipeItem> list);
 
 }

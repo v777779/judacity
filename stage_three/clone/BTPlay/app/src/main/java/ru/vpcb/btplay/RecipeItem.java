@@ -31,7 +31,7 @@ public class RecipeItem {
         valid = parseJSON(jsonObject);
     }
 
-// methods
+    // methods
     private boolean parseJSON(JSONObject jsonObject) {
         if (jsonObject == null || !jsonObject.has(KEY_ID) ||
                 !jsonObject.has(KEY_INGREDIENTS) && !jsonObject.has(KEY_STEPS)) {
@@ -111,8 +111,8 @@ public class RecipeItem {
         return list;
     }
 
-// classes
-    private class Ingredient {
+    // classes
+    class Ingredient {
         private int quantity;
         private String measure;
         private String ingredient;
@@ -134,8 +134,14 @@ public class RecipeItem {
                 e.printStackTrace();
             }
         }
+
+        @Override
+        public String toString() {
+            return  ingredient + ", " + quantity +" " + measure;
+        }
     }
-    private class Step {
+
+    class Step {
         private int id;
         private String shortDescription;
         private String description;
@@ -161,8 +167,42 @@ public class RecipeItem {
             }
         }
 
+        public int getId() {
+            return id;
+        }
+
+        public String getShortDescription() {
+            return shortDescription;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getVideoURL() {
+            return videoURL;
+        }
+
+        public String getThumbnailURL() {
+            return thumbnailURL;
+        }
     }
 
+// getters
 
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
 
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    public int getServings() {
+        return servings;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
 }

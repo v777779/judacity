@@ -26,28 +26,35 @@ import static ru.vpcb.btplay.utils.Constants.EXPANDED_TYPE;
 public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAdapter.FCViewHolder> {
 
     private List<FragmentDetailItem> mItemList;
-    private Context mContext;
-    private LayoutInflater mInflater;
-    private IFragmentHelper mHelper;
     private boolean isExpanded;
-    private RecyclerView mParent;
+    private RecipeItem mRecipeItem;
+    private IFragmentHelper mHelper;
 
-    public FragmentDetailAdapter(Context context, IFragmentHelper helper) {
+    private List<RecipeItem.Step> mStepList;
+    private List<RecipeItem.Ingredient> mIngredientList;
+    private Context mContext;
+
+    public FragmentDetailAdapter(Context context, IFragmentHelper helper, RecipeItem recipeItem) {
         mContext = context;
         mHelper = helper;
-        mInflater = LayoutInflater.from(context);
+        mRecipeItem = recipeItem;
         isExpanded = false;
-        mItemList = mHelper.getItemList();
-        mParent = helper.getRecycler();
+        mStepList = null;
+        mIngredientList = null;
+
+        if (recipeItem != null) {
+            mStepList = mRecipeItem.getSteps();
+            mIngredientList = mRecipeItem.getIngredients();
+        }
     }
 
 
     @Override
     public FCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView;
+        View itemView = inflater.inflate(R.layout.fragment_detail_item, parent, false);
+
         if (viewType == EXPANDED_TYPE) {
-            itemView = mInflater.inflate(R.layout.fragment_detail_item, parent, false);
             ImageView imageLeft = itemView.findViewById(R.id.circle_expand_left);
             ImageView imageRight = itemView.findViewById(R.id.circle_expand_right);
 
@@ -63,8 +70,6 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 imageRight.setScaleY(1);
                 itemView.findViewById(R.id.fc_recycler_detail_child).setVisibility(View.GONE);
             }
-        } else {
-            itemView = mInflater.inflate(R.layout.fragment_detail_item, parent, false);
         }
 
         return new FCViewHolder(itemView, viewType);
@@ -76,7 +81,6 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (position == 0) {
                     isExpanded = !isExpanded;
                     notifyItemChanged(position);
@@ -91,34 +95,53 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
     @Override
     public int getItemCount() {
-        if (mItemList == null) return 0;
-        return mItemList.size();
+        if (mStepList == null) return 0;
+        return mStepList.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mItemList == null || mItemList.isEmpty()) return COLLAPSED_TYPE;
-        return mItemList.get(position).getType();
+        if (position == 0) return EXPANDED_TYPE;
+        return COLLAPSED_TYPE;
     }
 
     class FCViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-        private final TextView mText2;
+        private final TextView mHeaderText;
+        private final TextView mDetailText;
+        private final TextView mChildDetailText;
 
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
-            mText = itemView.findViewById(R.id.fc_recycler_text);
-            mText2 = itemView.findViewById(R.id.fc_recycler_text2);
-
+            mHeaderText = itemView.findViewById(R.id.fc_recycler_head_text);
+            mDetailText = itemView.findViewById(R.id.fc_recycler_detail_text);
+            mChildDetailText = itemView.findViewById(R.id.fc_recycler_child_detail_text);
         }
 
         private void fill(int position, int viewType) {
-            String s;
-            if (mItemList == null || mItemList.isEmpty() || position < 0 || position > mItemList.size() - 1) {
-                return;
+
+
+            if (position == 0) {
+                mHeaderText.setText(mRecipeItem.getName());
+                if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
+                    StringBuilder sb = new StringBuilder();
+                    int count = 1;
+                    for (RecipeItem.Ingredient ingredient : mIngredientList) {
+                        sb.append(count + ". " + ingredient + "\n");
+                        count++;
+                    }
+                    mDetailText.setText(mContext.getString(R.string.click_collapse));
+                    mChildDetailText.setText(sb.toString());
+                } else {
+                    mDetailText.setText(mContext.getString(R.string.click_expand));
+                }
+            } else {
+                if (mStepList == null || mStepList.isEmpty() || position < 0 || position > mStepList.size()) {
+                    return;
+                }
+                mHeaderText.setText("Step " + (position));
+                mDetailText.setText(mStepList.get(position - 1).getShortDescription());
             }
-            s = mItemList.get(position).getName();
-            mText.setText(s);
+
         }
 
     }

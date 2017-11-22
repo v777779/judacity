@@ -26,24 +26,20 @@ import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
 
 public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapter.FCViewHolder> {
 
-
-    private Context mContext;
-    private LayoutInflater mInflater;
     private IFragmentHelper mHelper;
     private Cursor mCursor;
+    private Context mContext;
 
-
-    public FragmentMainAdapter(Context context, IFragmentHelper helper) {
+    public FragmentMainAdapter(Context context,IFragmentHelper helper) {
         mContext = context;
         mHelper = helper;
-        mInflater = LayoutInflater.from(context);
         mCursor = null;
     }
 
-
     @Override
     public FCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.fragment_main_item, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View itemView = inflater.inflate(R.layout.fragment_main_item, parent, false);
         return new FCViewHolder(itemView);
     }
 

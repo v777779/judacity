@@ -45,6 +45,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     TextView mNavigationText;
     View mPrevExt;
     View mNextExt;
+    private Context mContext;
+
+    IFragmentCallback mFragmentCallback;
 
 
     public FragmentPlayer() {
@@ -84,6 +87,12 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            mFragmentCallback = (IFragmentCallback)context;
+        }catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+        mContext = context;
     }
 
     @Override
@@ -95,24 +104,10 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
 
     }
 
-    @Override
-    public List<String> getList() {
-        return new ArrayList<>(mCardList);
-    }
 
     @Override
     public List<FragmentDetailItem> getItemList() {
         return null;
-    }
-
-    @Override
-    public RecyclerView getRecycler() {
-        return null;
-    }
-
-    @Override
-    public int getSpan() {
-        return 0;
     }
 
     @Override

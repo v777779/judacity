@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="0dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginStart="16dp"
+    android:layout_marginEnd="0dp"
+    android:layout_marginStart="0dp"
     android:layout_marginTop="2dp"
     app:cardBackgroundColor="@android:color/holo_green_light">
 
@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/fc_recycler_text"
+            android:id="@+id/fc_recycler_head_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -45,13 +45,13 @@
                 android:visibility="gone" />
 
             <TextView
-                android:id="@+id/fc_recycler_text2"
+                android:id="@+id/fc_recycler_detail_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Card Data Visual"
-                android:textAppearance="@style/TextHead"
+                android:textAppearance="@style/TextNormal"
                 tools:text="Lower Line of text" />
 
             <ImageView
@@ -79,48 +79,28 @@
                 android:background="#dadada" />
 
             <TextView
-                android:id="@+id/fc_recycler_child_text"
+                android:id="@+id/fc_recycler_child_head_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:layout_marginStart="16dp"
                 android:gravity="center"
-                android:text="Ingredients"
+                android:text="Ingredients:"
                 android:textAppearance="@style/TextHead" />
 
             <TextView
+                android:id="@+id/fc_recycler_child_detail_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:layout_marginStart="16dp"
-                android:text="1. Ingredients  text"
+                android:layout_marginEnd="16dp"
+                tools:text="1. Ingredients  text"
                 android:textAppearance="@style/TextNormal"
                 />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="2. Ingredients  text"
-                android:textAppearance="@style/TextNormal" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginStart="16dp"
-                android:text="3. Ingredients  text"
-                android:textAppearance="@style/TextNormal" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginStart="16dp"
-                android:text="4. Ingredients  text"
-                android:textAppearance="@style/TextNormal" />
         </LinearLayout>
 
     </LinearLayout>

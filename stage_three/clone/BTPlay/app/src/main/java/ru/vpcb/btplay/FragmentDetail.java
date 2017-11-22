@@ -18,6 +18,9 @@ import java.util.List;
 
 import ru.vpcb.btplay.utils.FragmentData;
 
+import static ru.vpcb.btplay.utils.Constants.RECIPE_POSITION;
+import static ru.vpcb.btplay.utils.Constants.RECIPE_STEP_POSITION;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -27,15 +30,16 @@ import ru.vpcb.btplay.utils.FragmentData;
 
 public class FragmentDetail extends Fragment implements IFragmentHelper {
 
-    private List<FragmentDetailItem> mList;
+
     private RecyclerView mRecyclerView;
     private FragmentDetailAdapter mRecyclerAdapter;
-    private int mSpan;
     private int mPosition;
     private boolean mIsWide;
+    private IFragmentCallback mFragmentCallback;
+    private RecipeItem mRecipeItem;
+    private Context mContext;
 
     public FragmentDetail() {
-
     }
 
     @Nullable
@@ -43,25 +47,34 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        mList = FragmentData.loadMockDetails();                               // load mock data
+        // load mock data
 
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        Bundle detailArgs = getArguments();
+        if (detailArgs != null) {
+            mPosition = detailArgs.getInt(RECIPE_POSITION, 0);
+        }
+
+        mRecipeItem = null;
+        if (mFragmentCallback != null) {
+            mRecipeItem = mFragmentCallback.getRecipe(mPosition);
+        }
 
 
-        mRecyclerView.setLayoutManager(layoutManager);                          // connect to LayoutManager
-        mRecyclerView.setHasFixedSize(false);                                    // item size fixed
-        mRecyclerAdapter = new FragmentDetailAdapter(rootView.getContext(), this);     //context  and data
+        mRecyclerView.setLayoutManager(layoutManager);                              // connect to LayoutManager
+        mRecyclerView.setHasFixedSize(false);                                       // item size fixed
+        mRecyclerAdapter = new FragmentDetailAdapter(mContext, this, mRecipeItem);      //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
-        mPosition = 0;
+
         mIsWide = rootView.findViewById(R.id.fc_p_container) != null;
 
         if (mIsWide) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentPlayer playerFragment = new FragmentPlayer();
-            Bundle args = new Bundle();
-            args.putInt("position", mPosition);
-            playerFragment.setArguments(args);
+            Bundle playerArgs = new Bundle();
+            playerArgs.putInt(RECIPE_STEP_POSITION, mPosition);
+            playerFragment.setArguments(playerArgs);
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
                     .commit();
@@ -74,6 +87,13 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            mFragmentCallback = (IFragmentCallback) context;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+        mContext = context;
+
     }
 
     @Override
@@ -104,25 +124,12 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         }
     }
 
-    @Override
-    public List<String> getList() {
-        return null;
-    }
 
     @Override
     public List<FragmentDetailItem> getItemList() {
-        return new ArrayList<>(mList);
+        return null;
     }
 
-    @Override
-    public RecyclerView getRecycler() {
-        return mRecyclerView;
-    }
-
-    @Override
-    public int getSpan() {
-        return 0;
-    }
 
     @Override
     public int getSpanHeight() {

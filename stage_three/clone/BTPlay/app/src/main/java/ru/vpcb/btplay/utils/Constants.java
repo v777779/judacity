@@ -88,11 +88,32 @@ public class Constants {
     public static final String KEY_SERVINGS = "servings";
     public static final String KEY_IMAGE_URL = "image";
 
+    // screen width
+    public static final int LOW_WIDTH_PORTRAIT = 320;          // dpi
+    public static final int LOW_WIDTH_LANDSCAPE = 520;     // dpi
+    public static final int LOW_SCALE_PORTRAIT = 300;      // dpi
+    public static final int LOW_SCALE_LANDSCAPE = 300;     // dpi
+    public static final double SCREEN_RATIO = 1.8;
+
+
+    public static final int HIGH_WIDTH_PORTRAIT = 600;     // dpi
+    public static final int HIGH_WIDTH_LANDSCAPE = 900;    // dpi
+    public static final int HIGH_SCALE_PORTRAIT = 240;     // dpi
+    public static final int HIGH_SCALE_LANDSCAPE = 250;    // dpi
+
+    public static final int MAX_SPAN = 6;
+    public static final int MIN_SPAN = 1;
+    public static final int MIN_HEIGHT = 100;
+
+
     // player animation
     public static final float BUTTON_DOWN_ALPHA = 0.5f;
     public static final float BUTTON_UP_ALPHA = 1.0f;
     public static final int BUTTON_DOWN_DELAY = 150;
     public static final int BUTTON_UP_DELAY = 150;
 
+    // mainfragment data
+    public static final String RECIPE_POSITION = "recipe_position";
+    public static final String RECIPE_STEP_POSITION = "recipe_step_position";
 
 }
