@@ -30,6 +30,9 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
-
+    <style name="TextLarge" parent="TextNormal">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/head_text_size</item>
+    </style>
 
 </resources>
