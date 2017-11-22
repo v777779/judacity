@@ -25,22 +25,21 @@ import ru.vpcb.btplay.utils.FragmentData;
  * Email: vadim.v.voronov@gmail.com
  */
 
-public class FragmentDetail extends Fragment implements IFragmentHelper {
+public class FragmentDetailWide extends Fragment implements IFragmentHelper {
 
     private List<FragmentDetailItem> mList;
     private RecyclerView mRecyclerView;
     private FragmentDetailAdapter mRecyclerAdapter;
     private int mSpan;
-    private int mPosition;
-    private boolean mIsWide;
 
-    public FragmentDetail() {
+    public FragmentDetailWide() {
 
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
 
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mList = FragmentData.loadMockDetails();                               // load mock data
@@ -53,20 +52,8 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         mRecyclerView.setHasFixedSize(false);                                    // item size fixed
         mRecyclerAdapter = new FragmentDetailAdapter(rootView.getContext(), this);     //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
-        mPosition = 0;
-        mIsWide = rootView.findViewById(R.id.fc_p_container) != null;
 
-        if (mIsWide) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentPlayer playerFragment = new FragmentPlayer();
-            Bundle args = new Bundle();
-            args.putInt("position", mPosition);
-            playerFragment.setArguments(args);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fc_p_container, playerFragment)
-                    .commit();
 
-        }
         return rootView;
     }
 
@@ -78,30 +65,20 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
     @Override
     public void onCallback(int position) {
-//        Snackbar.make(getView(), "Clicked position: "+position, Snackbar.LENGTH_LONG)
+//        Snackbar.make(getView(), "Clicked position: "+position,
+//          Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
 
-        mPosition = position;
-        if (mIsWide) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentPlayer playerFragment = new FragmentPlayer();
-            Bundle args = new Bundle();
-            args.putInt("position", mPosition);
-            playerFragment.setArguments(args);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fc_p_container, playerFragment)
-                    .commit();
-        } else {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentPlayer playerFragment = new FragmentPlayer();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, playerFragment)
-                    .commit();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentPlayer playerFragment = new FragmentPlayer();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, playerFragment)
+                .addToBackStack(null)
+                .commit();
 
-//            Snackbar.make(getView(), "Clicked Fragment Detail position: " + position + " stack: " +
-//                    fragmentManager.getBackStackEntryCount(), Snackbar.LENGTH_SHORT).show();
+//        Snackbar.make(getView(), "Clicked Fragment Detail Wide position: " + position + " stack: " +
+//                fragmentManager.getBackStackEntryCount(), Snackbar.LENGTH_SHORT).show();
 
-        }
     }
 
     @Override

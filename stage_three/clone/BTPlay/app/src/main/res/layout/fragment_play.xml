@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fc_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackLight">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +18,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
+
             <TextView
                 android:id="@+id/fp_video_text"
                 android:layout_width="match_parent"
@@ -42,16 +42,15 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/fc_recycler_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/holo_green_light"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:background="@android:color/holo_green_light" >
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/fp_head_text"
@@ -59,8 +58,7 @@
                     android:layout_height="wrap_content"
 
                     android:gravity="center"
-                    android:textAppearance="@style/TextBold"
-                    />
+                    android:textAppearance="@style/TextBold" />
 
                 <TextView
                     android:id="@+id/fp_line_text"
@@ -68,40 +66,39 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Card Data Visual"
-                    android:textAppearance="@style/TextNormal"
-                    />
+                    android:textAppearance="@style/TextNormal" />
+
                 <TextView
                     android:id="@+id/fp_line_text2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Card Data Visual"
-                    android:textAppearance="@style/TextNormal"
-                    />
+                    android:textAppearance="@style/TextNormal" />
+
                 <TextView
                     android:id="@+id/fp_line_text3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Card Data Visual"
-                    android:textAppearance="@style/TextNormal"
-                    />
+                    android:textAppearance="@style/TextNormal" />
+
                 <TextView
                     android:id="@+id/fp_line_text4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Card Data Visual"
-                    android:textAppearance="@style/TextNormal"
-                    />
+                    android:textAppearance="@style/TextNormal" />
+
                 <TextView
                     android:id="@+id/fp_line_text5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Card Data Visual"
-                    android:textAppearance="@style/TextNormal"
-                    />
+                    android:textAppearance="@style/TextNormal" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -109,32 +106,61 @@
             android:id="@+id/fp_navigation_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            >
-            <TextView
+            android:padding="0dp">
+
+            <FrameLayout
+                android:id="@+id/prev_button_extended"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="&lt;&lt;"
-                android:textAppearance="@style/TextHead"
-                />
+                android:layout_height="wrap_content"
+
+                >
+
+                <ImageButton
+                    android:id="@+id/prev_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="64dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:src="@drawable/ic_skip_prev_white_24dp" />
+            </FrameLayout>
+
             <TextView
+                android:id="@+id/navigation_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text=" Navigation to next step"
-                android:textAppearance="@style/TextNormal"
                 android:layout_weight="1"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="&gt;&gt;"
-                android:textAppearance="@style/TextHead"
-                />
+                android:text="Step 1"
+                android:textAppearance="@style/TextHead" />
+
+            <FrameLayout
+                android:id="@+id/next_button_extended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                >
+
+                <ImageButton
+                    android:id="@+id/next_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:src="@drawable/ic_skip_next_white_24dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+
+                    />
+            </FrameLayout>
+
         </LinearLayout>
 
 

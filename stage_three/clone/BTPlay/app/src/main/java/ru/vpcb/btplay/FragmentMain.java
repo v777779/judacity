@@ -1,14 +1,15 @@
 package ru.vpcb.btplay;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -17,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +51,6 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     private LoaderUri mLoader;
     private LoaderDb mLoaderDb;
-
-
-    // test!!!
-    private Toast mToast;
 
 
     public FragmentMain() {
@@ -182,7 +179,6 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onCallback(int position) {
-//        Toast.makeText(getContext(),"Clicked position: "+position,Toast.LENGTH_SHORT).show();
 
 
         FragmentDetail detailFragment = new FragmentDetail();
@@ -193,9 +189,9 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
                 .addToBackStack(null)
                 .commit();
 
-        Snackbar.make(getView(), "Clicked position: " + position + " stack: " +
-                fragmentManager.getBackStackEntryCount(), Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+//        Snackbar.make(getView(), "Clicked Fragment Main position: " + position + " stack: " +
+//                fragmentManager.getBackStackEntryCount(), Snackbar.LENGTH_SHORT)
+//                .setAction("Action", null).show();
     }
 
     @Override
@@ -226,13 +222,11 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void showProgress() {
-//        showToast("Main Progress");
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showError() {
-//        showToast("Main Error");
         mProgressBar.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.VISIBLE);
     }
@@ -253,11 +247,18 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         }
         final List<RecipeItem> listRecipeItem = RecipeItem.getRecipeList(s);
 
-//        showToast("Main Completes");
 
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
+                ContentResolver resolver = getActivity().getContentResolver();
+                LoaderManager manager = getLoaderManager();
+                if(resolver == null || manager == null ) {
+                    Snackbar.make(getView(),"Database Error  resolver: "+resolver +" manager: "+manager,
+                            Snackbar.LENGTH_LONG);
+                    return -1;
+                }
+
                 return RecipeData.bulkInsert(getActivity().getContentResolver(),
                         getLoaderManager(), listRecipeItem, mLoaderDb);
             }
@@ -273,8 +274,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         mRecyclerAdapter.swapCursor(cursor);
         showResult(); // только после загрузки базы данных
         if (!NetworkData.isOnline(getContext())) {
-            Snackbar.make(getView(), "No connection. Local database used",
-                    BaseTransientBottomBar.LENGTH_LONG).show();
+            Snackbar.make(getView(), "No connection. Local data used", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -283,15 +283,5 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     }
 
-    // test!!!
-    private void showToast(final String s) {
 
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        Snackbar.make(getView(), s, BaseTransientBottomBar.LENGTH_SHORT).show();
-//        mToast = Toast.makeText(getContext(), s, Toast.LENGTH_SHORT);
-//        mToast.show();
-
-    }
 }

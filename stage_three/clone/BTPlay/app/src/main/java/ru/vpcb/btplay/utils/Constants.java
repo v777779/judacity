@@ -88,5 +88,11 @@ public class Constants {
     public static final String KEY_SERVINGS = "servings";
     public static final String KEY_IMAGE_URL = "image";
 
+    // player animation
+    public static final float BUTTON_DOWN_ALPHA = 0.5f;
+    public static final float BUTTON_UP_ALPHA = 1.0f;
+    public static final int BUTTON_DOWN_DELAY = 150;
+    public static final int BUTTON_UP_DELAY = 150;
+
 
 }
