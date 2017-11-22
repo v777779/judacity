@@ -1,0 +1,172 @@
+[33mcommit 411dd542dad0050938fd56868a2ca199b32df69a[m
+Author: Vadim Voronov <vadim.v.voronov@gmail.com>
+Date:   Sat Nov 4 19:37:45 2017 +0300
+
+    ShushMe project update T0X.05 update
+
+[1mdiff --git a/Adv04/Shushme.T0X.05/app/build.gradle b/Adv04/Shushme.T0X.05/app/build.gradle[m
+[1mindex c818020..f06e91e 100644[m
+[1m--- a/Adv04/Shushme.T0X.05/app/build.gradle[m
+[1m+++ b/Adv04/Shushme.T0X.05/app/build.gradle[m
+[36m@@ -1,5 +1,5 @@[m
+ apply plugin: 'com.android.application'[m
+[31m-[m
+[32m+[m[32mdef GPS_API_KEY = PLACES_API_KEY[m
+ android {[m
+     compileSdkVersion 25[m
+     buildToolsVersion "25.0.2"[m
+[36m@@ -20,9 +20,11 @@[m [mandroid {[m
+             buildConfigField 'String', 'PLACES_API_KEY', PLACES_API_KEY[m
+             buildConfigField 'String', 'MOVIE_DB_API_KEY', MOVIE_DB_API_KEY[m
+             manifestPlaceholders = [[m
+[31m-                    GOOGLE_PLACES_API_KEY:PLACES_API_KEY[m
+[31m-[m
+[32m+[m[32m                    GOOGLE_PLACES_API_KEY:PLACES_API_KEY,[m
+[32m+[m[32m                    GPS_API_KEY:GPS_API_KEY,[m
+             ][m
+[32m+[m[32m            resValue "string", "places_api_key",PLACES_API_KEY  // выбор для манифеста[m
+[32m+[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/Adv04/Shushme.T0X.05/app/src/main/AndroidManifest.xml b/Adv04/Shushme.T0X.05/app/src/main/AndroidManifest.xml[m
+[1mindex 1580d78..08129c1 100644[m
+[1m--- a/Adv04/Shushme.T0X.05/app/src/main/AndroidManifest.xml[m
+[1m+++ b/Adv04/Shushme.T0X.05/app/src/main/AndroidManifest.xml[m
+[36m@@ -11,7 +11,7 @@[m
+ [m
+         <meta-data[m
+             android:name="com.google.android.geo.API_KEY"[m
+[31m-            android:value= "${GOOGLE_PLACES_API_KEY}" />[m
+[32m+[m[32m            android:value= "@string/places_api_key" />[m
+ [m
+         <activity android:name="com.example.android.shushme.MainActivity">[m
+             <intent-filter>[m
+[1mdiff --git a/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/GeofenceBroadcastReceiver.java b/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/GeofenceBroadcastReceiver.java[m
+[1mindex bb4862e..36cac31 100644[m
+[1m--- a/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/GeofenceBroadcastReceiver.java[m
+[1m+++ b/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/GeofenceBroadcastReceiver.java[m
+[36m@@ -17,11 +17,15 @@[m [mpackage com.example.android.shushme;[m
+ */[m
+ [m
+ import android.app.NotificationManager;[m
+[32m+[m[32mimport android.app.PendingIntent;[m
+[32m+[m[32mimport android.app.TaskStackBuilder;[m
+ import android.content.BroadcastReceiver;[m
+ import android.content.Context;[m
+ import android.content.Intent;[m
+[32m+[m[32mimport android.graphics.BitmapFactory;[m
+ import android.media.AudioManager;[m
+ import android.os.Build;[m
+[32m+[m[32mimport android.support.v7.app.NotificationCompat;[m
+ import android.util.Log;[m
+ [m
+ import com.google.android.gms.location.Geofence;[m
+[36m@@ -51,6 +55,11 @@[m [mpublic class GeofenceBroadcastReceiver extends BroadcastReceiver {[m
+             return;[m
+         }[m
+         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);[m
+[32m+[m[32m        if (geofencingEvent.hasError()) {[m
+[32m+[m[32m            Log.e(TAG, context.getString(R.string.transitions_error, geofencingEvent.getErrorCode()));[m
+[32m+[m[32m            return;[m
+[32m+[m[32m        }[m
+[32m+[m
+         int geoFenciesTransition = geofencingEvent.getGeofenceTransition();[m
+         if(geoFenciesTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {[m
+             setRingerMode(context,AudioManager.RINGER_MODE_SILENT);[m
+[36m@@ -60,7 +69,10 @@[m [mpublic class GeofenceBroadcastReceiver extends BroadcastReceiver {[m
+             Log.i(TAG, "onReceive Geofencies transition exit");[m
+         }else {[m
+             Log.e(TAG,context.getString(R.string.transitions_error,geoFenciesTransition));[m
+[32m+[m[32m            return;[m
+         }[m
+[32m+[m
+[32m+[m[32m        sendNotification(context, geoFenciesTransition);  // отослать Notification[m
+     }[m
+ [m
+     private void setRingerMode(Context context, int mode) {[m
+[36m@@ -70,7 +82,55 @@[m [mpublic class GeofenceBroadcastReceiver extends BroadcastReceiver {[m
+                 (Build.VERSION.SDK_INT >= 24 && !nm.isNotificationPolicyAccessGranted())) {[m
+             AudioManager audioManager = (AudioManager)context[m
+                     .getSystemService(Context.AUDIO_SERVICE);[m
+[31m-            audioManager.setMode(mode);[m
+[32m+[m[32m            audioManager.setRingerMode(mode);[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void sendNotification(Context context, int transitionType) {[m
+[32m+[m[32m        // Create an explicit content Intent that starts the main Activity.[m
+[32m+[m[32m        Intent notificationIntent = new Intent(context, MainActivity.class);[m
+[32m+[m
+[32m+[m[32m        // Construct a task stack.[m
+[32m+[m[32m        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);[m
+[32m+[m
+[32m+[m[32m        // Add the main Activity to the task stack as the parent.[m
+[32m+[m[32m        stackBuilder.addParentStack(MainActivity.class);[m
+[32m+[m
+[32m+[m[32m        // Push the content Intent onto the stack.[m
+[32m+[m[32m        stackBuilder.addNextIntent(notificationIntent);[m
+[32m+[m
+[32m+[m[32m        // Get a PendingIntent containing the entire back stack.[m
+[32m+[m[32m        PendingIntent notificationPendingIntent =[m
+[32m+[m[32m                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);[m
+[32m+[m
+[32m+[m[32m        // Get a notification builder[m
+[32m+[m[32m        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);[m
+[32m+[m
+[32m+[m[32m        // Check the transition type to display the relevant icon image[m
+[32m+[m[32m        if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {[m
+[32m+[m[32m            builder.setSmallIcon(R.drawable.ic_volume_off_white_24dp)[m
+[32m+[m[32m                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),[m
+[32m+[m[32m                            R.drawable.ic_volume_off_white_24dp))[m
+[32m+[m[32m                    .setContentTitle(context.getString(R.string.silent_mode_activated));[m
+[32m+[m[32m        } else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {[m
+[32m+[m[32m            builder.setSmallIcon(R.drawable.ic_volume_up_white_24dp)[m
+[32m+[m[32m                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),[m
+[32m+[m[32m                            R.drawable.ic_volume_up_white_24dp))[m
+[32m+[m[32m                    .setContentTitle(context.getString(R.string.back_to_normal));[m
+         }[m
+[32m+[m
+[32m+[m[32m        // Continue building the notification[m
+[32m+[m[32m        builder.setContentText(context.getString(R.string.touch_to_relaunch));[m
+[32m+[m[32m        builder.setContentIntent(notificationPendingIntent);[m
+[32m+[m
+[32m+[m[32m        // Dismiss notification once the user touches it.[m
+[32m+[m[32m        builder.setAutoCancel(true);[m
+[32m+[m
+[32m+[m[32m        // Get an instance of the Notification manager[m
+[32m+[m[32m        NotificationManager mNotificationManager =[m
+[32m+[m[32m                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);[m
+[32m+[m
+[32m+[m[32m        // Issue the notification[m
+[32m+[m[32m        mNotificationManager.notify(0, builder.build());[m
+     }[m
+ }[m
+[1mdiff --git a/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/MainActivity.java b/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/MainActivity.java[m
+[1mindex f42e681..503b594 100644[m
+[1m--- a/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/MainActivity.java[m
+[1m+++ b/Adv04/Shushme.T0X.05/app/src/main/java/com/example/android/shushme/MainActivity.java[m
+[36m@@ -116,9 +116,10 @@[m [mpublic class MainActivity extends AppCompatActivity implements[m
+                 .addApi(Places.GEO_DATA_API)[m
+                 .enableAutoManage(this, this)[m
+                 .build();[m
+[31m-[m
+         mGeofencing = new Geofencing(this, mClient);[m
+ [m
+[32m+[m[32m//        Log.d(TAG,BuildConfig.PLACES_API_KEY);[m
+[32m+[m[32m//        Log.d(TAG,BuildConfig.MOVIE_DB_API_KEY);[m
+     }[m
+ [m
+     /***[m
+[1mdiff --git a/Adv04/Shushme.T0X.05/app/src/main/res/values/strings.xml b/Adv04/Shushme.T0X.05/app/src/main/res/values/strings.xml[m
+[1mindex 3a4f756..b6bb13c 100644[m
+[1m--- a/Adv04/Shushme.T0X.05/app/src/main/res/values/strings.xml[m
+[1m+++ b/Adv04/Shushme.T0X.05/app/src/main/res/values/strings.xml[m
+[36m@@ -11,4 +11,7 @@[m
+     <string name="privacy">http://www.google.com/policies/privacy</string>[m
+     <string name="ringer_permissions">Ring Permissions</string>[m
+     <string name="transitions_error">Unknown transition: %1$s</string>[m
+[32m+[m[32m    <string name="silent_mode_activated">Silent mode activated</string>[m
+[32m+[m[32m    <string name="touch_to_relaunch">Touch to launch the app.</string>[m
+[32m+[m[32m    <string name="back_to_normal">Back to normal</string>[m
+ </resources>[m
