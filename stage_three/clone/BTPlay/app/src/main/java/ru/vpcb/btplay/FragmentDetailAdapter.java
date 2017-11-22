@@ -1,6 +1,7 @@
 package ru.vpcb.btplay;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -122,6 +123,8 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
             if (position == 0) {
                 mHeaderText.setText(mRecipeItem.getName());
+                mHeaderText.setTextSize(24);
+                itemView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.colorBackHead));
                 if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
                     StringBuilder sb = new StringBuilder();
                     int count = 1;

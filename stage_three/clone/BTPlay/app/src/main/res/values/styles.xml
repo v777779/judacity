@@ -34,5 +34,13 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
+    <style name="TextSmall" parent="TextNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+    <style name="TextExtra" parent="TextNormal">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+    </style>
 
 </resources>
