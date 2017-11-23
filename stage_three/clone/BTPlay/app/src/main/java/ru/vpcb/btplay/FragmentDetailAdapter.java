@@ -2,8 +2,6 @@ package ru.vpcb.btplay;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
-import static ru.vpcb.btplay.utils.Constants.CHILD_TYPE;
 import static ru.vpcb.btplay.utils.Constants.COLLAPSED_TYPE;
 import static ru.vpcb.btplay.utils.Constants.EXPANDED_TYPE;
 
@@ -56,12 +55,8 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
         View itemView = inflater.inflate(R.layout.fragment_detail_item, parent, false);
 
         if (viewType == EXPANDED_TYPE) {
-            ImageView imageLeft = itemView.findViewById(R.id.circle_expand_left);
-            ImageView imageRight = itemView.findViewById(R.id.circle_expand_right);
-
-            imageLeft.setVisibility(View.VISIBLE);
-            imageRight.setVisibility(View.VISIBLE);
-
+            ImageView imageLeft = itemView.findViewById(R.id.expand_left);
+            ImageView imageRight = itemView.findViewById(R.id.expand_right);
             if (isExpanded) {
                 imageLeft.setScaleY(-1);  // flip horizontal
                 imageRight.setScaleY(-1);  // flip horizontal
@@ -110,22 +105,32 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
         private final TextView mHeaderText;
         private final TextView mDetailText;
         private final TextView mChildDetailText;
+        private final ImageView mThumbImage;
+        private final ImageView mLeftExpand;
+        private final ImageView mRightExpand;
+
 
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
             mHeaderText = itemView.findViewById(R.id.fc_recycler_head_text);
             mDetailText = itemView.findViewById(R.id.fc_recycler_detail_text);
             mChildDetailText = itemView.findViewById(R.id.fc_recycler_child_detail_text);
+            mThumbImage = itemView.findViewById(R.id.step_thumb);
+            mLeftExpand = itemView.findViewById(R.id.expand_left);
+            mRightExpand = itemView.findViewById(R.id.expand_right);
         }
 
         private void fill(int position, int viewType) {
+            if (viewType == EXPANDED_TYPE) {
+                mThumbImage.setVisibility(View.GONE);
+                mLeftExpand.setVisibility(View.VISIBLE);
+                mRightExpand.setVisibility(View.VISIBLE);
 
-
-            if (position == 0) {
                 mHeaderText.setText(mRecipeItem.getName());
                 mHeaderText.setTextSize(24);
-                itemView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.colorBackHead));
+                itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBackHead));
 //                mHeaderText.setTextColor(ContextCompat.getColor(mContext,R.color.colorBackHeadText));
+
                 if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
                     StringBuilder sb = new StringBuilder();
                     int count = 1;
@@ -142,8 +147,28 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 if (mStepList == null || mStepList.isEmpty() || position < 0 || position > mStepList.size()) {
                     return;
                 }
+                // text
+                RecipeItem.Step stepItem = mStepList.get(position - 1);
                 mHeaderText.setText("Step " + (position));
-                mDetailText.setText(mStepList.get(position - 1).getShortDescription());
+                mDetailText.setText(stepItem.getShortDescription());
+                // thumb
+                mThumbImage.setVisibility(View.VISIBLE);
+                mLeftExpand.setVisibility(View.GONE);
+                mRightExpand.setVisibility(View.GONE);
+                String imageURL = stepItem.getThumbnailURL();
+
+                if (!imageURL.isEmpty()) {                            // default image
+                    if (stepItem.getVideoURL().isEmpty()) {
+                        mThumbImage.setImageResource(R.drawable.ic_videocam_off_24dp);
+                    } else {
+                        mThumbImage.setImageResource(R.drawable.ic_videocam_24dp);
+                    }
+                } else {
+                    Glide.with(mContext)
+                            .load(imageURL)
+                            .into(mThumbImage);
+                }
+
             }
 
         }

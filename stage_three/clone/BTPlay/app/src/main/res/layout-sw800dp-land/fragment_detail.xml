@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fc_container_wide"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackLight">
 
     <FrameLayout
         android:id="@+id/fc_d_container"
@@ -25,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             >
 
         </android.support.v7.widget.RecyclerView>

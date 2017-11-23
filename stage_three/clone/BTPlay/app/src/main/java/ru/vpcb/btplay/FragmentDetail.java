@@ -82,6 +82,7 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         mRecyclerAdapter = new FragmentDetailAdapter(mContext, this, mRecipeItem);      //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerAdapter.setExpanded(mIsExpanded);
+        mRecyclerView.setHasFixedSize(true);
 
         mIsWide = rootView.findViewById(R.id.fc_p_container) != null;
 

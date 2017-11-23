@@ -98,6 +98,10 @@ public class RecipeItem {
         public String getThumbnailURL() {
             return thumbnailURL;
         }
+
+        public void setThumbnailURL(String thumbnailURL) {
+            this.thumbnailURL = thumbnailURL;
+        }
     }
 
     // getters
@@ -124,5 +128,11 @@ public class RecipeItem {
     public String getImage() {
         return image;
     }
+
+    //setters
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 
 }

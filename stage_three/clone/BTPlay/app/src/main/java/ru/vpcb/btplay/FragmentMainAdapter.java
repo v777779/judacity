@@ -12,9 +12,13 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
+import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 //import static ru.vpcb.btplay.utils.Constants.MAIN_IMAGE_IDS;
 
 /**
@@ -30,7 +34,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     private Cursor mCursor;
     private Context mContext;
 
-    public FragmentMainAdapter(Context context,IFragmentHelper helper) {
+    public FragmentMainAdapter(Context context, IFragmentHelper helper) {
         mContext = context;
         mHelper = helper;
         mCursor = null;
@@ -47,7 +51,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     public void onBindViewHolder(FCViewHolder holder, final int position) {
 
         if (mCursor == null || position < 0 || position > mCursor.getCount() - 1) return;
-         mCursor.moveToPosition(position);
+        mCursor.moveToPosition(position);
 
 
 //        LayoutParams lp = holder.itemView.findViewById(R.id.fc_recycler_main_image).getLayoutParams();
@@ -92,10 +96,22 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         }
 
         private void fill(int position) {
-            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
+            RecipeItem recipeItem = new Gson().fromJson(
+                    mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE)), RecipeItem.class);
+
+
+//            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
+            mText.setText(recipeItem.getName());
 //            mImage.setImageResource(MAIN_IMAGE_IDS[position % MAIN_IMAGE_IDS.length]);
 // test!!! add Picasso here
-              mImage.setImageResource(R.drawable.cakes_025);
+            String imageURL = recipeItem.getImage();
+            if (imageURL != null && !imageURL.isEmpty()) {
+                Glide.with(mContext)
+                        .load(imageURL)
+                        .into(mImage);
+            } else {
+                mImage.setImageResource(R.drawable.cakes_025);
+            }
 
         }
 
