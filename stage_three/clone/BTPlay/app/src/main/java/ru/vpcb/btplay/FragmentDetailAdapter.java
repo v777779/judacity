@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -157,15 +158,16 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 mRightExpand.setVisibility(View.GONE);
                 String imageURL = stepItem.getThumbnailURL();
 
-                if (!imageURL.isEmpty()) {                            // default image
-                    if (stepItem.getVideoURL().isEmpty()) {
-                        mThumbImage.setImageResource(R.drawable.ic_videocam_off_24dp);
-                    } else {
-                        mThumbImage.setImageResource(R.drawable.ic_videocam_24dp);
-                    }
+                boolean isVideoAvailable = stepItem.getVideoURL().isEmpty();
+                int thumbImageId = R.drawable.ic_videocam_off_24dp;
+                if (isVideoAvailable) thumbImageId = R.drawable.ic_videocam_24dp;
+
+                if (imageURL.isEmpty()) {                            // default image
+                    mThumbImage.setImageResource(thumbImageId);
                 } else {
                     Glide.with(mContext)
                             .load(imageURL)
+                            .apply(new RequestOptions().error(thumbImageId))
                             .into(mThumbImage);
                 }
 

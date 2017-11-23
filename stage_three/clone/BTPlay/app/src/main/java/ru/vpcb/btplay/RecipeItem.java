@@ -42,7 +42,7 @@ public class RecipeItem {
 
 
     // classes
-    class Ingredient {
+    public class Ingredient {
         @SerializedName("quantity")
         @Expose
         private double quantity;
@@ -61,7 +61,7 @@ public class RecipeItem {
         }
     }
 
-    class Step {
+    public class Step {
         @SerializedName("id")
         @Expose
         private int id;

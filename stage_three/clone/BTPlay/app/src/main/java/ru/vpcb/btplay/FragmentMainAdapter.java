@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -108,6 +109,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
             if (imageURL != null && !imageURL.isEmpty()) {
                 Glide.with(mContext)
                         .load(imageURL)
+                        .apply(new RequestOptions().error(R.drawable.cakes_025))
                         .into(mImage);
             } else {
                 mImage.setImageResource(R.drawable.cakes_025);
