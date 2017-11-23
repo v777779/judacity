@@ -8,18 +8,23 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.vpcb.btplay.utils.FragmentData;
 
+import static ru.vpcb.btplay.utils.Constants.DETAIL_IS_EXPANDED;
 import static ru.vpcb.btplay.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.btplay.utils.Constants.RECIPE_STEP_POSITION;
+import static ru.vpcb.btplay.utils.Constants.TAG_DETAIL;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -38,6 +43,7 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     private IFragmentCallback mFragmentCallback;
     private RecipeItem mRecipeItem;
     private Context mContext;
+    private boolean mIsExpanded;
 
     public FragmentDetail() {
     }
@@ -45,27 +51,37 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        mIsExpanded = false;
+        if (savedInstanceState != null) {
+            mIsExpanded = savedInstanceState.getBoolean(DETAIL_IS_EXPANDED, false);
+        }
 
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         // load mock data
 
+
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         Bundle detailArgs = getArguments();
-        if (detailArgs != null) {
-            mPosition = detailArgs.getInt(RECIPE_POSITION, 0);
+        mRecipeItem = null;
+        try {
+            mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
+        } catch (Exception e) {
+            Log.d(TAG_DETAIL, e.getMessage());
         }
 
-        mRecipeItem = null;
-        if (mFragmentCallback != null) {
-            mRecipeItem = mFragmentCallback.getRecipe(mPosition);
-        }
+
+//        mRecipeItem = null;
+//        if (mFragmentCallback != null) {
+//            mRecipeItem = mFragmentCallback.getRecipe(mPosition);
+//        }
 
 
         mRecyclerView.setLayoutManager(layoutManager);                              // connect to LayoutManager
         mRecyclerView.setHasFixedSize(false);                                       // item size fixed
         mRecyclerAdapter = new FragmentDetailAdapter(mContext, this, mRecipeItem);      //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerAdapter.setExpanded(mIsExpanded);
 
         mIsWide = rootView.findViewById(R.id.fc_p_container) != null;
 
@@ -94,6 +110,13 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         }
         mContext = context;
 
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(DETAIL_IS_EXPANDED, mRecyclerAdapter.isExpanded());
     }
 
     @Override

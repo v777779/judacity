@@ -22,9 +22,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,9 +137,15 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     @Override
     public void onCallback(int position) {
         FragmentDetail detailFragment = new FragmentDetail();
-        Bundle detailArgs = new Bundle();
-        detailArgs.putInt(RECIPE_POSITION, position);
-        detailFragment.setArguments(detailArgs);
+
+        RecipeItem recipeItem = mFragmentCallback.getRecipe(position);
+        try {
+            Bundle detailArgs = new Bundle();
+            detailArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));
+            detailFragment.setArguments(detailArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, detailFragment)
@@ -182,30 +193,12 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         if (data != null) {
             s = data.getString(BUNDLE_LOADER_STRING_ID);
         }
-        final List<RecipeItem> listRecipeItem = RecipeItem.getRecipeList(s);
+        Type listType = new TypeToken<List<RecipeItem>>() {
+        }.getType();
+        List<RecipeItem> list = new Gson().fromJson(s, listType);
 
+        RecipeData.bulkInsertBackground(mContext.getContentResolver(), getLoaderManager(), list, mLoaderDb);
 
-        new AsyncTask<Void, Void, Integer>() {
-            @Override
-            protected Integer doInBackground(Void... params) {
-                FragmentActivity activity = getActivity();
-                if (activity == null) {
-                    Snackbar.make(getView(), "Activity Error",
-                            Snackbar.LENGTH_LONG);
-                    return -1;
-                }
-                ContentResolver resolver = activity.getContentResolver();
-                LoaderManager manager = getLoaderManager();
-                if (resolver == null || manager == null) {
-                    Snackbar.make(getView(), "Database Error  resolver: " + resolver + " manager: " + manager,
-                            Snackbar.LENGTH_LONG);
-                    return -1;
-                }
-
-                return RecipeData.bulkInsert(getActivity().getContentResolver(),
-                        getLoaderManager(), listRecipeItem, mLoaderDb);
-            }
-        }.execute();
     }
 
 
@@ -219,11 +212,17 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
             Snackbar.make(getView(), "No connection. Local data used", Snackbar.LENGTH_LONG).show();
         }
         List<RecipeItem> list = new ArrayList<>();
+        Gson gson = new GsonBuilder()
+//                    .setLenient()
+//                    .setPrettyPrinting()
+                .create();
+
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             try {
-                JSONObject jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE)));
-                list.add(new RecipeItem(jsonObject));
-            } catch (JSONException e) {
+                String recipeJson = cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE));
+                RecipeItem recipeItem = gson.fromJson(recipeJson, RecipeItem.class);
+                list.add(recipeItem);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

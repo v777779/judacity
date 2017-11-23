@@ -36,6 +36,9 @@ dependencies {
 // stetho
     compile 'com.facebook.stetho:stetho-okhttp:1.5.0'
 // retrofit2
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+// gson
+    compile 'com.google.code.gson:gson:2.8.2'
 
 }

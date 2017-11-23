@@ -1,9 +1,13 @@
 package ru.vpcb.btplay;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,155 +21,63 @@ import static ru.vpcb.btplay.utils.Constants.*;
  * Email: vadim.v.voronov@gmail.com
  */
 public class RecipeItem {
+    @SerializedName("id")
+    @Expose
     private int id;
+    @SerializedName("name")
+    @Expose
     private String name;
+    @SerializedName("ingredients")
+    @Expose
     private List<Ingredient> ingredients;
+    @SerializedName("steps")
+    @Expose
     private List<Step> steps;
+    @SerializedName("servings")
+    @Expose
     private int servings;
-    private String imageURL;
-    private JSONObject jsonObject;
-    private boolean valid;
+    @SerializedName("image")
+    @Expose
+    private String image;
 
-
-    public RecipeItem(JSONObject jsonObject) {
-        valid = parseJSON(jsonObject);
-    }
-
-    // methods
-    private boolean parseJSON(JSONObject jsonObject) {
-        if (jsonObject == null || !jsonObject.has(KEY_ID) ||
-                !jsonObject.has(KEY_INGREDIENTS) && !jsonObject.has(KEY_STEPS)) {
-            return false;
-        }
-        try {
-            this.id = jsonObject.getInt(KEY_ID);
-            this.name = jsonObject.getString(KEY_NAME);
-            this.ingredients = getIngredients(jsonObject.getJSONArray(KEY_INGREDIENTS));
-            this.steps = getSteps(jsonObject.getJSONArray(KEY_STEPS));
-            this.servings = jsonObject.getInt(KEY_SERVINGS);
-            this.imageURL = jsonObject.getString(KEY_IMAGE_URL);
-            this.jsonObject = jsonObject;
-            return true;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSource() {
-        return jsonObject.toString();
-    }
-
-    private List<Ingredient> getIngredients(JSONArray jsonArray) throws JSONException {
-        List<Ingredient> list = new ArrayList<>();
-        if (jsonArray == null) return list;
-        for (int i = 0; i < jsonArray.length(); i++) {
-            Ingredient ingredient = new Ingredient(jsonArray.getJSONObject(i));
-            if (ingredient.valid) {
-                list.add(ingredient);
-            }
-        }
-        return list;
-    }
-
-    private List<Step> getSteps(JSONArray jsonArray) throws JSONException {
-        List<Step> list = new ArrayList<>();
-        if (jsonArray == null) return list;
-        for (int i = 0; i < jsonArray.length(); i++) {
-            Step step = new Step(jsonArray.getJSONObject(i));
-            if (step.valid) {
-                list.add(step);
-            }
-        }
-        return list;
-    }
-
-
-    public static List<RecipeItem> getRecipeList(String jsonString) {
-        List<RecipeItem> list = new ArrayList<>();
-        if (jsonString == null || jsonString.isEmpty()) {
-            return list;
-        }
-        try {
-            JSONArray jsonArray = new JSONArray(jsonString);
-            if (jsonArray == null && jsonArray.length() == 0) return null;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject json = jsonArray.getJSONObject(i);
-
-                RecipeItem recipeItem = new RecipeItem(json);
-                if (recipeItem.valid) {
-                    list.add(recipeItem);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
 
     // classes
     class Ingredient {
-        private int quantity;
+        @SerializedName("quantity")
+        @Expose
+        private double quantity;
+        @SerializedName("measure")
+        @Expose
         private String measure;
+        @SerializedName("ingredient")
+        @Expose
         private String ingredient;
-        private boolean valid;
 
-
-        public Ingredient(JSONObject jsonObject) {
-            valid = false;
-            if (jsonObject == null) {
-                return;
-            }
-            try {
-                this.quantity = jsonObject.getInt(KEY_QUANTITY);
-                this.measure = jsonObject.getString(KEY_MEASURE);
-                this.ingredient = jsonObject.getString(KEY_INGREDIENT);
-                valid = true;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
 
         @Override
         public String toString() {
-            return  ingredient + ", " + quantity +" " + measure;
+            String stringQuantity = new DecimalFormat("0.#").format(quantity);
+            return ingredient + ", " + stringQuantity + " " + measure;
         }
     }
 
     class Step {
+        @SerializedName("id")
+        @Expose
         private int id;
+        @SerializedName("shortDescription")
+        @Expose
         private String shortDescription;
+        @SerializedName("description")
+        @Expose
         private String description;
+        @SerializedName("videoURL")
+        @Expose
         private String videoURL;
+        @SerializedName("thumbnailURL")
+        @Expose
         private String thumbnailURL;
-        private boolean valid;
 
-        public Step(JSONObject jsonObject) {
-            valid = false;
-            if (jsonObject == null) {
-                return;
-            }
-            try {
-                this.id = jsonObject.getInt(KEY_ID);
-                this.shortDescription = jsonObject.getString(KEY_SHORT_DESCRIPTION);
-                this.description = jsonObject.getString(KEY_DESCRIPTION);
-                this.videoURL = jsonObject.getString(KEY_VIDEO_URL);
-                this.thumbnailURL = jsonObject.getString(KEY_THUMBNAIL_URL);
-                this.valid = true;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
 
         public int getId() {
             return id;
@@ -188,7 +100,14 @@ public class RecipeItem {
         }
     }
 
-// getters
+    // getters
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public List<Ingredient> getIngredients() {
         return ingredients;
@@ -202,7 +121,8 @@ public class RecipeItem {
         return servings;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImage() {
+        return image;
     }
+
 }

@@ -6,8 +6,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
@@ -60,7 +64,17 @@ public class RecipeData {
             return null;
         }
         ContentValues contentValues = new ContentValues();
-        String jsonString = recipeItem.getSource();
+        Gson gson = new GsonBuilder()
+//                    .setLenient()
+//                    .setPrettyPrinting()
+                .create();
+        String jsonString;
+        try {
+            jsonString = gson.toJson(recipeItem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
         contentValues.put(COLUMN_RECIPE_ID, recipeItem.getId());                                // int
         contentValues.put(COLUMN_RECIPE_NAME, recipeItem.getName());       // string
@@ -78,18 +92,29 @@ public class RecipeData {
 
 
     public static int bulkInsert(ContentResolver contentResolver, LoaderManager loaderManager,
-                                  List<RecipeItem> list, LoaderDb mLoaderDb) {
+                                 List<RecipeItem> list, LoaderDb mLoaderDb) {
 
         if (list == null || list.isEmpty()) return 0;
 
         ContentValues[] contentValues = new ContentValues[list.size()];  // n records
+        Gson gson = new GsonBuilder()
+//                    .setLenient()
+//                    .setPrettyPrinting()
+                .create();
+        String jsonString = "";
+
         for (int i = 0; i < contentValues.length; i++) {
             ContentValues dest = new ContentValues();
+
             contentValues[i] = dest;
             RecipeItem src = list.get(i);
-            if (src == null) continue;
 
-            String jsonString = src.getSource().toString();
+            try {
+                jsonString = gson.toJson(src);
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
 
             dest.put(RecipeEntry.COLUMN_RECIPE_ID, src.getId());             // int
             dest.put(RecipeEntry.COLUMN_RECIPE_NAME, src.getName());            // string
@@ -113,8 +138,17 @@ public class RecipeData {
         Uri uri = CONTENT_URI;           // it's already uri
         uri = uri.buildUpon().appendPath(Integer.toString(recipeItem.getId())).build();
         ContentValues contentValues = new ContentValues();
-        String jsonString = recipeItem.getSource();
-
+        Gson gson = new GsonBuilder()
+//                    .setLenient()
+//                    .setPrettyPrinting()
+                .create();
+        String jsonString;
+        try {
+            jsonString = gson.toJson(recipeItem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
         contentValues.put(COLUMN_RECIPE_NAME, recipeItem.getName());
         contentValues.put(COLUMN_RECIPE_LENGTH, jsonString.length());
         contentValues.put(COLUMN_RECIPE_VALUE, jsonString);
@@ -132,13 +166,14 @@ public class RecipeData {
         return nUpdated;
     }
 
+    public static int bulkInsertBackground(ContentResolver resolver, LoaderManager manager,
+                                           List<RecipeItem> list, LoaderDb loader) {
+        if(resolver == null || manager == null) return 0;
 
-
-
-
-
-
-
+        BulkInsert bulkInsert = new BulkInsert(resolver,manager,list,loader);
+        bulkInsert.execute();
+        return bulkInsert.mResult;
+    }
 
     private static class BulkInsert extends AsyncTask<Void, Void, Integer> {
         private final ContentResolver mContentResolver;
