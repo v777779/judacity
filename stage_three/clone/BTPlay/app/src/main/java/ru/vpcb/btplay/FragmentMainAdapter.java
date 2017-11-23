@@ -95,7 +95,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
             mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
 //            mImage.setImageResource(MAIN_IMAGE_IDS[position % MAIN_IMAGE_IDS.length]);
 // test!!! add Picasso here
-              mImage.setImageResource(R.drawable.cakes_024);
+              mImage.setImageResource(R.drawable.cakes_025);
 
         }
 
