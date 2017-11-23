@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">BTPlay</string>
-    <string name="click_expand"> "click to expand"</string>
-    <string name="click_collapse"> "click to collapse"</string>
+    <string name="click_expand"> "expand ingredients"</string>
+    <string name="click_collapse"> "collapse"</string>
 </resources>

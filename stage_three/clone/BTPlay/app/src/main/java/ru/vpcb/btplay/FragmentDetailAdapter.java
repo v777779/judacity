@@ -125,6 +125,7 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 mHeaderText.setText(mRecipeItem.getName());
                 mHeaderText.setTextSize(24);
                 itemView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.colorBackHead));
+//                mHeaderText.setTextColor(ContextCompat.getColor(mContext,R.color.colorBackHeadText));
                 if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
                     StringBuilder sb = new StringBuilder();
                     int count = 1;
