@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fc_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,9 +29,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="left"
-                android:text="Media Player"
-                android:textAppearance="@style/TextNormal"
+                android:gravity="center"
+                tools:text="Media Player"
+                android:textAppearance="@style/TextHead"
                 android:textColor="@android:color/white"
 
                 />
@@ -53,7 +54,6 @@
                 android:id="@+id/fc_recycler_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:orientation="vertical"
                 >
 
@@ -61,17 +61,21 @@
                     android:id="@+id/fp_head_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:gravity="center"
-                    android:text="HEADER"
-                    android:textAppearance="@style/TextHead" />
+                    tools:text="HEADER"
+                    android:textAppearance="@style/TextHead"
+                    />
 
                 <TextView
                     android:id="@+id/fp_body_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Normal text"
+                    tools:text="Normal text"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:textAppearance="@style/TextNormal" />

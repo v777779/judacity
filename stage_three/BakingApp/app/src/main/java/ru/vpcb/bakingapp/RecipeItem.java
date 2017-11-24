@@ -51,7 +51,7 @@ public class RecipeItem {
         @Override
         public String toString() {
             String stringQuantity = new DecimalFormat("0.#").format(quantity);
-            return ingredient + ", " + stringQuantity + " " + measure;
+            return ingredient + ", " + stringQuantity + "" + measure;
         }
     }
 

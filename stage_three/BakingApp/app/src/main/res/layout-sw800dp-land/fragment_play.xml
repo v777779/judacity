@@ -31,10 +31,9 @@
             android:id="@+id/fp_video_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Media Player"
+            tools:text="Media Player"
             android:textAppearance="@style/TextBold"
 
             />
@@ -57,14 +56,17 @@
         app:layout_constraintTop_toTopOf="@+id/guideline_horizontal"
         android:weightSum="1">
 
+
         <TextView
             android:id="@+id/fp_head_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAppearance="@style/TextBold"
-            android:layout_margin="8dp"
-            android:text="HEADER"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            tools:text="HEADER"
             />
 
         <TextView
@@ -73,8 +75,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAppearance="@style/TextNormal"
-            android:layout_margin="8dp"
-            android:text="Normal text"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            tools:text="Normal text"
             />
 
     </LinearLayout>

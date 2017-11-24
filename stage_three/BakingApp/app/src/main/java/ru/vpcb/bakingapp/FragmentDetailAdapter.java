@@ -154,16 +154,13 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                     mDetailText.setText(mContext.getString(R.string.click_expand));
                 }
             } else {
-                if (mStepList == null || mStepList.isEmpty() || position < 0 || position > mStepList.size()) {
-                    fillEmptyStep();
+                if (mStepList == null || mStepList.isEmpty() || position < 0 ||
+                        position > mStepList.size() || mStepList.get(position - 1)== null) {
+                    setEmptyStep();
                     return;
                 }
 // stepItem
                 RecipeItem.Step stepItem = mStepList.get(position - 1);  // if stepItem == null exits
-                if (stepItem == null) {
-                    fillEmptyStep();
-                    return;
-                }
                 if (position == 1) {
                     mHeaderText.setText(mContext.getString(R.string.play_header_intro));
                 } else {
@@ -178,12 +175,8 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 mRightExpand.setVisibility(View.GONE);
                 String imageURL = stepItem.getThumbnailURL();
 
-                boolean isVideoAvailable = !stepItem.getVideoURL().isEmpty();
-//                int thumbImageId = R.drawable.ic_videocam_off_24dp;
-//                if (isVideoAvailable) thumbImageId = R.drawable.ic_videocam_24dp;
-
                 int thumbImageId = R.drawable.ic_play_circle_white_24dp;
-                if (isVideoAvailable) thumbImageId = R.drawable.ic_play_circle_black_24dp;
+                if (!stepItem.getVideoURL().isEmpty()) thumbImageId = R.drawable.ic_play_circle_black_24dp;
 
                 if (imageURL.isEmpty()) {                            // default image
                     mThumbImage.setImageResource(thumbImageId);
@@ -193,12 +186,11 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                             .apply(new RequestOptions().error(thumbImageId))
                             .into(mThumbImage);
                 }
-
             }
 
         }
 
-        private void fillEmptyStep() {
+        private void setEmptyStep() {
             mThumbImage.setVisibility(View.GONE);
             mLeftExpand.setVisibility(View.GONE);
             mRightExpand.setVisibility(View.GONE);

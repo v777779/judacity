@@ -8,9 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,10 +38,10 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     private List<String> mCardList;
     private RecyclerView mRecyclerView;
     private FragmentMainAdapter mRecyclerAdapter;
-    private int mSpan;
     private int mPosition;
     private int mPositionMax;
 
+    TextView mNameText;
     TextView mHeadText;
     TextView mBodyText;
     ImageView mPrevButton;
@@ -87,6 +86,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
 
         mCurrentStep = getCurrentStep();
 
+
         mHeadText = rootView.findViewById(R.id.fp_head_text);
         mBodyText = rootView.findViewById(R.id.fp_body_text);
         mPrevButton = rootView.findViewById(R.id.prev_button);
@@ -96,52 +96,24 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
         mNextExt = rootView.findViewById(R.id.next_button_extended);
         mVideoText = rootView.findViewById(R.id.fp_video_text);
 
-
-        Resources res = getResources();
-        if (mCurrentStep == null) {
-            String emptyText = res.getString(R.string.play_header_empty);
-            mHeadText.setText(emptyText);
-            if (mNavigationText != null) {
-                mNavigationText.setText(emptyText);
-            }
-
-            mBodyText.setText(res.getString(R.string.play_body_error));
-        } else {
-// head text
-// navigation text
-// body text
-            String stepText = res.getString(R.string.play_header_step, "" + mCurrentStep.getId());
-            mHeadText.setText(stepText);
-            if (mNavigationText != null) {
-                mNavigationText.setText(stepText);
-            }
-
-            stepText = mCurrentStep.getDescription();
-            if (stepText == null || stepText.isEmpty()) {
-                stepText = getString(R.string.play_body_empty);
-            } else {
-                stepText = stepText.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
-            }
-            mBodyText.setText(stepText);
+        if (mHeadText != null && mRecipeItem != null) {
+            mHeadText.setText(mRecipeItem.getName());
         }
-
-// video text
-        if(mCurrentStep !=null)    {
-        String videoURL = mCurrentStep.getVideoURL();
-        if (videoURL == null || videoURL.isEmpty()) {
-            mVideoText.setText("No video");
-            mVideoText.setTextSize(getResources().getDimension(R.dimen.bold_text_size));
-            mVideoText.setTypeface(mVideoText.getTypeface(), Typeface.BOLD);
-            mVideoText.setGravity(Gravity.CENTER);
-        } else mVideoText.setText(videoURL);
-    }
-
-
-    setupButtonsAnimation();
-
-
+        setupNavTextView();
+        setupNavButtons();
+        setupBodyTextView();
+        if (mCurrentStep == null) {
+            setVideoTextEmpty();
+        } else {
+            String videoURL = mCurrentStep.getVideoURL();
+            if (videoURL == null || videoURL.isEmpty()) {
+                setVideoTextEmpty();
+            } else {
+                setVideoText(videoURL);
+            }
+        }
         return rootView;
-}
+    }
 
 
     @Override
@@ -174,14 +146,11 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, playerFragment)
                     .commit();
-
-
         }
 
 //        Snackbar.make(getView(), "Clicked on Fragment Player " + " stack: " +
 //                        fragmentManager.getBackStackEntryCount(),
 //                Snackbar.LENGTH_SHORT).show();
-
     }
 
 
@@ -195,7 +164,6 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
         return 0;
     }
 
-
     private void setupButtonsAnimation() {
         if (mPrevExt == null || mPrevButton == null ||
                 mNextExt == null || mNextButton == null ||
@@ -208,14 +176,10 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
                 mPrevButton.callOnClick();
             }
         });
-
-
         mNextExt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mNextButton.callOnClick();
-
-
             }
         });
 
@@ -224,11 +188,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
             public void onClick(View v) {
                 if (mPosition > 1) {
                     mPosition--;
-
                     onCallback(mPosition);
                 }
 //                prevButtonAnimate();          // replaced by FrameLayout clickable
-
             }
         });
 
@@ -237,16 +199,168 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
             public void onClick(View v) {
                 if (mPosition < mPositionMax) {
                     mPosition++;
-
                     onCallback(mPosition);
                 }
 //                nextButtonAnimate();          // replaced by FrameLayout clickable
             }
         });
 
-
     }
 
+    private void setupNavButtonsVisibility() {
+        if (mPrevButton == null || mNextButton == null) {
+            return;
+        }
+
+        if (mPosition <= 1) {
+            mPrevButton.setVisibility(View.INVISIBLE);
+        }else {
+            mPrevButton.setVisibility(View.VISIBLE);
+        }
+        if (mPosition >= mPositionMax) {
+            mNextButton.setVisibility(View.INVISIBLE);
+        }else {
+            mNextButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setupNavButtons() {
+        if (mPrevExt == null || mNextExt == null) {
+            return;
+        }
+        setupNavButtonsVisibility();
+
+        mPrevExt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPosition > 1) {
+                    mPosition--;
+                    onCallback(mPosition);
+                }
+                setupNavButtonsVisibility();
+            }
+        });
+
+        mNextExt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPosition < mPositionMax) {
+                    mPosition++;
+                    onCallback(mPosition);
+
+                }
+                setupNavButtonsVisibility();
+            }
+        });
+    }
+
+    private void setupNavTextView() {
+        if (mNavigationText == null) {
+            return;
+        }
+        if (mCurrentStep == null) {
+            mNavigationText.setText(getString(R.string.play_header_empty));
+
+        } else {
+            String stepText = getString(R.string.play_header_step, "" + mCurrentStep.getId());
+            if (mPosition == 1) {
+                stepText = getString(R.string.play_header_intro);
+            }
+            mNavigationText.setText(stepText);
+        }
+    }
+
+    private void setupBodyTextView() {
+        if (mBodyText == null) {
+            return;
+        }
+        if (mCurrentStep == null) {
+            mBodyText.setText(getString(R.string.play_body_error));
+        } else {
+            String stepText = mCurrentStep.getDescription();
+            if (stepText == null || stepText.isEmpty()) {
+                stepText = getString(R.string.play_body_empty);
+            } else {
+                stepText = stepText.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
+            }
+            mBodyText.setText(stepText);
+        }
+    }
+
+    private void setAllText() {
+        Resources res = getResources();
+        if (mRecipeItem != null) {
+            mNameText.setText(mRecipeItem.getName());
+        }
+        mHeadText.setVisibility(View.GONE);
+
+        if (mCurrentStep == null) {
+            String emptyText = res.getString(R.string.play_header_empty);
+
+            mHeadText.setText(emptyText);
+            if (mNavigationText != null) {
+                mNavigationText.setText(emptyText);
+            }
+            mBodyText.setText(res.getString(R.string.play_body_error));
+            setVideoTextEmpty();
+        } else {
+            String stepText;
+            if (mPosition == 1) {
+                stepText = mContext.getString(R.string.play_header_intro);
+            } else {
+                stepText = mContext.getString(R.string.play_header_step, "" + mCurrentStep.getId());
+            }
+            mHeadText.setText(stepText);
+            if (mNavigationText != null) {
+                mNavigationText.setText(stepText);
+            }
+
+            stepText = mCurrentStep.getDescription();
+            if (stepText == null || stepText.isEmpty()) {
+                stepText = getString(R.string.play_body_empty);
+            } else {
+                stepText = stepText.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
+            }
+            mBodyText.setText(stepText);
+
+            // video text
+            String videoURL = mCurrentStep.getVideoURL();
+            if (videoURL == null || videoURL.isEmpty()) {
+                setVideoTextEmpty();
+            } else {
+                setVideoText(videoURL);
+            }
+        }
+    }
+
+    private void setDifferentText() {
+        Resources res = getResources();
+        if (mNavigationText != null) {
+            if (mCurrentStep == null) {
+                mNavigationText.setText(res.getString(R.string.play_header_empty));
+            } else {
+                String stepText = res.getString(R.string.play_header_step, "" + mCurrentStep.getId());
+                if (mPosition == 1) {
+                    stepText = res.getString(R.string.play_header_intro);
+                }
+                mNavigationText.setText(stepText);
+            }
+        }
+        if (mBodyText != null) {
+            if (mCurrentStep == null) {
+                mBodyText.setText(res.getString(R.string.play_body_error));
+
+            } else {
+                String stepText = mCurrentStep.getDescription();
+                if (stepText == null || stepText.isEmpty()) {
+                    stepText = getString(R.string.play_body_empty);
+                } else {
+                    stepText = stepText.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
+                }
+                mBodyText.setText(stepText);
+            }
+        }
+    }
 
     private RecipeItem.Step getCurrentStep() {
         if (mStepList == null || mPosition == 0 || mPosition > mStepList.size()) {
@@ -255,16 +369,18 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
         return mStepList.get(mPosition - 1);
     }
 
-    @SuppressWarnings("deprecated")
-    public static Spanned fromHtml(String data) {
-        Spanned result;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            result = Html.fromHtml(data);
-        }
-        return result;
+
+    private void setVideoTextEmpty() {
+        mVideoText.setText("No video");
+        mVideoText.setGravity(Gravity.CENTER);
     }
 
+    private void setVideoText(String s) {
+        mVideoText.setText(s);
+        mVideoText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size));
+        mVideoText.setTypeface(null, Typeface.NORMAL);
+        mVideoText.setGravity(Gravity.LEFT);
+
+    }
 
 }
