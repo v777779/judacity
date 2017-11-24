@@ -1,13 +1,18 @@
 package ru.vpcb.btplay;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +24,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static ru.vpcb.btplay.utils.Constants.BUTTON_DOWN_ALPHA;
 import static ru.vpcb.btplay.utils.Constants.BUTTON_DOWN_DELAY;
@@ -55,6 +61,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     private Context mContext;
     private RecipeItem mRecipeItem;
     private boolean mIsWide;
+    TextView mVideoText;
+    private List<RecipeItem.Step> mStepList;
+    private RecipeItem.Step mCurrentStep;
 
     public FragmentPlayer() {
 
@@ -67,33 +76,72 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
         final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
         Bundle playerArgs = getArguments();
         mPosition = 0;
+        mPositionMax = 0;
         mIsWide = false;
         mRecipeItem = null;
-        if (playerArgs != null) {
+        mStepList = null;
+        try {                                                               // null will be catch by Exception e
             mPosition = playerArgs.getInt(RECIPE_STEP_POSITION, 0);
             mIsWide = playerArgs.getBoolean(RECIPE_SCREEN_WIDE, false);
-            try {
-                mRecipeItem = new Gson().fromJson(playerArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
-                if (mRecipeItem != null)
-                    mPositionMax = mRecipeItem.getSteps().size();
-            } catch (Exception e) {
-                Log.d(TAG_FDETAIL, e.getMessage());
-            }
+            mRecipeItem = new Gson().fromJson(playerArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
+            mStepList = mRecipeItem.getSteps();
+            mPositionMax = mStepList.size();
+
+
+            if (mPositionMax < 0 || mPositionMax < mPosition) mPositionMax = mPosition;
+        } catch (Exception e) {
+            Log.d(TAG_FDETAIL, e.getMessage());
         }
 
-        mBodyText = rootView.findViewById(R.id.fp_body_text);
+        mCurrentStep = getCurrentStep();
+
         mHeadText = rootView.findViewById(R.id.fp_head_text);
+        mBodyText = rootView.findViewById(R.id.fp_body_text);
         mPrevButton = rootView.findViewById(R.id.prev_button);
         mNextButton = rootView.findViewById(R.id.next_button);
         mNavigationText = rootView.findViewById(R.id.navigation_text);
         mPrevExt = rootView.findViewById(R.id.prev_button_extended);
         mNextExt = rootView.findViewById(R.id.next_button_extended);
+        mVideoText = rootView.findViewById(R.id.fp_video_text);
 
+        Resources resources = getResources();
+        if (mHeadText != null) {
+            if (mPosition == 0) {
+                mHeadText.setText(resources.getString(R.string.play_header_empty));
+            } else {
+                mHeadText.setText(resources.getString(R.string.play_header_step, mPosition));
+            }
+        }
         if (mBodyText != null) {
-            mBodyText.setText("Normal text  positon: " + (mPosition + 1));
+            if (mCurrentStep == null) {
+                mBodyText.setText(resources.getString(R.string.play_body_empty));
+            } else {
+                String stepText = mCurrentStep.getDescription();
+
+                if (stepText == null || stepText.isEmpty()) {
+
+                    mBodyText.setText(resources.getString(R.string.play_body_empty));
+                } else {
+                    stepText = stepText.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
+                    mBodyText.setText(stepText);
+                }
+            }
+        }
+        if (mCurrentStep != null) {
+            String videoURL = mCurrentStep.getVideoURL();
+            if (videoURL == null || videoURL.isEmpty()) {
+                mVideoText.setText("No video");
+                mVideoText.setTextSize(getResources().getDimension(R.dimen.head_text_size));
+                mVideoText.setTypeface(mVideoText.getTypeface(), Typeface.BOLD);
+                mVideoText.setGravity(Gravity.CENTER);
+            } else mVideoText.setText(videoURL);
+
         }
 
+
         setupButtonsAnimation();
+
+
         return rootView;
     }
 
@@ -205,4 +253,21 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
         });
     }
 
+    private RecipeItem.Step getCurrentStep() {
+        if (mStepList == null || mPosition == 0 || mPosition > mStepList.size()) {
+            return null;
+        }
+        return mStepList.get(mPosition - 1);
+    }
+
+    @SuppressWarnings("deprecated")
+    public static Spanned fromHtml(String data) {
+        Spanned result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml(data);
+        }
+        return result;
+    }
 }

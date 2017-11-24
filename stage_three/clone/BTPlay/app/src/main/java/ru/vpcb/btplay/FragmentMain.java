@@ -1,17 +1,12 @@
 package ru.vpcb.btplay;
 
-import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -28,20 +23,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import ru.vpcb.btplay.network.LoaderDb;
 import ru.vpcb.btplay.network.LoaderUri;
 import ru.vpcb.btplay.utils.NetworkData;
-import ru.vpcb.btplay.utils.FragmentData;
 import ru.vpcb.btplay.utils.RecipeData;
-import ru.vpcb.btplay.utils.TestData;
 
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.btplay.utils.Constants.*;

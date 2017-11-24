@@ -100,7 +100,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
                     .commit();
-
         }
         return rootView;
     }

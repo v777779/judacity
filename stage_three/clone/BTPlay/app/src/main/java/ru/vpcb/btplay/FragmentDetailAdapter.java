@@ -150,7 +150,12 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 }
                 // text
                 RecipeItem.Step stepItem = mStepList.get(position - 1);
-                mHeaderText.setText("Step " + (position));
+                if (position == 1) {
+                    mHeaderText.setText(mContext.getString(R.string.play_header_intro));
+                } else {
+                    mHeaderText.setText(mContext.getString(R.string.play_header_step, position - 1));
+                }
+
                 mDetailText.setText(stepItem.getShortDescription());
                 // thumb
                 mThumbImage.setVisibility(View.VISIBLE);
