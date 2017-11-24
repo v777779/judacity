@@ -49,12 +49,6 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
             mStepList = mRecipeItem.getSteps();
             mIngredientList = mRecipeItem.getIngredients();
         }
-
-// test!!!
-        mStepList.set(2, null);
-        mStepList.set(5, null);
-
-
     }
 
 
