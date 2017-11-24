@@ -7,12 +7,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,10 @@ import static ru.vpcb.btplay.utils.Constants.BUTTON_DOWN_ALPHA;
 import static ru.vpcb.btplay.utils.Constants.BUTTON_DOWN_DELAY;
 import static ru.vpcb.btplay.utils.Constants.BUTTON_UP_ALPHA;
 import static ru.vpcb.btplay.utils.Constants.BUTTON_UP_DELAY;
+import static ru.vpcb.btplay.utils.Constants.RECIPE_POSITION;
+import static ru.vpcb.btplay.utils.Constants.RECIPE_SCREEN_WIDE;
+import static ru.vpcb.btplay.utils.Constants.RECIPE_STEP_POSITION;
+import static ru.vpcb.btplay.utils.Constants.TAG_FDETAIL;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -46,9 +53,8 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     View mPrevExt;
     View mNextExt;
     private Context mContext;
-
-    IFragmentCallback mFragmentCallback;
-
+    private RecipeItem mRecipeItem;
+    private boolean mIsWide;
 
     public FragmentPlayer() {
 
@@ -59,13 +65,21 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
-        Bundle args = getArguments();
-        if (args != null) {
-            mPosition = args.getInt("position", 0);
-            mPositionMax = args.getInt("positionMax", 0);
+        Bundle playerArgs = getArguments();
+        mPosition = 0;
+        mIsWide = false;
+        mRecipeItem = null;
+        if (playerArgs != null) {
+            mPosition = playerArgs.getInt(RECIPE_STEP_POSITION, 0);
+            mIsWide = playerArgs.getBoolean(RECIPE_SCREEN_WIDE, false);
+            try {
+                mRecipeItem = new Gson().fromJson(playerArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
+                if (mRecipeItem != null)
+                    mPositionMax = mRecipeItem.getSteps().size();
+            } catch (Exception e) {
+                Log.d(TAG_FDETAIL, e.getMessage());
+            }
         }
-//test !!!
-        mPositionMax = 8;
 
         mBodyText = rootView.findViewById(R.id.fp_body_text);
         mHeadText = rootView.findViewById(R.id.fp_head_text);
@@ -87,11 +101,11 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            mFragmentCallback = (IFragmentCallback)context;
-        }catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mFragmentCallback = (IFragmentCallback) context;
+//        } catch (ClassCastException e) {
+//            e.printStackTrace();
+//        }
         mContext = context;
     }
 

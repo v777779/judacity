@@ -22,6 +22,7 @@ public class RecipeContract {
         public static final String COLUMN_RECIPE_ID = "recipe_id";                // int
         public static final String COLUMN_RECIPE_NAME = "recipe_name";            // string
         public static final String COLUMN_RECIPE_LENGTH = "recipe_length";        // int
+        public static final String COLUMN_RECIPE_IMAGE = "recipe_image";        // int
         public static final String COLUMN_RECIPE_VALUE = "recipe_value";          // string
     }
 

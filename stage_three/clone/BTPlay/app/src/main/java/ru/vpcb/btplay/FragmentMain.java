@@ -15,6 +15,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -141,13 +143,10 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         FragmentDetail detailFragment = new FragmentDetail();
 
         RecipeItem recipeItem = mFragmentCallback.getRecipe(position);
-        try {
-            Bundle detailArgs = new Bundle();
-            detailArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));
-            detailFragment.setArguments(detailArgs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Bundle detailArgs = new Bundle();
+        detailArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));
+        detailFragment.setArguments(detailArgs);
+
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, detailFragment)
@@ -195,12 +194,17 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         if (data != null) {
             s = data.getString(BUNDLE_LOADER_STRING_ID);
         }
-        Type listType = new TypeToken<List<RecipeItem>>() {
-        }.getType();
-        List<RecipeItem> list = new Gson().fromJson(s, listType);
+
+        try {
+            Type listType = new TypeToken<List<RecipeItem>>() {
+            }.getType();
+            List<RecipeItem> list = new Gson().fromJson(s, listType);
 // test!!!
 //        TestData.addImages(list);
-        RecipeData.bulkInsertBackground(mContext.getContentResolver(), getLoaderManager(), list, mLoaderDb);
+            RecipeData.bulkInsertBackground(mContext.getContentResolver(), getLoaderManager(), list, mLoaderDb);
+        } catch (JsonSyntaxException e) {
+            Log.d(TAG_FMAIN, e.getMessage());
+        }
 
     }
 
@@ -225,7 +229,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
                 String recipeJson = cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE));
                 RecipeItem recipeItem = gson.fromJson(recipeJson, RecipeItem.class);
                 list.add(recipeItem);
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 e.printStackTrace();
             }
         }

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_IMAGE;
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 //import static ru.vpcb.btplay.utils.Constants.MAIN_IMAGE_IDS;
@@ -34,6 +35,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     private IFragmentHelper mHelper;
     private Cursor mCursor;
     private Context mContext;
+
 
     public FragmentMainAdapter(Context context, IFragmentHelper helper) {
         mContext = context;
@@ -97,15 +99,8 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         }
 
         private void fill(int position) {
-            RecipeItem recipeItem = new Gson().fromJson(
-                    mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE)), RecipeItem.class);
-
-
-//            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
-            mText.setText(recipeItem.getName());
-//            mImage.setImageResource(MAIN_IMAGE_IDS[position % MAIN_IMAGE_IDS.length]);
-// test!!! add Picasso here
-            String imageURL = recipeItem.getImage();
+            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
+            String imageURL =  mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_IMAGE));
             if (imageURL != null && !imageURL.isEmpty()) {
                 Glide.with(mContext)
                         .load(imageURL)

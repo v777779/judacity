@@ -4,6 +4,7 @@ package ru.vpcb.btplay.utils;
 import android.support.design.widget.Snackbar;
 
 import ru.vpcb.btplay.FragmentDetail;
+import ru.vpcb.btplay.FragmentMain;
 import ru.vpcb.btplay.MainActivity;
 import ru.vpcb.btplay.R;
 
@@ -19,7 +20,8 @@ public class Constants {
 
     // database data
     public static final String DATABASE_NAME = "recipesDb.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
+    public static final int OLD_DATABASE_VERSION = 1;
 
 
 // bundle saveInstance
@@ -116,10 +118,16 @@ public class Constants {
     public static final int BUTTON_UP_DELAY = 150;
 
     // fragment main data
+    public static final String TAG_FMAIN = FragmentMain.class.getSimpleName();
     public static final String RECIPE_POSITION = "recipe_position";
-    public static final String RECIPE_STEP_POSITION = "recipe_step_position";
+
 
     // fragment detail data
-    public static final String TAG_DETAIL = FragmentDetail.class.getSimpleName();
+    public static final String TAG_FDETAIL = FragmentDetail.class.getSimpleName();
     public static final String DETAIL_IS_EXPANDED = "detail_is_expanded";
+
+    // fragment play data
+    public static final String RECIPE_STEP_POSITION = "recipe_step_position";
+    public static final String RECIPE_SCREEN_WIDE = "recipe_screen_wide";
+
 }

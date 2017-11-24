@@ -15,16 +15,21 @@ import android.view.ViewGroup;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import ru.vpcb.btplay.utils.FragmentData;
 
 import static ru.vpcb.btplay.utils.Constants.DETAIL_IS_EXPANDED;
 import static ru.vpcb.btplay.utils.Constants.RECIPE_POSITION;
+import static ru.vpcb.btplay.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.btplay.utils.Constants.RECIPE_STEP_POSITION;
-import static ru.vpcb.btplay.utils.Constants.TAG_DETAIL;
+import static ru.vpcb.btplay.utils.Constants.TAG_FDETAIL;
+
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -40,7 +45,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     private FragmentDetailAdapter mRecyclerAdapter;
     private int mPosition;
     private boolean mIsWide;
-    private IFragmentCallback mFragmentCallback;
     private RecipeItem mRecipeItem;
     private Context mContext;
     private boolean mIsExpanded;
@@ -64,12 +68,13 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         Bundle detailArgs = getArguments();
         mRecipeItem = null;
-        try {
-            mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
-        } catch (Exception e) {
-            Log.d(TAG_DETAIL, e.getMessage());
+        if(detailArgs != null) {
+            try {
+                mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
+            } catch (JsonSyntaxException e) {
+                Log.d(TAG_FDETAIL, e.getMessage());
+            }
         }
-
 
 //        mRecipeItem = null;
 //        if (mFragmentCallback != null) {
@@ -90,7 +95,7 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentPlayer playerFragment = new FragmentPlayer();
             Bundle playerArgs = new Bundle();
-            playerArgs.putInt(RECIPE_STEP_POSITION, mPosition);
+            playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
             playerFragment.setArguments(playerArgs);
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
@@ -104,11 +109,11 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            mFragmentCallback = (IFragmentCallback) context;
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mFragmentCallback = (IFragmentCallback) context;
+//        } catch (ClassCastException e) {
+//            e.printStackTrace();
+//        }
         mContext = context;
 
     }
@@ -125,21 +130,25 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 //        Snackbar.make(getView(), "Clicked position: "+position, Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
 
-        mPosition = position;
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentPlayer playerFragment = new FragmentPlayer();
+        Bundle playerArgs = new Bundle();
+
+        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
+        playerArgs.putInt(RECIPE_STEP_POSITION, position);
+        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
+        playerFragment.setArguments(playerArgs);
+
         if (mIsWide) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentPlayer playerFragment = new FragmentPlayer();
-            Bundle args = new Bundle();
-            args.putInt("position", mPosition);
-            playerFragment.setArguments(args);
+            mPosition = position;
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
                     .commit();
         } else {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentPlayer playerFragment = new FragmentPlayer();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, playerFragment)
+                    .addToBackStack(null)
                     .commit();
 
 //            Snackbar.make(getView(), "Clicked Fragment Detail position: " + position + " stack: " +

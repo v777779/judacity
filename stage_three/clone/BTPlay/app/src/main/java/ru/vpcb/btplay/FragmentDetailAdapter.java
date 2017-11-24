@@ -158,9 +158,12 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 mRightExpand.setVisibility(View.GONE);
                 String imageURL = stepItem.getThumbnailURL();
 
-                boolean isVideoAvailable = stepItem.getVideoURL().isEmpty();
-                int thumbImageId = R.drawable.ic_videocam_off_24dp;
-                if (isVideoAvailable) thumbImageId = R.drawable.ic_videocam_24dp;
+                boolean isVideoAvailable = !stepItem.getVideoURL().isEmpty();
+//                int thumbImageId = R.drawable.ic_videocam_off_24dp;
+//                if (isVideoAvailable) thumbImageId = R.drawable.ic_videocam_24dp;
+
+                int thumbImageId = R.drawable.ic_play_circle_white_24dp;
+                if (isVideoAvailable) thumbImageId = R.drawable.ic_play_circle_black_24dp;
 
                 if (imageURL.isEmpty()) {                            // default image
                     mThumbImage.setImageResource(thumbImageId);

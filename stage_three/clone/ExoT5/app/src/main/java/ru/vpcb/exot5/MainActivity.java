@@ -73,28 +73,32 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
             mCurrentWindow = savedInstanceState.getInt("window_index");
             mPlaybackPosition = savedInstanceState.getLong("seek_position");
             mPlaybackWhenReady = savedInstanceState.getBoolean("pause_ready");
+            mPlaybackEnded = savedInstanceState.getBoolean("playback_ended");
+
         } else {
             mCurrentWindow = 0;
             mPlaybackPosition = 0;
             mPlaybackWhenReady = false;
+            mPlaybackEnded = false;
         }
 
 
         mPlayButton = (ImageView) findViewById(R.id.ic_play_button);
-        mPlaybackEnded = false;
+        if(!mPlaybackEnded) mPlayButton.setAlpha(0f);
 // animation
         mAnimationTime = 500; // ms
 
-        CustomLayout cl = (CustomLayout) findViewById(R.id.child_constraint);
+//        CustomLayout cl = (CustomLayout) findViewById(R.id.child_constraint);
 
 
-        cl.setOnClickListener(new View.OnClickListener() {
+       mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPlaybackPosition = mPlayer.getCurrentPosition();
                 mPlaybackWhenReady = !mPlaybackWhenReady;
-                mPlayButton.setAlpha(1f);
+
                 if (mPlaybackEnded) {
+                    mPlayButton.setAlpha(1f);
                     mPlaybackPosition = 0;
                     mPlaybackWhenReady = true;
                 }
@@ -122,10 +126,12 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
             mPlaybackPosition = mPlayer.getContentPosition();
             mCurrentWindow = mPlayer.getCurrentWindowIndex();
             mPlaybackWhenReady = mPlayer.getPlayWhenReady();
+
         }
         outState.putInt("window_index", mCurrentWindow);
         outState.putLong("seek_position", mPlayer.getContentPosition());
         outState.putBoolean("pause_ready", mPlaybackWhenReady);
+        outState.putBoolean("playback_ended", mPlaybackEnded);
     }
 
     private MediaSource buildMediaSource(String sourceURI) {

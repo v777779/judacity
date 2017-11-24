@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.vpcb.btplay.RecipeItem;
@@ -22,6 +23,7 @@ import ru.vpcb.btplay.data.RecipeContract.RecipeEntry;
 import ru.vpcb.btplay.network.LoaderDb;
 
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
+import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_IMAGE;
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_LENGTH;
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
 import static ru.vpcb.btplay.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
@@ -68,18 +70,15 @@ public class RecipeData {
 //                    .setLenient()
 //                    .setPrettyPrinting()
                 .create();
-        String jsonString;
-        try {
-            jsonString = gson.toJson(recipeItem);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
 
-        contentValues.put(COLUMN_RECIPE_ID, recipeItem.getId());                                // int
-        contentValues.put(COLUMN_RECIPE_NAME, recipeItem.getName());       // string
-        contentValues.put(COLUMN_RECIPE_LENGTH, jsonString.length());  // double
-        contentValues.put(COLUMN_RECIPE_VALUE, jsonString);       // string
+        String jsonString = gson.toJson(recipeItem);
+        if(jsonString == null || jsonString.isEmpty() || jsonString.equals("null")) return null;
+
+        contentValues.put(COLUMN_RECIPE_ID, recipeItem.getId());                        // int
+        contentValues.put(COLUMN_RECIPE_NAME, recipeItem.getName());                    // string
+        contentValues.put(COLUMN_RECIPE_LENGTH, jsonString.length());                   // double
+        contentValues.put(COLUMN_RECIPE_IMAGE, recipeItem.getImage());      // string
+        contentValues.put(COLUMN_RECIPE_VALUE, jsonString);                             // string
 
         Uri returnUri = contentResolver.insert(CONTENT_URI, contentValues);
 
@@ -96,32 +95,30 @@ public class RecipeData {
 
         if (list == null || list.isEmpty()) return 0;
 
-        ContentValues[] contentValues = new ContentValues[list.size()];  // n records
+//        ContentValues[] contentValues = new ContentValues[list.size()];  // n records
+        List<ContentValues> listContent = new ArrayList<>();
         Gson gson = new GsonBuilder()
 //                    .setLenient()
 //                    .setPrettyPrinting()
                 .create();
-        String jsonString = "";
 
-        for (int i = 0; i < contentValues.length; i++) {
+
+        for (int i = 0; i < list.size(); i++) {
             ContentValues dest = new ContentValues();
-
-            contentValues[i] = dest;
             RecipeItem src = list.get(i);
+            String jsonString = gson.toJson(src);
+            if(jsonString == null || jsonString.isEmpty() || jsonString.equals("null")) continue;
 
-            try {
-                jsonString = gson.toJson(src);
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            dest.put(RecipeEntry.COLUMN_RECIPE_ID, src.getId());             // int
-            dest.put(RecipeEntry.COLUMN_RECIPE_NAME, src.getName());            // string
-            dest.put(RecipeEntry.COLUMN_RECIPE_LENGTH, jsonString.length());            // string
-            dest.put(RecipeEntry.COLUMN_RECIPE_VALUE, jsonString);            // string
+            dest.put(COLUMN_RECIPE_ID, src.getId());                // int
+            dest.put(COLUMN_RECIPE_NAME, src.getName());            // string
+            dest.put(COLUMN_RECIPE_LENGTH, jsonString.length());    // string
+            dest.put(COLUMN_RECIPE_IMAGE, src.getImage());          // string
+            dest.put(COLUMN_RECIPE_VALUE, jsonString);              // string
+            listContent.add(dest);
         }
-        int nInserted = contentResolver.bulkInsert(RecipeEntry.CONTENT_URI, contentValues);
+
+        ContentValues[] contentValues = listContent.toArray(new ContentValues[listContent.size()]);
+        int nInserted = contentResolver.bulkInsert(CONTENT_URI, contentValues);
         if (nInserted > 0) {
             loaderManager.restartLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb);
         }
@@ -142,17 +139,14 @@ public class RecipeData {
 //                    .setLenient()
 //                    .setPrettyPrinting()
                 .create();
-        String jsonString;
-        try {
-            jsonString = gson.toJson(recipeItem);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
+
+        String jsonString = gson.toJson(recipeItem);
+        if(jsonString == null || jsonString.isEmpty() || jsonString.equals("null")) return 0;
+
         contentValues.put(COLUMN_RECIPE_NAME, recipeItem.getName());
         contentValues.put(COLUMN_RECIPE_LENGTH, jsonString.length());
+        contentValues.put(COLUMN_RECIPE_IMAGE, recipeItem.getImage());
         contentValues.put(COLUMN_RECIPE_VALUE, jsonString);
-
 
         int nUpdated = contentResolver.update(
                 uri, contentValues,
@@ -168,9 +162,9 @@ public class RecipeData {
 
     public static int bulkInsertBackground(ContentResolver resolver, LoaderManager manager,
                                            List<RecipeItem> list, LoaderDb loader) {
-        if(resolver == null || manager == null) return 0;
+        if (resolver == null || manager == null) return 0;
 
-        BulkInsert bulkInsert = new BulkInsert(resolver,manager,list,loader);
+        BulkInsert bulkInsert = new BulkInsert(resolver, manager, list, loader);
         bulkInsert.execute();
         return bulkInsert.mResult;
     }
