@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fc_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,10 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1">
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/black"
+            >
 
             <TextView
                 android:id="@+id/fp_video_text"
@@ -28,6 +31,7 @@
                 android:gravity="left"
                 android:text="Media Player"
                 android:textAppearance="@style/TextNormal"
+                android:textColor="@android:color/white"
 
                 />
 
@@ -40,14 +44,16 @@
             android:layout_marginBottom="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1">
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/colorBackPlay"
+            >
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/fc_recycler_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/holo_green_light"
+
                 android:orientation="vertical"
                 >
 
@@ -66,6 +72,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Normal text"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:textAppearance="@style/TextNormal" />
 
 
@@ -79,9 +87,10 @@
             android:background="@color/colorPrimary"
             android:orientation="horizontal"
             android:padding="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
 
             >
 
@@ -89,6 +98,8 @@
                 android:id="@+id/prev_button_extended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
                 >
 
                 <ImageButton
@@ -117,6 +128,8 @@
                 android:id="@+id/next_button_extended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
 
                 >
 

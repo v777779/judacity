@@ -61,6 +61,7 @@ public class ExoListener implements Player.EventListener, SimpleExoPlayer.VideoL
                 break;
             case Player.STATE_ENDED:
                 stateString = "ExoPlayer.STATE_ENDED     -";
+
                 break;
             default:
                 stateString = "UNKNOWN_STATE             -";

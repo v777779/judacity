@@ -114,8 +114,8 @@ public class Constants {
     // player animation
     public static final float BUTTON_DOWN_ALPHA = 0.5f;
     public static final float BUTTON_UP_ALPHA = 1.0f;
-    public static final int BUTTON_DOWN_DELAY = 150;
-    public static final int BUTTON_UP_DELAY = 150;
+    public static final int BUTTON_DOWN_DELAY = 1250;
+    public static final int BUTTON_UP_DELAY = 2550;
 
     // fragment main data
     public static final String TAG_FMAIN = FragmentMain.class.getSimpleName();

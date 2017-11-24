@@ -1,14 +1,11 @@
 package ru.vpcb.exot5;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -58,13 +55,14 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
     private boolean mPlaybackEnded;
     // animation
     private int mAnimationTime;
+    private boolean isLandscape;
 
-   @Override
-   protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        mPlayButton = (ImageView) findViewById(R.id.ic_play_button);
         mPlayerView = (SimpleExoPlayerView) findViewById(R.id.exoplayer_view);
         mBandwidthMeter = new DefaultBandwidthMeter();
         mExoListener = new ExoListener(this);
@@ -74,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
             mPlaybackPosition = savedInstanceState.getLong("seek_position");
             mPlaybackWhenReady = savedInstanceState.getBoolean("pause_ready");
             mPlaybackEnded = savedInstanceState.getBoolean("playback_ended");
+            if (!mPlaybackEnded)
+                mPlayButton.setAlpha(0f);
 
         } else {
             mCurrentWindow = 0;
@@ -81,22 +81,24 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
             mPlaybackWhenReady = false;
             mPlaybackEnded = false;
         }
+// mode
+        DisplayMetrics dp = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dp);
+        isLandscape = dp.widthPixels < dp.heightPixels;
 
 
-        mPlayButton = (ImageView) findViewById(R.id.ic_play_button);
-        if(!mPlaybackEnded) mPlayButton.setAlpha(0f);
 // animation
         mAnimationTime = 500; // ms
+//        CustomLayout cl = (CustomLayout) findViewById(R.id.child_constraint);  // FrameLayout
+        mPlayerView.setControllerAutoShow(false);
+        mPlayerView.setControllerShowTimeoutMs(2500);
 
-//        CustomLayout cl = (CustomLayout) findViewById(R.id.child_constraint);
-
-
-       mPlayButton.setOnClickListener(new View.OnClickListener() {
+        mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPlaybackPosition = mPlayer.getCurrentPosition();
                 mPlaybackWhenReady = !mPlaybackWhenReady;
-
+                mPlayerView.showController();
                 if (mPlaybackEnded) {
                     mPlayButton.setAlpha(1f);
                     mPlaybackPosition = 0;
@@ -263,7 +265,9 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
     @Override
     public void onResume() {
         super.onResume();
-        hideSystemUi();
+        if (!isLandscape) {
+            hideSystemUi();
+        }
         if ((Build.VERSION.SDK_INT <= 23 || mPlayer == null)) {
             initializePlayer();
         }
@@ -317,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
 //            mPlayButton.setImageResource(R.drawable.ic_play_circle_24dp);
             mPlayButton.setAlpha(1f);
             mPlaybackEnded = true;
-
+            mPlayerView.setControllerAutoShow(false);
         }
     }
 
