@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Baking App</string>
+
+<!--messages text-->
+    <string name="click_expand"> "expand ingredients"</string>
+    <string name="click_collapse"> "collapse"</string>
+    <string name="play_header_step"> "Step %1$s"</string>
+    <string name="play_header_intro"> "Intro"</string>
+    <string name="play_body_text"> "Description: %1$s"</string>
+    <string name="play_body_empty"> "No description"</string>
+    <string name="play_header_empty"> "\u2014"</string>
+    <string name="play_body_error"> "No or invalid data"</string>
+<!--tools text    -->
+    <string name="tool_header">HEADER</string>
+    <string name="tool_body">Normal text</string>
+
+
 </resources>
