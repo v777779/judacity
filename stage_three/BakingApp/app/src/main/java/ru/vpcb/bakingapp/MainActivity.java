@@ -8,9 +8,7 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements IFragmentCallback {
-
-    List<RecipeItem> mList;
+public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentCallback
                     .commit();
         }
 
-        mList = null;
+
     }
 
     @Override
@@ -43,20 +41,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentCallback
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public RecipeItem getRecipe(int position) {
-        if (mList == null || mList.isEmpty() || position < 0 || position > mList.size() - 1) {
-            return null;
-        }
-        return mList.get(position);
-    }
-
-    @Override
-    public void setRecipeList(List<RecipeItem> list) {
-        mList = list;
-    }
-
 
 
 }

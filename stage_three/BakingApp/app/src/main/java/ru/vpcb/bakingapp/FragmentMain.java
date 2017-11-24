@@ -46,6 +46,7 @@ import static ru.vpcb.bakingapp.utils.Constants.MIN_HEIGHT;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_SPAN;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
+import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
 import static ru.vpcb.bakingapp.utils.Constants.TAG_FMAIN;
 
 /**
@@ -68,10 +69,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     private LoaderDb mLoaderDb;
     private int mSpan;
     private int mSpanHeight;
-
-
-    private List<RecipeItem> mList;
-    private IFragmentCallback mFragmentCallback;
+    private Cursor mCursor;
     private Context mContext;
 
     public FragmentMain() {
@@ -125,11 +123,6 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            mFragmentCallback = (IFragmentCallback) context;
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
         mContext = context;
     }
 
@@ -142,11 +135,25 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onCallback(int position) {
-        FragmentDetail detailFragment = new FragmentDetail();
+        if (mCursor == null) {
+            return;
+        }
+        mCursor.moveToPosition(position);
+        String recipeJson = mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE));
+        RecipeItem recipeItem = null;
+        try {
+            recipeItem = new Gson().fromJson(recipeJson, RecipeItem.class);
 
-        RecipeItem recipeItem = mFragmentCallback.getRecipe(position);
+        } catch (JsonSyntaxException e) {
+            Log.d(TAG_FMAIN, e.getMessage());
+        }
+        if (recipeItem == null) {
+            return; // check syntax
+        }
+
+        FragmentDetail detailFragment = new FragmentDetail();
         Bundle detailArgs = new Bundle();
-        detailArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));
+        detailArgs.putString(RECIPE_POSITION, recipeJson);
         detailFragment.setArguments(detailArgs);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -235,9 +242,10 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
                 e.printStackTrace();
             }
         }
-
-        mFragmentCallback.setRecipeList(list);
         mRecyclerAdapter.swapCursor(cursor);
+        mCursor = cursor;
+
+
     }
 
     @Override
