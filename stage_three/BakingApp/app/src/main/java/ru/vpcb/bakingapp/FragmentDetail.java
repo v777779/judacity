@@ -18,9 +18,11 @@ import com.google.gson.JsonSyntaxException;
 import java.util.List;
 
 import static ru.vpcb.bakingapp.utils.Constants.DETAIL_IS_EXPANDED;
+import static ru.vpcb.bakingapp.utils.Constants.ERROR_RECIPE_EMPTY;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
+import static ru.vpcb.bakingapp.utils.Constants.STEP_DEFAULT_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
 
 
@@ -60,19 +62,14 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         Bundle detailArgs = getArguments();
-        mRecipeItem = null;
-        if(detailArgs != null) {
+
+        if (detailArgs != null) {
             try {
                 mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
             } catch (JsonSyntaxException e) {
                 Log.d(TAG_FDETAIL, e.getMessage());
             }
         }
-
-//        mRecipeItem = null;
-//        if (mFragmentCallback != null) {
-//            mRecipeItem = mFragmentCallback.getRecipe(mPosition);
-//        }
 
 
         mRecyclerView.setLayoutManager(layoutManager);                              // connect to LayoutManager
@@ -81,15 +78,12 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerAdapter.setExpanded(mIsExpanded);
         mRecyclerView.setHasFixedSize(true);
-
         mIsWide = rootView.findViewById(R.id.fc_p_container) != null;
+        mPosition = STEP_DEFAULT_POSITION;
 
-        if (mIsWide) {
+        if (mIsWide && mRecipeItem != null ) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentPlayer playerFragment = new FragmentPlayer();
-            Bundle playerArgs = new Bundle();
-            playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
-            playerFragment.setArguments(playerArgs);
+            FragmentPlayer playerFragment = getFragmentPlayer();
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
                     .commit();
@@ -101,11 +95,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        try {
-//            mFragmentCallback = (IFragmentCallback) context;
-//        } catch (ClassCastException e) {
-//            e.printStackTrace();
-//        }
         mContext = context;
 
     }
@@ -119,19 +108,8 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
     @Override
     public void onCallback(int position) {
-//        Snackbar.make(getView(), "Clicked position: "+position, Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
-
-
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentPlayer playerFragment = new FragmentPlayer();
-        Bundle playerArgs = new Bundle();
-
-        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
-        playerArgs.putInt(RECIPE_STEP_POSITION, position);
-        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
-        playerFragment.setArguments(playerArgs);
-
+        FragmentPlayer playerFragment = getFragmentPlayer();
         if (mIsWide) {
             mPosition = position;
             fragmentManager.beginTransaction()
@@ -159,5 +137,15 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     @Override
     public int getSpanHeight() {
         return 0;
+    }
+
+    private FragmentPlayer getFragmentPlayer() {
+        FragmentPlayer playerFragment = new FragmentPlayer();
+        Bundle playerArgs = new Bundle();
+        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
+        playerArgs.putInt(RECIPE_STEP_POSITION, mPosition);
+        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
+        playerFragment.setArguments(playerArgs);
+        return playerFragment;
     }
 }

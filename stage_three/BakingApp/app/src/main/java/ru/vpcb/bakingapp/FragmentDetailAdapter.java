@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,6 +49,9 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
         if (recipeItem != null) {
             mStepList = mRecipeItem.getSteps();
             mIngredientList = mRecipeItem.getIngredients();
+        } else {
+            mStepList = new ArrayList<>();
+            mIngredientList = new ArrayList<>();
         }
     }
 
@@ -125,31 +129,13 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
 
         private void fill(int position, int viewType) {
             if (viewType == EXPANDED_TYPE) {
-                mThumbImage.setVisibility(View.GONE);
-                mLeftExpand.setVisibility(View.VISIBLE);
-                mRightExpand.setVisibility(View.VISIBLE);
 
-                mHeaderText.setText(mRecipeItem.getName());
-                mHeaderText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        mContext.getResources().getDimension(R.dimen.large_text_size));
-                itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBackHead));
-//                mHeaderText.setTextColor(ContextCompat.getColor(mContext,R.color.colorBackHeadText));
+                setHeaderText();
+                setChildText();
 
-                if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
-                    StringBuilder sb = new StringBuilder();
-                    int count = 1;
-                    for (RecipeItem.Ingredient ingredient : mIngredientList) {
-                        sb.append(count + ". " + ingredient + "\n");
-                        count++;
-                    }
-                    mDetailText.setText(mContext.getString(R.string.click_collapse));
-                    mChildDetailText.setText(sb.toString());
-                } else {
-                    mDetailText.setText(mContext.getString(R.string.click_expand));
-                }
             } else {
                 if (mStepList == null || mStepList.isEmpty() || position < 0 ||
-                        position > mStepList.size() || mStepList.get(position - 1)== null) {
+                        position > mStepList.size() || mStepList.get(position - 1) == null) {
                     setEmptyStep();
                     return;
                 }
@@ -170,7 +156,8 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 String imageURL = stepItem.getThumbnailURL();
 
                 int thumbImageId = R.drawable.ic_play_circle_white_24dp;
-                if (!stepItem.getVideoURL().isEmpty()) thumbImageId = R.drawable.ic_play_circle_black_24dp;
+                if (!stepItem.getVideoURL().isEmpty())
+                    thumbImageId = R.drawable.ic_play_circle_black_24dp;
 
                 if (imageURL.isEmpty()) {                            // default image
                     mThumbImage.setImageResource(thumbImageId);
@@ -182,6 +169,37 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 }
             }
 
+
+        }
+
+        private void setChildText() {
+            if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
+                StringBuilder sb = new StringBuilder();
+                int count = 1;
+                for (RecipeItem.Ingredient ingredient : mIngredientList) {
+                    sb.append(count + ". " + ingredient + "\n");
+                    count++;
+                }
+                mDetailText.setText(mContext.getString(R.string.click_collapse));
+                mChildDetailText.setText(sb.toString());
+            } else {
+                mDetailText.setText(mContext.getString(R.string.click_expand));
+            }
+        }
+
+        private void setHeaderText() {
+            mThumbImage.setVisibility(View.GONE);
+            mLeftExpand.setVisibility(View.VISIBLE);
+            mRightExpand.setVisibility(View.VISIBLE);
+
+            if (mRecipeItem == null) {
+                mHeaderText.setText(mContext.getString(R.string.play_header_error));
+            } else {
+                mHeaderText.setText(mRecipeItem.getName());
+            }
+            mHeaderText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    mContext.getResources().getDimension(R.dimen.large_text_size));
+            itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBackHead));
         }
 
         private void setEmptyStep() {
@@ -200,6 +218,5 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
     public void setExpanded(boolean expanded) {
         isExpanded = expanded;
     }
-
 
 }
