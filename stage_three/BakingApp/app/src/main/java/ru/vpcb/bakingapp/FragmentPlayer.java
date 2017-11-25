@@ -2,12 +2,14 @@ package ru.vpcb.bakingapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -44,6 +46,8 @@ import static ru.vpcb.bakingapp.utils.Constants.PLAY_CONTROL_SHOWTIME;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
+import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_HIDE_FLAGS;
+import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
 import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
 
 /**
@@ -71,6 +75,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     View mNextExt;
     SimpleExoPlayerView mPlayerView;
     private ImageView mPlayButton;
+    private ImageView mPlayButtonBack;
+    private CardView mCardView;
+
 
     private Context mContext;
     private RecipeItem mRecipeItem;
@@ -86,6 +93,8 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     private VideoEventListener mVideoListener;
     private String mVideoURL;
     private boolean mIsVideoEnabled;
+    private boolean mIsLandMode;
+
 
 
     public FragmentPlayer() {
@@ -98,6 +107,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
         final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
         Bundle playerArgs = getArguments();
+        mIsLandMode = isLandMode();
 //        mPosition = 0;
 //        mPositionMax = 0;
 //        mIsWide = false;
@@ -125,16 +135,19 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         mNavigationText = rootView.findViewById(R.id.navigation_text);
         mPrevExt = rootView.findViewById(R.id.prev_button_extended);
         mNextExt = rootView.findViewById(R.id.next_button_extended);
-
         mPlayerView = rootView.findViewById(R.id.exoplayer_view);
         mPlayButton = rootView.findViewById(R.id.ic_play_button);
         mVideoListener = new VideoEventListener(this);
+        mPlayButtonBack = rootView.findViewById(R.id.ic_play_button_back);
+        mCardView = rootView.findViewById(R.id.fp_video_card);
+
+
 // video
         if (savedInstanceState != null) {
-            mCurrentWindow = savedInstanceState.getInt(BUNDLE_PLAY_WINDOW_INDEX);
-            mPlaybackPosition = savedInstanceState.getLong(BUNDLE_PLAY_SEEK_POSITION);
-            mPlaybackWhenReady = savedInstanceState.getBoolean(BUNDLE_PLAY_PAUSE_READY);
-            mPlaybackEnded = savedInstanceState.getBoolean(BUNDLE_PLAY_BACK_ENDED);
+            mCurrentWindow = savedInstanceState.getInt(BUNDLE_PLAY_WINDOW_INDEX, 0);
+            mPlaybackPosition = savedInstanceState.getLong(BUNDLE_PLAY_SEEK_POSITION, 0);
+            mPlaybackWhenReady = savedInstanceState.getBoolean(BUNDLE_PLAY_PAUSE_READY, true);
+            mPlaybackEnded = savedInstanceState.getBoolean(BUNDLE_PLAY_BACK_ENDED, false);
             if (!mPlaybackEnded) {
                 mPlayButton.setAlpha(0f);
             }
@@ -144,7 +157,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
             mPlaybackWhenReady = true;
             mPlaybackEnded = false;
         }
-        setupPlayButton();
+
 // text
         mCurrentStep = getCurrentStep();
         if (mHeadText != null && mRecipeItem != null) {
@@ -154,7 +167,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         setupNavButtons();
         setupBodyTextView();
         setVideoAccess();
+        setupPlayButton();
 
+        rootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
         return rootView;
     }
 
@@ -178,13 +193,11 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
             mCurrentWindow = mPlayer.getCurrentWindowIndex();
             mPlaybackWhenReady = mPlayer.getPlayWhenReady();
 
+            outState.putInt(BUNDLE_PLAY_WINDOW_INDEX, mCurrentWindow);
+            outState.putLong(BUNDLE_PLAY_SEEK_POSITION, mPlayer.getContentPosition());
+            outState.putBoolean(BUNDLE_PLAY_PAUSE_READY, mPlaybackWhenReady);
+            outState.putBoolean(BUNDLE_PLAY_BACK_ENDED, mPlaybackEnded);
         }
-
-        outState.putInt(BUNDLE_PLAY_WINDOW_INDEX, mCurrentWindow);
-        outState.putLong(BUNDLE_PLAY_SEEK_POSITION, mPlayer.getContentPosition());
-        outState.putBoolean(BUNDLE_PLAY_PAUSE_READY, mPlaybackWhenReady);
-        outState.putBoolean(BUNDLE_PLAY_BACK_ENDED, mPlaybackEnded);
-
     }
 
     @Override
@@ -198,9 +211,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     @Override
     public void onResume() {
         super.onResume();
-        if (!isLandMode()) {
-            hideSystemUi();
-        }
+        hideSystemUi();
         if ((Build.VERSION.SDK_INT <= 23 || mPlayer == null)) {
             initializePlayer();
         }
@@ -224,15 +235,15 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
     @SuppressLint("InlinedApi")
     private void hideSystemUi() {
-        if (!isLandMode()) {
+        if (!mIsLandMode) {
             return;
         }
-        mPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
+        if (!mIsVideoEnabled) {
+            getView().setSystemUiVisibility(SYSTEM_UI_HIDE_FLAGS);
+        }else {
+            mPlayerView.setSystemUiVisibility(SYSTEM_UI_HIDE_FLAGS);
+        }
     }
 
     private MediaSource buildMediaSource(String sourceURI) {
@@ -250,11 +261,15 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
                 mCurrentStep.getVideoURL().isEmpty()) {
             releasePlayer();
             mPlayerView.setVisibility(View.INVISIBLE);
-            mPlayButton.setImageResource(R.drawable.cakes_020);
-            mPlayButton.getLayoutParams().width = mPlayerView.getLayoutParams().width;
-            mPlayButton.getLayoutParams().height = mPlayerView.getLayoutParams().height;
-            mPlayButton.setScaleType(ImageView.ScaleType.FIT_XY);
+            mPlayButton.setImageResource(R.drawable.ic_play_circle_white_24dp);
+//            mPlayButton.getLayoutParams().width = mPlayerView.getLayoutParams().width;
+//            mPlayButton.getLayoutParams().height = mPlayerView.getLayoutParams().height;
+//            mPlayButton.setScaleType(ImageView.ScaleType.FIT_XY);
             mPlayButton.setAlpha(1f);
+            mPlayButtonBack.setAlpha(0f);
+            mCardView.setBackgroundResource(R.drawable.cakes_020);
+
+
             mIsVideoEnabled = false;
             return;
         }
@@ -422,6 +437,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
 
     private void setupPlayButton() {
+        if (!mIsVideoEnabled) {
+            return;
+        }
         mPlayerView.setControllerAutoShow(false);
         mPlayerView.setControllerShowTimeoutMs(PLAY_CONTROL_SHOWTIME);
         mPlayButton.setAlpha(0f);

@@ -23,6 +23,7 @@ import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.STEP_DEFAULT_POSITION;
+import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
 import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
 
 
@@ -88,6 +89,10 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
                     .replace(R.id.fc_p_container, playerFragment)
                     .commit();
         }
+
+
+        rootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
+
         return rootView;
     }
 
@@ -122,8 +127,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
                     .addToBackStack(null)
                     .commit();
 
-//            Snackbar.make(getView(), "Clicked Fragment Detail position: " + position + " stack: " +
-//                    fragmentManager.getBackStackEntryCount(), Snackbar.LENGTH_SHORT).show();
 
         }
     }

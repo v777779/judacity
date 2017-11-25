@@ -15,5 +15,7 @@
     <string name="tool_header">HEADER</string>
     <string name="tool_body">Normal text</string>
 
+    <string name="tool_alpha">0.0</string>
+
 
 </resources>

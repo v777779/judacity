@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fc_container"
+    android:id="@+id/fp_video_card"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackLight">
+    android:background="@color/colorBackLight"
+    app:cardBackgroundColor="@android:color/black"
+    >
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/exoplayer_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+
+    <ImageView
+        android:id="@+id/ic_play_button_back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.0"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cakes_020" />
+
     <ImageView
         android:id="@+id/ic_play_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
-
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-
-        android:layout_marginTop="8dp"
         android:src="@drawable/ic_play_button_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center"
+/>
 
-</android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

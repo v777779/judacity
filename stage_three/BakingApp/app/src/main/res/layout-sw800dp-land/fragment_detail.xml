@@ -6,7 +6,9 @@
     android:id="@+id/fc_container_wide"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackLight">
+    android:background="@color/colorBackLight"
+    android:layout_marginTop="@dimen/navigation_margin"
+    >
 
     <FrameLayout
         android:id="@+id/fc_d_container"

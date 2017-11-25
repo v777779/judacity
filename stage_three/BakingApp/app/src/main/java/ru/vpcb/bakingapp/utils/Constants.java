@@ -1,6 +1,8 @@
 package ru.vpcb.bakingapp.utils;
 
 
+import android.view.View;
+
 import ru.vpcb.bakingapp.FragmentDetail;
 import ru.vpcb.bakingapp.FragmentMain;
 import ru.vpcb.bakingapp.MainActivity;
@@ -136,5 +138,15 @@ public class Constants {
     public static final String BUNDLE_PLAY_PAUSE_READY = "bundle_play_pause_ready";
     public static final String BUNDLE_PLAY_BACK_ENDED = "bundle_play_back_ended";
 
+    public static final int SYSTEM_UI_HIDE_FLAGS = View.SYSTEM_UI_FLAG_LOW_PROFILE
+            | View.SYSTEM_UI_FLAG_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+
+    public static final int SYSTEM_UI_SHOW_FLAGS = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 
 }

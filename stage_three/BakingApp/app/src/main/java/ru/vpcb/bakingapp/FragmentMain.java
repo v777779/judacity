@@ -47,6 +47,7 @@ import static ru.vpcb.bakingapp.utils.Constants.MIN_HEIGHT;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_SPAN;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
+import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
 import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
 import static ru.vpcb.bakingapp.utils.Constants.TAG_FMAIN;
 
@@ -116,6 +117,8 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         if (!NetworkData.isOnline(getContext())) {
             showError();
         }
+
+        rootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
         return rootView;
     }
 

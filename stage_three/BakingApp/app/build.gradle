@@ -40,6 +40,11 @@ dependencies {
 // retrofit2
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+// timber
+    compile 'com.jakewharton.timber:timber:4.6.0'
+// butterknife
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 // gson
     compile 'com.google.code.gson:gson:2.8.2'
 //glide
