@@ -125,6 +125,10 @@ public class Constants {
     public static final String TAG_FDETAIL = FragmentDetail.class.getSimpleName();
     public static final String DETAIL_IS_EXPANDED = "detail_is_expanded";
     public static final String ERROR_RECIPE_EMPTY ="Error RecipeItem object is null";
+    public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";
+    public static final String BUNDLE_DETAIL_POSITION = "bundle_detail_position";
+
+
 
     // fragment play data
     public static final String RECIPE_STEP_POSITION = "recipe_step_position";

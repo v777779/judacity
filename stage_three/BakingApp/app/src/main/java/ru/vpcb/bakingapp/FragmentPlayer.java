@@ -213,7 +213,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
     @SuppressLint("InlinedApi")
     private void hideSystemUi() {
-        if (!mIsLandMode) {
+        if (!mIsLandMode || mIsWide) {
             return;
         }
 

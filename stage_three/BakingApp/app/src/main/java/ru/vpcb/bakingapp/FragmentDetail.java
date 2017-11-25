@@ -18,6 +18,12 @@ import com.google.gson.JsonSyntaxException;
 import java.util.List;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_EXPANDED;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_POSITION;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_SEEK_POSITION;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_WINDOW_INDEX;
 import static ru.vpcb.bakingapp.utils.Constants.DETAIL_IS_EXPANDED;
 import static ru.vpcb.bakingapp.utils.Constants.ERROR_RECIPE_EMPTY;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
@@ -52,9 +58,12 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        mIsExpanded = false;
         if (savedInstanceState != null) {
-            mIsExpanded = savedInstanceState.getBoolean(DETAIL_IS_EXPANDED, false);
+            mIsExpanded = savedInstanceState.getBoolean(BUNDLE_DETAIL_EXPANDED, false);
+            mPosition = savedInstanceState.getInt(BUNDLE_DETAIL_POSITION, STEP_DEFAULT_POSITION);
+        }else {
+            mPosition = STEP_DEFAULT_POSITION;
+            mIsExpanded = false;
         }
 
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -81,9 +90,9 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         mRecyclerAdapter.setExpanded(mIsExpanded);
         mRecyclerView.setHasFixedSize(true);
         mIsWide = rootView.findViewById(R.id.fc_p_container) != null;
-        mPosition = STEP_DEFAULT_POSITION;
 
-        if (mIsWide && mRecipeItem != null ) {
+
+        if (mIsWide && mRecipeItem != null && savedInstanceState == null ) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentPlayer playerFragment = getFragmentPlayer();
             fragmentManager.beginTransaction()
@@ -106,11 +115,11 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(DETAIL_IS_EXPANDED, mRecyclerAdapter.isExpanded());
+        outState.putBoolean(BUNDLE_DETAIL_EXPANDED, mIsExpanded);
+        outState.putInt(BUNDLE_DETAIL_POSITION, mPosition);
     }
 
     @Override
