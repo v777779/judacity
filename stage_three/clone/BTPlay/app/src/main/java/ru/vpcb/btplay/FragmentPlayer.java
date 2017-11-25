@@ -106,6 +106,8 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper {
 // navigation text
         if (mHeadText != null) {
             mHeadText.setText(getHeaderText());
+        }
+        if(mNavigationText!= null) {
             mNavigationText.setText(getHeaderText());
         }
 // body text

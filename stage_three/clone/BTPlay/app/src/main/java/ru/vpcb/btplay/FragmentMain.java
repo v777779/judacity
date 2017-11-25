@@ -60,6 +60,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     private List<RecipeItem> mList;
     private IFragmentCallback mFragmentCallback;
     private Context mContext;
+    private Cursor  mCursor;
 
     public FragmentMain() {
 
@@ -129,11 +130,29 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onCallback(int position) {
-        FragmentDetail detailFragment = new FragmentDetail();
+        showProgress();
+//        if (mCursor == null) {
+//            return;
+//        }
+//        mCursor.moveToPosition(position);
+//        String recipeJson = mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE));
+//        RecipeItem recipeItem = null;
+//        try {
+//            recipeItem = new Gson().fromJson(recipeJson, RecipeItem.class);
+//
+//        } catch (JsonSyntaxException e) {
+//            Log.d(TAG_FMAIN, e.getMessage());
+//        }
+//        if (recipeItem == null) {
+//            return; // check syntax
+//        }
 
+
+        FragmentDetail detailFragment = new FragmentDetail();
         RecipeItem recipeItem = mFragmentCallback.getRecipe(position);
         Bundle detailArgs = new Bundle();
         detailArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));
+//        detailArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));
         detailFragment.setArguments(detailArgs);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -225,6 +244,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
         mFragmentCallback.setRecipeList(list);
         mRecyclerAdapter.swapCursor(cursor);
+        mCursor = cursor;
     }
 
     @Override
