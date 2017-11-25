@@ -130,7 +130,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     @Override
     public void onCallback(int position) {
         FragmentDetail detailFragment = new FragmentDetail();
-
+showProgress();
         RecipeItem recipeItem = mFragmentCallback.getRecipe(position);
         Bundle detailArgs = new Bundle();
         detailArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));

@@ -71,6 +71,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     private int mSpanHeight;
     private Cursor mCursor;
     private Context mContext;
+    private List<RecipeItem> mList;
 
     public FragmentMain() {
 
@@ -135,22 +136,26 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onCallback(int position) {
-        if (mCursor == null) {
-            return;
-        }
-        mCursor.moveToPosition(position);
-        String recipeJson = mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE));
-        RecipeItem recipeItem = null;
-        try {
-            recipeItem = new Gson().fromJson(recipeJson, RecipeItem.class);
-
-        } catch (JsonSyntaxException e) {
-            Log.d(TAG_FMAIN, e.getMessage());
-        }
-        if (recipeItem == null) {
-            return; // check syntax
-        }
-
+        showProgress();
+//        if (mCursor == null) {
+//            return;
+//        }
+//        mCursor.moveToPosition(position);
+//        String recipeJson = mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE));
+//        RecipeItem recipeItem = null;
+//        try {
+//            recipeItem = new Gson().fromJson(recipeJson, RecipeItem.class);
+//
+//        } catch (JsonSyntaxException e) {
+//            Log.d(TAG_FMAIN, e.getMessage());
+//        }
+//        if (recipeItem == null) {
+//            return; // check syntax
+//        }
+    if(mList == null || mList.isEmpty() || position < 0 || position > mList.size()-1) {
+        return;
+    }
+        String recipeJson = new Gson().toJson(mList.get(position));
         FragmentDetail detailFragment = new FragmentDetail();
         Bundle detailArgs = new Bundle();
         detailArgs.putString(RECIPE_POSITION, recipeJson);
@@ -237,15 +242,16 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
             try {
                 String recipeJson = cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE));
                 RecipeItem recipeItem = gson.fromJson(recipeJson, RecipeItem.class);
+                if(recipeItem == null) continue;
                 list.add(recipeItem);
             } catch (JsonSyntaxException e) {
                 e.printStackTrace();
             }
         }
-        mRecyclerAdapter.swapCursor(cursor);
-        mCursor = cursor;
-
-
+//        mRecyclerAdapter.swapCursor(cursor);
+//        mCursor = cursor;
+        mRecyclerAdapter.swapList(list);
+        mList = list;
     }
 
     @Override

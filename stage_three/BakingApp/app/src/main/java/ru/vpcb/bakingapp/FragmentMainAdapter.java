@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.List;
+
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_IMAGE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
 
@@ -28,12 +30,15 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     private IFragmentHelper mHelper;
     private Cursor mCursor;
     private Context mContext;
+    private List<RecipeItem> mList;
 
 
     public FragmentMainAdapter(Context context, IFragmentHelper helper) {
         mContext = context;
         mHelper = helper;
-        mCursor = null;
+//        mCursor = null;
+        mList = null;
+
     }
 
     @Override
@@ -46,8 +51,11 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     @Override
     public void onBindViewHolder(FCViewHolder holder, final int position) {
 
-        if (mCursor == null || position < 0 || position > mCursor.getCount() - 1) return;
-        mCursor.moveToPosition(position);
+//        if (mCursor == null || position < 0 || position > mCursor.getCount() - 1) return;
+//        mCursor.moveToPosition(position);
+        if (mList == null || position < 0 || position > mList.size()) {
+            return;
+        }
 
 
 //        LayoutParams lp = holder.itemView.findViewById(R.id.fc_recycler_main_image).getLayoutParams();
@@ -63,10 +71,16 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
     }
 
+//    @Override
+//    public int getItemCount() {
+//        if (mCursor == null) return 0;
+//        return mCursor.getCount();
+//    }
+
     @Override
     public int getItemCount() {
-        if (mCursor == null) return 0;
-        return mCursor.getCount();
+        if (mList == null) return 0;
+        return mList.size();
     }
 
     public Cursor swapCursor(Cursor cursor) {
@@ -77,6 +91,16 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         }
         return oldCursor;
     }
+
+    public List<RecipeItem> swapList(List<RecipeItem> list) {
+        List<RecipeItem> oldList = mList;
+        mList = list;
+        if (list != null) {
+            notifyDataSetChanged();
+        }
+        return oldList;
+    }
+
 
     class FCViewHolder extends RecyclerView.ViewHolder {
         private final TextView mText;
@@ -92,8 +116,13 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         }
 
         private void fill(int position) {
-            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
-            String imageURL =  mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_IMAGE));
+//            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
+//            String imageURL =  mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_IMAGE));
+            if(mList == null || mList.isEmpty() || position < 0 || position > mList.size()-1) return;
+            RecipeItem recipeItem = mList.get(position);
+            mText.setText(recipeItem.getName());
+            String imageURL =  recipeItem.getImage();
+
             if (imageURL != null && !imageURL.isEmpty()) {
                 Glide.with(mContext)
                         .load(imageURL)
@@ -102,7 +131,6 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
             } else {
                 mImage.setImageResource(R.drawable.cakes_025);
             }
-
         }
 
     }
