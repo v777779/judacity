@@ -17,6 +17,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.List;
 
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.utils.Constants.DETAIL_IS_EXPANDED;
 import static ru.vpcb.bakingapp.utils.Constants.ERROR_RECIPE_EMPTY;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
@@ -117,6 +118,8 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentPlayer playerFragment = getFragmentPlayer();
 
+        fragmentManager.popBackStack("player",POP_BACK_STACK_INCLUSIVE);
+
         if (mIsWide) {
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
@@ -124,7 +127,7 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         } else {
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, playerFragment)
-                    .addToBackStack(null)
+                    .addToBackStack("player")
                     .commit();
 
 

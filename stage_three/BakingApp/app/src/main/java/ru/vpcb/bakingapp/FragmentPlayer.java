@@ -32,11 +32,13 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.gson.Gson;
 
+import java.util.Iterator;
 import java.util.List;
 
 import ru.vpcb.bakingapp.video.IVideoEventCallback;
 import ru.vpcb.bakingapp.video.VideoEventListener;
 
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_SEEK_POSITION;
@@ -324,6 +326,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         playerArgs.putInt(RECIPE_STEP_POSITION, position);
         playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
         playerFragment.setArguments(playerArgs);
+        fragmentManager.popBackStack("player",POP_BACK_STACK_INCLUSIVE);
 
         if (mIsWide) {
             fragmentManager.beginTransaction()
@@ -332,6 +335,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         } else {
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, playerFragment)
+                    .addToBackStack("player")
                     .commit();
         }
 
