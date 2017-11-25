@@ -1,6 +1,7 @@
 package ru.vpcb.bakingapp;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -16,6 +17,9 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static ru.vpcb.bakingapp.utils.Constants.COLLAPSED_TYPE;
 import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
@@ -109,22 +113,17 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
     }
 
     class FCViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mHeaderText;
-        private final TextView mDetailText;
-        private final TextView mChildDetailText;
-        private final ImageView mThumbImage;
-        private final ImageView mLeftExpand;
-        private final ImageView mRightExpand;
+        @Nullable @BindView(R.id.fc_recycler_head_text) TextView mHeaderText;
+        @Nullable @BindView(R.id.fc_recycler_detail_text) TextView mDetailText;
+        @Nullable @BindView(R.id.fc_recycler_child_detail_text) TextView mChildDetailText;
+        @Nullable @BindView(R.id.step_thumb) ImageView mThumbImage;
+        @Nullable @BindView(R.id.expand_left) ImageView mLeftExpand;
+        @Nullable @BindView(R.id.expand_right)ImageView mRightExpand;
 
 
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
-            mHeaderText = itemView.findViewById(R.id.fc_recycler_head_text);
-            mDetailText = itemView.findViewById(R.id.fc_recycler_detail_text);
-            mChildDetailText = itemView.findViewById(R.id.fc_recycler_child_detail_text);
-            mThumbImage = itemView.findViewById(R.id.step_thumb);
-            mLeftExpand = itemView.findViewById(R.id.expand_left);
-            mRightExpand = itemView.findViewById(R.id.expand_right);
+            ButterKnife.bind(this,itemView);
         }
 
         private void fill(int position, int viewType) {
@@ -155,10 +154,10 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 mRightExpand.setVisibility(View.GONE);
                 String imageURL = stepItem.getThumbnailURL();
                 String videoURL = stepItem.getVideoURL();
-                if(imageURL == null || imageURL.isEmpty()) {
+                if (imageURL == null || imageURL.isEmpty()) {
                     imageURL = videoURL;
                 }
-                if (videoURL == null || videoURL.isEmpty() ) {                            // default image
+                if (videoURL == null || videoURL.isEmpty()) {                            // default image
                     mThumbImage.setImageResource(R.drawable.ic_play_circle_white_24dp);
 
                 } else {
