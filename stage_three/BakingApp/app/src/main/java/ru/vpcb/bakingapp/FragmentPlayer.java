@@ -60,15 +60,7 @@ import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
  * Date: 15-Nov-17
  * Email: vadim.v.voronov@gmail.com
  */
-
 public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoEventCallback {
-
-    private List<String> mCardList;
-    private RecyclerView mRecyclerView;
-    private FragmentMainAdapter mRecyclerAdapter;
-    private int mPosition;
-    private int mPositionMax;
-
 
     @Nullable @BindView(R.id.fp_head_text)TextView mHeadText;
     @Nullable @BindView(R.id.fp_body_text)TextView mBodyText;
@@ -80,16 +72,15 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     @Nullable @BindView(R.id.exoplayer_view)SimpleExoPlayerView mPlayerView;
     @Nullable @BindView(R.id.ic_play_button)ImageView mPlayButton;
     @Nullable @BindView(R.id.ic_play_button_back)ImageView mPlayButtonBack;
-    @Nullable @BindView(R.id.fp_video_card)CardView mCardView;
-
-
+    @Nullable @BindView(R.id.fp_video_card)View mCardView;
 
     private Context mContext;
     private RecipeItem mRecipeItem;
     private List<RecipeItem.Step> mStepList;
     private RecipeItem.Step mCurrentStep;
+    private int mPosition;
+    private int mPositionMax;
     private boolean mIsWide;
-
     private boolean mPlaybackEnded;
     private long mPlaybackPosition;
     private boolean mPlaybackWhenReady;
@@ -115,16 +106,10 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
         Bundle playerArgs = getArguments();
         mIsLandMode = isLandMode();
-//        mPosition = 0;
-//        mPositionMax = 0;
-//        mIsWide = false;
-//        mRecipeItem = null;
-//        mStepList = null;
         try {                                                               // null will be catch by Exception e
             mPosition = playerArgs.getInt(RECIPE_STEP_POSITION, 0);
             mIsWide = playerArgs.getBoolean(RECIPE_SCREEN_WIDE, false);
             mRecipeItem = new Gson().fromJson(playerArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
-
             mStepList = mRecipeItem.getSteps();
             mPositionMax = mStepList.size();
             if (mPositionMax < 0 || mPositionMax < mPosition) {
@@ -133,21 +118,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         } catch (Exception e) {
             Log.d(TAG_FDETAIL, e.getMessage());
         }
-
-
-//        mHeadText = rootView.findViewById(R.id.fp_head_text);
-//        mBodyText = rootView.findViewById(R.id.fp_body_text);
-//        mPrevButton = rootView.findViewById(R.id.prev_button);
-//        mNextButton = rootView.findViewById(R.id.next_button);
-//        mNavigationText = rootView.findViewById(R.id.navigation_text);
-//        mPrevExt = rootView.findViewById(R.id.prev_button_extended);
-//        mNextExt = rootView.findViewById(R.id.next_button_extended);
-//        mPlayerView = rootView.findViewById(R.id.exoplayer_view);
-//        mPlayButton = rootView.findViewById(R.id.ic_play_button);
-//        mPlayButtonBack = rootView.findViewById(R.id.ic_play_button_back);
-//        mCardView = rootView.findViewById(R.id.fp_video_card);
         mVideoListener = new VideoEventListener(this);
-
 
 // video
         if (savedInstanceState != null) {

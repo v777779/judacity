@@ -88,6 +88,7 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
             FragmentPlayer playerFragment = getFragmentPlayer();
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
+                    .addToBackStack("player")
                     .commit();
         }
 

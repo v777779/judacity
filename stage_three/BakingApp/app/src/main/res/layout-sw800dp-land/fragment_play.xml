@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackLight"
-    android:layout_marginTop="@dimen/navigation_margin"
+    android:layout_marginTop="90dp"
     >
 
     <android.support.constraint.Guideline
@@ -17,7 +17,7 @@
         app:layout_constraintGuide_percent="0.60" />
 
     <FrameLayout
-        android:id="@+id/fp_video_player"
+        android:id="@+id/fp_video_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="0dp"

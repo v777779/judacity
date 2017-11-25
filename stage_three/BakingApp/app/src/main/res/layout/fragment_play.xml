@@ -19,7 +19,7 @@
 
         />
 
-    <android.support.v7.widget.CardView
+    <FrameLayout
         android:id="@+id/fp_video_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -29,7 +29,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="8dp"
-        app:cardBackgroundColor="@android:color/black"
+        android:background="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_one"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -58,7 +58,7 @@
             android:src="@drawable/ic_play_button_24dp" />
 
 
-    </android.support.v7.widget.CardView>
+    </FrameLayout>
 
     <android.support.v7.widget.CardView
         android:id="@+id/fp_text_card"
