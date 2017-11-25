@@ -154,17 +154,16 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 mLeftExpand.setVisibility(View.GONE);
                 mRightExpand.setVisibility(View.GONE);
                 String imageURL = stepItem.getThumbnailURL();
+                if(imageURL == null || imageURL.isEmpty()) {
+                    imageURL = stepItem.getVideoURL();
+                }
+                if (imageURL == null || imageURL.isEmpty()) {                            // default image
+                    mThumbImage.setImageResource(R.drawable.ic_play_circle_white_24dp);
 
-                int thumbImageId = R.drawable.ic_play_circle_white_24dp;
-                if (!stepItem.getVideoURL().isEmpty())
-                    thumbImageId = R.drawable.ic_play_circle_black_24dp;
-
-                if (imageURL.isEmpty()) {                            // default image
-                    mThumbImage.setImageResource(thumbImageId);
                 } else {
                     Glide.with(mContext)
                             .load(imageURL)
-                            .apply(new RequestOptions().error(thumbImageId))
+                            .apply(new RequestOptions().error(R.drawable.ic_play_circle_black_24dp))
                             .into(mThumbImage);
                 }
             }

@@ -36,7 +36,7 @@ public class ConfigGlideModule extends AppGlideModule {
     public void applyOptions(Context context, GlideBuilder builder) {
         super.applyOptions(context, builder);
         builder.setDefaultRequestOptions(new RequestOptions()
-                .placeholder(R.drawable.empty_loading)
+                .placeholder(R.drawable.ic_play_circle_black_24dp)
                 .error(R.drawable.not_available)
                 .format(DecodeFormat.PREFER_ARGB_8888)
         );

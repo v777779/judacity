@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import ru.vpcb.bakingapp.data.LoaderDb;
@@ -71,7 +72,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     private int mSpanHeight;
     private Cursor mCursor;
     private Context mContext;
-    private List<RecipeItem> mList;
+
 
     public FragmentMain() {
 
@@ -128,11 +129,14 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onCallback(int position) {
-        showProgress();
-        if (mList == null || mList.isEmpty() || position < 0 || position > mList.size() - 1) {
+        if (mCursor == null) {
             return;
         }
-        String recipeJson = new Gson().toJson(mList.get(position));
+        showProgress();
+        mCursor.moveToPosition(position);
+        String recipeJson = mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE));
+
+
         FragmentDetail detailFragment = new FragmentDetail();
         Bundle detailArgs = new Bundle();
         detailArgs.putString(RECIPE_POSITION, recipeJson);
@@ -187,6 +191,13 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
             Type listType = new TypeToken<List<RecipeItem>>() {
             }.getType();
             List<RecipeItem> list = new Gson().fromJson(s, listType);
+            Iterator<RecipeItem> it = list.iterator();
+            while(it.hasNext()) {
+                if(it.next() == null)  {
+                    it.remove();
+                }
+            }
+
 // test!!!
 //        TestData.addImages(list);
             RecipeData.bulkInsertBackground(mContext.getContentResolver(), getLoaderManager(), list, mLoaderDb);
@@ -206,26 +217,26 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         if (!NetworkData.isOnline(getContext())) {
             Snackbar.make(getView(), "No connection. Local data used", Snackbar.LENGTH_LONG).show();
         }
-        List<RecipeItem> list = new ArrayList<>();
-        Gson gson = new GsonBuilder()
+//        List<RecipeItem> list = new ArrayList<>();
+//        Gson gson = new GsonBuilder()
 //                    .setLenient()
 //                    .setPrettyPrinting()
-                .create();
+//                .create();
 
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            try {
-                String recipeJson = cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE));
-                RecipeItem recipeItem = gson.fromJson(recipeJson, RecipeItem.class);
-                if (recipeItem == null) {
-                    continue;
-                }
-                list.add(recipeItem);
-            } catch (JsonSyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-        mRecyclerAdapter.swapList(list);
-        mList = list;
+//        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+//            try {
+//                String recipeJson = cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE));
+//                RecipeItem recipeItem = gson.fromJson(recipeJson, RecipeItem.class);
+//                if (recipeItem == null) {
+//                    continue;
+//                }
+//                list.add(recipeItem);
+//            } catch (JsonSyntaxException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        mRecyclerAdapter.swapCursor(cursor);
+        mCursor = cursor;
     }
 
     @Override

@@ -108,10 +108,11 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
     @Override
     public void onCallback(int position) {
+        mPosition = position;
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentPlayer playerFragment = getFragmentPlayer();
+
         if (mIsWide) {
-            mPosition = position;
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
                     .commit();

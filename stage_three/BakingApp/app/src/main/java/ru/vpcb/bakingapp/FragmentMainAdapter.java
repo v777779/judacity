@@ -36,8 +36,8 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     public FragmentMainAdapter(Context context, IFragmentHelper helper) {
         mContext = context;
         mHelper = helper;
-//        mCursor = null;
-        mList = null;
+        mCursor = null;
+
 
     }
 
@@ -51,15 +51,8 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     @Override
     public void onBindViewHolder(FCViewHolder holder, final int position) {
 
-//        if (mCursor == null || position < 0 || position > mCursor.getCount() - 1) return;
-//        mCursor.moveToPosition(position);
-        if (mList == null || position < 0 || position > mList.size()) {
-            return;
-        }
+        if (mCursor == null || position < 0 || position > mCursor.getCount() - 1) return;
 
-
-//        LayoutParams lp = holder.itemView.findViewById(R.id.fc_recycler_main_image).getLayoutParams();
-//        lp.height = mHelper.getSpanHeight(); // set to display metrics
 
         holder.fill(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -71,17 +64,13 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
     }
 
-//    @Override
-//    public int getItemCount() {
-//        if (mCursor == null) return 0;
-//        return mCursor.getCount();
-//    }
-
     @Override
     public int getItemCount() {
-        if (mList == null) return 0;
-        return mList.size();
+        if (mCursor == null) return 0;
+        return mCursor.getCount();
     }
+
+
 
     public Cursor swapCursor(Cursor cursor) {
         Cursor oldCursor = mCursor;
@@ -92,14 +81,6 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         return oldCursor;
     }
 
-    public List<RecipeItem> swapList(List<RecipeItem> list) {
-        List<RecipeItem> oldList = mList;
-        mList = list;
-        if (list != null) {
-            notifyDataSetChanged();
-        }
-        return oldList;
-    }
 
 
     class FCViewHolder extends RecyclerView.ViewHolder {
@@ -116,13 +97,9 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         }
 
         private void fill(int position) {
-//            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
-//            String imageURL =  mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_IMAGE));
-            if(mList == null || mList.isEmpty() || position < 0 || position > mList.size()-1) return;
-            RecipeItem recipeItem = mList.get(position);
-            mText.setText(recipeItem.getName());
-            String imageURL =  recipeItem.getImage();
-
+            mCursor.moveToPosition(position);
+            mText.setText(mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_NAME)));
+            String imageURL =  mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_IMAGE));
             if (imageURL != null && !imageURL.isEmpty()) {
                 Glide.with(mContext)
                         .load(imageURL)
@@ -132,8 +109,6 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
                 mImage.setImageResource(R.drawable.cakes_025);
             }
         }
-
     }
-
 
 }
