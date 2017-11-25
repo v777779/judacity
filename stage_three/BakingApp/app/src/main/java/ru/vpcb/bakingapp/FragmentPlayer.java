@@ -37,6 +37,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.vpcb.bakingapp.video.IVideoEventCallback;
 import ru.vpcb.bakingapp.video.VideoEventListener;
 
@@ -90,6 +91,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     private String mVideoURL;
     private boolean mIsVideoEnabled;
     private boolean mIsLandMode;
+    private Unbinder mUnBinder;
 
 
 
@@ -102,7 +104,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
-        ButterKnife.bind(this,rootView);
+        mUnBinder = ButterKnife.bind(this,rootView);
 
         Bundle playerArgs = getArguments();
         mIsLandMode = isLandMode();
@@ -211,6 +213,12 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnBinder.unbind();
+    }
+
     @SuppressLint("InlinedApi")
     private void hideSystemUi() {
         if (!mIsLandMode || mIsWide) {
@@ -240,9 +248,6 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
             releasePlayer();
             mPlayerView.setVisibility(View.INVISIBLE);
             mPlayButton.setImageResource(R.drawable.ic_play_circle_white_24dp);
-//            mPlayButton.getLayoutParams().width = mPlayerView.getLayoutParams().width;
-//            mPlayButton.getLayoutParams().height = mPlayerView.getLayoutParams().height;
-//            mPlayButton.setScaleType(ImageView.ScaleType.FIT_XY);
             mPlayButton.setAlpha(1f);
             mPlayButtonBack.setAlpha(0f);
             mCardView.setBackgroundResource(R.drawable.cakes_020);
@@ -321,10 +326,6 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     }
 
 
-    @Override
-    public List<FragmentDetailItem> getItemList() {
-        return null;
-    }
 
     @Override
     public int getSpanHeight() {

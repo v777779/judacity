@@ -2,6 +2,7 @@ package ru.vpcb.bakingapp;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_IMAGE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
@@ -84,14 +88,13 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
 
     class FCViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-        private final ImageView mImage;
+        @Nullable @BindView(R.id.fc_recycler_text) TextView mText;
+        @Nullable @BindView(R.id.fc_recycler_image) ImageView mImage;
 
 
         public FCViewHolder(View itemView) {
             super(itemView);
-            mText = itemView.findViewById(R.id.fc_recycler_text);
-            mImage = itemView.findViewById(R.id.fc_recycler_image);
+            ButterKnife.bind(this,itemView);
             mImage.getLayoutParams().height = mHelper.getSpanHeight();
 
         }

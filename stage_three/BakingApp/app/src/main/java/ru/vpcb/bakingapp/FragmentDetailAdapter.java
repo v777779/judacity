@@ -29,7 +29,7 @@ import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
 
 public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAdapter.FCViewHolder> {
 
-    private List<FragmentDetailItem> mItemList;
+
     private boolean isExpanded;
     private RecipeItem mRecipeItem;
     private IFragmentHelper mHelper;
@@ -154,10 +154,11 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
                 mLeftExpand.setVisibility(View.GONE);
                 mRightExpand.setVisibility(View.GONE);
                 String imageURL = stepItem.getThumbnailURL();
+                String videoURL = stepItem.getVideoURL();
                 if(imageURL == null || imageURL.isEmpty()) {
-                    imageURL = stepItem.getVideoURL();
+                    imageURL = videoURL;
                 }
-                if (imageURL == null || imageURL.isEmpty()) {                            // default image
+                if (videoURL == null || videoURL.isEmpty() ) {                            // default image
                     mThumbImage.setImageResource(R.drawable.ic_play_circle_white_24dp);
 
                 } else {

@@ -145,10 +145,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     }
 
 
-    @Override
-    public List<FragmentDetailItem> getItemList() {
-        return null;
-    }
 
 
     @Override

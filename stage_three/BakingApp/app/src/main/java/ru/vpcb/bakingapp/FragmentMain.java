@@ -32,6 +32,7 @@ import ru.vpcb.bakingapp.data.LoaderUri;
 import ru.vpcb.bakingapp.utils.NetworkData;
 import ru.vpcb.bakingapp.utils.RecipeData;
 
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_LOADER_STRING_ID;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_LANDSCAPE;
@@ -118,6 +119,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
             showError();
         }
 
+
         rootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
         return rootView;
     }
@@ -154,10 +156,6 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     }
 
 
-    @Override
-    public List<FragmentDetailItem> getItemList() {
-        return null;
-    }
 
     @Override
     public int getSpanHeight() {
