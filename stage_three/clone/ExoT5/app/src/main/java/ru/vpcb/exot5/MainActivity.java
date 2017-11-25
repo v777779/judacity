@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements IPlayerCallback {
             mPlayer.seekTo(mCurrentWindow, mPlaybackPosition);  // get info
         }
 
-        MediaSource mediaSource = buildAssetSource(localURI);
+        MediaSource mediaSource = buildMediaSource(mediaURI);
         mPlayer.prepare(mediaSource, true, false);
     }
 

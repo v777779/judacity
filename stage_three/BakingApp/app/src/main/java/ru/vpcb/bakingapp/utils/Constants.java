@@ -128,4 +128,13 @@ public class Constants {
     public static final String RECIPE_STEP_POSITION = "recipe_step_position";
     public static final String RECIPE_SCREEN_WIDE = "recipe_screen_wide";
 
+    public static final int PLAY_BUTTON_ANIMATION = 500;
+    public static final int PLAY_CONTROL_SHOWTIME = 2500;
+
+    public static final String BUNDLE_PLAY_WINDOW_INDEX = "bundle_play_window_index";
+    public static final String BUNDLE_PLAY_SEEK_POSITION = "bundle_play_seek_position";
+    public static final String BUNDLE_PLAY_PAUSE_READY = "bundle_play_pause_ready";
+    public static final String BUNDLE_PLAY_BACK_ENDED = "bundle_play_back_ended";
+
+
 }
