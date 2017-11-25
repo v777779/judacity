@@ -27,8 +27,6 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.gson.Gson;
 
@@ -253,7 +251,10 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
             releasePlayer();
             mPlayerView.setVisibility(View.INVISIBLE);
             mPlayButton.setImageResource(R.drawable.cakes_020);
-            mPlayButton.setVisibility(View.VISIBLE);
+            mPlayButton.getLayoutParams().width = mPlayerView.getLayoutParams().width;
+            mPlayButton.getLayoutParams().height = mPlayerView.getLayoutParams().height;
+            mPlayButton.setScaleType(ImageView.ScaleType.FIT_XY);
+            mPlayButton.setAlpha(1f);
             mIsVideoEnabled = false;
             return;
         }
