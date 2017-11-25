@@ -35,6 +35,8 @@ import com.google.gson.Gson;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.vpcb.bakingapp.video.IVideoEventCallback;
 import ru.vpcb.bakingapp.video.VideoEventListener;
 
@@ -67,18 +69,19 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     private int mPosition;
     private int mPositionMax;
 
-    TextView mNameText;
-    TextView mHeadText;
-    TextView mBodyText;
-    ImageView mPrevButton;
-    ImageView mNextButton;
-    TextView mNavigationText;
-    View mPrevExt;
-    View mNextExt;
-    SimpleExoPlayerView mPlayerView;
-    private ImageView mPlayButton;
-    private ImageView mPlayButtonBack;
-    private CardView mCardView;
+
+    @Nullable @BindView(R.id.fp_head_text)TextView mHeadText;
+    @Nullable @BindView(R.id.fp_body_text)TextView mBodyText;
+    @Nullable @BindView(R.id.prev_button)ImageView mPrevButton;
+    @Nullable @BindView(R.id.next_button)ImageView mNextButton;
+    @Nullable @BindView(R.id.navigation_text)TextView mNavigationText;
+    @Nullable @BindView(R.id.prev_button_extended)View mPrevExt;
+    @Nullable @BindView(R.id.next_button_extended)View mNextExt;
+    @Nullable @BindView(R.id.exoplayer_view)SimpleExoPlayerView mPlayerView;
+    @Nullable @BindView(R.id.ic_play_button)ImageView mPlayButton;
+    @Nullable @BindView(R.id.ic_play_button_back)ImageView mPlayButtonBack;
+    @Nullable @BindView(R.id.fp_video_card)CardView mCardView;
+
 
 
     private Context mContext;
@@ -108,6 +111,8 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
+        ButterKnife.bind(this,rootView);
+
         Bundle playerArgs = getArguments();
         mIsLandMode = isLandMode();
 //        mPosition = 0;
@@ -130,18 +135,18 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         }
 
 
-        mHeadText = rootView.findViewById(R.id.fp_head_text);
-        mBodyText = rootView.findViewById(R.id.fp_body_text);
-        mPrevButton = rootView.findViewById(R.id.prev_button);
-        mNextButton = rootView.findViewById(R.id.next_button);
-        mNavigationText = rootView.findViewById(R.id.navigation_text);
-        mPrevExt = rootView.findViewById(R.id.prev_button_extended);
-        mNextExt = rootView.findViewById(R.id.next_button_extended);
-        mPlayerView = rootView.findViewById(R.id.exoplayer_view);
-        mPlayButton = rootView.findViewById(R.id.ic_play_button);
+//        mHeadText = rootView.findViewById(R.id.fp_head_text);
+//        mBodyText = rootView.findViewById(R.id.fp_body_text);
+//        mPrevButton = rootView.findViewById(R.id.prev_button);
+//        mNextButton = rootView.findViewById(R.id.next_button);
+//        mNavigationText = rootView.findViewById(R.id.navigation_text);
+//        mPrevExt = rootView.findViewById(R.id.prev_button_extended);
+//        mNextExt = rootView.findViewById(R.id.next_button_extended);
+//        mPlayerView = rootView.findViewById(R.id.exoplayer_view);
+//        mPlayButton = rootView.findViewById(R.id.ic_play_button);
+//        mPlayButtonBack = rootView.findViewById(R.id.ic_play_button_back);
+//        mCardView = rootView.findViewById(R.id.fp_video_card);
         mVideoListener = new VideoEventListener(this);
-        mPlayButtonBack = rootView.findViewById(R.id.ic_play_button_back);
-        mCardView = rootView.findViewById(R.id.fp_video_card);
 
 
 // video

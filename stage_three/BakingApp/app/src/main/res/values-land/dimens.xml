@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+<!--frame margins-->
+    <dimen name="navigation_margin">72dp</dimen>
+
+
+
+
+</resources>
