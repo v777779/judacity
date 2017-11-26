@@ -9,6 +9,7 @@
 
 <!--frame margins-->
     <dimen name="navigation_margin">80dp</dimen>
+    <dimen name="navigation_main">88dp</dimen>
     <dimen name="frame_side_margin">8dp</dimen>
 
 

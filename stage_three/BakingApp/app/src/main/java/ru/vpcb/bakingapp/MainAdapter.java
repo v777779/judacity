@@ -17,6 +17,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.vpcb.bakingapp.data.RecipeItem;
 
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_IMAGE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
@@ -29,18 +30,20 @@ import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NA
  * Email: vadim.v.voronov@gmail.com
  */
 
-public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapter.FCViewHolder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.FCViewHolder> {
 
     private IFragmentHelper mHelper;
     private Cursor mCursor;
     private Context mContext;
-    private List<RecipeItem> mList;
+    private int mSpanHeight;
 
 
-    public FragmentMainAdapter(Context context, IFragmentHelper helper) {
+    public MainAdapter(Context context, IFragmentHelper helper, int spanHeight) {
         mContext = context;
         mHelper = helper;
+        mSpanHeight = spanHeight;
         mCursor = null;
+
 
 
     }
@@ -95,7 +98,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         public FCViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
-            mImage.getLayoutParams().height = mHelper.getSpanHeight();
+            mImage.getLayoutParams().height = mSpanHeight;
 
         }
 

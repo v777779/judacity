@@ -1,4 +1,4 @@
-package ru.vpcb.bakingapp;
+package ru.vpcb.bakingapp.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

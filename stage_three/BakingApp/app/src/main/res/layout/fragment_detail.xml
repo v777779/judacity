@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackLight"
     android:layout_marginTop="@dimen/navigation_margin"
+    android:clickable="true"
     >
 
     <android.support.v7.widget.RecyclerView

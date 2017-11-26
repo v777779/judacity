@@ -14,8 +14,7 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.List;
-
+import ru.vpcb.bakingapp.data.RecipeItem;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -133,14 +132,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
 
 
         }
-    }
-
-
-
-
-    @Override
-    public int getSpanHeight() {
-        return 0;
     }
 
     private FragmentPlayer getFragmentPlayer() {

@@ -3,8 +3,7 @@ package ru.vpcb.bakingapp.utils;
 
 import android.view.View;
 
-import ru.vpcb.bakingapp.FragmentDetail;
-import ru.vpcb.bakingapp.FragmentMain;
+
 import ru.vpcb.bakingapp.MainActivity;
 
 
@@ -21,23 +20,6 @@ public class Constants {
     public static final String DATABASE_NAME = "recipesDb.db";
     public static final int DATABASE_VERSION = 2;
     public static final int OLD_DATABASE_VERSION = 1;
-
-
-// bundle saveInstance
-//    public static final String BUNDLE_LOADER_URL_ID = "bundle_loader_url_id";
-//    public static final String BUNDLE_LOADER_ID = "bundle_loader_id";
-//    public static final String BUNDLE_LOADER_LIST_URI_ID = "bundle_loader_list_uri_id";
-//    public static final String BUNDLE_LOADER_LIST_POPULAR_ID = "bundle_loader_list_popular_id";
-//    public static final String BUNDLE_LOADER_LIST_TOPRATED_ID = "bundle_loader_list_toprated_id";
-//    public static final String BUNDLE_LOADER_LIST_POSITION_ID = "bundle_loader_list_position_id";
-//    public static final String BUNDLE_LOADER_STRING_ID = "bundle_loader_string_id";
-//    public static final String BUNDLE_LOADER_RECIPE_ID = "bundle_loader_query_id";
-//    public static final String BUNDLE_LOADER_PAGE_ID = "bundle_loader_page_id";
-//    public static final String BUNDLE_LOADER_MOVIE_ID = "bundle_loader_movie_id";
-//    public static final String BUNDLE_LOADER_MOVIE_ITEM_ID = "bundle_loader_movie_item_id";
-//    public static final String BUNDLE_LOADER_LIST_REVIEW_ID = "bundle_loader_list_review_id";
-//    public static final String BUNDLE_LOADER_LIST_TRAILER_ID = "bundle_loader_list_trailer_id";
-
 
     // MainActivity constants
     public static final String TAG = MainActivity.class.getSimpleName();

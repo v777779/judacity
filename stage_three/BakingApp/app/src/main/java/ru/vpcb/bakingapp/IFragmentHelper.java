@@ -11,6 +11,5 @@ import java.util.List;
 
 public interface IFragmentHelper {
     void onCallback(int position);
-    int getSpanHeight();
 
 }

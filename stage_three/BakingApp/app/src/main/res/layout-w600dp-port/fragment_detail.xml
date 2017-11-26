@@ -7,7 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackLight"
-    android:layout_marginTop="@dimen/navigation_margin">
+    android:layout_marginTop="@dimen/navigation_margin"
+    android:clickable="true"
+    >
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

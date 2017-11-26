@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.vpcb.bakingapp.data.RecipeItem;
 
 import static ru.vpcb.bakingapp.utils.Constants.COLLAPSED_TYPE;
 import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;

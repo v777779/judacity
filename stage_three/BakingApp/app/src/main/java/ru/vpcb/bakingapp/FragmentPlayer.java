@@ -2,15 +2,12 @@ package ru.vpcb.bakingapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +28,12 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.gson.Gson;
 
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ru.vpcb.bakingapp.data.RecipeItem;
 import ru.vpcb.bakingapp.video.IVideoEventCallback;
 import ru.vpcb.bakingapp.video.VideoEventListener;
 import timber.log.Timber;
@@ -297,6 +294,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
     @Override
     public void onCallback(int position) {
+        if(mIsWide) {
+            return;
+        }
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentPlayer playerFragment = new FragmentPlayer();
         Bundle playerArgs = new Bundle();
@@ -321,13 +321,6 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 //        Snackbar.make(getView(), "Clicked on Fragment Player " + " stack: " +
 //                        fragmentManager.getBackStackEntryCount(),
 //                Snackbar.LENGTH_SHORT).show();
-    }
-
-
-
-    @Override
-    public int getSpanHeight() {
-        return 0;
     }
 
 

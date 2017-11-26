@@ -5,8 +5,8 @@
     android:id="@+id/fp_video_card"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@android:color/black"
+    android:clickable="true"
     >
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
