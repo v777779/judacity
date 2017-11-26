@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import ru.vpcb.bakingapp.data.LoaderDb;
 import ru.vpcb.bakingapp.data.LoaderUri;
 import ru.vpcb.bakingapp.utils.NetworkData;
 import ru.vpcb.bakingapp.utils.RecipeData;
+import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
@@ -49,8 +49,6 @@ import static ru.vpcb.bakingapp.utils.Constants.MIN_SPAN;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
-import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
-import static ru.vpcb.bakingapp.utils.Constants.TAG_FMAIN;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -203,9 +201,8 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 //        TestData.addImages(list);
             RecipeData.bulkInsertBackground(mContext.getContentResolver(), getLoaderManager(), list, mLoaderDb);
         } catch (JsonSyntaxException e) {
-            Log.d(TAG_FMAIN, e.getMessage());
+            Timber.d(e.getMessage());
         }
-
     }
 
 
@@ -217,25 +214,9 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         showResult(); // только после загрузки базы данных
         if (!NetworkData.isOnline(getContext())) {
             Snackbar.make(getView(), "No connection. Local data used", Snackbar.LENGTH_LONG).show();
+            Timber.d("No connection. Local data used");
         }
-//        List<RecipeItem> list = new ArrayList<>();
-//        Gson gson = new GsonBuilder()
-//                    .setLenient()
-//                    .setPrettyPrinting()
-//                .create();
 
-//        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-//            try {
-//                String recipeJson = cursor.getString(cursor.getColumnIndex(COLUMN_RECIPE_VALUE));
-//                RecipeItem recipeItem = gson.fromJson(recipeJson, RecipeItem.class);
-//                if (recipeItem == null) {
-//                    continue;
-//                }
-//                list.add(recipeItem);
-//            } catch (JsonSyntaxException e) {
-//                e.printStackTrace();
-//            }
-//        }
         mRecyclerAdapter.swapCursor(cursor);
         mCursor = cursor;
     }

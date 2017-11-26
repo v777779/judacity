@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +16,16 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_EXPANDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_SEEK_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_WINDOW_INDEX;
-import static ru.vpcb.bakingapp.utils.Constants.DETAIL_IS_EXPANDED;
-import static ru.vpcb.bakingapp.utils.Constants.ERROR_RECIPE_EMPTY;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.STEP_DEFAULT_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
-import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
 
 
 /**
@@ -67,8 +61,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         }
 
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        // load mock data
-
 
         mRecyclerView = rootView.findViewById(R.id.fc_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -78,10 +70,9 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
             try {
                 mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
             } catch (JsonSyntaxException e) {
-                Log.d(TAG_FDETAIL, e.getMessage());
+                Timber.d(e.getMessage());
             }
         }
-
 
         mRecyclerView.setLayoutManager(layoutManager);                              // connect to LayoutManager
         mRecyclerView.setHasFixedSize(false);                                       // item size fixed

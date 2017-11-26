@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import timber.log.Timber;
 
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.CONTENT_URI;
@@ -181,7 +181,7 @@ public class RecipeContentProvider extends ContentProvider {
                         try {
                             _id = db.insertOrThrow(RecipeEntry.TABLE_NAME, null, value);
                         } catch (SQLiteConstraintException e) {
-                            Log.d(TAG, "Attempting to insert " +
+                            Timber.d(TAG, "Attempting to insert " +
                                     value.getAsString(RecipeEntry.COLUMN_RECIPE_NAME)
                                     + " but value is already in database.");
                         }

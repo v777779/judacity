@@ -117,12 +117,12 @@ public class Constants {
     public static final int BUTTON_UP_DELAY = 2550;
 
     // fragment main data
-    public static final String TAG_FMAIN = FragmentMain.class.getSimpleName();
+//    public static final String TAG_FMAIN = FragmentMain.class.getSimpleName();
     public static final String RECIPE_POSITION = "recipe_position";
     public static final int STEP_DEFAULT_POSITION = 1;
 
     // fragment detail data
-    public static final String TAG_FDETAIL = FragmentDetail.class.getSimpleName();
+//    public static final String TAG_FDETAIL = FragmentDetail.class.getSimpleName();
     public static final String DETAIL_IS_EXPANDED = "detail_is_expanded";
     public static final String ERROR_RECIPE_EMPTY ="Error RecipeItem object is null";
     public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";

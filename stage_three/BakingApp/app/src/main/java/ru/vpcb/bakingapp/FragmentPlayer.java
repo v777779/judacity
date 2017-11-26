@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.vpcb.bakingapp.video.IVideoEventCallback;
 import ru.vpcb.bakingapp.video.VideoEventListener;
+import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
@@ -53,7 +53,6 @@ import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_HIDE_FLAGS;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
-import static ru.vpcb.bakingapp.utils.Constants.TAG_FDETAIL;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -118,10 +117,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
                 mPositionMax = mPosition;
             }
         } catch (Exception e) {
-            Log.d(TAG_FDETAIL, e.getMessage());
+            Timber.d(e.getMessage());
         }
         mVideoListener = new VideoEventListener(this);
-
 // video
         if (savedInstanceState != null) {
             mCurrentWindow = savedInstanceState.getInt(BUNDLE_PLAY_WINDOW_INDEX, 0);
