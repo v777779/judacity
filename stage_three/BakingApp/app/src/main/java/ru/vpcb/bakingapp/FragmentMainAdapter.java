@@ -106,7 +106,9 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
             if (imageURL != null && !imageURL.isEmpty()) {
                 Glide.with(mContext)
                         .load(imageURL)
-                        .apply(new RequestOptions().error(R.drawable.cakes_025))
+                        .apply(new RequestOptions()
+                                .placeholder(R.drawable.empty_loading)
+                                .error(R.drawable.cakes_025))
                         .into(mImage);
             } else {
                 mImage.setImageResource(R.drawable.cakes_025);

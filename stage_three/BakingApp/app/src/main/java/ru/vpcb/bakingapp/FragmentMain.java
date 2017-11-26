@@ -2,6 +2,8 @@ package ru.vpcb.bakingapp;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -17,22 +19,26 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.vpcb.bakingapp.data.IRetrofitAPI;
 import ru.vpcb.bakingapp.data.LoaderDb;
-import ru.vpcb.bakingapp.data.LoaderUri;
-import ru.vpcb.bakingapp.utils.NetworkData;
+import ru.vpcb.bakingapp.utils.FragmentData;
 import ru.vpcb.bakingapp.utils.RecipeData;
 import timber.log.Timber;
 
-import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_LOADER_STRING_ID;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_LANDSCAPE;
@@ -40,12 +46,12 @@ import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_PORTRAIT;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_LANDSCAPE;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_PORTRAIT;
 import static ru.vpcb.bakingapp.utils.Constants.LOADER_RECIPES_DB_ID;
-import static ru.vpcb.bakingapp.utils.Constants.LOADER_RECIPES_ID;
 import static ru.vpcb.bakingapp.utils.Constants.LOW_SCALE_LANDSCAPE;
 import static ru.vpcb.bakingapp.utils.Constants.LOW_SCALE_PORTRAIT;
 import static ru.vpcb.bakingapp.utils.Constants.MAX_SPAN;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_HEIGHT;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_SPAN;
+import static ru.vpcb.bakingapp.utils.Constants.RECIPES_BASE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
@@ -58,7 +64,7 @@ import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
  */
 
 public class FragmentMain extends Fragment implements IFragmentHelper,
-        LoaderUri.ICallbackUri, LoaderDb.ICallbackDb {
+        LoaderDb.ICallbackDb {
 
 
     private RecyclerView mRecyclerView;
@@ -66,12 +72,13 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     private ProgressBar mProgressBar;
     private TextView mErrorMessage;
 
-    private LoaderUri mLoader;
     private LoaderDb mLoaderDb;
     private int mSpan;
     private int mSpanHeight;
     private Cursor mCursor;
     private Context mContext;
+    private Retrofit mRetrofit;
+    private IRetrofitAPI mRetrofitAPI;
 
 
     public FragmentMain() {
@@ -80,15 +87,12 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-// loaders here for dynamic fragments
-// loaders for static fragments can be in onViewCreated
-        mLoader = new LoaderUri(getContext(), this);
-        mLoaderDb = new LoaderDb(getContext(), this);
-        if (NetworkData.isOnline(getContext())) {
-            getLoaderManager().initLoader(LOADER_RECIPES_ID, new Bundle(), mLoader); // empty bundle FFU
-        }
-        getLoaderManager().initLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb); // empty bundle FFU
 
+        mLoaderDb = new LoaderDb(getContext(), this);
+        getLoaderManager().initLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb); // empty bundle FFU
+        if (savedInstanceState == null) {
+            startRetrofitLoader();
+        }
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -113,7 +117,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
         mErrorMessage = rootView.findViewById(R.id.error_message);
 
 // loaders
-        if (!NetworkData.isOnline(getContext())) {
+        if (!isOnline(getContext())) {
             showError();
         }
 
@@ -154,18 +158,16 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
     }
 
 
-
     @Override
     public int getSpanHeight() {
         return mSpanHeight;
     }
 
-    @Override
+
     public void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void showError() {
         mProgressBar.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.VISIBLE);
@@ -177,32 +179,65 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     }
 
-    @Override
-    public void onComplete(Bundle data) {
-        showResult();
-
-        String s = null;
-        if (data != null) {
-            s = data.getString(BUNDLE_LOADER_STRING_ID);
+    private void startRetrofitLoader() {
+        showProgress();
+        if (!isOnline(mContext)) {
+            return;
         }
+// setup Retrofit
+        boolean isLogging = true;
+        if (isLogging) {
+//logging
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);     // set your desired log level  NONE, BASIC, HEADERS, BODY
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            httpClient.addInterceptor(logging);  // <-- this is the important line!
 
-        try {
-            Type listType = new TypeToken<List<RecipeItem>>() {
-            }.getType();
-            List<RecipeItem> list = new Gson().fromJson(s, listType);
-            Iterator<RecipeItem> it = list.iterator();
-            while(it.hasNext()) {
-                if(it.next() == null)  {
-                    it.remove();
+            mRetrofit = new Retrofit.Builder()   // add your other interceptors …
+                    .baseUrl(RECIPES_BASE)       // add logging as last interceptor
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient.build())
+                    .build();
+
+        } else {
+// no logging
+            mRetrofit = new Retrofit.Builder()
+                    .baseUrl(RECIPES_BASE) //Базовая часть адреса
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
+
+
+        mRetrofitAPI.getData(null).enqueue(new Callback<List<RecipeItem>>() {
+            @Override
+            public void onResponse(Call<List<RecipeItem>> call, Response<List<RecipeItem>> response) {
+                if (response.body() == null) {
+                    showError();
+                    return;
                 }
+
+                List<RecipeItem> list = response.body();
+                Iterator<RecipeItem> it = list.iterator();
+                while (it.hasNext()) {
+                    if (it.next() == null) {
+                        it.remove();
+                    }
+                }
+// test!!!
+                FragmentData.addImages(list);
+                RecipeData.bulkInsertBackground(mContext.getContentResolver(), getLoaderManager(), list, mLoaderDb);
+                showResult();
             }
 
-// test!!!
-//        TestData.addImages(list);
-            RecipeData.bulkInsertBackground(mContext.getContentResolver(), getLoaderManager(), list, mLoaderDb);
-        } catch (JsonSyntaxException e) {
-            Timber.d(e.getMessage());
-        }
+            @Override
+            public void onFailure(Call<List<RecipeItem>> call, Throwable t) {
+                Timber.d("Retrofit load error: " + t.getMessage());
+                showError();
+            }
+        });
+
+
     }
 
 
@@ -212,7 +247,7 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
             return;
         }
         showResult(); // только после загрузки базы данных
-        if (!NetworkData.isOnline(getContext())) {
+        if (!isOnline(getContext())) {
             Snackbar.make(getView(), "No connection. Local data used", Snackbar.LENGTH_LONG).show();
             Timber.d("No connection. Local data used");
         }
@@ -258,5 +293,10 @@ public class FragmentMain extends Fragment implements IFragmentHelper,
 
     }
 
-
+    private boolean isOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 }

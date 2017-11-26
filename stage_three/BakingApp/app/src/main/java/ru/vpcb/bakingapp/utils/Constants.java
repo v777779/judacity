@@ -62,10 +62,14 @@ public class Constants {
 //    };
 
 
-    // network data
+ // network data
+
     public static final int LOADER_RECIPES_ID = 1210;
     public static final int LOADER_RECIPES_DB_ID = 1220;
-    public static final String RECIPES_BASE = "https://go.udacity.com/android-baking-app-json";
+    public static final String RECIPES_BASE = "https://go.udacity.com/";
+    public static final String RECIPES_QUERY = "android-baking-app-json";
+
+
 
     public static final String BUNDLE_LOADER_STRING_ID = "bundle_loader_string_id";
     public static final String BUNDLE_LOADER_RECIPE_ID = "bundle_loader_recipe_id";
