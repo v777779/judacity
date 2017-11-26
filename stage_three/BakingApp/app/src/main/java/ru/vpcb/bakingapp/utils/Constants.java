@@ -113,6 +113,7 @@ public class Constants {
     public static final String ERROR_RECIPE_EMPTY ="Error RecipeItem object is null";
     public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";
     public static final String BUNDLE_DETAIL_POSITION = "bundle_detail_position";
+    public static final String BUNDLE_DETAIL_INTENT = "bundle_detail_intent";
 
 
 

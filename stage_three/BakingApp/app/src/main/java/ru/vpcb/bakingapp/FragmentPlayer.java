@@ -59,17 +59,39 @@ import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
  */
 public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoEventCallback {
 
-    @Nullable @BindView(R.id.fp_head_text)TextView mHeadText;
-    @Nullable @BindView(R.id.fp_body_text)TextView mBodyText;
-    @Nullable @BindView(R.id.prev_button)ImageView mPrevButton;
-    @Nullable @BindView(R.id.next_button)ImageView mNextButton;
-    @Nullable @BindView(R.id.navigation_text)TextView mNavigationText;
-    @Nullable @BindView(R.id.prev_button_extended)View mPrevExt;
-    @Nullable @BindView(R.id.next_button_extended)View mNextExt;
-    @Nullable @BindView(R.id.exoplayer_view)SimpleExoPlayerView mPlayerView;
-    @Nullable @BindView(R.id.ic_play_button)ImageView mPlayButton;
-    @Nullable @BindView(R.id.ic_play_button_back)ImageView mPlayButtonBack;
-    @Nullable @BindView(R.id.fp_video_card)View mCardView;
+    @Nullable
+    @BindView(R.id.fp_head_text)
+    TextView mHeadText;
+    @Nullable
+    @BindView(R.id.fp_body_text)
+    TextView mBodyText;
+    @Nullable
+    @BindView(R.id.prev_button)
+    ImageView mPrevButton;
+    @Nullable
+    @BindView(R.id.next_button)
+    ImageView mNextButton;
+    @Nullable
+    @BindView(R.id.navigation_text)
+    TextView mNavigationText;
+    @Nullable
+    @BindView(R.id.prev_button_extended)
+    View mPrevExt;
+    @Nullable
+    @BindView(R.id.next_button_extended)
+    View mNextExt;
+    @Nullable
+    @BindView(R.id.exoplayer_view)
+    SimpleExoPlayerView mPlayerView;
+    @Nullable
+    @BindView(R.id.ic_play_button)
+    ImageView mPlayButton;
+    @Nullable
+    @BindView(R.id.ic_play_button_back)
+    ImageView mPlayButtonBack;
+    @Nullable
+    @BindView(R.id.fp_video_card)
+    View mCardView;
 
     private Context mContext;
     private RecipeItem mRecipeItem;
@@ -90,7 +112,6 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     private Unbinder mUnBinder;
 
 
-
     public FragmentPlayer() {
 
     }
@@ -100,7 +121,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
-        mUnBinder = ButterKnife.bind(this,rootView);
+        mUnBinder = ButterKnife.bind(this, rootView);
 
         Bundle playerArgs = getArguments();
         mIsLandMode = isLandMode();
@@ -123,13 +144,13 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
             mPlaybackPosition = savedInstanceState.getLong(BUNDLE_PLAY_SEEK_POSITION, 0);
             mPlaybackWhenReady = savedInstanceState.getBoolean(BUNDLE_PLAY_PAUSE_READY, true);
             mPlaybackEnded = savedInstanceState.getBoolean(BUNDLE_PLAY_BACK_ENDED, false);
-            if (!mPlaybackEnded) {
-                mPlayButton.setAlpha(0f);
-            }
+//            if (!mPlaybackEnded) {
+//                mPlayButton.setAlpha(0f);
+//            }
         } else {
             mCurrentWindow = 0;
             mPlaybackPosition = 0;
-            mPlaybackWhenReady = true;
+            mPlaybackWhenReady = false;
             mPlaybackEnded = false;
         }
 
@@ -222,7 +243,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
         if (!mIsVideoEnabled) {
             getView().setSystemUiVisibility(SYSTEM_UI_HIDE_FLAGS);
-        }else {
+        } else {
             mPlayerView.setSystemUiVisibility(SYSTEM_UI_HIDE_FLAGS);
         }
     }
@@ -294,7 +315,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
     @Override
     public void onCallback(int position) {
-        if(mIsWide) {
+        if (mIsWide) {
             return;
         }
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -305,7 +326,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         playerArgs.putInt(RECIPE_STEP_POSITION, position);
         playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
         playerFragment.setArguments(playerArgs);
-        fragmentManager.popBackStack("player",POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.popBackStack("player", POP_BACK_STACK_INCLUSIVE);
 
         if (mIsWide) {
             fragmentManager.beginTransaction()
@@ -318,9 +339,6 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
                     .commit();
         }
 
-//        Snackbar.make(getView(), "Clicked on Fragment Player " + " stack: " +
-//                        fragmentManager.getBackStackEntryCount(),
-//                Snackbar.LENGTH_SHORT).show();
     }
 
 
@@ -414,7 +432,10 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         }
         mPlayerView.setControllerAutoShow(false);
         mPlayerView.setControllerShowTimeoutMs(PLAY_CONTROL_SHOWTIME);
-        mPlayButton.setAlpha(0f);
+
+        if (mPlaybackWhenReady) mPlayButton.setAlpha(0f);
+        else mPlayButton.setAlpha(1f);
+
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -445,7 +466,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
     private boolean isLandMode() {
         DisplayMetrics dp = new DisplayMetrics();
-        ((MainActivity) mContext).getWindowManager().getDefaultDisplay().getMetrics(dp);
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
         return dp.widthPixels > dp.heightPixels;
     }
 

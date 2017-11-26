@@ -32,7 +32,7 @@ import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
  * Email: vadim.v.voronov@gmail.com
  */
 
-public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAdapter.FCViewHolder> {
+public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHolder> {
 
 
     private boolean isExpanded;
@@ -43,7 +43,7 @@ public class FragmentDetailAdapter extends RecyclerView.Adapter<FragmentDetailAd
     private List<RecipeItem.Ingredient> mIngredientList;
     private Context mContext;
 
-    public FragmentDetailAdapter(Context context, IFragmentHelper helper, RecipeItem recipeItem) {
+    public DetailAdapter(Context context, IFragmentHelper helper, RecipeItem recipeItem) {
         mContext = context;
         mHelper = helper;
         mRecipeItem = recipeItem;

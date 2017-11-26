@@ -1,15 +1,15 @@
 package ru.vpcb.bakingapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -19,6 +19,7 @@ import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_EXPANDED;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
@@ -26,83 +27,82 @@ import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.STEP_DEFAULT_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
 
-
-/**
- * Exercise for course : Android Developer Nanodegree
- * Created: Vadim Voronov
- * Date: 15-Nov-17
- * Email: vadim.v.voronov@gmail.com
- */
-
-public class FragmentDetail extends Fragment implements IFragmentHelper {
-
+public class DetailActivity extends AppCompatActivity implements IFragmentHelper {
 
     private RecyclerView mRecyclerView;
-    private FragmentDetailAdapter mRecyclerAdapter;
+    private DetailAdapter mRecyclerAdapter;
     private int mPosition;
     private boolean mIsWide;
     private RecipeItem mRecipeItem;
     private Context mContext;
     private boolean mIsExpanded;
+    private View mRootView;
 
-    public FragmentDetail() {
-    }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_detail);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);  // обязательно без Manifest.PARENT
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
+        }
+
+        mContext = this;
+        mRootView = findViewById(R.id.fragment_container);
+
         if (savedInstanceState != null) {
             mIsExpanded = savedInstanceState.getBoolean(BUNDLE_DETAIL_EXPANDED, false);
             mPosition = savedInstanceState.getInt(BUNDLE_DETAIL_POSITION, STEP_DEFAULT_POSITION);
-        }else {
+        } else {
             mPosition = STEP_DEFAULT_POSITION;
             mIsExpanded = false;
         }
 
-        final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mRecyclerView = mRootView.findViewById(R.id.fc_recycler);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
 
-        mRecyclerView = rootView.findViewById(R.id.fc_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        Bundle detailArgs = getArguments();
-
-        if (detailArgs != null) {
-            try {
-                mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
-            } catch (JsonSyntaxException e) {
-                Timber.d(e.getMessage());
-            }
+        try {
+            Intent intent = getIntent();
+            Bundle detailArgs = intent.getBundleExtra(BUNDLE_DETAIL_INTENT);
+            mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
+        } catch (JsonSyntaxException e) {
+            Timber.d(e.getMessage());
+            onBackPressed();
         }
 
         mRecyclerView.setLayoutManager(layoutManager);                              // connect to LayoutManager
         mRecyclerView.setHasFixedSize(false);                                       // item size fixed
-        mRecyclerAdapter = new FragmentDetailAdapter(mContext, this, mRecipeItem);      //context  and data
+        mRecyclerAdapter = new DetailAdapter(mContext, this, mRecipeItem);      //context  and data
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerAdapter.setExpanded(mIsExpanded);
         mRecyclerView.setHasFixedSize(true);
-        mIsWide = rootView.findViewById(R.id.fc_p_container) != null;
+        mIsWide = mRootView.findViewById(R.id.fc_p_container) != null;
 
-
-        if (mIsWide && mRecipeItem != null && savedInstanceState == null ) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        if (mIsWide && mRecipeItem != null && savedInstanceState == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentPlayer playerFragment = getFragmentPlayer();
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
                     .addToBackStack("player")
                     .commit();
         }
+        mRootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
 
-
-        rootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
-
-        return rootView;
     }
 
-
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (mIsWide) {
+                getSupportFragmentManager().popBackStack("player", POP_BACK_STACK_INCLUSIVE);
+            }
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -115,10 +115,10 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
     @Override
     public void onCallback(int position) {
         mPosition = position;
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentPlayer playerFragment = getFragmentPlayer();
 
-        fragmentManager.popBackStack("player",POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.popBackStack("player", POP_BACK_STACK_INCLUSIVE);
 
         if (mIsWide) {
             fragmentManager.beginTransaction()
@@ -129,8 +129,6 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
                     .replace(R.id.fragment_container, playerFragment)
                     .addToBackStack("player")
                     .commit();
-
-
         }
     }
 
@@ -143,4 +141,5 @@ public class FragmentDetail extends Fragment implements IFragmentHelper {
         playerFragment.setArguments(playerArgs);
         return playerFragment;
     }
+
 }

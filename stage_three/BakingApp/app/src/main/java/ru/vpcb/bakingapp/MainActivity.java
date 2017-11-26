@@ -1,6 +1,7 @@
 package ru.vpcb.bakingapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,6 +36,7 @@ import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_LANDSCAPE;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_PORTRAIT;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_LANDSCAPE;
@@ -131,9 +133,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (mIsWide) {
-                getSupportFragmentManager().popBackStack("player", POP_BACK_STACK_INCLUSIVE);
-            }
             hideProgress();
             onBackPressed();
             return true;
@@ -158,17 +157,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mCursor.moveToPosition(position);
         String recipeJson = mCursor.getString(mCursor.getColumnIndex(COLUMN_RECIPE_VALUE));
 
-
-        FragmentDetail detailFragment = new FragmentDetail();
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         Bundle detailArgs = new Bundle();
         detailArgs.putString(RECIPE_POSITION, recipeJson);
-        detailFragment.setArguments(detailArgs);
+        intent.putExtra(BUNDLE_DETAIL_INTENT, detailArgs);
+        startActivity(intent);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
-                .addToBackStack(null)
-                .commit();
 
     }
 
@@ -176,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
     }
+
     private void hideProgress() {
         mProgressBar.setVisibility(View.INVISIBLE);
     }
@@ -185,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mErrorMessage.setVisibility(View.VISIBLE);
     }
 
-    private  void showResult() {
+    private void showResult() {
         mProgressBar.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.INVISIBLE);
 
