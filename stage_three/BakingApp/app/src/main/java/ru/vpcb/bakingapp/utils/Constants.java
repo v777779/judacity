@@ -95,6 +95,8 @@ public class Constants {
     public static final int MIN_SPAN = 1;
     public static final int MIN_HEIGHT = 100;
 
+    public static final int MIN_WIDTH_WIDE_SCREEN = 600;     // dpi
+
 
     // player animation
     public static final float BUTTON_DOWN_ALPHA = 0.5f;

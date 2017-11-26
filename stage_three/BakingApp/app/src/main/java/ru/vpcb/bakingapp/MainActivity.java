@@ -47,6 +47,7 @@ import static ru.vpcb.bakingapp.utils.Constants.LOW_SCALE_PORTRAIT;
 import static ru.vpcb.bakingapp.utils.Constants.MAX_SPAN;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_HEIGHT;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_SPAN;
+import static ru.vpcb.bakingapp.utils.Constants.MIN_WIDTH_WIDE_SCREEN;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPES_BASE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
@@ -87,9 +88,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
         }
 
-
 // oNnCreateView
         mContext = this;
+        if (!mIsTimber) {
+            Timber.plant(new Timber.DebugTree());
+            mIsTimber = true;
+        }
+
         mRecyclerView = (RecyclerView) findViewById(R.id.fc_recycler);
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         setDisplayMetrics();
@@ -109,18 +114,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
 
         mRootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
 
-
-        if (!mIsTimber) {
-            Timber.plant(new Timber.DebugTree());
-            mIsTimber = true;
-        }
-
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
         if (dp.heightPixels < dp.widthPixels) {
-            mIsWide = dp.widthPixels / dp.density >= 600;
+            mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
         } else {
-            mIsWide = dp.heightPixels / dp.density >= 600;
+            mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
         }
 
         mLoaderDb = new LoaderDb(this, this);
