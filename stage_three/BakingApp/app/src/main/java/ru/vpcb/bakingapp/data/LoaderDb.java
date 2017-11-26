@@ -61,17 +61,18 @@ public class LoaderDb implements LoaderManager.LoaderCallbacks<Cursor> {
             }
 
             @Override
-            public void deliverResult(Cursor data) {
-                mCached = data;
-                super.deliverResult(data);
+            public void deliverResult(Cursor cursor) {
+                mCached = cursor;
+                super.deliverResult(cursor);
 
             }
         };
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            mCallback.onComplete(data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+            mCallback.onComplete(cursor);
     }
 
     @Override

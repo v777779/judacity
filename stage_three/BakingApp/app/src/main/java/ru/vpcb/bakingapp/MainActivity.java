@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             Snackbar.make(mRootView, "No connection. Local data used", Snackbar.LENGTH_LONG).show();
             Timber.d("No connection. Local data used");
         }
-
+        cursor.moveToFirst();
         mRecyclerAdapter.swapCursor(cursor);
         mCursor = cursor;
         showResult();
