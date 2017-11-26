@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
 
 
     private boolean mIsWide;
-    private static boolean mIsTimber;
+    public static boolean mIsTimber;
 
 
     @Override

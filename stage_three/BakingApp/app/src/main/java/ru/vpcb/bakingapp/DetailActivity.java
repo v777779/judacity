@@ -52,6 +52,11 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 
         mContext = this;
         mRootView = findViewById(R.id.fragment_container);
+        if (!MainActivity.mIsTimber) {
+            Timber.plant(new Timber.DebugTree());
+            MainActivity.mIsTimber = true;
+        }
+
 
         if (savedInstanceState != null) {
             mIsExpanded = savedInstanceState.getBoolean(BUNDLE_DETAIL_EXPANDED, false);
@@ -68,9 +73,10 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
             Intent intent = getIntent();
             Bundle detailArgs = intent.getBundleExtra(BUNDLE_DETAIL_INTENT);
             mRecipeItem = new Gson().fromJson(detailArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             Timber.d(e.getMessage());
-            onBackPressed();
+            finish();           // onBackPressed();
+            return;
         }
 
         mRecyclerView.setLayoutManager(layoutManager);                              // connect to LayoutManager
