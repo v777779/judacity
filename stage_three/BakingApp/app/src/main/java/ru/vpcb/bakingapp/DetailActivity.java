@@ -103,9 +103,11 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (mIsWide) {
-                getSupportFragmentManager().popBackStack("player", POP_BACK_STACK_INCLUSIVE);
+//                getSupportFragmentManager().popBackStack("player", POP_BACK_STACK_INCLUSIVE);
+                finish();
+            }else {
+                onBackPressed();
             }
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
