@@ -10,11 +10,11 @@
     <dimen name="widget_text_size">12sp</dimen>
 
     <!--frame margins-->
-    <dimen name="navigation_margin">80dp</dimen>
+    <dimen name="navigation_margin">84dp</dimen>
     <dimen name="navigation_main">88dp</dimen>
     <dimen name="frame_side_margin">8dp</dimen>
     <!--tablet-->
-    <dimen name="botom_tablet_margin">0dp</dimen>
+    <dimen name="bottom_tablet_margin">0dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

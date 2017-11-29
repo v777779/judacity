@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackLight"
-    android:layout_marginBottom="@dimen/botom_tablet_margin"
+    android:layout_marginBottom="@dimen/bottom_tablet_margin"
     >
 
     <android.support.v7.widget.RecyclerView

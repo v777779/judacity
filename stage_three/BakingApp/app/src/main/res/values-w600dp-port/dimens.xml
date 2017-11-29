@@ -9,7 +9,7 @@
     <dimen name="navigation_main">96dp</dimen>
 
     <!--tablet-->
-    <dimen name="botom_tablet_margin">0dp</dimen>
+    <dimen name="bottom_tablet_margin">0dp</dimen>
 
 
 </resources>
