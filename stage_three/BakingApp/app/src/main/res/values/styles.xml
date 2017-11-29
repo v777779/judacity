@@ -32,6 +32,12 @@
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
 
+    <style name="TextBoldLight" parent="TextNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/bold_text_size</item>
+    </style>
+
     <style name="TextLarge" parent="TextNormal">
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/head_text_size</item>

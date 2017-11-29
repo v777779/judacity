@@ -338,8 +338,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
 
     @Override
     public void onComplete(Cursor cursor) {
-        if (cursor == null || cursor.getCount() == 0 || mRecyclerAdapter == null) {   // нет адаптера выходим
+        if (!isOnline(mContext) && (cursor == null || cursor.getCount() == 0)) {   // нет адаптера выходим
             showErrorHandler();
+        }
+
+        if (cursor == null || cursor.getCount() == 0 || mRecyclerAdapter == null) {   // нет адаптера выходим
             return;
         }
         showResult(); // только после загрузки базы данных
@@ -407,13 +410,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     public static boolean getLoadPreference(Context context) {
         boolean isLoadImages = false;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if(!sharedPreferences.contains(PREFERENCE_LOAD_IMAGES)) {
+        if (!sharedPreferences.contains(PREFERENCE_LOAD_IMAGES)) {
             isLoadImages = context.getResources().getBoolean(R.bool.load_images);
-            setLoadPreference(context,isLoadImages);
-        }else {
+            setLoadPreference(context, isLoadImages);
+        } else {
             isLoadImages = sharedPreferences.getBoolean(PREFERENCE_LOAD_IMAGES, false);
         }
-        return  isLoadImages;
+        return isLoadImages;
     }
 
     public static void setLoadPreference(Context context, boolean isImageLoad) {
