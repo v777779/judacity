@@ -89,8 +89,6 @@ public class RecipeWidgetService extends IntentService {
 
 
         }
-
-
     }
 
 
@@ -100,7 +98,8 @@ public class RecipeWidgetService extends IntentService {
         if (ingredientList != null) {
             int count = 1;
             for (RecipeItem.Ingredient ingredient : ingredientList) {
-                sb.append(count + "." + ingredient.toString() + "\n");
+                String s = ingredient.toString().substring(0,1).toUpperCase()+ingredient.toString().substring(1);
+                sb.append(count + "." + s + "\n");
                 count++;
             }
         }

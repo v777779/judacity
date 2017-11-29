@@ -43,6 +43,7 @@ import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_SEEK_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_WINDOW_INDEX;
+import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_PLAYER_NAME;
 import static ru.vpcb.bakingapp.utils.Constants.PLAY_BUTTON_ANIMATION;
 import static ru.vpcb.bakingapp.utils.Constants.PLAY_CONTROL_SHOWTIME;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
@@ -326,7 +327,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         playerArgs.putInt(RECIPE_STEP_POSITION, position);
         playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
         playerFragment.setArguments(playerArgs);
-        fragmentManager.popBackStack("player", POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.popBackStack(FRAGMENT_PLAYER_NAME, POP_BACK_STACK_INCLUSIVE);
 
         if (mIsWide) {
             fragmentManager.beginTransaction()
@@ -335,7 +336,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         } else {
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, playerFragment)
-                    .addToBackStack("player")
+                    .addToBackStack(FRAGMENT_PLAYER_NAME)
                     .commit();
         }
 

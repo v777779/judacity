@@ -31,7 +31,7 @@
             android:onClick="onClickTapWidget"
             android:text="@string/widget_button"
             android:textAppearance="@style/TextHeadLight"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

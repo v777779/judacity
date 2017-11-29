@@ -41,5 +41,8 @@
     <string name="error_exit">EXIT</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-
+    <!--menu-->
+    <string name="menu_settings">Settings</string>
+    <string name="load_images">Load preview images</string>
+    <string name="no_load_images">Not load preview images</string>
 </resources>

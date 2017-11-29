@@ -42,11 +42,14 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
     private List<RecipeItem.Step> mStepList;
     private List<RecipeItem.Ingredient> mIngredientList;
     private Context mContext;
+    private String mWidgetId;
+    private boolean mIsloadImages;
 
-    public DetailAdapter(Context context, IFragmentHelper helper, RecipeItem recipeItem) {
+    public DetailAdapter(Context context, IFragmentHelper helper, RecipeItem recipeItem, boolean isLoadImages) {
         mContext = context;
         mHelper = helper;
         mRecipeItem = recipeItem;
+        mIsloadImages = isLoadImages;
         isExpanded = false;
         mStepList = null;
         mIngredientList = null;
@@ -107,6 +110,18 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
         return mStepList.size() + 1;
     }
 
+    public RecipeItem swapRecipe(RecipeItem recipeItem) {
+        RecipeItem oldRecipeItem = mRecipeItem;
+        mRecipeItem = recipeItem;
+        if (recipeItem != null) {
+            mStepList = recipeItem.getSteps();
+            mIngredientList = recipeItem.getIngredients();
+            notifyDataSetChanged();
+        }
+        return oldRecipeItem;
+
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == 0) return EXPANDED_TYPE;
@@ -114,17 +129,29 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
     }
 
     class FCViewHolder extends RecyclerView.ViewHolder {
-        @Nullable @BindView(R.id.fc_recycler_head_text) TextView mHeaderText;
-        @Nullable @BindView(R.id.fc_recycler_detail_text) TextView mDetailText;
-        @Nullable @BindView(R.id.fc_recycler_child_detail_text) TextView mChildDetailText;
-        @Nullable @BindView(R.id.step_thumb) ImageView mThumbImage;
-        @Nullable @BindView(R.id.expand_left) ImageView mLeftExpand;
-        @Nullable @BindView(R.id.expand_right)ImageView mRightExpand;
+        @Nullable
+        @BindView(R.id.fc_recycler_head_text)
+        TextView mHeaderText;
+        @Nullable
+        @BindView(R.id.fc_recycler_detail_text)
+        TextView mDetailText;
+        @Nullable
+        @BindView(R.id.fc_recycler_child_detail_text)
+        TextView mChildDetailText;
+        @Nullable
+        @BindView(R.id.step_thumb)
+        ImageView mThumbImage;
+        @Nullable
+        @BindView(R.id.expand_left)
+        ImageView mLeftExpand;
+        @Nullable
+        @BindView(R.id.expand_right)
+        ImageView mRightExpand;
 
 
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         private void fill(int position, int viewType) {
@@ -161,6 +188,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
                 if (videoURL == null || videoURL.isEmpty()) {                            // default image
                     mThumbImage.setImageResource(R.drawable.ic_play_circle_white_24dp);
 
+                } else if (!mIsloadImages) {
+                    mThumbImage.setImageResource(R.drawable.ic_play_circle_black_24dp);   // no load
                 } else {
                     Glide.with(mContext)
                             .load(imageURL)
@@ -169,7 +198,6 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
                 }
             }
 
-
         }
 
         private void setChildText() {
@@ -177,7 +205,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
                 StringBuilder sb = new StringBuilder();
                 int count = 1;
                 for (RecipeItem.Ingredient ingredient : mIngredientList) {
-                    sb.append(count + ". " + ingredient + "\n");
+                    String s = ingredient.toString().substring(0,1).toUpperCase()+ingredient.toString().substring(1);
+                    sb.append(count + ". " + s + "\n");
                     count++;
                 }
                 mDetailText.setText(mContext.getString(R.string.click_collapse));
@@ -209,6 +238,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
             mHeaderText.setText(mContext.getString(R.string.play_header_empty));
             mDetailText.setText(mContext.getString(R.string.play_body_error));
         }
+
     }
 
     public boolean isExpanded() {

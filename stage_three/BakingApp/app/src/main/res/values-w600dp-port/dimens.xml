@@ -3,6 +3,7 @@
     <!--test sizes-->
     <!--widget-->
     <dimen name="widget_text_size">16sp</dimen>
+    <dimen name="widget_head_size">20sp</dimen>
 
     <!--frame margins-->
     <dimen name="navigation_margin">80dp</dimen>
@@ -10,6 +11,8 @@
 
     <!--tablet-->
     <dimen name="bottom_tablet_margin">0dp</dimen>
+    <dimen name="widget_height">120dp</dimen>
+    <dimen name="widget_width">120dp</dimen>
 
 
 </resources>

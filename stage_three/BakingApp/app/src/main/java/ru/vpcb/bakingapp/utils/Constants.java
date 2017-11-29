@@ -109,6 +109,12 @@ public class Constants {
     public static final String RECIPE_POSITION = "recipe_position";
     public static final int STEP_DEFAULT_POSITION = 1;
 //    public static final String BUNDLE_MAIN_CONNECTION = "bundle_main_connection";
+    public static final int MESSAGE_ERROR_ID = 1221;
+    public static final int MESSAGE_PLAYER_ID = 1223;
+    public static final String FRAGMENT_PLAYER_NAME = "fragment_player_name";
+    public static final String FRAGMENT_ERROR_NAME = "fragment_error_name";
+    public static final String FRAGMENT_ERROR_TAG = "fragment_error_tag";
+    public static final String PREFERENCE_LOAD_IMAGES = "preference_load_images";
 
 
     // fragment detail data
