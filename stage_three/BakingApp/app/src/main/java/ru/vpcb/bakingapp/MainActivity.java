@@ -236,15 +236,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
                         getSupportLoaderManager(), list, mLoaderDb);
                 showResult();
             }
-
             @Override
             public void onFailure(Call<List<RecipeItem>> call, Throwable t) {
-                Timber.d("Retrofit load error: " + t.getMessage());
+                Timber.d(t.getMessage());
                 showError();
             }
         });
-
-
     }
 
 
@@ -255,8 +252,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         }
         showResult(); // только после загрузки базы данных
         if (!isOnline(mContext)) {
-            Snackbar.make(mRootView, "No connection. Local data used", Snackbar.LENGTH_LONG).show();
-            Timber.d("No connection. Local data used");
+            Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_LONG).show();
+            Timber.d(getString(R.string.message_error));
         }
         cursor.moveToFirst();
         mRecyclerAdapter.swapCursor(cursor);

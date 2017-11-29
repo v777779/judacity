@@ -108,6 +108,8 @@ public class Constants {
 //    public static final String TAG_FMAIN = FragmentMain.class.getSimpleName();
     public static final String RECIPE_POSITION = "recipe_position";
     public static final int STEP_DEFAULT_POSITION = 1;
+//    public static final String BUNDLE_MAIN_CONNECTION = "bundle_main_connection";
+
 
     // fragment detail data
 //    public static final String TAG_FDETAIL = FragmentDetail.class.getSimpleName();
@@ -116,7 +118,7 @@ public class Constants {
     public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";
     public static final String BUNDLE_DETAIL_POSITION = "bundle_detail_position";
     public static final String BUNDLE_DETAIL_INTENT = "bundle_detail_intent";
-
+    public static final String BUNDLE_DETAIL_WIDGET_FILLED = "bundle_detail_widget_filled";
 
 
     // fragment play data
@@ -141,5 +143,23 @@ public class Constants {
     public static final int SYSTEM_UI_SHOW_FLAGS = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+
+    // widget data
+    public static final String BUNDLE_PACKAGE = Constants.class.getPackage().toString();
+    public static final String BUNDLE_WIDGET_INTENT = BUNDLE_PACKAGE+".bundle_widget_intent";
+    public static final String WIDGET_SERVICE_FILL_ACTION = BUNDLE_PACKAGE+".widget_fill_action";
+    public static final String WIDGET_SERVICE_UPDATE_ACTION = BUNDLE_PACKAGE+".widget_update_action";
+
+
+    public static final String WIDGET_PREFERENCES = "ru.vpcb.bakingapp.widget.";
+    public static final String WIDGET_WIDGET_ID = "widget_id";
+    public static final String WIDGET_WIDGET_ID_ARRAY = "widget_id_array";
+    public static final String WIDGET_RECIPE_ID = "widget_recipe_position";
+    public static final String WIDGET_RECIPE_LIST = "widget_recipe_list";
+    public static final String WIDGET_RECIPE_NAME = "widget_recipe_name";
+
+
+    public static final int WIDGET_ID_EMPTY_VALUE = -1;
+    public static final int RECIPE_ID_EMPTY_VALUE = -1;
 
 }

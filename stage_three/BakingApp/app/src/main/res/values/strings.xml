@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Baking App</string>
 
-<!--messages text-->
+    <!--messages text-->
     <string name="click_expand"> "expand ingredients"</string>
     <string name="click_collapse"> "collapse"</string>
     <string name="play_header_step"> "Step %1$s"</string>
@@ -11,11 +11,35 @@
     <string name="play_body_empty"> "No description"</string>
     <string name="play_header_empty"> "\u2014"</string>
     <string name="play_body_error"> "No or invalid data"</string>
-<!--tools text    -->
+
+    <!--tools text    -->
     <string name="tool_header">HEADER</string>
     <string name="tool_body">Normal text</string>
-
     <string name="tool_alpha">0.0</string>
 
+    <!--widget-->
+    <string name="empty_widget_head">Click to choose recipe</string>
+    <string name="empty_widget_body"> </string>
+    <string name="widget_head_text">Recipe Name</string>
+    <string name="widget_body_text">Ingredients List</string>
+    <string name="widget_button">Tap to fill widget</string>
+    <string name="widget_add">Add widget</string>
+    <string name="widget_list_added">List of ingredients added to widget</string>
+
+    <!--dialog-->
+    <string name="error_title">Error connecton</string>
+    <string name="empty_title">The database of recipes is empty</string>
+    <string name="message_error">Error connection! Local data used. </string>
+    <string name="message_close">Please close program! </string>
+    <string name="message_error_line1">There is no connection to the Internet</string>
+    <string name="message_error_line2">Please retry or exit from the program</string>
+    <string name="message_error_line3"> </string>
+    <string name="message_error_line4">Please restart program to load recipes</string>
+
+    <string name="error_retry">RETRY</string>
+    <string name="error_close">CLOSE</string>
+    <string name="error_exit">EXIT</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
