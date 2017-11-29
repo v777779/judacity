@@ -18,6 +18,7 @@ import android.widget.Button;
 public class FragmentError extends DialogFragment implements View.OnClickListener {
     final String LOG_TAG = "myLogs";
     private boolean isFinish = false;
+    private IFragmentHelper mCallback;
 
     private int mLayoutId;
 
@@ -31,11 +32,11 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
 
         View v = inflater.inflate(mLayoutId, null);
         v.findViewById(R.id.error_exit).setOnClickListener(this);
-        if(mLayoutId  == R.layout.fragment_error) {
+        if (mLayoutId == R.layout.fragment_error) {
             getDialog().setTitle(getString(R.string.error_title));
             v.findViewById(R.id.error_try).setOnClickListener(this);
             v.findViewById(R.id.error_close).setOnClickListener(this);
-        }else {
+        } else {
             getDialog().setTitle(getString(R.string.empty_title));
         }
 
@@ -47,21 +48,26 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
         this.mLayoutId = mLayoutId;
     }
 
+    public void setCallback(IFragmentHelper mCallback) {
+        this.mCallback = mCallback;
+    }
+
     public void onClick(View v) {
         Log.d(LOG_TAG, "Dialog 1: " + ((Button) v).getText());
         String s = ((Button) v).getText().toString();
-        if(s.equals(getString(R.string.error_retry))){
+        if (s.equals(getString(R.string.error_retry))) {
             recreate();
-
         }
-        if(s.equals(getString(R.string.error_close))) {
-
+        if (s.equals(getString(R.string.error_close))) {
+            if (mCallback != null) {
+                mCallback.showError();
+            }
         }
-        if(s.equals(getString(R.string.error_exit))) {
+        if (s.equals(getString(R.string.error_exit))) {
             getActivity().finish();
 
         }
-dismiss();
+        dismiss();
 
 
     }
@@ -88,11 +94,11 @@ dismiss();
 
     private void recreate() {
         Activity parent = getActivity();
-        if (android.os.Build.VERSION.SDK_INT >= 11){
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
 //Code for recreate
             parent.recreate();
 
-        }else{
+        } else {
 //Code for Intent
             Intent intent = parent.getIntent();
             parent.finish();

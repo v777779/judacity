@@ -41,9 +41,11 @@ import timber.log.Timber;
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PREVIOUS_CONNECTION;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_WIDGET_INTENT;
 import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_NAME;
 import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_TAG;
+import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_PLAYER_NAME;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_LANDSCAPE;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_PORTRAIT;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_LANDSCAPE;
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private String mWidgetId;
     private String mRecipeId;
     private boolean mIsLoadImages;
+    private boolean mIsSaveInstance;
+    private boolean mPreviousConnection;
 
 
     @Override
@@ -115,6 +119,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             Bundle args = intent.getBundleExtra(BUNDLE_WIDGET_INTENT);
             mWidgetId = args.getString(WIDGET_WIDGET_ID, "");
         }
+// saveInstance
+        mIsSaveInstance = savedInstanceState != null;
+        if (savedInstanceState != null) {  // if repeated session but no connection before ==> load data
+            mPreviousConnection = savedInstanceState.getBoolean(BUNDLE_PREVIOUS_CONNECTION, false);
+        } else {
+            mPreviousConnection = false;
+        }
 
 // display parameters
         setDisplayMetrics();        //mSpan, mSpanHeight, mIsWide
@@ -130,12 +141,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mErrorMessage = (TextView) findViewById(R.id.error_message);
 
 //loaders
-        if (!isOnline(mContext)) {
-            showError();
-        }
         mLoaderDb = new LoaderDb(this, this);
         getSupportLoaderManager().initLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb); // empty bundle FFU
-        if (savedInstanceState == null) {
+        if (!mPreviousConnection) {
             startRetrofitLoader();
         }
 
@@ -165,9 +173,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             case android.R.id.home:
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if (mIsWide) {
-                    fragmentManager.popBackStack("FRAGMENT_PLAYER_NAME", POP_BACK_STACK_INCLUSIVE);
+                    fragmentManager.popBackStack(FRAGMENT_PLAYER_NAME, POP_BACK_STACK_INCLUSIVE);
                 }
-                fragmentManager.popBackStack("FRAGMENT_ERROR_NAME", POP_BACK_STACK_INCLUSIVE);
+                fragmentManager.popBackStack(FRAGMENT_ERROR_NAME, POP_BACK_STACK_INCLUSIVE);
                 hideProgress();
                 onBackPressed();
                 return true;
@@ -201,6 +209,19 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         getSupportLoaderManager().restartLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        setLoadPreference(mContext, mIsLoadImages);  // for the first time
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BUNDLE_PREVIOUS_CONNECTION, isOnline(this));
+
+
+    }
 
     @Override
     public void onCallback(int position) {
@@ -237,6 +258,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private void showErrorDialog() {
         FragmentError fragmentError = new FragmentError();
         fragmentError.setStyle(R.style.dialog_title_style, R.style.CustomDialog);
+        fragmentError.setCallback(this);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(FRAGMENT_ERROR_NAME, POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -250,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MESSAGE_ERROR_ID) {
-                    showError();
+                    hideProgress();
                     showErrorDialog();
                 }
             }
@@ -258,7 +281,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         handler.sendEmptyMessage(MESSAGE_ERROR_ID);
     }
 
-    private void showError() {
+    @Override
+    public void showError() {
         mProgressBar.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.VISIBLE);
     }
@@ -285,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             @Override
             public void onResponse(Call<List<RecipeItem>> call, Response<List<RecipeItem>> response) {
                 if (response.body() == null) {
-                    showError();
+                    hideProgress();
                     return;
                 }
                 List<RecipeItem> list = response.body();
@@ -306,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             @Override
             public void onFailure(Call<List<RecipeItem>> call, Throwable t) {
                 Timber.d(t.getMessage());
-                showError();
+                hideProgress();
             }
         });
     }
@@ -381,11 +405,18 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     }
 
     public static boolean getLoadPreference(Context context) {
+        boolean isLoadImages = false;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean(PREFERENCE_LOAD_IMAGES, false);
+        if(!sharedPreferences.contains(PREFERENCE_LOAD_IMAGES)) {
+            isLoadImages = context.getResources().getBoolean(R.bool.load_images);
+            setLoadPreference(context,isLoadImages);
+        }else {
+            isLoadImages = sharedPreferences.getBoolean(PREFERENCE_LOAD_IMAGES, false);
+        }
+        return  isLoadImages;
     }
 
-    public static void setLoadPreference(Context context ,boolean isImageLoad) {
+    public static void setLoadPreference(Context context, boolean isImageLoad) {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();

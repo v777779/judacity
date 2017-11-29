@@ -342,6 +342,11 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
     }
 
+    @Override
+    public void showError() {
+
+    }
+
 
     private void setupNavButtonsVisibility() {
         if (mPosition <= 1) {

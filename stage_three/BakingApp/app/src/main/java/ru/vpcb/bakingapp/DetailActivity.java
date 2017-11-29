@@ -278,14 +278,14 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MESSAGE_PLAYER_ID) {
-                   showPlayerFragment();
+                    showPlayerFragment();
                 }
             }
         };
         handler.sendEmptyMessage(MESSAGE_PLAYER_ID);
     }
 
-    private void showError() {
+    public void showError() {
 //        showErrorDialog();
         Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_LONG).show();
 //        Toast.makeText(mContext, getString(R.string.message_error), Toast.LENGTH_LONG).show();
@@ -310,7 +310,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         mCursor = cursor;
         mRecipeItem = getRecipeItem(mCursor);
         mRecyclerAdapter.swapRecipe(mRecipeItem);
-//        showPlayerHandler();
+        showPlayerHandler();
 
     }
 
