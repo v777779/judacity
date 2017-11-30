@@ -35,34 +35,35 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.bakingapp.data.IRetrofitAPI;
 import ru.vpcb.bakingapp.data.LoaderDb;
 import ru.vpcb.bakingapp.data.RecipeItem;
+import ru.vpcb.bakingapp.utils.RecipeData;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
-import static ru.vpcb.bakingapp.data.Constants.BUNDLE_DETAIL_INTENT;
-import static ru.vpcb.bakingapp.data.Constants.BUNDLE_ERROR_CONNECTION;
-import static ru.vpcb.bakingapp.data.Constants.BUNDLE_PREVIOUS_CONNECTION;
-import static ru.vpcb.bakingapp.data.Constants.BUNDLE_WIDGET_INTENT;
-import static ru.vpcb.bakingapp.data.Constants.FRAGMENT_ERROR_NAME;
-import static ru.vpcb.bakingapp.data.Constants.FRAGMENT_ERROR_TAG;
-import static ru.vpcb.bakingapp.data.Constants.FRAGMENT_PLAYER_NAME;
-import static ru.vpcb.bakingapp.data.Constants.HIGH_SCALE_LANDSCAPE;
-import static ru.vpcb.bakingapp.data.Constants.HIGH_SCALE_PORTRAIT;
-import static ru.vpcb.bakingapp.data.Constants.HIGH_WIDTH_LANDSCAPE;
-import static ru.vpcb.bakingapp.data.Constants.HIGH_WIDTH_PORTRAIT;
-import static ru.vpcb.bakingapp.data.Constants.LOADER_RECIPES_DB_ID;
-import static ru.vpcb.bakingapp.data.Constants.LOW_SCALE_LANDSCAPE;
-import static ru.vpcb.bakingapp.data.Constants.LOW_SCALE_PORTRAIT;
-import static ru.vpcb.bakingapp.data.Constants.MAX_SPAN;
-import static ru.vpcb.bakingapp.data.Constants.MESSAGE_ERROR_ID;
-import static ru.vpcb.bakingapp.data.Constants.MIN_HEIGHT;
-import static ru.vpcb.bakingapp.data.Constants.MIN_SPAN;
-import static ru.vpcb.bakingapp.data.Constants.MIN_WIDTH_WIDE_SCREEN;
-import static ru.vpcb.bakingapp.data.Constants.RECIPES_BASE;
-import static ru.vpcb.bakingapp.data.Constants.SCREEN_RATIO;
-import static ru.vpcb.bakingapp.data.Constants.SYSTEM_UI_SHOW_FLAGS;
-import static ru.vpcb.bakingapp.data.Constants.WIDGET_RECIPE_ID;
-import static ru.vpcb.bakingapp.data.Constants.WIDGET_WIDGET_ID;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_ERROR_CONNECTION;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PREVIOUS_CONNECTION;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_WIDGET_INTENT;
+import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_NAME;
+import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_TAG;
+import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_PLAYER_NAME;
+import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_LANDSCAPE;
+import static ru.vpcb.bakingapp.utils.Constants.HIGH_SCALE_PORTRAIT;
+import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_LANDSCAPE;
+import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_PORTRAIT;
+import static ru.vpcb.bakingapp.utils.Constants.LOADER_RECIPES_DB_ID;
+import static ru.vpcb.bakingapp.utils.Constants.LOW_SCALE_LANDSCAPE;
+import static ru.vpcb.bakingapp.utils.Constants.LOW_SCALE_PORTRAIT;
+import static ru.vpcb.bakingapp.utils.Constants.MAX_SPAN;
+import static ru.vpcb.bakingapp.utils.Constants.MESSAGE_ERROR_ID;
+import static ru.vpcb.bakingapp.utils.Constants.MIN_HEIGHT;
+import static ru.vpcb.bakingapp.utils.Constants.MIN_SPAN;
+import static ru.vpcb.bakingapp.utils.Constants.MIN_WIDTH_WIDE_SCREEN;
+import static ru.vpcb.bakingapp.utils.Constants.RECIPES_BASE;
+import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
+import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
+import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_ID;
+import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
 
 public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         LoaderDb.ICallbackDb {
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mIsSaveInstance = savedInstanceState != null;
         if (savedInstanceState != null) {  // if repeated session but no connection before ==> load data
             mPreviousConnection = savedInstanceState.getBoolean(BUNDLE_PREVIOUS_CONNECTION, false);
-            mIsErrorShowed = savedInstanceState.getBoolean(BUNDLE_ERROR_CONNECTION,false);
+            mIsErrorShowed = savedInstanceState.getBoolean(BUNDLE_ERROR_CONNECTION, false);
         } else {
             mPreviousConnection = false;
             mIsErrorShowed = false;
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mLoaderDb = new LoaderDb(this, this);
         getSupportLoaderManager().initLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb); // empty bundle FFU
         if (!mPreviousConnection) {
-            startRetrofitLoader();
+//            startRetrofitLoader();
         }
 
 // landscape fullscreen support
@@ -315,6 +316,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
                         it.remove();
                     }
                 }
+                RecipeData.bulkInsertBackground(mContext.getContentResolver(),
+                        getSupportLoaderManager(), list, mLoaderDb);
                 showResult();
             }
 
@@ -329,11 +332,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
 
     @Override
     public void onComplete(Cursor cursor) {
-        if (!isOnline(mContext) && (cursor == null || cursor.getCount() == 0)) {   // нет адаптера выходим
-            showErrorHandler();
-        }
-
-        if (cursor == null || cursor.getCount() == 0 || mRecyclerAdapter == null) {   // нет адаптера выходим
+        if (cursor == null || cursor.getCount() == 0) {   // нет адаптера выходим
+            if (!isOnline(mContext)) showErrorHandler();
+            else startRetrofitLoader();
             return;
         }
         showResult(); // только после загрузки базы данных

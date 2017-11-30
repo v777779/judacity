@@ -20,11 +20,11 @@ import timber.log.Timber;
 
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
-import static ru.vpcb.bakingapp.data.Constants.BUNDLE_WIDGET_INTENT;
-import static ru.vpcb.bakingapp.data.Constants.WIDGET_RECIPE_ID;
-import static ru.vpcb.bakingapp.data.Constants.WIDGET_SERVICE_FILL_ACTION;
-import static ru.vpcb.bakingapp.data.Constants.WIDGET_SERVICE_UPDATE_ACTION;
-import static ru.vpcb.bakingapp.data.Constants.WIDGET_WIDGET_ID;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_WIDGET_INTENT;
+import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_ID;
+import static ru.vpcb.bakingapp.utils.Constants.WIDGET_SERVICE_FILL_ACTION;
+import static ru.vpcb.bakingapp.utils.Constants.WIDGET_SERVICE_UPDATE_ACTION;
+import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
 
 
 public class RecipeWidgetService extends IntentService {

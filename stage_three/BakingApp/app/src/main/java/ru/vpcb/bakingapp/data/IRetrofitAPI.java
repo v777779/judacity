@@ -6,7 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-import static ru.vpcb.bakingapp.data.Constants.RECIPES_QUERY;
+import static ru.vpcb.bakingapp.utils.Constants.RECIPES_QUERY;
 
 /**
  * Exercise for course : Android Developer Nanodegree
