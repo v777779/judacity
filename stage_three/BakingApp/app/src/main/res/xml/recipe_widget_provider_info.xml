@@ -4,6 +4,8 @@
     android:initialLayout="@layout/recipe_widget_provider"
     android:minHeight="@dimen/widget_height"
     android:minWidth="@dimen/widget_width"
+    android:minResizeHeight="@dimen/widget_resize_height"
+    android:minResizeWidth="@dimen/widget_resize_width"
     android:previewImage="@drawable/recipe_widget_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"

@@ -41,6 +41,7 @@ import timber.log.Timber;
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_ERROR_CONNECTION;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PREVIOUS_CONNECTION;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_WIDGET_INTENT;
 import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_NAME;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private boolean mIsLoadImages;
     private boolean mIsSaveInstance;
     private boolean mPreviousConnection;
+    private boolean mIsErrorShowed;
 
 
     @Override
@@ -123,8 +125,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mIsSaveInstance = savedInstanceState != null;
         if (savedInstanceState != null) {  // if repeated session but no connection before ==> load data
             mPreviousConnection = savedInstanceState.getBoolean(BUNDLE_PREVIOUS_CONNECTION, false);
+            mIsErrorShowed = savedInstanceState.getBoolean(BUNDLE_ERROR_CONNECTION,false);
         } else {
             mPreviousConnection = false;
+            mIsErrorShowed = false;
         }
 
 // display parameters
@@ -158,10 +162,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         MenuItem menuItemNoLoad = menu.findItem(R.id.item_no_load);
         if (mIsLoadImages) {
             menuItemLoad.setChecked(true);
-//            menuItemNoLoad.setChecked(false);
-
         } else {
-
             menuItemNoLoad.setChecked(true);
         }
         return super.onCreateOptionsMenu(menu);
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
                     fragmentManager.popBackStack(FRAGMENT_PLAYER_NAME, POP_BACK_STACK_INCLUSIVE);
                 }
                 fragmentManager.popBackStack(FRAGMENT_ERROR_NAME, POP_BACK_STACK_INCLUSIVE);
-                hideProgress();
+                showResult();
                 onBackPressed();
                 return true;
             case R.id.item_load:
@@ -219,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(BUNDLE_PREVIOUS_CONNECTION, isOnline(this));
+        outState.putBoolean(BUNDLE_ERROR_CONNECTION, mIsErrorShowed);
 
 
     }
@@ -251,10 +253,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgress() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-    }
-
     private void showErrorDialog() {
         FragmentError fragmentError = new FragmentError();
         fragmentError.setStyle(R.style.dialog_title_style, R.style.CustomDialog);
@@ -273,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MESSAGE_ERROR_ID) {
-                    hideProgress();
+                    showResult();
                     showErrorDialog();
                 }
             }
@@ -290,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private void showResult() {
         mProgressBar.setVisibility(View.INVISIBLE);
         mErrorMessage.setVisibility(View.INVISIBLE);
-
     }
 
 
@@ -309,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             @Override
             public void onResponse(Call<List<RecipeItem>> call, Response<List<RecipeItem>> response) {
                 if (response.body() == null) {
-                    hideProgress();
+                    showResult();
                     return;
                 }
                 List<RecipeItem> list = response.body();
@@ -330,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             @Override
             public void onFailure(Call<List<RecipeItem>> call, Throwable t) {
                 Timber.d(t.getMessage());
-                hideProgress();
+                showResult();
             }
         });
     }
@@ -346,14 +343,15 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             return;
         }
         showResult(); // только после загрузки базы данных
-        if (!isOnline(mContext)) {
+        if (!isOnline(mContext) && !mIsErrorShowed) {  // for the first one only
             Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_LONG).show();
             Timber.d(getString(R.string.message_error));
+            mIsErrorShowed = true;
         }
         cursor.moveToFirst();
         mRecyclerAdapter.swapCursor(cursor);
         mCursor = cursor;
-        showResult();
+
     }
 
     @Override

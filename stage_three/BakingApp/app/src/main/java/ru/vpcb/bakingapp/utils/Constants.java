@@ -109,6 +109,7 @@ public class Constants {
     public static final String RECIPE_POSITION = "recipe_position";
     public static final int STEP_DEFAULT_POSITION = 1;
     public static final String BUNDLE_PREVIOUS_CONNECTION = "bundle_previous_connection";
+    public static final String BUNDLE_ERROR_CONNECTION = "bundle_error_connection";
     public static final int MESSAGE_ERROR_ID = 1221;
     public static final int MESSAGE_PLAYER_ID = 1223;
     public static final String FRAGMENT_PLAYER_NAME = "fragment_player_name";

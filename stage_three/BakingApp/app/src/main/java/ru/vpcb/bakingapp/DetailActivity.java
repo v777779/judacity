@@ -34,6 +34,7 @@ import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_EXPANDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_WIDGET_FILLED;
+import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_ERROR_CONNECTION;
 import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_NAME;
 import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_TAG;
 import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_PLAYER_NAME;
@@ -66,6 +67,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     private Cursor mCursor;
     private boolean mIsLoadImages;
     private boolean mIsSavedInstance;
+    private boolean mIsErrorShowed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +108,13 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
             mIsExpanded = savedInstanceState.getBoolean(BUNDLE_DETAIL_EXPANDED, false);
             mPosition = savedInstanceState.getInt(BUNDLE_DETAIL_POSITION, STEP_DEFAULT_POSITION);
             mIsWidgetFilled = savedInstanceState.getBoolean(BUNDLE_DETAIL_WIDGET_FILLED, false);
+            mIsErrorShowed = savedInstanceState.getBoolean(BUNDLE_ERROR_CONNECTION, false);
+
         } else {
             mPosition = STEP_DEFAULT_POSITION;
             mIsExpanded = false;
             mIsWidgetFilled = mWidgetId.isEmpty();
+            mIsErrorShowed = false;
         }
 
         mRecyclerView = mRootView.findViewById(R.id.fc_recycler);
@@ -168,6 +173,8 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         outState.putBoolean(BUNDLE_DETAIL_EXPANDED, mIsExpanded);
         outState.putInt(BUNDLE_DETAIL_POSITION, mPosition);
         outState.putBoolean(BUNDLE_DETAIL_WIDGET_FILLED, mIsWidgetFilled);
+        outState.putBoolean(BUNDLE_ERROR_CONNECTION, mIsErrorShowed);
+
     }
 
     @Override
@@ -286,15 +293,12 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     }
 
     public void showError() {
-//        showErrorDialog();
+        if (mIsErrorShowed) return;
         Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_LONG).show();
-//        Toast.makeText(mContext, getString(R.string.message_error), Toast.LENGTH_LONG).show();
         Timber.d(getString(R.string.message_error));
+        mIsErrorShowed = true;
     }
 
-    private void showResult() {
-
-    }
 
     @Override
     public void onComplete(Cursor cursor) {
@@ -302,7 +306,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
             showErrorHandler();
             return;
         }
-        showResult(); // только после загрузки базы данных
+//        showResult(); // только после загрузки базы данных
         if (!isOnline(mContext)) {
             showError();
         }

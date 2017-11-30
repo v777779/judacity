@@ -39,6 +39,7 @@ import ru.vpcb.bakingapp.video.VideoEventListener;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.bakingapp.MainActivity.isOnline;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_SEEK_POSITION;
@@ -261,7 +262,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 
     private void setVideoAccess() {
         if (mCurrentStep == null || mCurrentStep.getVideoURL() == null ||
-                mCurrentStep.getVideoURL().isEmpty()) {
+                mCurrentStep.getVideoURL().isEmpty() || !isOnline(mContext)) {
             releasePlayer();
             mPlayerView.setVisibility(View.INVISIBLE);
             mPlayButton.setImageResource(R.drawable.ic_play_circle_white_24dp);
