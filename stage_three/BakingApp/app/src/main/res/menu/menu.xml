@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"  >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/settings_menu"
-        android:title="@string/menu_settings"
-        />
-    <group android:checkableBehavior = "single">
+        android:title="@string/menu_settings" />
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/item_load"
-            android:title="@string/load_images_on"
-
-            />
+            android:title="@string/load_images_on" />
         <item
             android:id="@+id/item_no_load"
-            android:title="@string/load_images_off"
-
-            />
+            android:title="@string/load_images_off" />
     </group>
 
 </menu>
