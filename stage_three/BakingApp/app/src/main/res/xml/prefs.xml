@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:defaultValue="@bool/load_images_default"
+        android:key="@string/load_images_key"
+        android:summaryOff="@string/load_images_off"
+        android:summaryOn="@string/load_images_on"
+        android:title="@string/load_images_label" />
+
+
+</PreferenceScreen>

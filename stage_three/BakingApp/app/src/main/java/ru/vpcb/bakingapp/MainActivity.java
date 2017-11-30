@@ -58,7 +58,6 @@ import static ru.vpcb.bakingapp.utils.Constants.MESSAGE_ERROR_ID;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_HEIGHT;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_SPAN;
 import static ru.vpcb.bakingapp.utils.Constants.MIN_WIDTH_WIDE_SCREEN;
-import static ru.vpcb.bakingapp.utils.Constants.PREFERENCE_LOAD_IMAGES;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPES_BASE;
 import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
@@ -111,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         }
 // preferences
         mIsLoadImages = getLoadPreference(mContext);
+
 
 // intent from widget
         Intent intent = getIntent();
@@ -410,12 +410,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     public static boolean getLoadPreference(Context context) {
         boolean isLoadImages = false;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (!sharedPreferences.contains(PREFERENCE_LOAD_IMAGES)) {
-            isLoadImages = context.getResources().getBoolean(R.bool.load_images);
-            setLoadPreference(context, isLoadImages);
-        } else {
-            isLoadImages = sharedPreferences.getBoolean(PREFERENCE_LOAD_IMAGES, false);
-        }
+        isLoadImages = sharedPreferences.getBoolean(context.getString(R.string.load_images_key),
+                context.getResources().getBoolean(R.bool.load_images_default));
+
         return isLoadImages;
     }
 
@@ -423,7 +420,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(PREFERENCE_LOAD_IMAGES, isImageLoad);
+        editor.putBoolean(context.getString(R.string.load_images_key), isImageLoad);
         editor.apply();
     }
+
+
 }

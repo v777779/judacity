@@ -114,7 +114,7 @@ public class Constants {
     public static final String FRAGMENT_PLAYER_NAME = "fragment_player_name";
     public static final String FRAGMENT_ERROR_NAME = "fragment_error_name";
     public static final String FRAGMENT_ERROR_TAG = "fragment_error_tag";
-    public static final String PREFERENCE_LOAD_IMAGES = "preference_load_images";
+
 
 
     // fragment detail data
