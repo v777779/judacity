@@ -15,12 +15,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
-import java.util.List;
 
 import ru.vpcb.bakingapp.data.LoaderDb;
 import ru.vpcb.bakingapp.data.RecipeItem;
@@ -30,24 +26,24 @@ import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.MainActivity.getLoadPreference;
 import static ru.vpcb.bakingapp.MainActivity.isOnline;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_EXPANDED;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_WIDGET_FILLED;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_ERROR_CONNECTION;
-import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_ERROR_TAG;
-import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_PLAYER_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.LOADER_RECIPES_DB_ID;
-import static ru.vpcb.bakingapp.utils.Constants.MESSAGE_ERROR_ID;
-import static ru.vpcb.bakingapp.utils.Constants.MESSAGE_PLAYER_ID;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.STEP_DEFAULT_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
-import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_ID;
-import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_DETAIL_EXPANDED;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_DETAIL_INTENT;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_DETAIL_POSITION;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_DETAIL_WIDGET_FILLED;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_ERROR_CONNECTION;
+import static ru.vpcb.bakingapp.data.Constants.FRAGMENT_ERROR_NAME;
+import static ru.vpcb.bakingapp.data.Constants.FRAGMENT_ERROR_TAG;
+import static ru.vpcb.bakingapp.data.Constants.FRAGMENT_PLAYER_NAME;
+import static ru.vpcb.bakingapp.data.Constants.LOADER_RECIPES_DB_ID;
+import static ru.vpcb.bakingapp.data.Constants.MESSAGE_ERROR_ID;
+import static ru.vpcb.bakingapp.data.Constants.MESSAGE_PLAYER_ID;
+import static ru.vpcb.bakingapp.data.Constants.RECIPE_POSITION;
+import static ru.vpcb.bakingapp.data.Constants.RECIPE_SCREEN_WIDE;
+import static ru.vpcb.bakingapp.data.Constants.RECIPE_STEP_POSITION;
+import static ru.vpcb.bakingapp.data.Constants.STEP_DEFAULT_POSITION;
+import static ru.vpcb.bakingapp.data.Constants.SYSTEM_UI_SHOW_FLAGS;
+import static ru.vpcb.bakingapp.data.Constants.WIDGET_RECIPE_ID;
+import static ru.vpcb.bakingapp.data.Constants.WIDGET_WIDGET_ID;
 import static ru.vpcb.bakingapp.widget.RecipeWidgetService.startFillWidgetAction;
 
 public class DetailActivity extends AppCompatActivity implements IFragmentHelper, LoaderDb.ICallbackDb {

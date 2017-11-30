@@ -1,6 +1,6 @@
 package ru.vpcb.bakingapp;
 
-import static ru.vpcb.bakingapp.utils.Constants.COLLAPSED_TYPE;
+import static ru.vpcb.bakingapp.data.Constants.COLLAPSED_TYPE;
 
 /**
  * Exercise for course : Android Developer Nanodegree

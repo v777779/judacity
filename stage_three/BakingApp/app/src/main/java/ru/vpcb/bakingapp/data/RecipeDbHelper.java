@@ -10,8 +10,8 @@ import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_LE
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.TABLE_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.DATABASE_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.DATABASE_VERSION;
+import static ru.vpcb.bakingapp.data.Constants.DATABASE_NAME;
+import static ru.vpcb.bakingapp.data.Constants.DATABASE_VERSION;
 
 /**
  * Exercise for course : Android Developer Nanodegree

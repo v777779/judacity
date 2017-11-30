@@ -3,7 +3,7 @@
 
 
 <!--frame margins-->
-    <dimen name="navigation_margin">76dp</dimen>
+    <dimen name="navigation_margin">72dp</dimen>
     <dimen name="navigation_main">80dp</dimen>
 
 

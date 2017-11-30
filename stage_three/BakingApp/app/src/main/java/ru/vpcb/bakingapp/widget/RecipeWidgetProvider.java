@@ -16,12 +16,12 @@ import ru.vpcb.bakingapp.R;
 import timber.log.Timber;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_WIDGET_INTENT;
-import static ru.vpcb.bakingapp.utils.Constants.WIDGET_PREFERENCES;
-import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_ID;
-import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_DETAIL_INTENT;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_WIDGET_INTENT;
+import static ru.vpcb.bakingapp.data.Constants.WIDGET_PREFERENCES;
+import static ru.vpcb.bakingapp.data.Constants.WIDGET_RECIPE_ID;
+import static ru.vpcb.bakingapp.data.Constants.WIDGET_RECIPE_NAME;
+import static ru.vpcb.bakingapp.data.Constants.WIDGET_WIDGET_ID;
 
 /**
  * Implementation of App Widget functionality.

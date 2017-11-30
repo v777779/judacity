@@ -40,18 +40,18 @@ import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.bakingapp.MainActivity.isOnline;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_SEEK_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_WINDOW_INDEX;
-import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_PLAYER_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.PLAY_BUTTON_ANIMATION;
-import static ru.vpcb.bakingapp.utils.Constants.PLAY_CONTROL_SHOWTIME;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_HIDE_FLAGS;
-import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_PLAY_BACK_ENDED;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_PLAY_PAUSE_READY;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_PLAY_SEEK_POSITION;
+import static ru.vpcb.bakingapp.data.Constants.BUNDLE_PLAY_WINDOW_INDEX;
+import static ru.vpcb.bakingapp.data.Constants.FRAGMENT_PLAYER_NAME;
+import static ru.vpcb.bakingapp.data.Constants.PLAY_BUTTON_ANIMATION;
+import static ru.vpcb.bakingapp.data.Constants.PLAY_CONTROL_SHOWTIME;
+import static ru.vpcb.bakingapp.data.Constants.RECIPE_POSITION;
+import static ru.vpcb.bakingapp.data.Constants.RECIPE_SCREEN_WIDE;
+import static ru.vpcb.bakingapp.data.Constants.RECIPE_STEP_POSITION;
+import static ru.vpcb.bakingapp.data.Constants.SYSTEM_UI_HIDE_FLAGS;
+import static ru.vpcb.bakingapp.data.Constants.SYSTEM_UI_SHOW_FLAGS;
 
 /**
  * Exercise for course : Android Developer Nanodegree
