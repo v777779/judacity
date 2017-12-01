@@ -35,30 +35,18 @@ public class Constants {
     public static final int COLLAPSED_TYPE = 0;
     public static final int EXPANDED_TYPE = 1;
     public static final int CHILD_TYPE = 2;
-//    public static final int[] MAIN_IMAGE_IDS = new int[]{
-//            R.drawable.cakes_002,
-//            R.drawable.cakes_001,
-//            R.drawable.cakes_005,
-//            R.drawable.cakes_003,
-//            R.drawable.cakes_004
-//    };
-
 
  // network data
-
     public static final int LOADER_RECIPES_ID = 1210;
     public static final int LOADER_RECIPES_DB_ID = 1220;
     public static final String RECIPES_BASE = "https://go.udacity.com/";
     public static final String RECIPES_QUERY = "android-baking-app-json";
-
-
 
     public static final String BUNDLE_LOADER_STRING_ID = "bundle_loader_string_id";
     public static final String BUNDLE_LOADER_RECIPE_ID = "bundle_loader_recipe_id";
 
     public static final int RECIPE_RESPONSE_ID = 0;
     public static final int RECIPE_EMPTY_ID = 1;
-
 
     // ParseData constants
     public static final String KEY_ID = "id";
@@ -168,5 +156,24 @@ public class Constants {
 
     public static final int WIDGET_ID_EMPTY_VALUE = -1;
     public static final int RECIPE_ID_EMPTY_VALUE = -1;
+
+
+    //test data
+    public static final int TEST_SNACKBAR_TIMEOUT = 2500;
+    public static final int TEST_EXPAND_TIMEOUT= 500;
+    public static final int TEST_START_TIMEOUT= 500;
+    public static final int TEST_LOAD_DATABASE_TRIALS= 10;
+
+    public static final int TEST_RECIPE_0 = 0;
+    public static final int TEST_RECIPE_1 = 1;
+    public static final int TEST_RECIPE_2 = 2;
+    public static final int TEST_RECIPE_3 = 3;
+
+    public static final int TEST_STEP_0 = 0;
+    public static final int TEST_STEP_1 = 2;
+    public static final int TEST_STEP_4 = 5;
+    public static final int TEST_STEP_5 = 6;
+    public static final int TEST_STEP_12 = 12;
+
 
 }

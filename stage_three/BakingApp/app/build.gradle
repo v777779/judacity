@@ -56,4 +56,14 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:4.3.1@aar'
 //exoplayer
     compile 'com.google.android.exoplayer:exoplayer:r2.5.4'
+//espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 }

@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         }
         showResult(); // только после загрузки базы данных
         if (!isOnline(mContext) && !mIsErrorShowed) {  // for the first one only
-            Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_SHORT).show();
             Timber.d(getString(R.string.message_error));
             mIsErrorShowed = true;
         }
@@ -417,5 +417,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         editor.apply();
     }
 
+    public Cursor getCursor(){
+        return mCursor;
+    }
 
 }

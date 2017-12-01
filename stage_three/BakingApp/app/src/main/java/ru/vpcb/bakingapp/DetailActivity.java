@@ -290,7 +290,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 
     public void showError() {
         if (mIsErrorShowed) return;
-        Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_SHORT).show();
         Timber.d(getString(R.string.message_error));
         mIsErrorShowed = true;
     }

@@ -50,6 +50,10 @@
     <string name="load_images_key">load_images_key</string>
     <string name="load_images_label">Load preview images</string>
 
+<!--test-->
+<string name="test_message_error">Recipe database is empty, connect device
+ to the Internet, run application to load data, then run test</string>
+
 
 
 </resources>
