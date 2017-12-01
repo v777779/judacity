@@ -22,6 +22,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.bakingapp.data.RecipeItem;
 
+import static ru.vpcb.bakingapp.MainActivity.clrText;
+import static ru.vpcb.bakingapp.MainActivity.getIngredientString;
+import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
+import static ru.vpcb.bakingapp.MainActivity.getShortDescription;
+import static ru.vpcb.bakingapp.MainActivity.getStepName;
 import static ru.vpcb.bakingapp.utils.Constants.COLLAPSED_TYPE;
 import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
 
@@ -168,13 +173,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
                 }
 // stepItem
                 RecipeItem.Step stepItem = mStepList.get(position - 1);  // if stepItem == null exits
-                if (position == 1) {
-                    mHeaderText.setText(mContext.getString(R.string.play_header_intro));
-                } else {
-                    mHeaderText.setText(mContext.getString(R.string.play_header_step, "" + stepItem.getId()));
-                }
-
-                mDetailText.setText(stepItem.getShortDescription());
+                mHeaderText.setText(getStepName(mContext.getResources(),stepItem));
+                mDetailText.setText(getShortDescription(mContext.getResources(),stepItem));
 
                 // thumb
                 mThumbImage.setVisibility(View.VISIBLE);
@@ -202,17 +202,11 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
 
         private void setChildText() {
             if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
-                StringBuilder sb = new StringBuilder();
-                int count = 1;
-                for (RecipeItem.Ingredient ingredient : mIngredientList) {
-                    String s = ingredient.toString().substring(0,1).toUpperCase()+ingredient.toString().substring(1);
-                    sb.append(count + ". " + s + "\n");
-                    count++;
-                }
-                mDetailText.setText(mContext.getString(R.string.click_collapse));
-                mChildDetailText.setText(sb.toString());
+                String s = getIngredientString(mContext.getResources(),mIngredientList);  // get and clear text
+                mDetailText.setText(mContext.getString(R.string.ingredients_collapse));
+                mChildDetailText.setText(s);
             } else {
-                mDetailText.setText(mContext.getString(R.string.click_expand));
+                mDetailText.setText(mContext.getString(R.string.ingredients_expand));
             }
         }
 
@@ -224,7 +218,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
             if (mRecipeItem == null) {
                 mHeaderText.setText(mContext.getString(R.string.play_header_error));
             } else {
-                mHeaderText.setText(mRecipeItem.getName());
+                mHeaderText.setText(getRecipeName(mContext.getResources(),mRecipeItem));
             }
             mHeaderText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     mContext.getResources().getDimension(R.dimen.large_text_size));

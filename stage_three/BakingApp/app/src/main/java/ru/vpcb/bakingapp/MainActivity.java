@@ -3,6 +3,7 @@ package ru.vpcb.bakingapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private boolean mIsSaveInstance;
     private boolean mPreviousConnection;
     private boolean mIsErrorShowed;
+    private boolean mIsLand;
 
 
     @Override
@@ -358,10 +360,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private void setDisplayMetrics() {
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
-        boolean isLand = dp.widthPixels > dp.heightPixels;
+        mIsLand = dp.widthPixels > dp.heightPixels;
         double width = dp.widthPixels / dp.density;
 
-        if (!isLand) {
+        if (!mIsLand) {
             mSpan = 1;
             if (width >= HIGH_WIDTH_PORTRAIT) {
                 mSpan = (int) Math.round(width / HIGH_SCALE_PORTRAIT);
@@ -384,14 +386,15 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         if (mSpan > MAX_SPAN) mSpan = MAX_SPAN;
         if (mSpanHeight < MIN_HEIGHT) mSpanHeight = MIN_HEIGHT;
 
-        if (!isLand) {
+        if (!mIsLand) {
             mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
         } else {
             mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
         }
 
-
     }
+
+
 
     public static boolean isOnline(Context context) {
         ConnectivityManager cm =
@@ -417,8 +420,54 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         editor.apply();
     }
 
-    public Cursor getCursor(){
+    public Cursor getCursor() {
         return mCursor;
     }
 
+    public static String clrText(Resources res, String s) {
+        if(s == null || s.isEmpty()) return "";
+        return s.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
+
+    }
+
+    public static String getIngredientString(Resources res, List<RecipeItem.Ingredient> list) {
+        if (list == null || list.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        int count = 1;
+        for (RecipeItem.Ingredient ingredient : list) {
+            String s = ingredient.toString().substring(0, 1).toUpperCase() + ingredient.toString().substring(1);
+            sb.append(count + ". " + s + "\n");
+            count++;
+        }
+
+        return clrText(res, sb.toString());
+    }
+
+    public static String getStepName(Resources res, RecipeItem.Step step) {
+        if (step == null) return "";
+        if (step.getId() == 0) {
+            return res.getString(R.string.play_header_intro);
+        }
+        String s = res.getString(R.string.play_header_step, "" + step.getId());
+        return clrText(res, s);
+    }
+
+    public static String getShortDescription(Resources res, RecipeItem.Step step) {
+        if (step == null) return "";
+        String s = step.getShortDescription();
+        if (s == null) return "";
+        return clrText(res, s);
+    }
+
+    public static String getDescription(Resources res, RecipeItem.Step step) {
+        if (step == null) return "";
+        String s = step.getDescription();
+        if (s == null) return "";
+        return clrText(res, s);
+    }
+
+    public static String getRecipeName(Resources res, RecipeItem recipeItem) {
+        String s = recipeItem.getName();
+        return clrText(res, s);
+    }
 }

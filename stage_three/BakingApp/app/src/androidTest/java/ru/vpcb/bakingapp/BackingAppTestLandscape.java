@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.vpcb.bakingapp.data.RecipeItem;
-import timber.log.Timber;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -37,8 +36,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.IsNot.not;
 import static ru.vpcb.bakingapp.MainActivity.getDescription;
 import static ru.vpcb.bakingapp.MainActivity.getIngredientString;
@@ -46,10 +43,6 @@ import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
 import static ru.vpcb.bakingapp.MainActivity.getShortDescription;
 import static ru.vpcb.bakingapp.MainActivity.getStepName;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
-import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
-import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_LANDSCAPE;
-import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_PORTRAIT;
-
 import static ru.vpcb.bakingapp.utils.Constants.MIN_WIDTH_WIDE_SCREEN;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_EXPAND_TIMEOUT;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_LOAD_DATABASE_TRIALS;
@@ -66,7 +59,6 @@ import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_2;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_3;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_4;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_5;
-import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_7;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_9;
 
 /**
@@ -77,14 +69,15 @@ import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_9;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class BackingAppTest {
-    private static boolean mIsSet = false;
-    private static boolean mIsLand;
-    private static boolean mIsWide;
+public class BackingAppTestLandscape {
 
     @Rule
-    public ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mainActivity =
+            new ActivityTestRule<MainActivity>(MainActivity.class);
 
+
+    private boolean mIsLand;
+    private boolean mIsWide;
     private List<RecipeItem> mList;
     private boolean mIsOnline;
     private Resources mRes;
@@ -93,22 +86,20 @@ public class BackingAppTest {
     private List<RecipeItem.Ingredient> mIngredients;
     private String mIngredientsString;
 
+
     @Before
     public void setUp() {
         mRes = mainActivity.getActivity().getResources();
         mIsOnline = mainActivity.getActivity().isOnline(mainActivity.getActivity());
 
-        if (!mIsSet) {
-            DisplayMetrics dp = new DisplayMetrics();
-            mainActivity.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
-            mIsLand = dp.widthPixels > dp.heightPixels;
-            if (!mIsLand) {
-                mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
-            } else {
-                mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
-            }
-            mIsSet = true;
-         }
+        DisplayMetrics dp = new DisplayMetrics();
+        mainActivity.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
+        mIsLand = dp.widthPixels > dp.heightPixels;
+        if (!mIsLand) {
+            mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
+        } else {
+            mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
+        }
 
         Cursor cursor = mainActivity.getActivity().getCursor();
         int trials = TEST_LOAD_DATABASE_TRIALS;
@@ -158,13 +149,8 @@ public class BackingAppTest {
 
 
         if (!mIsWide) {
-            if (!mIsLand) {  // portrait
-                onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_0)))).check(matches(isDisplayed()));
-                onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_3)))).check(doesNotExist());
-            } else {         // landscape
-                onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_0)))).check(matches(isDisplayed()));
-                onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_3)))).check(matches(not(isDisplayed())));
-            }
+            onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_0)))).check(matches(isDisplayed()));
+            onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_3)))).check(matches(not(isDisplayed())));
         } else {
             onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_0)))).check(matches(isDisplayed()));
             onView(withText(getRecipeName(mRes, mList.get(TEST_RECIPE_1)))).check(matches(isDisplayed()));
@@ -221,9 +207,7 @@ public class BackingAppTest {
             onView(withText(getRecipeName(mRes, mRecipeItem))).check(matches(isDisplayed()));
             checkRecyclerText(mSteps.get(TEST_STEP_1));
             checkRecyclerText(mSteps.get(TEST_STEP_2));
-            if(!mIsLand) {
-                checkRecyclerText(mSteps.get(TEST_STEP_4));
-            }
+
             checkRecyclerNoText(mSteps.get(TEST_STEP_12));
 
 // ingredients part
@@ -316,90 +300,30 @@ public class BackingAppTest {
 
         if (!mIsWide) {  // not tablet
             ViewInteraction recyclerView = onView(allOf(withId(R.id.fc_recycler), isDisplayed()));
-            ViewInteraction prevButton = onView(withId(R.id.prev_button));
-            ViewInteraction nextButton = onView(withId(R.id.next_button));
-
             recyclerView.perform(actionOnItemAtPosition(TEST_RECIPE_1, click()));  // brownies
 
-            if (mIsLand) {
-                recyclerView.perform(actionOnItemAtPosition(TEST_STEP_0 + 1, click()));  //intro
-                checkIsVideoVisible(mSteps.get(TEST_STEP_0));
-                onView(withId(R.id.fp_text_card)).check(doesNotExist());
-                onView(withId(R.id.fp_navigation_bar)).check(doesNotExist());
+
+            recyclerView.perform(actionOnItemAtPosition(TEST_STEP_0 + 1, click()));  //intro
+            checkIsVideoVisible(mSteps.get(TEST_STEP_0));
+            onView(withId(R.id.fp_text_card)).check(doesNotExist());
+            onView(withId(R.id.fp_navigation_bar)).check(doesNotExist());
 // back
-                onView(isRoot()).perform(ViewActions.pressBack());
-                sleep(TEST_EXPAND_TIMEOUT);  // Espresso doesn't work correctly with onBack()
+            onView(isRoot()).perform(ViewActions.pressBack());
+            sleep(TEST_EXPAND_TIMEOUT);  // Espresso doesn't work correctly with onBack()
 // step1
-                recyclerView.perform(actionOnItemAtPosition(TEST_STEP_1 + 1, click()));  //intro
-                checkIsVideoVisible(mSteps.get(TEST_STEP_1));
-                onView(withId(R.id.fp_text_card)).check(doesNotExist());
-                onView(withId(R.id.fp_navigation_bar)).check(doesNotExist());
+            recyclerView.perform(actionOnItemAtPosition(TEST_STEP_1 + 1, click()));  //intro
+            checkIsVideoVisible(mSteps.get(TEST_STEP_1));
+            onView(withId(R.id.fp_text_card)).check(doesNotExist());
+            onView(withId(R.id.fp_navigation_bar)).check(doesNotExist());
 // back
-                onView(isRoot()).perform(ViewActions.pressBack());
-                sleep(TEST_EXPAND_TIMEOUT);
+            onView(isRoot()).perform(ViewActions.pressBack());
+            sleep(TEST_EXPAND_TIMEOUT);
 // step5
-                recyclerView.perform(actionOnItemAtPosition(TEST_STEP_5 + 1, click()));  //intro
-                checkIsVideoVisible(mSteps.get(TEST_STEP_5));
-                onView(withId(R.id.fp_text_card)).check(doesNotExist());
-                onView(withId(R.id.fp_navigation_bar)).check(doesNotExist());
-            } else {
-                recyclerView.perform(actionOnItemAtPosition(TEST_STEP_5 + 1, click()));  // step5
-                onView(withId(R.id.fp_text_card)).check(matches(isDisplayed()));
-                onView(withId(R.id.fp_navigation_bar)).check(matches(isDisplayed()));
-// step5
-                checkIsVideoVisible(mSteps.get(TEST_STEP_5));   // video if connected
-                checkTextNarrow(mSteps.get(TEST_STEP_5));
-                if (!mIsOnline) {                               // Snackbar.LENGTH_SHORT delay
-                    sleep(TEST_SNACKBAR_TIMEOUT);
-                }
-// step4
-                prevButton.perform(click());
-                checkIsVideoVisible(mSteps.get(TEST_STEP_4));
+            recyclerView.perform(actionOnItemAtPosition(TEST_STEP_5 + 1, click()));  //intro
+            checkIsVideoVisible(mSteps.get(TEST_STEP_5));
+            onView(withId(R.id.fp_text_card)).check(doesNotExist());
+            onView(withId(R.id.fp_navigation_bar)).check(doesNotExist());
 
-// step3
-                prevButton.perform(click());
-                checkIsVideoVisible(mSteps.get(TEST_STEP_3));
-
-// step2
-                prevButton.perform(click());
-                checkIsVideoVisible(mSteps.get(TEST_STEP_2));
-                checkTextNarrow(mSteps.get(TEST_STEP_2));
-// step1
-                prevButton.perform(click());
-                checkIsVideoVisible(mSteps.get(TEST_STEP_1));
-
-
-                prevButton.perform(click());    // intro video
-                checkIsVideoVisible(mSteps.get(TEST_STEP_0));
-                checkTextNarrow(mSteps.get(TEST_STEP_0));
-
-                prevButton.check(matches(not(isDisplayed())));
-                nextButton.check(matches(isDisplayed()));
-                nextButton.perform(click());    // step1
-                prevButton.check(matches(isDisplayed()));
-                nextButton.check(matches(isDisplayed()));
-                nextButton.perform(click());
-                nextButton.perform(click());
-                nextButton.perform(click());
-                nextButton.perform(click());
-                nextButton.perform(click());
-                nextButton.perform(click());
-                nextButton.perform(click());
-// step 9
-                nextButton.perform(click());
-                prevButton.check(matches(isDisplayed()));
-                nextButton.check(matches(not(isDisplayed())));
-// step8
-                prevButton.perform(click());
-                prevButton.check(matches(isDisplayed()));
-                nextButton.check(matches(isDisplayed()));
-// step9
-                nextButton.perform(click());    // step9 video
-                prevButton.check(matches(isDisplayed()));
-                nextButton.check(matches(not(isDisplayed())));
-                checkIsVideoVisible(mSteps.get(TEST_STEP_9));
-                checkTextNarrow(mSteps.get(TEST_STEP_9));
-            }
 
         }
 

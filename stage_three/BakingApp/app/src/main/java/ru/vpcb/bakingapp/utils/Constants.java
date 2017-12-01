@@ -74,8 +74,8 @@ public class Constants {
     public static final double SCREEN_RATIO = 1.8;
 
 
-    public static final int HIGH_WIDTH_PORTRAIT = 600;     // dpi
-    public static final int HIGH_WIDTH_LANDSCAPE = 900;    // dpi
+    public static final int HIGH_WIDTH_PORTRAIT = 600;     // dpi  600
+    public static final int HIGH_WIDTH_LANDSCAPE = 900;    // dpi  900
     public static final int HIGH_SCALE_PORTRAIT = 240;     // dpi
     public static final int HIGH_SCALE_LANDSCAPE = 250;    // dpi
 
@@ -83,7 +83,7 @@ public class Constants {
     public static final int MIN_SPAN = 1;
     public static final int MIN_HEIGHT = 100;
 
-    public static final int MIN_WIDTH_WIDE_SCREEN = 600;     // dpi
+    public static final int MIN_WIDTH_WIDE_SCREEN = 550;     // dpi  600
 
 
     // player animation
@@ -136,7 +136,7 @@ public class Constants {
             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 
     public static final int SYSTEM_UI_SHOW_FLAGS = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION  // to compatibility with 5X and Pixel
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 
     // widget data
@@ -170,10 +170,16 @@ public class Constants {
     public static final int TEST_RECIPE_3 = 3;
 
     public static final int TEST_STEP_0 = 0;
-    public static final int TEST_STEP_1 = 2;
-    public static final int TEST_STEP_4 = 5;
-    public static final int TEST_STEP_5 = 6;
+    public static final int TEST_STEP_1 = 1;
+    public static final int TEST_STEP_2 = 2;
+    public static final int TEST_STEP_3 = 3;
+    public static final int TEST_STEP_4 = 4;
+    public static final int TEST_STEP_5 = 5;
+    public static final int TEST_STEP_7 = 7;
+    public static final int TEST_STEP_9 = 9;
     public static final int TEST_STEP_12 = 12;
+
+
 
 
 }

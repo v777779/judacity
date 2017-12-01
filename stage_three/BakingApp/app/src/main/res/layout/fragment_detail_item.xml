@@ -137,7 +137,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="16dp"
                 android:gravity="center"
-                android:text="INGREDIENTS:"
+                android:text="@string/ingredients_title"
                 android:textAppearance="@style/TextHead" />
 
             <TextView

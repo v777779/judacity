@@ -39,6 +39,10 @@ import ru.vpcb.bakingapp.video.VideoEventListener;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.bakingapp.MainActivity.clrText;
+import static ru.vpcb.bakingapp.MainActivity.getDescription;
+import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
+import static ru.vpcb.bakingapp.MainActivity.getStepName;
 import static ru.vpcb.bakingapp.MainActivity.isOnline;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
@@ -159,7 +163,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
 // text
         mCurrentStep = getCurrentStep();
         if (mHeadText != null && mRecipeItem != null) {
-            mHeadText.setText(mRecipeItem.getName());
+            mHeadText.setText(getRecipeName(mContext.getResources(),mRecipeItem));
         }
         setupNavTextView();
         setupNavButtons();
@@ -400,11 +404,7 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
             mNavigationText.setText(getString(R.string.play_header_empty));
 
         } else {
-            String stepText = getString(R.string.play_header_step, "" + mCurrentStep.getId());
-            if (mPosition == 1) {
-                stepText = getString(R.string.play_header_intro);
-            }
-            mNavigationText.setText(stepText);
+            mNavigationText.setText(getStepName(mContext.getResources(),mCurrentStep));
         }
     }
 
@@ -415,11 +415,9 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         if (mCurrentStep == null) {
             mBodyText.setText(getString(R.string.play_body_error));
         } else {
-            String stepText = mCurrentStep.getDescription();
+            String stepText = getDescription(mContext.getResources(),mCurrentStep);
             if (stepText == null || stepText.isEmpty()) {
                 stepText = getString(R.string.play_body_empty);
-            } else {
-                stepText = stepText.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
             }
             mBodyText.setText(stepText);
         }

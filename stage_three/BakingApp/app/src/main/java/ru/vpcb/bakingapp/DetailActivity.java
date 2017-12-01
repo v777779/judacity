@@ -180,14 +180,6 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 
     }
 
-    private String getRecipeName() {
-        if (mRecipeItem == null) {
-            return "";
-        }
-        return mRecipeItem.getName();
-
-    }
-
     public void onClickTapWidget(View view) {
         startFillWidgetAction(mContext, mRecipeId, mWidgetId);
         mRootView.findViewById(R.id.widget_button).setVisibility(View.GONE);

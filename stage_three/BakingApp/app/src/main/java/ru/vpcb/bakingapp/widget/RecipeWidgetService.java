@@ -18,6 +18,8 @@ import ru.vpcb.bakingapp.data.RecipeContract;
 import ru.vpcb.bakingapp.data.RecipeItem;
 import timber.log.Timber;
 
+import static ru.vpcb.bakingapp.MainActivity.getIngredientString;
+import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_WIDGET_INTENT;
@@ -82,8 +84,8 @@ public class RecipeWidgetService extends IntentService {
 
             RecipeItem recipeItem = getRecipeItem(recipeId);
             if (recipeItem != null) {
-                recipeName = recipeItem.getName();
-                recipeList = getIngredients(recipeItem);
+                recipeName = getRecipeName(getResources(),recipeItem);
+                recipeList = getIngredientString(getResources(),recipeItem.getIngredients());
             }
             RecipeWidgetProvider.updateWidget(this,appWidgetManager,recipeId,widgetId,recipeName,recipeList);
 
@@ -91,21 +93,6 @@ public class RecipeWidgetService extends IntentService {
         }
     }
 
-
-    private String getIngredients(RecipeItem recipeItem) {
-        List<RecipeItem.Ingredient> ingredientList = recipeItem.getIngredients();
-        StringBuilder sb = new StringBuilder();
-        if (ingredientList != null) {
-            int count = 1;
-            for (RecipeItem.Ingredient ingredient : ingredientList) {
-                String s = ingredient.toString().substring(0,1).toUpperCase()+ingredient.toString().substring(1);
-                sb.append(count + "." + s + "\n");
-                count++;
-            }
-        }
-        return sb.toString();
-
-    }
 
     RecipeItem getRecipeItem(String sRecipeId) {
         if (sRecipeId.isEmpty()) return null;
@@ -159,8 +146,8 @@ public class RecipeWidgetService extends IntentService {
                     RecipeItem.class);
             widgetId = Integer.valueOf(sWidgetId);
             recipeId = Integer.valueOf(sRecipeId);
-            recipeName = recipeItem.getName();
-            recipeList = getIngredients(recipeItem);
+            recipeName = getRecipeName(getResources(),recipeItem);
+            recipeList = getIngredientString(getResources(),recipeItem.getIngredients());
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
             RecipeWidgetProvider.fillWidget(this, appWidgetManager, recipeId, widgetId,
