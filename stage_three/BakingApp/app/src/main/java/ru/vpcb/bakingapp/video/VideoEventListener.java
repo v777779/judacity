@@ -1,24 +1,19 @@
 package ru.vpcb.bakingapp.video;
 
-import android.util.Log;
-import android.view.Surface;
+
 
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 
 /**
- * Created by V1 on 18-Nov-17.
+ * VideoEventListener Class of ExoPlayer Event Listener
+ *
  */
-
 public class VideoEventListener implements Player.EventListener {
-//    private static final String TAG = VideoEventListener.class.getSimpleName();
     private IVideoEventCallback mCallback;
 
     public VideoEventListener(IVideoEventCallback mCallback) {
@@ -60,7 +55,6 @@ public class VideoEventListener implements Player.EventListener {
                 stateString = "UNKNOWN_STATE             -";
                 break;
         }
-//        Log.d(TAG, "changed state to " + stateString + " playWhenReady: " + playWhenReady);
     }
 
     @Override
