@@ -274,8 +274,10 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     public void onClickTapWidget(View view) {
         startFillWidgetAction(mContext, mRecipeId, mWidgetId);
         mRootView.findViewById(R.id.widget_button).setVisibility(View.GONE);
-        Snackbar.make(mRootView, getString(R.string.widget_list_added), Snackbar.LENGTH_SHORT).show();
-//        Toast.makeText(mContext, getString(R.string.widget_list_added), Toast.LENGTH_LONG).show();
+        if (mIsShowWarning) {
+            Snackbar.make(mRootView, getString(R.string.widget_list_added), Snackbar.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, getString(R.string.widget_list_added), Toast.LENGTH_LONG).show();
+        }
         mIsWidgetFilled = true;
     }
 
