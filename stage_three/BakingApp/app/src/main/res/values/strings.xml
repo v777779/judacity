@@ -61,7 +61,7 @@
     <string name="pref_show_warnings_on">Show connection warning enabled</string>
     <string name="pref_show_warnings_off">Show connection warning disabled</string>
     <string name="pref_show_warnings_key">pref_show_warning_key</string>
-    <string name="pref_show_warnings_label">Show "no connection" warning</string>
+    <string name="pref_show_warnings_label">Show \'no connection\' warning</string>
 
     <string name="pref_reload_time_key">pref_load_time_key</string>
     <string name="pref_reload_delay_key">pref_load_delay_key</string>

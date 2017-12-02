@@ -2,6 +2,6 @@
 <resources>
     <bool name="pref_load_images_default">true</bool>
     <bool name="pref_reload_recipes_default">false</bool>
-    <bool name="pref_show_warning_default">true</bool>
+    <bool name="pref_show_warning_default">false</bool>
 
 </resources>

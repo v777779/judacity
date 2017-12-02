@@ -65,9 +65,12 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     private boolean mIsWidgetFilled;
     private LoaderDb mLoaderDb;
     private Cursor mCursor;
-    private boolean mIsLoadImages;
+
     private boolean mIsSavedInstance;
     private boolean mIsErrorShowed;
+    // prefs
+    private boolean mIsLoadImages;
+    private boolean mIsShowWarninig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
             MainActivity.mIsTimber = true;
         }
 // preferences
-        mIsLoadImages = getLoadImagesPreference();
+        loadPreferences();
 // intent
         mRecipeItem = null;
         try {
@@ -285,7 +288,9 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     }
 
     public void showError() {
-        if (mIsErrorShowed) return;
+        if (mIsErrorShowed || !mIsShowWarninig) {
+            return;
+        }
         Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_SHORT).show();
         Timber.d(getString(R.string.message_error));
         mIsErrorShowed = true;
@@ -315,12 +320,15 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 
     }
 
-     private boolean getLoadImagesPreference() {
+    private void loadPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return  sharedPreferences.getBoolean(getString(R.string.pref_load_images_key),
-                getResources().getBoolean(R.bool.pref_load_images_default));
 
-     }
+        mIsLoadImages = sharedPreferences.getBoolean(getString(R.string.pref_load_images_key),
+                getResources().getBoolean(R.bool.pref_load_images_default));
+        mIsShowWarninig = sharedPreferences.getBoolean(getString(R.string.pref_show_warnings_key),
+                getResources().getBoolean(R.bool.pref_show_warning_default));
+
+    }
 
 
 }

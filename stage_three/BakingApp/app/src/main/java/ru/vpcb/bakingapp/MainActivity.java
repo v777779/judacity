@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             return;
         }
         showResult(); // только после загрузки базы данных
-        if (!isOnline(mContext) && !mIsErrorShowed) {  // for the first one only
+        if (!isOnline(mContext) && !mIsErrorShowed && mIsShowWarning) {  // for the first one only
             Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_SHORT).show();
             Timber.d(getString(R.string.message_error));
             mIsErrorShowed = true;
