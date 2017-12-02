@@ -2,10 +2,12 @@ package ru.vpcb.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,12 +20,14 @@ import android.view.View;
 
 import com.google.gson.Gson;
 
+import java.util.concurrent.TimeUnit;
+
 import ru.vpcb.bakingapp.data.LoaderDb;
 import ru.vpcb.bakingapp.data.RecipeItem;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static ru.vpcb.bakingapp.MainActivity.getLoadPreference;
+
 import static ru.vpcb.bakingapp.MainActivity.isOnline;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_EXPANDED;
@@ -84,7 +88,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
             MainActivity.mIsTimber = true;
         }
 // preferences
-        mIsLoadImages = getLoadPreference(mContext);
+        mIsLoadImages = getLoadImagesPreference();
 // intent
         mRecipeItem = null;
         try {
@@ -310,4 +314,13 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     public void onReset() {
 
     }
+
+     private boolean getLoadImagesPreference() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return  sharedPreferences.getBoolean(getString(R.string.pref_load_images_key),
+                getResources().getBoolean(R.bool.pref_load_images_default));
+
+     }
+
+
 }

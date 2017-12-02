@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
-        android:defaultValue="@bool/load_images_default"
-        android:key="@string/load_images_key"
-        android:summaryOff="@string/load_images_off"
-        android:summaryOn="@string/load_images_on"
-        android:title="@string/load_images_label" />
+        android:defaultValue="@bool/pref_load_images_default"
+        android:key="@string/pref_load_images_key"
+        android:summaryOff="@string/pref_load_images_off"
+        android:summaryOn="@string/pref_load_images_on"
+        android:title="@string/pref_load_images_label" />
 
+    <Preference
+        android:defaultValue="@bool/pref_reload_recipes_default"
+        android:key="@string/pref_reload_recipes_key"
+        android:summaryOff="@string/pref_reload_recipes_off"
+        android:summaryOn="@string/pref_reload_recipes_on"
+        android:title="@string/pref_reload_recipes_label" />
+
+    <Preference
+        android:defaultValue="@bool/pref_show_warning_default"
+        android:key="@string/pref_show_warnings_key"
+        android:summaryOff="@string/pref_show_warnings_off"
+        android:summaryOn="@string/pref_load_images_on"
+        android:title="@string/pref_show_warnings_on" />
 
 </PreferenceScreen>

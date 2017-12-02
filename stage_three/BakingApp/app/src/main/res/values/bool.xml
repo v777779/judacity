@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="load_images_default">true</bool>
+    <bool name="pref_load_images_default">true</bool>
+    <bool name="pref_reload_recipes_default">false</bool>
+    <bool name="pref_show_warning_default">true</bool>
 
 </resources>

@@ -1,6 +1,7 @@
 package ru.vpcb.bakingapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -14,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private TextView mErrorMessage;
     private View mRootView;
 
-
     private LoaderDb mLoaderDb;
     private int mSpan;
     private int mSpanHeight;
@@ -87,11 +89,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     public static boolean mIsTimber;
     private String mWidgetId;
     private String mRecipeId;
-    private boolean mIsLoadImages;
-    private boolean mIsSaveInstance;
     private boolean mPreviousConnection;
     private boolean mIsErrorShowed;
-    private boolean mIsLand;
+    //pref
+    private boolean mIsLoadImages;
+    private boolean mIsReloadEnabled;
+    private boolean mIsShowWarning;
 
 
     @Override
@@ -107,14 +110,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
         }
 
-// oNnCreateView
+// log
         if (!mIsTimber) {
             Timber.plant(new Timber.DebugTree());
             mIsTimber = true;
         }
 // preferences
-        mIsLoadImages = getLoadPreference(mContext);
-
+        loadPreferences();  // mIsLoadImages, mIsReloadEnabled, mIsShowWarning, mReloadLastTime
 
 // intent from widget
         Intent intent = getIntent();
@@ -124,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
             mWidgetId = args.getString(WIDGET_WIDGET_ID, "");
         }
 // saveInstance
-        mIsSaveInstance = savedInstanceState != null;
         if (savedInstanceState != null) {  // if repeated session but no connection before ==> load data
             mPreviousConnection = savedInstanceState.getBoolean(BUNDLE_PREVIOUS_CONNECTION, false);
             mIsErrorShowed = savedInstanceState.getBoolean(BUNDLE_ERROR_CONNECTION, false);
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         }
 
 // display parameters
-        setDisplayMetrics();        //mSpan, mSpanHeight, mIsWide
+        setDisplayMetrics();        // mSpan, mSpanHeight, mIsWide
 
         mRecyclerView = (RecyclerView) findViewById(R.id.fc_recycler);
         GridLayoutManager layoutManager = new GridLayoutManager(this, mSpan);
@@ -146,11 +147,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mErrorMessage = (TextView) findViewById(R.id.error_message);
 
-//loaders
+// loaders
         mLoaderDb = new LoaderDb(this, this);
         getSupportLoaderManager().initLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb); // empty bundle FFU
-        if (!mPreviousConnection) {
-//            startRetrofitLoader();
+
+// reload from internet
+        if (savedInstanceState == null && isReloadTimeout()) {
+            startRetrofitLoader();
         }
 
 // landscape fullscreen support
@@ -160,14 +163,15 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        MenuItem menuItemLoad = menu.findItem(R.id.item_load);
-        MenuItem menuItemNoLoad = menu.findItem(R.id.item_no_load);
-        if (mIsLoadImages) {
-            menuItemLoad.setChecked(true);
-        } else {
-            menuItemNoLoad.setChecked(true);
-        }
+        menu.findItem(R.id.item_load).setChecked(mIsLoadImages);
+        menu.findItem(R.id.item_reload).setChecked(mIsReloadEnabled);
+        menu.findItem(R.id.item_show).setChecked(mIsShowWarning);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
     }
 
     @Override
@@ -189,16 +193,25 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
                     item.setChecked(true);
                 }
                 mIsLoadImages = item.isChecked();
-                setLoadPreference(mContext, mIsLoadImages);
+                saveLoadImagePreference();
                 return true;
-            case R.id.item_no_load:
+            case R.id.item_reload:
                 if (item.isChecked()) {
                     item.setChecked(false);
                 } else {
                     item.setChecked(true);
                 }
-                mIsLoadImages = !item.isChecked();
-                setLoadPreference(mContext, mIsLoadImages);
+                mIsReloadEnabled = item.isChecked();
+
+                return true;
+            case R.id.item_show:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                mIsShowWarning = item.isChecked();
+
                 return true;
             default:
         }
@@ -215,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        setLoadPreference(mContext, mIsLoadImages);  // for the first time
+        savePreferences();
     }
 
     @Override
@@ -223,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         super.onSaveInstanceState(outState);
         outState.putBoolean(BUNDLE_PREVIOUS_CONNECTION, isOnline(this));
         outState.putBoolean(BUNDLE_ERROR_CONNECTION, mIsErrorShowed);
-
 
     }
 
@@ -294,10 +306,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
 
 
     private void startRetrofitLoader() {
-        showProgress();
         if (!isOnline(mContext)) {
             return;
         }
+        showProgress();
 // setup Retrofit
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(RECIPES_BASE) //Базовая часть адреса
@@ -321,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
                 RecipeData.bulkInsertBackground(mContext.getContentResolver(),
                         getSupportLoaderManager(), list, mLoaderDb);
                 showResult();
+                saveReLoadTimePreference();
             }
 
             @Override
@@ -360,10 +373,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private void setDisplayMetrics() {
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
-        mIsLand = dp.widthPixels > dp.heightPixels;
+        boolean isLand = dp.widthPixels > dp.heightPixels;
         double width = dp.widthPixels / dp.density;
 
-        if (!mIsLand) {
+        if (!isLand) {
             mSpan = 1;
             if (width >= HIGH_WIDTH_PORTRAIT) {
                 mSpan = (int) Math.round(width / HIGH_SCALE_PORTRAIT);
@@ -386,14 +399,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         if (mSpan > MAX_SPAN) mSpan = MAX_SPAN;
         if (mSpanHeight < MIN_HEIGHT) mSpanHeight = MIN_HEIGHT;
 
-        if (!mIsLand) {
+        if (!isLand) {
             mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
         } else {
             mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
         }
-
     }
-
 
 
     public static boolean isOnline(Context context) {
@@ -403,29 +414,68 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static boolean getLoadPreference(Context context) {
-        boolean isLoadImages = false;
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        isLoadImages = sharedPreferences.getBoolean(context.getString(R.string.load_images_key),
-                context.getResources().getBoolean(R.bool.load_images_default));
 
-        return isLoadImages;
+    private void loadPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mIsLoadImages = sharedPreferences.getBoolean(getString(R.string.pref_load_images_key),
+                getResources().getBoolean(R.bool.pref_load_images_default));
+
+        mIsReloadEnabled = sharedPreferences.getBoolean(getString(R.string.pref_reload_recipes_key),
+                getResources().getBoolean(R.bool.pref_reload_recipes_default));
+
+        mIsShowWarning = sharedPreferences.getBoolean(getString(R.string.pref_show_warnings_key),
+                getResources().getBoolean(R.bool.pref_show_warning_default));
+
     }
 
-    public static void setLoadPreference(Context context, boolean isImageLoad) {
+    private boolean isReloadTimeout() {
+        if (mIsReloadEnabled) return true;
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        int lastTimeSec = sharedPreferences.getInt(getString(R.string.pref_reload_time_key),
+                getResources().getInteger(R.integer.pref_reload_time_default));
+        long lastTime = TimeUnit.SECONDS.toMillis(lastTimeSec);
+
+        int delayTimeHr = sharedPreferences.getInt(getString(R.string.pref_reload_delay_key),
+                getResources().getInteger(R.integer.pref_reload_delay_default));
+
+        long delayTime = TimeUnit.HOURS.toMillis(delayTimeHr);
+
+        return (System.currentTimeMillis() - lastTime) > delayTime;
+    }
+
+    private void saveLoadImagePreference() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(context.getString(R.string.load_images_key), isImageLoad);
+        editor.putBoolean(getString(R.string.pref_load_images_key), mIsLoadImages);
         editor.apply();
     }
+
+    private void saveReLoadTimePreference() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int currentTimeSec = (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+        editor.putInt(getString(R.string.pref_reload_time_key), currentTimeSec);
+        editor.apply();
+    }
+
+    private void savePreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean(getString(R.string.pref_load_images_key), mIsLoadImages);
+        editor.putBoolean(getString(R.string.pref_reload_recipes_key), mIsReloadEnabled);
+        editor.putBoolean(getString(R.string.pref_show_warnings_key), mIsShowWarning);
+        editor.apply();
+    }
+
 
     public Cursor getCursor() {
         return mCursor;
     }
 
     public static String clrText(Resources res, String s) {
-        if(s == null || s.isEmpty()) return "";
+        if (s == null || s.isEmpty()) return "";
         return s.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
 
     }

@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/settings_menu"
-        android:title="@string/menu_settings" />
-    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/settings_menu"
+            android:title="@string/menu_settings" />
+    <group android:checkableBehavior="all">
         <item
             android:id="@+id/item_load"
-            android:title="@string/load_images_on" />
+            android:title="@string/pref_load_images_label" />
         <item
-            android:id="@+id/item_no_load"
-            android:title="@string/load_images_off" />
-    </group>
+            android:id="@+id/item_reload"
+            android:title="@string/pref_reload_recipes_label" />
 
+        <item
+            android:id="@+id/item_show"
+            android:title="@string/pref_show_warnings_label" />
+    </group>
 </menu>

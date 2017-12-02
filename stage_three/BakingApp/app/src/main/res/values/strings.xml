@@ -48,10 +48,23 @@
 
     <string name="menu_settings">Settings</string>
     <!--preference-->
-    <string name="load_images_on">Load preview enabled</string>
-    <string name="load_images_off">Load preview disabled</string>
-    <string name="load_images_key">load_images_key</string>
-    <string name="load_images_label">Load preview images</string>
+    <string name="pref_load_images_on">Load preview enabled</string>
+    <string name="pref_load_images_off">Load preview disabled</string>
+    <string name="pref_load_images_key">pref_load_images_key</string>
+    <string name="pref_load_images_label">Load preview images</string>
+
+    <string name="pref_reload_recipes_on">Reload recipes always</string>
+    <string name="pref_reload_recipes_off">Reload recipes one per 24hr</string>
+    <string name="pref_reload_recipes_key">pref_load_recipes_key</string>
+    <string name="pref_reload_recipes_label">Reload recipes every start</string>
+
+    <string name="pref_show_warnings_on">Show connection warning enabled</string>
+    <string name="pref_show_warnings_off">Show connection warning disabled</string>
+    <string name="pref_show_warnings_key">pref_show_warning_key</string>
+    <string name="pref_show_warnings_label">Show "no connection" warning</string>
+
+    <string name="pref_reload_time_key">pref_load_time_key</string>
+    <string name="pref_reload_delay_key">pref_load_delay_key</string>
 
     <!--test-->
     <string name="test_message_error">Recipe database is empty, connect device
