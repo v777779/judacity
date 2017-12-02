@@ -216,6 +216,7 @@ public class BackingAppTest {
 
         if (!mIsWide) {
             setRecipeLists(TEST_RECIPE_2);     // fills mRecipeName, mStep, mIngredients, mingredientString
+            if(mIsLand) sleep(TEST_EXPAND_TIMEOUT);  // to rotate
 
             recyclerView.perform(actionOnItemAtPosition(TEST_RECIPE_2, click()));
             onView(withText(getRecipeName(mRes, mRecipeItem))).check(matches(isDisplayed()));
@@ -319,9 +320,11 @@ public class BackingAppTest {
             ViewInteraction prevButton = onView(withId(R.id.prev_button));
             ViewInteraction nextButton = onView(withId(R.id.next_button));
 
+            if(mIsLand)  sleep(TEST_EXPAND_TIMEOUT);  // to rotate
             recyclerView.perform(actionOnItemAtPosition(TEST_RECIPE_1, click()));  // brownies
 
             if (mIsLand) {
+
                 recyclerView.perform(actionOnItemAtPosition(TEST_STEP_0 + 1, click()));  //intro
                 checkIsVideoVisible(mSteps.get(TEST_STEP_0));
                 onView(withId(R.id.fp_text_card)).check(doesNotExist());
