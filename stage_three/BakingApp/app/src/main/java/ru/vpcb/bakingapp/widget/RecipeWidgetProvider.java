@@ -29,9 +29,12 @@ import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
     /**
-     * Updates widget with parametefs or creates empty new one
-     *  createWidget() method used for new widget
-     *  fillWidget()   method used to fill widget
+     * Updates widget with parameters or creates empty new one
+     * createWidget() method used for new widget
+     * fillWidget()   method used to fill widget
+     *
+     * This method called from WidgetService when user creates new widget
+     * This method called by system when onUpdate() method called
      *
      * @param context  Context of calling activity
      * @param appWidgetManager  AppWidgetManager
@@ -144,7 +147,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     }
 
     /**
-     * System method for updating all widgets
+     * System method for updates all widgets of RecipeWidgetProvider
      *
      * @param context           Context of calling application
      * @param appWidgetManager  AppWidgetManager widget manager object

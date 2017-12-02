@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 
-import java.util.List;
 
 import ru.vpcb.bakingapp.data.RecipeContract;
 import ru.vpcb.bakingapp.data.RecipeItem;
@@ -30,6 +29,7 @@ import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
 
 
 public class RecipeWidgetService extends IntentService {
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
@@ -62,6 +62,8 @@ public class RecipeWidgetService extends IntentService {
     /**
      * Starts service with Intent to create new widget or update existed one
      * The only valid parameter in new widget is Widget ID
+     * This method called by when user creates new widget
+     * This method called by system when WidgetService.onUpdate() method called
      *
      * @param context
      */
@@ -111,8 +113,6 @@ public class RecipeWidgetService extends IntentService {
                 recipeList = getIngredientString(getResources(),recipeItem.getIngredients());
             }
             RecipeWidgetProvider.updateWidget(this,appWidgetManager,recipeId,widgetId,recipeName,recipeList);
-
-
         }
     }
 
@@ -191,7 +191,6 @@ public class RecipeWidgetService extends IntentService {
                     recipeName, recipeList);
         } catch (Exception e) {
             Timber.d(e.getMessage());
-
         }
     }
 
