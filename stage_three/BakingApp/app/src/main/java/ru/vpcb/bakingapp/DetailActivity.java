@@ -28,7 +28,7 @@ import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
-import static ru.vpcb.bakingapp.MainActivity.isOnline;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.isOnline;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_EXPANDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_DETAIL_INTENT;

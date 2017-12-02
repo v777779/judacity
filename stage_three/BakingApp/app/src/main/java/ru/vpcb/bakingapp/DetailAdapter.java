@@ -22,11 +22,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.bakingapp.data.RecipeItem;
 
-import static ru.vpcb.bakingapp.MainActivity.clrText;
-import static ru.vpcb.bakingapp.MainActivity.getIngredientString;
-import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
-import static ru.vpcb.bakingapp.MainActivity.getShortDescription;
-import static ru.vpcb.bakingapp.MainActivity.getStepName;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.clrText;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getIngredientString;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getRecipeName;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getShortDescription;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getStepName;
 import static ru.vpcb.bakingapp.utils.Constants.COLLAPSED_TYPE;
 import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
 

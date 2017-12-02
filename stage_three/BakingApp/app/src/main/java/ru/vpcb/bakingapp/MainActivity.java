@@ -1,13 +1,9 @@
 package ru.vpcb.bakingapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -15,7 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -39,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.bakingapp.data.IRetrofitAPI;
 import ru.vpcb.bakingapp.data.LoaderDb;
 import ru.vpcb.bakingapp.data.RecipeItem;
-import ru.vpcb.bakingapp.utils.RecipeData;
+import ru.vpcb.bakingapp.utils.RecipeUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -68,6 +63,7 @@ import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
 import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_ID;
 import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.isOnline;
 
 public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         LoaderDb.ICallbackDb {
@@ -330,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
                         it.remove();
                     }
                 }
-                RecipeData.bulkInsertBackground(mContext.getContentResolver(),
+                RecipeUtils.bulkInsertBackground(mContext.getContentResolver(),
                         getSupportLoaderManager(), list, mLoaderDb);
                 showResult();
                 saveReLoadTimePreference();
@@ -407,12 +403,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     }
 
 
-    public static boolean isOnline(Context context) {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
 
 
     private void loadPreferences() {
@@ -474,50 +464,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         return mCursor;
     }
 
-    public static String clrText(Resources res, String s) {
-        if (s == null || s.isEmpty()) return "";
-        return s.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
 
-    }
 
-    public static String getIngredientString(Resources res, List<RecipeItem.Ingredient> list) {
-        if (list == null || list.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder();
-        int count = 1;
-        for (RecipeItem.Ingredient ingredient : list) {
-            String s = ingredient.toString().substring(0, 1).toUpperCase() + ingredient.toString().substring(1);
-            sb.append(count + ". " + s + "\n");
-            count++;
-        }
-
-        return clrText(res, sb.toString());
-    }
-
-    public static String getStepName(Resources res, RecipeItem.Step step) {
-        if (step == null) return "";
-        if (step.getId() == 0) {
-            return res.getString(R.string.play_header_intro);
-        }
-        String s = res.getString(R.string.play_header_step, "" + step.getId());
-        return clrText(res, s);
-    }
-
-    public static String getShortDescription(Resources res, RecipeItem.Step step) {
-        if (step == null) return "";
-        String s = step.getShortDescription();
-        if (s == null) return "";
-        return clrText(res, s);
-    }
-
-    public static String getDescription(Resources res, RecipeItem.Step step) {
-        if (step == null) return "";
-        String s = step.getDescription();
-        if (s == null) return "";
-        return clrText(res, s);
-    }
-
-    public static String getRecipeName(Resources res, RecipeItem recipeItem) {
-        String s = recipeItem.getName();
-        return clrText(res, s);
-    }
 }

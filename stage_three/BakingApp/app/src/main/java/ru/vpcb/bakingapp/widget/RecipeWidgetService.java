@@ -18,8 +18,8 @@ import ru.vpcb.bakingapp.data.RecipeContract;
 import ru.vpcb.bakingapp.data.RecipeItem;
 import timber.log.Timber;
 
-import static ru.vpcb.bakingapp.MainActivity.getIngredientString;
-import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getIngredientString;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getRecipeName;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_WIDGET_INTENT;

@@ -39,11 +39,11 @@ import ru.vpcb.bakingapp.video.VideoEventListener;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static ru.vpcb.bakingapp.MainActivity.clrText;
-import static ru.vpcb.bakingapp.MainActivity.getDescription;
-import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
-import static ru.vpcb.bakingapp.MainActivity.getStepName;
-import static ru.vpcb.bakingapp.MainActivity.isOnline;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.clrText;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getDescription;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getRecipeName;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getStepName;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.isOnline;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_BACK_ENDED;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_PAUSE_READY;
 import static ru.vpcb.bakingapp.utils.Constants.BUNDLE_PLAY_SEEK_POSITION;
