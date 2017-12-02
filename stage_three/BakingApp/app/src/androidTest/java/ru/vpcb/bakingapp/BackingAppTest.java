@@ -77,23 +77,64 @@ import static ru.vpcb.bakingapp.utils.RecipeUtils.isOnline;
  * Email: vadim.v.voronov@gmail.com
  */
 
+/**
+ *  Junit4 Testing Class uses Espresso Library for UI testing
+ */
 @RunWith(AndroidJUnit4.class)
 public class BackingAppTest {
+    /**
+     *  Static flag used to set other static flags once per suite
+     */
     private static boolean mIsSet = false;
+    /**
+     *  The flag is true if orientation is landscape
+     */
     private static boolean mIsLand;
+    /**
+     * The flag is true if the smallest screen width greater or equal than 550dp
+     */
     private static boolean mIsWide;
 
     @Rule
     public ActivityTestRule<MainActivity> mainActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
 
+    /**
+     *  List of RecipeItems data source
+     */
     private List<RecipeItem> mList;
+    /**
+     *  The flag is true if connection to network exists
+     */
     private boolean mIsOnline;
+    /**
+     *  Activity Resources pbject
+     */
     private Resources mRes;
+    /**
+     *  RecipeItem object for test
+     */
     private RecipeItem mRecipeItem;
+    /**
+     * List of RecipeItem.Step of RecipeItem object
+     *
+     */
     private List<RecipeItem.Step> mSteps;
+    /**
+     * List of RecipeItem.Ingredients of RecipeItem object
+     *
+     */
     private List<RecipeItem.Ingredient> mIngredients;
+    /**
+     * String with Ingredients of RecipeItem object
+     *
+     */
     private String mIngredientsString;
 
+    /**
+     * Setup  mIsLand, mIsWide flags and lock them for the next tests.
+     *  Waits when Activity loads database and fills List of RecipeItems
+     *
+     */
     @Before
     public void setUp() {
         mRes = mainActivity.getActivity().getResources();
@@ -123,6 +164,11 @@ public class BackingAppTest {
 
     }
 
+    /**
+     *  Loads List of RecipeItems from the Cursor object
+     *
+     * @return List of RecipeItem objects
+     */
     private List<RecipeItem> getRecipeItemList() {
         List<RecipeItem> list = new ArrayList<>();
         Cursor cursor = mainActivity.getActivity().getCursor();
@@ -137,6 +183,13 @@ public class BackingAppTest {
         return list;
     }
 
+    /**
+     *  Fills  mRecipeItem, mSteps and mIngredients by
+     *  the from the mList, using the input index value.
+     *  Asserts if any of  mRecipeItem, mSteps and mIngredients is empty
+     *
+     * @param index int poisition in Lis
+     */
     private void setRecipeLists(int index) {
         assertThat(mRes.getString(R.string.test_message_error), mList != null && !mList.isEmpty());
 
@@ -152,7 +205,10 @@ public class BackingAppTest {
         mIngredientsString = getIngredientString(mRes, mIngredients);
     }
 
-
+    /**
+     *  Tests MainActivity RecyclerView interface
+     *  Checks visibility of RecyclerView items
+     */
     @Test
     public void testRecycler1() {
         setRecipeLists(TEST_RECIPE_0);
@@ -174,6 +230,11 @@ public class BackingAppTest {
         }
     }
 
+    /**
+     *  Time Delay method
+     *
+     * @param sleep int the value of delay in milliseconds
+     */
     private void sleep(int sleep) {
         try {
             Thread.sleep(sleep);          // Espresso doesn't work with expand correctly
@@ -182,6 +243,11 @@ public class BackingAppTest {
         }
     }
 
+    /**
+     * Checks if View visible for TextViews of RecyclerView of Detail Activity
+     *
+     * @param step RecipeItem.Step object
+     */
     private void checkRecyclerText(RecipeItem.Step step) {
         Matcher<View> childRecycler = isDescendantOfA(withId(R.id.fc_recycler));
 
@@ -191,6 +257,11 @@ public class BackingAppTest {
         onView(allOf(withText(stepText), childRecycler)).check(matches(isDisplayed()));
     }
 
+    /**
+     * Checks if View is not exists for TextViews of RecyclerView of Detail Activity
+     *
+     * @param step RecipeItem.Step object
+     */
     private void checkRecyclerNoText(RecipeItem.Step step) {
         Matcher<View> childRecycler = isDescendantOfA(withId(R.id.fc_recycler));
 
@@ -201,8 +272,9 @@ public class BackingAppTest {
     }
 
     /**
+     * Checks if View visible for TextViews fields in Layout
      *
-     * @param step
+     * @param step RecipeItem.Step object
      */
     private void checkTextWide(RecipeItem.Step step) {
         Matcher<View> childOfRecycler = isDescendantOfA(withId(R.id.fc_recycler));
@@ -213,6 +285,13 @@ public class BackingAppTest {
         onView(withId(R.id.fp_body_text)).check(matches(withText(getDescription(mRes, step))));
     }
 
+    /**
+     *  Checks Visibility and RecyclerView clicks for DetailActivity
+     *  Test performs different sequences for narrow screen and  wide screen devices.
+     *  For narrow screen devices checks visibility of recycler view objects only
+     *  For wide screen devices test checks full visibility and button movement  of
+     *  DetailActivity and FragmentPlayer fragments.
+     */
     @Test
     public void testRecycler2() {
         ViewInteraction recyclerView = onView(allOf(withId(R.id.fc_recycler), isDisplayed()));
@@ -294,7 +373,11 @@ public class BackingAppTest {
         }
     }
 
-
+    /**
+     * Checks if video player or placeholder image is visible
+     *
+     * @param step Recipe.Step item
+     */
     private void checkIsVideoVisible(RecipeItem.Step step) {
         String videoURL = step.getVideoURL();
         boolean isVideoEnabled = !(videoURL == null || videoURL.isEmpty() || !mIsOnline);
@@ -306,14 +389,21 @@ public class BackingAppTest {
         }
     }
 
-
+    /**
+     * Checks visibility if TextView of Layout
+     *
+     * @param step Recipe.Step object
+     */
     private void checkTextNarrow(RecipeItem.Step step) {
         onView(withId(R.id.fp_head_text)).check(matches(withText(getRecipeName(mRes, mRecipeItem))));
         onView(withId(R.id.fp_body_text)).check(matches(withText(getDescription(mRes, step))));
         onView(withId(R.id.navigation_text)).check(matches(withText(getStepName(mRes, step))));
     }
 
-
+    /**
+     *  Checks full functionality FragmentPlayer activity for narrow devices
+     *  Checks visibility and button movement between FragmentPlayer fragments.
+     */
     @Test
     public void testRecycler3() {
         setRecipeLists(TEST_RECIPE_1);
@@ -408,9 +498,5 @@ public class BackingAppTest {
             }
 
         }
-
-
     }
-
-
 }
