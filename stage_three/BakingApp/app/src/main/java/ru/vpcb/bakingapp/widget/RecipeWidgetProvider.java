@@ -132,7 +132,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     }
 
     /**
-     * Helper returns String of RecipeId from Preferences of widget
+     * Returns String of RecipeId from Preferences of widget
      *
      * @param context Context of calling activity
      * @param widgetId int WidgetID that owner of RecipeID

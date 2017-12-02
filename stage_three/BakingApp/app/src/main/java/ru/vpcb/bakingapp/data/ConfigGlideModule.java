@@ -18,8 +18,19 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import ru.vpcb.bakingapp.R;
 
+/**
+ * Glide Configuration Class used to configure OkHttip client
+ *
+ */
 @GlideModule
 public class ConfigGlideModule extends AppGlideModule {
+    /**
+     * Setup connection options for OkHttp Client
+     *
+     * @param context Context of calling activity
+     * @param glide Glide object
+     * @param registry Registry object
+     */
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -32,6 +43,12 @@ public class ConfigGlideModule extends AppGlideModule {
         glide.getRegistry().replace(GlideUrl.class, InputStream.class, factory);
     }
 
+    /**
+     * Setup download options for Glide client
+     *
+     * @param context Context of calling activity
+     * @param builder GlideBuilder builder for Glide client
+     */
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
         super.applyOptions(context, builder);

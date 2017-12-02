@@ -15,7 +15,18 @@ import static ru.vpcb.bakingapp.utils.Constants.RECIPES_QUERY;
  * Email: vadim.v.voronov@gmail.com
  */
 
+/**
+ *  Retrofit API Interface
+ *
+ */
 public interface IRetrofitAPI {
+
+    /**
+     * Returns parsed List<RecipeItem>  after JSON data have been downloaded
+     *
+     * @param s String empry parameter
+     * @return List<RecipeItem>  list of recipes downloaded from the server
+     */
     @GET(RECIPES_QUERY)
     Call<List<RecipeItem>> getData(@Query("") String s);
 }

@@ -24,6 +24,9 @@ import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.TABLE_NAME;
  * Email: vadim.v.voronov@gmail.com
  */
 
+/**
+ * Recipe Content Provider Class
+ */
 public class RecipeContentProvider extends ContentProvider {
 
     public static final int RECIPES = 100;
@@ -31,6 +34,10 @@ public class RecipeContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final String TAG = RecipeContentProvider.class.getSimpleName();
 
+    /**
+     * Returns UriMatcher object which recognizes bulk or alone records Uri
+     * @return UriMatcher object
+     */
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(RecipeContract.AUTHORITY, RecipeContract.PATH_RECIPES, RECIPES);
@@ -48,6 +55,16 @@ public class RecipeContentProvider extends ContentProvider {
         return true;
     }
 
+    /**
+     *  Returns  Cursor object with RecipeItems loaded from database
+     *
+     * @param uri URI   address of RecipeItems
+     * @param projection
+     * @param selection  String  selection query template
+     * @param selectionArgs String[] selection arguments for selection template
+     * @param sortOrder String sorting template
+     * @return Cursor object with RecipeItems
+     */
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
@@ -89,6 +106,15 @@ public class RecipeContentProvider extends ContentProvider {
         return null;
     }
 
+    /**
+     *  Inserts RecipeItem into database
+     *  RecipeItem object converted to JSON format and store as string
+     *
+     * @param uri Uri address to store in database
+     * @param contentValues ContentValues with RecipeItem data
+     * @return Uri of inserted record, Uri is valid for successful operation
+     */
+
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
@@ -114,6 +140,15 @@ public class RecipeContentProvider extends ContentProvider {
         return returnUri;
     }
 
+    /**
+     *  Deletes RecipeItem from database
+     *  RecipeItem object converted to JSON format and store as string
+     *
+     * @param uri Uri address to store in database
+     * @param selection  String  selection query template
+     * @param selectionArgs String[] selection arguments for selection template
+     * @return int number of deleted records, number > 0 valid for successful operation
+     */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         final SQLiteDatabase db = mRecipesDbHelper.getWritableDatabase();
@@ -142,6 +177,23 @@ public class RecipeContentProvider extends ContentProvider {
         return nDeleted;
     }
 
+    /**
+     *  Deletes RecipeItem from database
+     *  RecipeItem object converted to JSON format and store as string
+     *
+     * @param uri Uri address to store in database
+     * @param selection  String  selection query template
+     * @param selectionArgs String[] selection arguments for selection template
+     * @return int number of deleted records, number > 0 valid for successful operation
+     */
+    /**
+     *
+     * @param uri
+     * @param contentValues
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
                       @Nullable String selection, @Nullable String[] selectionArgs) {

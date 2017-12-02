@@ -18,23 +18,50 @@ import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID
  * Email: vadim.v.voronov@gmail.com
  */
 
+/**
+ * Loader of RecipeItem Database
+ */
 public class LoaderDb implements LoaderManager.LoaderCallbacks<Cursor> {
     private Context mContext;
     private ICallbackDb mCallback;
     private String mRecipeId;
 
+    /**
+     * Callback Interface for loader
+     */
     public interface ICallbackDb {
+        /**
+         * Gets cursor data as parameter from loader after load finished
+         * Used as callback method by user to work with loaded cursor data
+         */
         void onComplete(Cursor data);
 
+        /**
+         * Resets cursor object
+         */
         void onReset();
     }
 
+    /**
+     * Constructor of one RecipeItem
+     *
+     * @param context Context of calling activity
+     * @param callback ICallbackDB interface object with callback method placed in user activity
+     * @param recipeId String RecipeID used to load specific recipe from database
+     */
     public LoaderDb(Context context, ICallbackDb callback, String recipeId) {
         mContext = context;
         mCallback = callback;
         mRecipeId = recipeId;
     }
 
+    /**
+     * Constructor of all RecipeItems
+     *
+     * @param context Context of calling activity
+     * @param callback ICallbackDB interface object with callback method placed in user activity
+
+     */
     public LoaderDb(Context context, ICallbackDb callback) {
         this(context, callback, "");
     }
@@ -62,15 +89,15 @@ public class LoaderDb implements LoaderManager.LoaderCallbacks<Cursor> {
                         return mContext.getContentResolver().query(uri,
                                 null,
                                 COLUMN_RECIPE_ID + "=?",
-                                new String[] {mRecipeId},
+                                new String[]{mRecipeId},
                                 COLUMN_RECIPE_ID + " ASC"
                         ); // sorted by recipe ID ascending
-                    }else
-                    return mContext.getContentResolver().query(uri,
-                            null,
-                            null,
-                            null,
-                            COLUMN_RECIPE_ID + " ASC"); // sorted by recipe ID ascending
+                    } else
+                        return mContext.getContentResolver().query(uri,
+                                null,
+                                null,
+                                null,
+                                COLUMN_RECIPE_ID + " ASC"); // sorted by recipe ID ascending
 
                 } catch (Exception e) {
                     e.printStackTrace();
