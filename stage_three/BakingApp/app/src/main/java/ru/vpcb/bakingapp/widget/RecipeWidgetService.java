@@ -37,6 +37,15 @@ public class RecipeWidgetService extends IntentService {
         super(RecipeWidgetService.class.getSimpleName());
     }
 
+    /**
+     *  Starts service with Intent to fill widget with recipe data
+     *  Uses bundle parameters added to Intent
+     *  Bundle parameters are Recipe ID in local database and Widget ID
+     *
+     * @param context   context of activity that starts service
+     * @param recipeId  string version of integer Recipe ID used to query recipe from local database
+     * @param widgetId  string version of integer Widget Id assigned by system
+     */
     public static void startFillWidgetAction(Context context, String recipeId, String widgetId) {
         if (widgetId.isEmpty() || recipeId.isEmpty()) {
             return;
@@ -50,12 +59,23 @@ public class RecipeWidgetService extends IntentService {
         context.startService(intent);
     }
 
+    /**
+     * Starts service with Intent to create new widget or update existed one
+     * The only valid parameter in new widget is Widget ID
+     *
+     * @param context
+     */
     public static void startWidgetUpdateAction(Context context) {
         Intent intent = new Intent(context, RecipeWidgetService.class);
         intent.setAction(WIDGET_SERVICE_UPDATE_ACTION);
         context.startService(intent);
     }
 
+    /**
+     * Serves requests for actions to service
+     *
+     * @param intent Intent with action and bundle of parameters if exists
+     */
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
@@ -71,7 +91,10 @@ public class RecipeWidgetService extends IntentService {
         }
     }
 
-
+    /**
+     *  Creates new empty widget as response of service WIDGET_SERVICE_UPDATE_ACTION action
+     *  RecipeWidgetProvider.updateWidget() method used to create new widget
+     */
     private void startWidgetUpdateAction() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         ComponentName componentName = new ComponentName(this, RecipeWidgetProvider.class);
@@ -93,8 +116,14 @@ public class RecipeWidgetService extends IntentService {
         }
     }
 
-
-    RecipeItem getRecipeItem(String sRecipeId) {
+    /**
+     *  Extracts RecipeItem from local database by Recipe ID
+     *
+     * @param sRecipeId string version of Recipe ID value used for query request
+     * @return  RecipeItem object or null
+     */
+    @Nullable
+    private RecipeItem getRecipeItem(String sRecipeId) {
         if (sRecipeId.isEmpty()) return null;
         int recipeId;
         try {
@@ -121,8 +150,16 @@ public class RecipeWidgetService extends IntentService {
 
     }
 
-
-    void startFillWidgetAction(Bundle args) {
+    /**
+     *  Fills widget with selected RecipeItem data
+     *  Uses bundle as input parameter RecipeID and WidgetID
+     *  RecipeID used for database query
+     *  WidgetID used as address of widget is filled
+     *  Filling of widget RecipeWidgetProvider.fillWidget() method does
+     *       *
+     * @param args  Bundle args with RecipeID and WidgetID
+     */
+    private void startFillWidgetAction(Bundle args) {
         String recipeName = "";
         String recipeList = "";
         int widgetId;

@@ -28,6 +28,18 @@ import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
+    /**
+     * Updates widget with parametefs or creates empty new one
+     *  createWidget() method used for new widget
+     *  fillWidget()   method used to fill widget
+     *
+     * @param context  Context of calling activity
+     * @param appWidgetManager  AppWidgetManager
+     * @param sRecipeId String version of int RecipeID, string used to check if RecipeID is empty
+     * @param widgetId String version of int WidgetID, string used to check if WidgetID is empty
+     * @param recipeName String the name of recipe
+     * @param recipeList String the list of ingredients
+     */
     static void updateWidget(Context context, AppWidgetManager appWidgetManager,
                                 String sRecipeId, int widgetId,
                                 String recipeName, String recipeList) {
@@ -46,6 +58,18 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    /**
+     *  Creates empty widget with valid WidgetId and PendingIntent with MainActivity as destination
+     *  Prepare Bundle with parameters  WidgetID and PendingIntent
+     *  WidgetID is string version of int widgetId, used to show when this parameter is empty
+     *  Detail Activity recognizes not empty widgetID and shows "fill widget" button in response
+     *  WidgetID used as address of widget in MainActivity and DetailActivity
+     *  Pending Intent to start MainActivity on click on widget
+     *
+     * @param context Context of calling activity
+     * @param appWidgetManager  AppWidgetManager widget manager
+     * @param widgetId String version of int WidgetID, string used to show the case when WidgetID is empty
+     */
     private static void createWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
@@ -66,6 +90,19 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
+    /**
+     * Fills widget with List of ingredients , WidgetId, RecipeId and PendingIntent with DetailActivity as destination
+     *  DetailActivity recognizes that widgetID is empty and does not show "fill widget" button
+     *  RecipeID used for database query
+     *  Pending Intent to start DetailActivity on click on widget
+     *
+     * @param context Context of calling activity
+     * @param appWidgetManager  AppWidgetManager widget manager
+     * @param recipeId String version of int RecipeID
+     * @param widgetId String version of int WidgetID, string used to show the case when WidgetID is empty
+     * @param recipeName String the name of Recipe
+     * @param recipeList String the list of ingredients
+     */
     public static void fillWidget(Context context, AppWidgetManager appWidgetManager,
                                    int recipeId, int widgetId,
                                    String recipeName, String recipeList) {
@@ -94,11 +131,25 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
+    /**
+     * Helper returns String of RecipeId from Preferences of widget
+     *
+     * @param context Context of calling activity
+     * @param widgetId int WidgetID that owner of RecipeID
+     * @return String RecipeID value
+     */
     public static String getWidgetRecipeId(Context context, int widgetId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(WIDGET_PREFERENCES + WIDGET_RECIPE_ID + widgetId, "");
     }
 
+    /**
+     * System method for updating all widgets
+     *
+     * @param context           Context of calling application
+     * @param appWidgetManager  AppWidgetManager widget manager object
+     * @param appWidgetIds      int[] WidgetID array to update
+     */
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them

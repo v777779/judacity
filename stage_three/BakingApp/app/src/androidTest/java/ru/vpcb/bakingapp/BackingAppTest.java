@@ -199,7 +199,10 @@ public class BackingAppTest {
         onView(allOf(withText(stepText), childRecycler)).check(doesNotExist());
     }
 
-
+    /**
+     *
+     * @param step
+     */
     private void checkTextWide(RecipeItem.Step step) {
         Matcher<View> childOfRecycler = isDescendantOfA(withId(R.id.fc_recycler));
 
@@ -312,7 +315,6 @@ public class BackingAppTest {
 
     @Test
     public void testRecycler3() {
-
         setRecipeLists(TEST_RECIPE_1);
 
         if (!mIsWide) {  // not tablet
