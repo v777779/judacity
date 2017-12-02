@@ -37,7 +37,7 @@ import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
  */
 
 /**
- * DetailActivity RecyclerVeiw Adapter Class with RecipeItem.Step items
+ * DetailActivity RecyclerView Adapter Class with RecipeItem.Step items
  */
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHolder> {
 
@@ -73,7 +73,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
     private boolean mIsLoadImages;
 
     /**
-     * RecyclerView Adapter for RecylerView of Step items
+     * RecyclerView Adapter for RecyclerView of Step items
      *
      * @param context      context of current activity
      * @param helper       IFragmentHelper callback interface object
@@ -171,10 +171,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
     }
 
     /**
-     * Loads List RecipeItem.Step to mStepList
-     * Loads List RecipeItem.Ingredients to mIngredientList.
-     * Loads RecipeItem object from input RecipeItem object.
-     * Notify adapter to reload RecyclerView.
+     * Replaces current List of Step, List of Ingredients and RecipeItem by the new ones.
+     * Stores new values to mStepList, mIngredientList, mRecipeItem.
+     * If recipeItem is not null notifyDataSetChanged() is called
      *
      * @param recipeItem RecipeItem input RecipeItem object
      * @return RecipeItem current value of mRecipeItem

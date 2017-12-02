@@ -55,7 +55,7 @@ import static ru.vpcb.bakingapp.widget.RecipeWidgetService.startFillWidgetAction
 public class DetailActivity extends AppCompatActivity implements IFragmentHelper, LoaderDb.ICallbackDb {
 
     /**
-     * RecyclerView of Steps list
+     * RecyclerView of Steps list with LinearLayout
      */
     private RecyclerView mRecyclerView;
     /**
@@ -103,7 +103,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
      */
     private LoaderDb mLoaderDb;
     /**
-     * Cursor with RecipeItem data, dfilled by mLoaderDb
+     * Cursor with RecipeItem data, filled by mLoaderDb
      */
     private Cursor mCursor;
     /**
@@ -111,7 +111,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
      */
     private boolean mIsSavedInstance;
     /**
-     * The flag is true if "no connection" warning already showed
+     * The flag is true if warning already showed
      */
     private boolean mIsErrorShowed;
     /**
@@ -119,7 +119,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
      */
     private boolean mIsLoadImages;
     /**
-     * Preference flag, is true if "no connection" warning show is enabled
+     * Preference flag, is true if warning show is enabled
      */
     private boolean mIsShowWarning;
 
@@ -140,7 +140,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
      *                           mIsExpanded          if list of ingredients was expanded
      *                           mPosition            position selected RecyclerView Item
      *                           mIsWidgetFilled      if widget filled button pressed
-     *                           mIsErrorShowed       if "no connection" warning showed
+     *                           mIsErrorShowed       if warning showed
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,7 +241,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
      * mIsExpanded          if list of ingredients was expanded
      * mPosition            position selected RecyclerView Item
      * mIsWidgetFilled      if widget filled button pressed
-     * mIsErrorShowed       if "no connection" warning showed
+     * mIsErrorShowed       if warning showed
      *
      * @param outState Bundle storage for parameters
      */
@@ -286,7 +286,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
      * Creates new Fragment player activity and run it
      * Uses getFragment() method to create new fragment
      *
-     * @param position int position of selected item that has been selected
+     * @param position int position of item that was selected
      */
     @Override
     public void onCallback(int position) {
@@ -348,7 +348,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     }
 
     /**
-     * Shows Error Connection dialog if database is empty and connection is absent
+     * Shows FragmentError dialog if database is empty and connection is absent
      * Creates Fragment Error object which extends DialogFragment class
      * Clear stack of fragment from previous versions of this type of objects
      * Runs FragmentError object
@@ -382,7 +382,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     }
 
     /**
-     * Shows Error Dialog in background mode
+     * Shows FragmentError Dialog in background mode
      * This method called from onFinishLoader() method,
      * it requires to start Fragment activities in background
      */
@@ -432,7 +432,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     /**
      * Callback method of mLoaderDb object
      * Performs input Cursor object data processing
-     * Fills mRecipItem object and pass it to RecyclerView Adapter
+     * Fills mRecipeItem object and pass it to RecyclerView Adapter
      *
      * @param cursor Cursor input data object with RecipeItem data
      */
@@ -463,7 +463,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     /**
      * Loads Preferences
      * mIsLoadImages    flag if Load of thumbnails images enabled
-     * mIsShowWarning   flag if 'no connection' warning show is enabled
+     * mIsShowWarning   flag if warning show is enabled
      */
     private void loadPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
