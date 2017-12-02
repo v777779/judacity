@@ -39,19 +39,27 @@ import static ru.vpcb.bakingapp.utils.Constants.LOADER_RECIPES_DB_ID;
  * Date: 23-Oct-17
  * Email: vadim.v.voronov@gmail.com
  */
+
+/**
+ *  Utils class for common used static methods
+ */
 public class RecipeUtils {
 
-
+    /**
+     *  Inserts a number of RecipeItem objects into database
+     *
+     * @param contentResolver ContentResolver object
+     * @param loaderManager   LoaderManager object
+     * @param list List<RecipeItem>  list of RecipeItem objects to store into database
+     * @param mLoaderDb LoaderDb loader that updates database after successful operation
+     * @return int number of inserted records, 0 if records already in database
+     */
     public static int bulkInsert(ContentResolver contentResolver, LoaderManager loaderManager,
                                  List<RecipeItem> list, LoaderDb mLoaderDb) {
 
         if (list == null || list.isEmpty()) return 0;
-
-//        ContentValues[] contentValues = new ContentValues[list.size()];  // n records
         List<ContentValues> listContent = new ArrayList<>();
         Gson gson = new GsonBuilder()
-//                    .setLenient()
-//                    .setPrettyPrinting()
                 .create();
 
 
@@ -77,6 +85,16 @@ public class RecipeUtils {
         return nInserted;
     }
 
+    /**
+     *  Inserts a number of RecipeItem objects into database in background
+     *  Uses BulkInsert object to insert records in background
+     *
+     * @param resolver ContentResolver object
+     * @param manager   LoaderManager object
+     * @param list List<RecipeItem>  list of RecipeItem objects to store into database
+     * @param loader LoaderDb loader that updates database after successful operation
+     * @return int number of inserted records, 0 if records already in database
+     */
     public static int bulkInsertBackground(ContentResolver resolver, LoaderManager manager,
                                            List<RecipeItem> list, LoaderDb loader) {
         if (resolver == null || manager == null) return 0;
@@ -86,6 +104,12 @@ public class RecipeUtils {
         return bulkInsert.mResult;
     }
 
+    /**
+     * BulkInsert AsyncTask class used to store a number of RecipeItems objects to database
+     *  in background mode
+     *  Uses bulkInsert() method to store RecipeItems and BulkInsert AsyncTask class
+     *
+     */
     private static class BulkInsert extends AsyncTask<Void, Void, Integer> {
         private final ContentResolver mContentResolver;
         private final LoaderManager mLoaderManager;
@@ -121,6 +145,12 @@ public class RecipeUtils {
         }
     }
 
+    /**
+     *  Returns status of connecton to network
+     *
+     * @param context Context of calling activity
+     * @return boolean status of connection, true if connected, false if not
+     */
     public static boolean isOnline(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -128,12 +158,26 @@ public class RecipeUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    /**
+     * Removes  characters with ASCII codes greater than 0xBE from input string
+     *
+     * @param res Resources resources of activity
+     * @param s String input string
+     * @return String cleared string
+     */
     public static String clrText(Resources res, String s) {
         if (s == null || s.isEmpty()) return "";
         return s.replaceAll("[^\\x00-\\xBE]", "");  // clear from broken symbols
-
     }
 
+    /**
+     * Returns string with all ingredients of RecipeItem
+     * Clears output from the wrong characters
+     *
+     * @param res Resources resources of activity
+     * @param list List<Recipe.INgredients> list of ingredients objects of RecipeItem
+     * @return String with all ingredients
+     */
     public static String getIngredientString(Resources res, List<RecipeItem.Ingredient> list) {
         if (list == null || list.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
@@ -143,10 +187,17 @@ public class RecipeUtils {
             sb.append(count + ". " + s + "\n");
             count++;
         }
-
         return clrText(res, sb.toString());
     }
 
+    /**
+     * Returns the name of Step object of RecipeItem
+     * Clears output from the wrong characters
+     *
+     * @param res Resources resources of activity
+     * @param step RecipeItem.Step object
+     * @return String name of Step object
+     */
     public static String getStepName(Resources res, RecipeItem.Step step) {
         if (step == null) return "";
         if (step.getId() == 0) {
@@ -156,6 +207,14 @@ public class RecipeUtils {
         return clrText(res, s);
     }
 
+    /**
+     * Returns short description of Step object of RecipeItem
+     * Clears output from the wrong characters
+     *
+     * @param res Resources resources of activity
+     * @param step RecipeItem.Step object
+     * @return String short description of Step object
+     */
     public static String getShortDescription(Resources res, RecipeItem.Step step) {
         if (step == null) return "";
         String s = step.getShortDescription();
@@ -163,6 +222,14 @@ public class RecipeUtils {
         return clrText(res, s);
     }
 
+    /**
+     * Returns description of Step object of RecipeItem
+     * Clears output from the wrong characters
+     *
+     * @param res Resources resources of activity
+     * @param step RecipeItem.Step object
+     * @return String description of Step object
+     */
     public static String getDescription(Resources res, RecipeItem.Step step) {
         if (step == null) return "";
         String s = step.getDescription();
@@ -170,6 +237,14 @@ public class RecipeUtils {
         return clrText(res, s);
     }
 
+    /**
+     * Returns the name of RecipeItem
+     * Clears output from the wrong characters
+     *
+     * @param res Resources resources of activity
+     * @param recipeItem  RecipeItem object
+     * @return String name of RecipeItem object
+     */
     public static String getRecipeName(Resources res, RecipeItem recipeItem) {
         String s = recipeItem.getName();
         return clrText(res, s);

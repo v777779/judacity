@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         }
         cursor.moveToFirst();
         mRecyclerAdapter.swapCursor(cursor);
-        mCursor = cursor;
+       mCursor = cursor;
 
     }
 

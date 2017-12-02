@@ -40,11 +40,11 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.IsNot.not;
-import static ru.vpcb.bakingapp.MainActivity.getDescription;
-import static ru.vpcb.bakingapp.MainActivity.getIngredientString;
-import static ru.vpcb.bakingapp.MainActivity.getRecipeName;
-import static ru.vpcb.bakingapp.MainActivity.getShortDescription;
-import static ru.vpcb.bakingapp.MainActivity.getStepName;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getDescription;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getIngredientString;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getRecipeName;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getShortDescription;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.getStepName;
 import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
 import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
 import static ru.vpcb.bakingapp.utils.Constants.HIGH_WIDTH_LANDSCAPE;
@@ -68,6 +68,7 @@ import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_4;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_5;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_7;
 import static ru.vpcb.bakingapp.utils.Constants.TEST_STEP_9;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.isOnline;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -96,7 +97,7 @@ public class BackingAppTest {
     @Before
     public void setUp() {
         mRes = mainActivity.getActivity().getResources();
-        mIsOnline = mainActivity.getActivity().isOnline(mainActivity.getActivity());
+        mIsOnline = isOnline(mainActivity.getActivity());
 
         if (!mIsSet) {
             DisplayMetrics dp = new DisplayMetrics();
