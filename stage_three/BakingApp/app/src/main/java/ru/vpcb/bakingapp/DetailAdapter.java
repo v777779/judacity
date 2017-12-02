@@ -139,7 +139,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
      * calls IFragmentHelper.callback for all items except first
      *
      * @param holder   FCViewHolder object of Step item
-     * @param position int position in the List<RecipeItem.Step>  of items
+     * @param position int position in the List RecipeItem.Step  of items
      */
     @Override
     public void onBindViewHolder(final FCViewHolder holder, final int position) {
@@ -160,7 +160,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
     }
 
     /**
-     * Returns the size of List<RecipeItem.Step> data source of RecyclerView Adapter
+     * Returns the size of List RecipeItem.Step  data source of RecyclerView Adapter
      *
      * @return int size of step objects
      */
@@ -171,10 +171,10 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
     }
 
     /**
-     * Loads List<RecipeItem.Step>, List<RecipeItem.Ingredients>
-     * and RecipeItem object from input RecipeItem object
-     * Fills mStepList, mIngredientList and mRecipeItem objects
-     * Notify adapter to reload RecyclerView
+     * Loads List RecipeItem.Step to mStepList
+     * Loads List RecipeItem.Ingredients to mIngredientList.
+     * Loads RecipeItem object from input RecipeItem object.
+     * Notify adapter to reload RecyclerView.
      *
      * @param recipeItem RecipeItem input RecipeItem object
      * @return RecipeItem current value of mRecipeItem
@@ -193,8 +193,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
 
 
     /**
-     * Returns type of ItemView object
-     * There are two possible values  EXPANDED_TYPE and COLLAPSES_TYPE
+     * Returns type of ItemView object.
+     * There are two possible values  EXPANDED_TYPE and COLLAPSES_TYPE.
      *
      * @param position int position of ItemView
      * @return int type of ItemView object
@@ -206,7 +206,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
     }
 
     /**
-     * FCViewHolder class of RecyclerView
+     * FCViewHolder class of RecyclerView.
      */
     class FCViewHolder extends RecyclerView.ViewHolder {
         /**
@@ -223,8 +223,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
         TextView mDetailText;
 
         /**
-         * Text of expanded item all lines except first
-         *  First line of expanded item is always INGREDIENTS:
+         * Text of expanded item all lines except first.
+         *  First line of expanded item is always INGREDIENTS:.
          */
         @Nullable
         @BindView(R.id.fc_recycler_child_detail_text)
@@ -260,10 +260,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
         }
 
         /**
-         *  Extracts data from List<RecipeItem.Step> and List<RecipeItem.Ingredients>
-         *  into fields of item layout
-         *  Load thumbnails images from imageURL, if not from videoURL
-         *  If preference mIsLoadImages is false, placeholder used instead
+         *  Extracts data from List RecipeItem.Step and List RecipeItem.Ingredients into fields of item layout.
+         *  Loads thumbnails images from imageURL, if not from videoURL.
+         *  If preference mIsLoadImages is false, placeholder used instead.
          *           *
          * @param position
          * @param viewType
@@ -310,9 +309,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
         }
 
         /**
-         *  Fills second line of EXPANDED_TYPE and COLLAPSED_TYPE items
-         *  Fills all lines except first one in expanded part of EXPANDED_TYPE item
-         *  in COLLAPSED_TYPE item this expanded part is GONE
+         *  Fills second line of EXPANDED_TYPE and COLLAPSED_TYPE items.
+         *  Fills all lines except first one in expanded part of EXPANDED_TYPE item.
+         *  In COLLAPSED_TYPE item this expanded part is GONE.
          */
         private void setChildText() {
             if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
@@ -325,7 +324,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
         }
 
         /**
-         *  Fills first line of EXPANDED_TYPE and COLLAPSED_TYPE items
+         *  Fills first line of EXPANDED_TYPE and COLLAPSED_TYPE items.
          */
         private void setHeaderText() {
             mThumbImage.setVisibility(View.GONE);

@@ -124,16 +124,16 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     private boolean mIsShowWarning;
 
     /**
-     * Initializes Detail Activity
-     * Setup actionBar home button with custom icon
-     * Loads Preferences with loadPreference() method
-     * Setup Timber.Tree if not exists
-     * Extracts  mWidgetId and mRecipeId from input Intent bundle,  calls finish() if failed
-     * Extracts parameters from savedInstance bundle, see teh list of parameters below
-     * Setup RecyclerView with LinearLayout
-     * Shows "Filled widget" button if mIsWidgetFilled true
-     * Start database loader mLoaderDb
-     * Setup System.Visibility Flags to FULLSCREEN mode
+     * Initializes Detail Activity.
+     * Setup actionBar home button with custom icon.
+     * Loads Preferences with loadPreference() method.
+     * Setup Timber.Tree if not exists.
+     * Extracts  mWidgetId and mRecipeId from input Intent bundle,  calls finish() if failed.
+     * Extracts parameters from savedInstance bundle, see teh list of parameters below.
+     * Setup RecyclerView with LinearLayout.
+     * Shows "Filled widget" button if mIsWidgetFilled true.
+     * Start database loader mLoaderDb.
+     * Setup System.Visibility Flags to FULLSCREEN mode.
      *
      * @param savedInstanceState Bundle  with instance parameters
      *                           Saved parameters:
