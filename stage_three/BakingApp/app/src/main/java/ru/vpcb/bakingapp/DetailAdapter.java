@@ -22,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.bakingapp.data.RecipeItem;
 
-import static ru.vpcb.bakingapp.utils.RecipeUtils.clrText;
 import static ru.vpcb.bakingapp.utils.RecipeUtils.getIngredientString;
 import static ru.vpcb.bakingapp.utils.RecipeUtils.getRecipeName;
 import static ru.vpcb.bakingapp.utils.RecipeUtils.getShortDescription;
@@ -37,24 +36,55 @@ import static ru.vpcb.bakingapp.utils.Constants.EXPANDED_TYPE;
  * Email: vadim.v.voronov@gmail.com
  */
 
+/**
+ * DetailActivity RecyclerVeiw Adapter Class with RecipeItem.Step items
+ */
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHolder> {
 
-
+    /**
+     * The flag is true if the list of Ingredients in RecyclerView is expanded
+     */
     private boolean isExpanded;
+    /**
+     * The RecipeItem parent object
+     */
     private RecipeItem mRecipeItem;
+    /**
+     * Callback interface object for RecyclerView Adapter
+     */
     private IFragmentHelper mHelper;
-
+    /**
+     * List of Step objects is data source for RecyclerView Adapter
+     */
     private List<RecipeItem.Step> mStepList;
+    /**
+     * List of ingredients objects is data source for RecyclerView Adapter
+     */
     private List<RecipeItem.Ingredient> mIngredientList;
-    private Context mContext;
-    private String mWidgetId;
-    private boolean mIsloadImages;
 
+    /**
+     * Context of current activity
+     */
+    private Context mContext;
+
+    /**
+     * Preference flag, is true if load thumbnails enabled
+     */
+    private boolean mIsLoadImages;
+
+    /**
+     * RecyclerView Adapter for RecylerView of Step items
+     *
+     * @param context      context of current activity
+     * @param helper       IFragmentHelper callback interface object
+     * @param recipeItem   RecipeItem parent data source object
+     * @param isLoadImages boolean flag is true if load of thumbnails images is enabled
+     */
     public DetailAdapter(Context context, IFragmentHelper helper, RecipeItem recipeItem, boolean isLoadImages) {
         mContext = context;
         mHelper = helper;
         mRecipeItem = recipeItem;
-        mIsloadImages = isLoadImages;
+        mIsLoadImages = isLoadImages;
         isExpanded = false;
         mStepList = null;
         mIngredientList = null;
@@ -68,7 +98,19 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
         }
     }
 
-
+    /**
+     * Creates FCViewHolder object
+     * if the viewType is EXPANDED, buttons added and List of ingredients is showed
+     * when isExpanded is true, buttons rotated arrows up
+     * List of ingredient is VISIBLE
+     * when isExpanded is false, buttons rotated arrows down
+     * List of ingredient is VISIBLE
+     * if the viewType is COLLAPSED, buttons are INVISIBLE, List of ingredients is GONE
+     *
+     * @param parent   ViewGroup parent view object
+     * @param viewType int type of item, can be EXPANDED_TYPE or COLLAPSED_TYPE
+     * @return FCViewHolder object of item of RecyclerView
+     */
     @Override
     public FCViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -87,10 +129,18 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
                 itemView.findViewById(R.id.fc_recycler_detail_child).setVisibility(View.GONE);
             }
         }
-
         return new FCViewHolder(itemView, viewType);
     }
 
+    /**
+     * Binds Step data to itemView object
+     * Instantiates onClick() method which
+     * toggles flag isExpanded for the first item and calls notifyDataChanged()
+     * calls IFragmentHelper.callback for all items except first
+     *
+     * @param holder   FCViewHolder object of Step item
+     * @param position int position in the List<RecipeItem.Step>  of items
+     */
     @Override
     public void onBindViewHolder(final FCViewHolder holder, final int position) {
         holder.fill(position, holder.getItemViewType());
@@ -109,12 +159,26 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
 
     }
 
+    /**
+     * Returns the size of List<RecipeItem.Step> data source of RecyclerView Adapter
+     *
+     * @return int size of step objects
+     */
     @Override
     public int getItemCount() {
         if (mStepList == null) return 0;
         return mStepList.size() + 1;
     }
 
+    /**
+     * Loads List<RecipeItem.Step>, List<RecipeItem.Ingredients>
+     * and RecipeItem object from input RecipeItem object
+     * Fills mStepList, mIngredientList and mRecipeItem objects
+     * Notify adapter to reload RecyclerView
+     *
+     * @param recipeItem RecipeItem input RecipeItem object
+     * @return RecipeItem current value of mRecipeItem
+     */
     public RecipeItem swapRecipe(RecipeItem recipeItem) {
         RecipeItem oldRecipeItem = mRecipeItem;
         mRecipeItem = recipeItem;
@@ -127,38 +191,83 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
 
     }
 
+
+    /**
+     * Returns type of ItemView object
+     * There are two possible values  EXPANDED_TYPE and COLLAPSES_TYPE
+     *
+     * @param position int position of ItemView
+     * @return int type of ItemView object
+     */
     @Override
     public int getItemViewType(int position) {
         if (position == 0) return EXPANDED_TYPE;
         return COLLAPSED_TYPE;
     }
 
+    /**
+     * FCViewHolder class of RecyclerView
+     */
     class FCViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * Text of collapsed item first line
+         */
         @Nullable
         @BindView(R.id.fc_recycler_head_text)
         TextView mHeaderText;
+        /**
+         * Text of collapsed item second line
+         */
         @Nullable
         @BindView(R.id.fc_recycler_detail_text)
         TextView mDetailText;
+
+        /**
+         * Text of expanded item all lines except first
+         *  First line of expanded item is always INGREDIENTS:
+         */
         @Nullable
         @BindView(R.id.fc_recycler_child_detail_text)
         TextView mChildDetailText;
+        /**
+         * Image of thumbnail in the left of item
+         */
         @Nullable
         @BindView(R.id.step_thumb)
         ImageView mThumbImage;
+        /**
+         * Left expand button image
+         */
         @Nullable
         @BindView(R.id.expand_left)
         ImageView mLeftExpand;
+        /**
+         * Right expand button image
+         */
         @Nullable
         @BindView(R.id.expand_right)
         ImageView mRightExpand;
 
-
+        /**
+         *  Constructor FCView Holder
+         *
+         * @param itemView View  object of item
+         * @param viewType int  type of item EXPANDED_TYPE or COLLAPSED_TYPE
+         */
         public FCViewHolder(View itemView, int viewType) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+        /**
+         *  Extracts data from List<RecipeItem.Step> and List<RecipeItem.Ingredients>
+         *  into fields of item layout
+         *  Load thumbnails images from imageURL, if not from videoURL
+         *  If preference mIsLoadImages is false, placeholder used instead
+         *           *
+         * @param position
+         * @param viewType
+         */
         private void fill(int position, int viewType) {
             if (viewType == EXPANDED_TYPE) {
 
@@ -173,8 +282,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
                 }
 // stepItem
                 RecipeItem.Step stepItem = mStepList.get(position - 1);  // if stepItem == null exits
-                mHeaderText.setText(getStepName(mContext.getResources(),stepItem));
-                mDetailText.setText(getShortDescription(mContext.getResources(),stepItem));
+                mHeaderText.setText(getStepName(mContext.getResources(), stepItem));
+                mDetailText.setText(getShortDescription(mContext.getResources(), stepItem));
 
                 // thumb
                 mThumbImage.setVisibility(View.VISIBLE);
@@ -188,7 +297,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
                 if (videoURL == null || videoURL.isEmpty()) {                            // default image
                     mThumbImage.setImageResource(R.drawable.ic_play_circle_white_24dp);
 
-                } else if (!mIsloadImages) {
+                } else if (!mIsLoadImages) {
                     mThumbImage.setImageResource(R.drawable.ic_play_circle_black_24dp);   // no load
                 } else {
                     Glide.with(mContext)
@@ -200,9 +309,14 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
 
         }
 
+        /**
+         *  Fills second line of EXPANDED_TYPE and COLLAPSED_TYPE items
+         *  Fills all lines except first one in expanded part of EXPANDED_TYPE item
+         *  in COLLAPSED_TYPE item this expanded part is GONE
+         */
         private void setChildText() {
             if (isExpanded && mIngredientList != null && mIngredientList.size() > 0) {
-                String s = getIngredientString(mContext.getResources(),mIngredientList);  // get and clear text
+                String s = getIngredientString(mContext.getResources(), mIngredientList);  // get and clear text
                 mDetailText.setText(mContext.getString(R.string.ingredients_collapse));
                 mChildDetailText.setText(s);
             } else {
@@ -210,6 +324,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
             }
         }
 
+        /**
+         *  Fills first line of EXPANDED_TYPE and COLLAPSED_TYPE items
+         */
         private void setHeaderText() {
             mThumbImage.setVisibility(View.GONE);
             mLeftExpand.setVisibility(View.VISIBLE);
@@ -218,13 +335,16 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
             if (mRecipeItem == null) {
                 mHeaderText.setText(mContext.getString(R.string.play_header_error));
             } else {
-                mHeaderText.setText(getRecipeName(mContext.getResources(),mRecipeItem));
+                mHeaderText.setText(getRecipeName(mContext.getResources(), mRecipeItem));
             }
             mHeaderText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     mContext.getResources().getDimension(R.dimen.large_text_size));
             itemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorBackHead));
         }
 
+        /**
+         *  Fills item placeholder if data soruces are empty
+         */
         private void setEmptyStep() {
             mThumbImage.setVisibility(View.GONE);
             mLeftExpand.setVisibility(View.GONE);
@@ -235,10 +355,21 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FCViewHold
 
     }
 
+    /**
+     *  Return state of isExpanded flag
+     * @return boolean is true if expanded
+     */
     public boolean isExpanded() {
         return isExpanded;
     }
 
+    /**
+     * Set the value of isExpanded flag
+     *  Used by DetailActivity during setup RecyclerAdapter
+     *  when device is rotated to hold of expanded state of RecyclerView
+     *
+     * @param expanded
+     */
     public void setExpanded(boolean expanded) {
         isExpanded = expanded;
     }

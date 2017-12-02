@@ -20,8 +20,6 @@ import android.view.View;
 
 import com.google.gson.Gson;
 
-import java.util.concurrent.TimeUnit;
-
 import ru.vpcb.bakingapp.data.LoaderDb;
 import ru.vpcb.bakingapp.data.RecipeItem;
 import timber.log.Timber;
@@ -50,28 +48,100 @@ import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_ID;
 import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
 import static ru.vpcb.bakingapp.widget.RecipeWidgetService.startFillWidgetAction;
 
+/**
+ * DetailActivity class
+ * Creates RecyclerView with information about Steps and Ingredients
+ */
 public class DetailActivity extends AppCompatActivity implements IFragmentHelper, LoaderDb.ICallbackDb {
 
+    /**
+     * RecyclerView of Steps list
+     */
     private RecyclerView mRecyclerView;
+    /**
+     * RecyclerView Adapter of Steps list
+     */
     private DetailAdapter mRecyclerAdapter;
+    /**
+     * Step Position in Recipe.Steps list
+     */
     private int mPosition;
+    /**
+     * The flag if screen smallest wide greater or even 550dp (true) or less (false)
+     */
     private boolean mIsWide;
+    /**
+     * The RecipeItem parent object
+     */
     private RecipeItem mRecipeItem;
+    /**
+     * Context of current activity
+     */
     private Context mContext;
+    /**
+     * The flag is true if the list of Ingredients in RecyclerView is expanded
+     */
     private boolean mIsExpanded;
+    /**
+     * Root View of DetailActivity layout
+     */
     private View mRootView;
+    /**
+     * The WidgetID from input Intent object
+     */
     private String mWidgetId;
+    /**
+     * The RecipeItemID from input Intent object
+     */
     private String mRecipeId;
+    /**
+     * The flag is true if widget filled
+     */
     private boolean mIsWidgetFilled;
+    /**
+     * Loader database object, loads data into mCursor object
+     */
     private LoaderDb mLoaderDb;
+    /**
+     * Cursor with RecipeItem data, dfilled by mLoaderDb
+     */
     private Cursor mCursor;
-
+    /**
+     * The flag is true if savedInstance is not null
+     */
     private boolean mIsSavedInstance;
+    /**
+     * The flag is true if "no connection" warning already showed
+     */
     private boolean mIsErrorShowed;
-    // prefs
+    /**
+     * Preference flag, is true if load thumbnails enabled
+     */
     private boolean mIsLoadImages;
-    private boolean mIsShowWarninig;
+    /**
+     * Preference flag, is true if "no connection" warning show is enabled
+     */
+    private boolean mIsShowWarning;
 
+    /**
+     * Initializes Detail Activity
+     * Setup actionBar home button with custom icon
+     * Loads Preferences with loadPreference() method
+     * Setup Timber.Tree if not exists
+     * Extracts  mWidgetId and mRecipeId from input Intent bundle,  calls finish() if failed
+     * Extracts parameters from savedInstance bundle, see teh list of parameters below
+     * Setup RecyclerView with LinearLayout
+     * Shows "Filled widget" button if mIsWidgetFilled true
+     * Start database loader mLoaderDb
+     * Setup System.Visibility Flags to FULLSCREEN mode
+     *
+     * @param savedInstanceState Bundle  with instance parameters
+     *                           Saved parameters:
+     *                           mIsExpanded          if list of ingredients was expanded
+     *                           mPosition            position selected RecyclerView Item
+     *                           mIsWidgetFilled      if widget filled button pressed
+     *                           mIsErrorShowed       if "no connection" warning showed
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,16 +202,6 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         mRecyclerView.setHasFixedSize(true);
         mIsWide = mRootView.findViewById(R.id.fc_p_container) != null;
 
-//        if (mIsWide &&  savedInstanceState == null) {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            FragmentPlayer playerFragment = getFragmentPlayer();
-//            fragmentManager.beginTransaction()
-//                    .replace(R.id.fc_p_container, playerFragment)
-//                    .addToBackStack(FRAGMENT_PLAYER_NAME)
-//                    .commit();
-//        }
-
-// show fill widget n=button
         if (!mIsWidgetFilled) {
             mRootView.findViewById(R.id.widget_button).setVisibility(View.VISIBLE);
         } else {
@@ -151,11 +211,16 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 // loader for one recipe
         mLoaderDb = new LoaderDb(this, this, mRecipeId);
         getSupportLoaderManager().initLoader(LOADER_RECIPES_DB_ID, null, mLoaderDb); // empty bundle FFU
-
         mRootView.setSystemUiVisibility(SYSTEM_UI_SHOW_FLAGS);
-
     }
 
+    /**
+     * Processes Home button click
+     * If screen is Wide the finish() called and onBackPressed() in other case
+     *
+     * @param item MenuItem object whic is selected in options menu
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -170,6 +235,16 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Saves Instance parameters to Bundle object
+     * Saved parameters:
+     * mIsExpanded          if list of ingredients was expanded
+     * mPosition            position selected RecyclerView Item
+     * mIsWidgetFilled      if widget filled button pressed
+     * mIsErrorShowed       if "no connection" warning showed
+     *
+     * @param outState Bundle storage for parameters
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -180,6 +255,9 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 
     }
 
+    /**
+     * Resume activity and restart database loader with mLoaderDb object
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -187,6 +265,12 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 
     }
 
+    /**
+     * Starts RecipeWidgetService with WIDGET_SERVICE_FILL_ACTION to fill widget with current RecipeItem data
+     * Shows Snackbar object with message about action
+     *
+     * @param view View button View object
+     */
     public void onClickTapWidget(View view) {
         startFillWidgetAction(mContext, mRecipeId, mWidgetId);
         mRootView.findViewById(R.id.widget_button).setVisibility(View.GONE);
@@ -195,6 +279,13 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         mIsWidgetFilled = true;
     }
 
+    /**
+     * Callback method from RecyclerView HolderView.onClick() method
+     * Creates new Fragment player activity and run it
+     * Uses getFragment() method to create new fragment
+     *
+     * @param position int position of selected item that has been selected
+     */
     @Override
     public void onCallback(int position) {
         mPosition = position;
@@ -215,6 +306,16 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         }
     }
 
+    /**
+     * Returns new FragmentPlayer object
+     * Creates Bundle with parameters, put it into fragment object
+     * Bundle parameters
+     * mRecipeItem     RecipeItem object converted to JSON format at RECIPE_POSITION
+     * mPosition       position of current Step at RECIPE_STEP_POSITION
+     * mIsWide         flag is true if screen is wide
+     *
+     * @return FragmentPlayer object with bundle of parameters
+     */
     private FragmentPlayer getFragmentPlayer() {
         FragmentPlayer playerFragment = new FragmentPlayer();
         Bundle playerArgs = new Bundle();
@@ -225,7 +326,13 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         return playerFragment;
     }
 
-
+    /**
+     * Returns RecipeItem object from the first position of input Cursor object
+     * Extracts JSON string data, converts them to RecipeItem object
+     *
+     * @param cursor Cursor input Cursor object with JSON string data
+     * @return RecipeItem object or null
+     */
     private RecipeItem getRecipeItem(Cursor cursor) {
         RecipeItem recipeItem = null;
         try {
@@ -238,6 +345,12 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         return recipeItem;
     }
 
+    /**
+     * Shows Error Connection dialog if database is empty and connection is absent
+     * Creates Fragment Error object which extends DialogFragment class
+     * Clear stack of fragment from previous versions of this type of objects
+     * Runs FragmentError object
+     */
     public void showErrorDialog() {
         FragmentError fragmentError = new FragmentError();
         fragmentError.setLayoutId(R.layout.fragment_error_detail);
@@ -251,6 +364,10 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
 
     }
 
+    /**
+     * Creates and runs FragmentPlayer when data from database is loaded and screen is wide
+     * This method called from onComplete() method of mLoaderDb Listener
+     */
     private void showPlayerFragment() {
         if (mIsWide && !mIsSavedInstance) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -262,6 +379,11 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         }
     }
 
+    /**
+     * Shows Error Dialog in background mode
+     * This method called from onFinishLoader() method,
+     * it requires to start Fragment activities in background
+     */
     private void showErrorHandler() {
         Handler handler = new Handler() {
             @Override
@@ -275,6 +397,11 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         handler.sendEmptyMessage(MESSAGE_ERROR_ID);
     }
 
+    /**
+     * Shows FragmentPlayer in background mode
+     * This method called from onFinishLoader() method,
+     * it requires to start Fragment activities in background
+     */
     private void showPlayerHandler() {
         Handler handler = new Handler() {
             @Override
@@ -287,8 +414,12 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         handler.sendEmptyMessage(MESSAGE_PLAYER_ID);
     }
 
+    /**
+     * Shows Snackbar with warning message if preference mIsShowWarnig is enabled and
+     * this is the first time, after onCreate()
+     */
     public void showError() {
-        if (mIsErrorShowed || !mIsShowWarninig) {
+        if (mIsErrorShowed || !mIsShowWarning) {
             return;
         }
         Snackbar.make(mRootView, getString(R.string.message_error), Snackbar.LENGTH_SHORT).show();
@@ -296,7 +427,13 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         mIsErrorShowed = true;
     }
 
-
+    /**
+     * Callback method of mLoaderDb object
+     * Performs input Cursor object data processing
+     * Fills mRecipItem object and pass it to RecyclerView Adapter
+     *
+     * @param cursor Cursor input data object with RecipeItem data
+     */
     @Override
     public void onComplete(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0 || mRecyclerAdapter == null) {   // нет адаптера выходим
@@ -307,28 +444,31 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         if (!isOnline(mContext)) {
             showError();
         }
-
         mCursor = cursor;
         mRecipeItem = getRecipeItem(mCursor);
         mRecyclerAdapter.swapRecipe(mRecipeItem);
         showPlayerHandler();
-
     }
 
+    /**
+     * Callback method of mLoaderDb object
+     * Resets Cursor object
+     */
     @Override
     public void onReset() {
-
     }
 
+    /**
+     * Loads Preferences
+     * mIsLoadImages    flag if Load of thumbnails images enabled
+     * mIsShowWarning   flag if 'no connection' warning show is enabled
+     */
     private void loadPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         mIsLoadImages = sharedPreferences.getBoolean(getString(R.string.pref_load_images_key),
                 getResources().getBoolean(R.bool.pref_load_images_default));
-        mIsShowWarninig = sharedPreferences.getBoolean(getString(R.string.pref_show_warnings_key),
+        mIsShowWarning = sharedPreferences.getBoolean(getString(R.string.pref_show_warnings_key),
                 getResources().getBoolean(R.bool.pref_show_warning_default));
-
     }
-
-
 }
