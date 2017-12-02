@@ -1,11 +1,9 @@
 package ru.vpcb.bakingapp;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +45,7 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
         v.findViewById(R.id.error_exit).setOnClickListener(this);
         if (mLayoutId == R.layout.fragment_error) {
             getDialog().setTitle(getString(R.string.error_title));
-            v.findViewById(R.id.error_try).setOnClickListener(this);
+            v.findViewById(R.id.error_retry).setOnClickListener(this);
             v.findViewById(R.id.error_close).setOnClickListener(this);
         } else {
             getDialog().setTitle(getString(R.string.empty_title));

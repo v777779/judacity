@@ -59,37 +59,35 @@
 
 
     <Button
-        android:id="@+id/error_try"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/error_retry"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text_line3" />
-
-    <Button
         android:id="@+id/error_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/error_close"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error_text_line3"
+        android:visibility="invisible"
+        />
 
+    <Button
+        android:id="@+id/error_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/error_close"
-        app:layout_constraintLeft_toRightOf="@+id/error_try"
+        app:layout_constraintLeft_toRightOf="@+id/error_close"
         app:layout_constraintRight_toLeftOf="@+id/error_exit"
         app:layout_constraintTop_toBottomOf="@+id/error_text_line3"
         app:layout_constraintHorizontal_bias="0.50"
-        android:visibility="invisible"
         />
 
     <Button
         android:id="@+id/error_exit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/error_exit"
