@@ -147,7 +147,7 @@ public class RecipeContentProvider extends ContentProvider {
      * @param uri Uri address to store in database
      * @param selection  String  selection query template
      * @param selectionArgs String[] selection arguments for selection template
-     * @return int number of deleted records, number > 0 valid for successful operation
+     * @return int number of deleted record, number > 0 valid for successful operation
      */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
@@ -178,21 +178,14 @@ public class RecipeContentProvider extends ContentProvider {
     }
 
     /**
-     *  Deletes RecipeItem from database
+     *  Updates RecipeItem in database
      *  RecipeItem object converted to JSON format and store as string
      *
      * @param uri Uri address to store in database
+     * @param contentValues ContentValues with RecipeItem data
      * @param selection  String  selection query template
      * @param selectionArgs String[] selection arguments for selection template
-     * @return int number of deleted records, number > 0 valid for successful operation
-     */
-    /**
-     *
-     * @param uri
-     * @param contentValues
-     * @param selection
-     * @param selectionArgs
-     * @return
+     * @return int number of updated record, number > 0 valid for successful operation
      */
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
@@ -214,6 +207,13 @@ public class RecipeContentProvider extends ContentProvider {
         return nUpdated;
     }
 
+    /**
+     * Inserts a number  of RecipeItems into database
+     *
+     * @param uri Uri address to store in database
+     * @param contentValues ContentValues with RecipeItem data
+     * @return int number of inserted records, number > 0 valid for successful operation
+     */
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] contentValues) {
         final SQLiteDatabase db = mRecipesDbHelper.getWritableDatabase();
