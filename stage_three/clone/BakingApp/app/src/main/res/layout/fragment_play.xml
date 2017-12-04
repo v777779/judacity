@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackLight"
     android:layout_marginTop="@dimen/navigation_margin"
+    android:layout_marginBottom="@dimen/bottom_tablet_margin"
     android:clickable="true"
     >
 

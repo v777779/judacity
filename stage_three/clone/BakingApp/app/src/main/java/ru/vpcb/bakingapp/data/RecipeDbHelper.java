@@ -20,7 +20,9 @@ import static ru.vpcb.bakingapp.utils.Constants.DATABASE_VERSION;
  * Email: vadim.v.voronov@gmail.com
  */
 
-
+/**
+ * RecipeDbHelper class for RecipeItem Database Content Provider
+ */
 public class RecipeDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_ALTER_VERSION_1 = "ALTER TABLE "
             + TABLE_NAME + " ADD COLUMN " + COLUMN_RECIPE_IMAGE + " string;";
@@ -29,6 +31,11 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Creates Database of RecipeItems
+     *
+     * @param db SQLiteDatabse database
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
@@ -41,6 +48,13 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE);
     }
 
+    /**
+     *  Upgrades old version database to new version
+     *
+     * @param db    SQLiteDatabase databed for upgrading
+     * @param oldVersion  int old version to compare
+     * @param newVersion  int new version to compare
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 //        db.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME);

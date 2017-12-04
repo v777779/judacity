@@ -21,4 +21,7 @@
 
     <color name="colorBackPlay">#cbe7f2</color>
 
+
+    <!--<color name="colorButtonText">#5591f5</color>-->
+    <color name="colorButtonText">#4cb5ac</color>
 </resources>

@@ -6,12 +6,25 @@
     <dimen name="head_text_size">16sp</dimen>
     <dimen name="bold_text_size">20sp</dimen>
     <dimen name="large_text_size">24sp</dimen>
+    <!--widget-->
+    <dimen name="widget_text_size">10sp</dimen>
+    <dimen name="widget_head_size">12sp</dimen>
 
-<!--frame margins-->
+    <!--frame margins-->
     <dimen name="navigation_margin">80dp</dimen>
     <dimen name="navigation_main">88dp</dimen>
     <dimen name="frame_side_margin">8dp</dimen>
+    <!--tablet-->
+    <dimen name="bottom_tablet_margin">0dp</dimen>
 
-
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_height">110dp</dimen>
+    <dimen name="widget_width">110dp</dimen>
+    <dimen name="widget_resize_height">40dp</dimen>
+    <dimen name="widget_resize_width">110dp</dimen>
 
 </resources>

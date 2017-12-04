@@ -10,12 +10,17 @@ import android.provider.BaseColumns;
  * Email: vadim.v.voronov@gmail.com
  */
 
-
+/**
+ * Contract class for RecipeItem Database ContentProvider
+ */
 public class RecipeContract {
     public static final String AUTHORITY = "ru.vpcb.bakingapp";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_RECIPES = "recipes";
 
+    /**
+     * Entry class for RecipeItem Database Content Provider
+     */
     public static final class RecipeEntry implements BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RECIPES).build();
         public static final String TABLE_NAME = "recipes";

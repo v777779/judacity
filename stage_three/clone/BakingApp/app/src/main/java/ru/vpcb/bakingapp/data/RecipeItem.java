@@ -14,6 +14,10 @@ import java.util.List;
  * Date: 16-Nov-17
  * Email: vadim.v.voronov@gmail.com
  */
+
+/**
+ * RecipeItem Class  of Recipe object
+ */
 public class RecipeItem {
     @SerializedName("id")
     @Expose
@@ -34,8 +38,9 @@ public class RecipeItem {
     @Expose
     private String image;
 
-
-    // classes
+    /**
+     * Ingredient class of Recioe ingredients object
+     */
     public class Ingredient {
         @SerializedName("quantity")
         @Expose
@@ -55,6 +60,9 @@ public class RecipeItem {
         }
     }
 
+    /**
+     *  Step class of Recipe step object
+     */
     public class Step {
         @SerializedName("id")
         @Expose
@@ -123,7 +131,7 @@ public class RecipeItem {
         return image;
     }
 
-    //setters
+
     public void setImage(String image) {
         this.image = image;
     }

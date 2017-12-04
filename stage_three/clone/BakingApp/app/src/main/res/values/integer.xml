@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--last time reload timestamp in seconds-->
+    <integer name="pref_reload_time_default">0</integer>
+    <!--delay before reload recipes in hours-->
+    <integer name="pref_reload_delay_default">24</integer>
+
+</resources>

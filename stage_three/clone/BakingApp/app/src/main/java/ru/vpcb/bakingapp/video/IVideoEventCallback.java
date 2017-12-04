@@ -1,10 +1,16 @@
 package ru.vpcb.bakingapp.video;
 
-/**
- * Created by V1 on 19-Nov-17.
- */
 
+/**
+ *  IVideoEventCallback interface for ExoPlayer Evevnt Listener
+ *
+ */
 public interface IVideoEventCallback {
+    /**
+     * Callback methor to process state of ExoPlayer
+     *
+     * @param state int state of ExoPlayer
+     */
     void setPlayState(int state);
 
 }
