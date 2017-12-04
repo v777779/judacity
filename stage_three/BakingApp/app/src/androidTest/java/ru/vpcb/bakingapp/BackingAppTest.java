@@ -140,15 +140,9 @@ public class BackingAppTest {
         mRes = mainActivity.getActivity().getResources();
         mIsOnline = isOnline(mainActivity.getActivity());
 
-        if (!mIsSet) {
-            DisplayMetrics dp = new DisplayMetrics();
-            mainActivity.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dp);
-            mIsLand = dp.widthPixels > dp.heightPixels;
-            if (!mIsLand) {
-                mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
-            } else {
-                mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
-            }
+        if (!mIsSet) {   // set must be done at the entrance of the suite
+            mIsLand = mRes.getBoolean(R.bool.is_land);
+            mIsWide = mRes.getBoolean(R.bool.is_wide);
             mIsSet = true;
          }
 
@@ -417,7 +411,6 @@ public class BackingAppTest {
             recyclerView.perform(actionOnItemAtPosition(TEST_RECIPE_1, click()));  // brownies
 
             if (mIsLand) {
-
                 recyclerView.perform(actionOnItemAtPosition(TEST_STEP_0 + 1, click()));  //intro
                 checkIsVideoVisible(mSteps.get(TEST_STEP_0));
                 onView(withId(R.id.fp_text_card)).check(doesNotExist());

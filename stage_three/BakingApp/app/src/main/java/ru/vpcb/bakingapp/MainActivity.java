@@ -63,6 +63,7 @@ import static ru.vpcb.bakingapp.utils.Constants.SCREEN_RATIO;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
 import static ru.vpcb.bakingapp.utils.Constants.WIDGET_RECIPE_ID;
 import static ru.vpcb.bakingapp.utils.Constants.WIDGET_WIDGET_ID;
+import static ru.vpcb.bakingapp.utils.RecipeUtils.bulkInsert;
 import static ru.vpcb.bakingapp.utils.RecipeUtils.isOnline;
 
 /**
@@ -527,7 +528,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
     private void setDisplayMetrics() {
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
-        boolean isLand = dp.widthPixels > dp.heightPixels;
+//        boolean isLand = dp.widthPixels > dp.heightPixels;
+        boolean isLand = getResources().getBoolean(R.bool.is_land);
+        mIsWide = getResources().getBoolean(R.bool.is_wide);
+
         double width = dp.widthPixels / dp.density;
 
         if (!isLand) {
@@ -553,11 +557,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
         if (mSpan > MAX_SPAN) mSpan = MAX_SPAN;
         if (mSpanHeight < MIN_HEIGHT) mSpanHeight = MIN_HEIGHT;
 
-        if (!isLand) {
-            mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
-        } else {
-            mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
-        }
+//        if (!isLand) {
+//            mIsWide = dp.widthPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
+//        } else {
+//            mIsWide = dp.heightPixels / dp.density >= MIN_WIDTH_WIDE_SCREEN;
+//        }
+
+
     }
 
     /**

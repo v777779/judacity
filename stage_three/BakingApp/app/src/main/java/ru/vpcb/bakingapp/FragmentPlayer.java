@@ -53,7 +53,6 @@ import static ru.vpcb.bakingapp.utils.Constants.FRAGMENT_PLAYER_NAME;
 import static ru.vpcb.bakingapp.utils.Constants.PLAY_BUTTON_ANIMATION;
 import static ru.vpcb.bakingapp.utils.Constants.PLAY_CONTROL_SHOWTIME;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_HIDE_FLAGS;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
@@ -223,6 +222,24 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
     }
 
     /**
+     * Returns new FragmentPlayer object
+     * Creates Bundle with parameters, put it into fragment object
+     * Bundle parameters
+     * mRecipeItem     RecipeItem object converted to JSON format at RECIPE_POSITION
+     * mPosition       position of current Step at RECIPE_STEP_POSITION
+     *
+     * @return FragmentPlayer object with bundle of parameters
+     */
+    public static FragmentPlayer newInstance(RecipeItem recipeItem, int position) {
+        FragmentPlayer playerFragment = new FragmentPlayer();
+        Bundle playerArgs = new Bundle();
+        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(recipeItem));
+        playerArgs.putInt(RECIPE_STEP_POSITION, position);
+//        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
+        playerFragment.setArguments(playerArgs);
+        return playerFragment;
+    }
+    /**
      * Create main View of FragmentPlayer.
      * Inflates layout of Fragment.
      * Extracts parameters from input Intent bundle.
@@ -252,10 +269,14 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
         mUnBinder = ButterKnife.bind(this, rootView);
 
         Bundle playerArgs = getArguments();
-        mIsLandMode = isLandMode();
+//        mIsLandMode = isLandMode();
+        mIsLandMode = getResources().getBoolean(R.bool.is_land);
+        mIsWide = getResources().getBoolean(R.bool.is_wide);
         try {                                                               // null will be catch by Exception e
             mPosition = playerArgs.getInt(RECIPE_STEP_POSITION, 0);
-            mIsWide = playerArgs.getBoolean(RECIPE_SCREEN_WIDE, false);
+//            mIsWide = playerArgs.getBoolean(RECIPE_SCREEN_WIDE, false);
+
+
             mRecipeItem = new Gson().fromJson(playerArgs.getString(RECIPE_POSITION, null), RecipeItem.class);
             mStepList = mRecipeItem.getSteps();
             mPositionMax = mStepList.size();
@@ -485,13 +506,16 @@ public class FragmentPlayer extends Fragment implements IFragmentHelper, IVideoE
             return;
         }
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentPlayer playerFragment = new FragmentPlayer();
-        Bundle playerArgs = new Bundle();
+        FragmentPlayer playerFragment = FragmentPlayer.newInstance(mRecipeItem,position);
 
-        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
-        playerArgs.putInt(RECIPE_STEP_POSITION, position);
-        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
-        playerFragment.setArguments(playerArgs);
+//        FragmentPlayer playerFragment = new FragmentPlayer();
+//        Bundle playerArgs = new Bundle();
+//
+//        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
+//        playerArgs.putInt(RECIPE_STEP_POSITION, position);
+//        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
+//        playerFragment.setArguments(playerArgs);
+
         fragmentManager.popBackStack(FRAGMENT_PLAYER_NAME, POP_BACK_STACK_INCLUSIVE);
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, playerFragment)

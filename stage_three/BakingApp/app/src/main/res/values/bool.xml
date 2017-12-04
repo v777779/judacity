@@ -4,4 +4,7 @@
     <bool name="pref_reload_recipes_default">false</bool>
     <bool name="pref_show_warning_default">false</bool>
 
+    <bool name="is_land">false</bool>
+    <bool name="is_wide">false</bool>
+
 </resources>

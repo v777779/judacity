@@ -40,7 +40,6 @@ import static ru.vpcb.bakingapp.utils.Constants.LOADER_RECIPES_DB_ID;
 import static ru.vpcb.bakingapp.utils.Constants.MESSAGE_ERROR_ID;
 import static ru.vpcb.bakingapp.utils.Constants.MESSAGE_PLAYER_ID;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_POSITION;
-import static ru.vpcb.bakingapp.utils.Constants.RECIPE_SCREEN_WIDE;
 import static ru.vpcb.bakingapp.utils.Constants.RECIPE_STEP_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.STEP_DEFAULT_POSITION;
 import static ru.vpcb.bakingapp.utils.Constants.SYSTEM_UI_SHOW_FLAGS;
@@ -200,7 +199,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerAdapter.setExpanded(mIsExpanded);
         mRecyclerView.setHasFixedSize(true);
-        mIsWide = mRootView.findViewById(R.id.fc_p_container) != null;
+        mIsWide = getResources().getBoolean(R.bool.is_wide);
 
         if (!mIsWidgetFilled) {
             mRootView.findViewById(R.id.widget_button).setVisibility(View.VISIBLE);
@@ -292,7 +291,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     public void onCallback(int position) {
         mPosition = position;
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentPlayer playerFragment = getFragmentPlayer();
+        FragmentPlayer playerFragment = FragmentPlayer.newInstance(mRecipeItem,mPosition);
 
         fragmentManager.popBackStack(FRAGMENT_PLAYER_NAME, POP_BACK_STACK_INCLUSIVE);
 
@@ -318,15 +317,15 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
      *
      * @return FragmentPlayer object with bundle of parameters
      */
-    private FragmentPlayer getFragmentPlayer() {
-        FragmentPlayer playerFragment = new FragmentPlayer();
-        Bundle playerArgs = new Bundle();
-        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
-        playerArgs.putInt(RECIPE_STEP_POSITION, mPosition);
-        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
-        playerFragment.setArguments(playerArgs);
-        return playerFragment;
-    }
+//    private FragmentPlayer getFragmentPlayer() {
+//        FragmentPlayer playerFragment = new FragmentPlayer();
+//        Bundle playerArgs = new Bundle();
+//        playerArgs.putString(RECIPE_POSITION, new Gson().toJson(mRecipeItem));
+//        playerArgs.putInt(RECIPE_STEP_POSITION, mPosition);
+//        playerArgs.putBoolean(RECIPE_SCREEN_WIDE, mIsWide);
+//        playerFragment.setArguments(playerArgs);
+//        return playerFragment;
+//    }
 
     /**
      * Returns RecipeItem object from the first position of input Cursor object
@@ -373,7 +372,7 @@ public class DetailActivity extends AppCompatActivity implements IFragmentHelper
     private void showPlayerFragment() {
         if (mIsWide && !mIsSavedInstance) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentPlayer playerFragment = getFragmentPlayer();
+            FragmentPlayer playerFragment = FragmentPlayer.newInstance(mRecipeItem,mPosition);
             fragmentManager.beginTransaction()
                     .replace(R.id.fc_p_container, playerFragment)
                     .addToBackStack(FRAGMENT_PLAYER_NAME)
