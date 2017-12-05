@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="tabIndicatorColor">@color/colorPrimaryDark</item>
+        <!-- options menu new icon -->
+        <!--<item name="actionOverflowButtonStyle">@style/OverFlow</item>-->
+
+    </style>
+
+    <style name="OverFlow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_sort_white_24dp</item>
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="displayOptions">useLogo|showHome</item>
+        <item name="logo">@drawable/ic_logo</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlayTitle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="TransparentText" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">#00000000</item>
+        <item name="android:textSize">22sp</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="NonTransparentText" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="TextTabStyle" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/tab_text_size</item>
+    </style>
+
+    <style name="TabStyle" parent="Widget.Design.TabLayout">
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabTextAppearance">@style/TextTabStyle</item>
+    </style>
+
+    <style name="TextChildNormal" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorTextChild</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/child_text_size</item>
+    </style>
+
+    <style name="TextChildBold" parent="TextChildNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/child_bold_text_size</item>
+
+    </style>
+    <style name="TextChildHead" parent="TextChildNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/child_head_text_size</item>
+
+    </style>
+</resources>
