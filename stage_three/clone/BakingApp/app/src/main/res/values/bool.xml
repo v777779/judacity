@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <bool name="pref_load_images_default">true</bool>
-    <bool name="pref_reload_recipes_default">false</bool>
-    <bool name="pref_show_warning_default">false</bool>
-    <bool name="is_land">false</bool>
-    <bool name="is_wide">false</bool>
-
-</resources>
