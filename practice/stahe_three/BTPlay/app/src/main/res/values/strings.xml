@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">BTPlay</string>
+    <string name="click_expand"> "expand ingredients"</string>
+    <string name="click_collapse"> "collapse"</string>
+    <string name="play_header_step"> "Step %1$d"</string>
+    <string name="play_header_intro"> "Intro"</string>
+    <string name="play_header_empty"> "No steps"</string>
+    <string name="play_body_text"> "Description: %1$s"</string>
+    <string name="play_body_empty"> "No description"</string>
+
+
+</resources>

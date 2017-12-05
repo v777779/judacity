@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackLight"
+    android:layout_marginBottom="@dimen/bottom_tablet_margin"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fc_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="@dimen/navigation_main"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/error_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textAppearance="@style/TextBold"
+        android:text="@string/message_close"
+        android:visibility="invisible"
+        />
+</android.support.design.widget.CoordinatorLayout>
