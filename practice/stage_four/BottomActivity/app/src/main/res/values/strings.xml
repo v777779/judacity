@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BottomActivity</string>
+    <string name="title_prev">prev</string>
+    <string name="title_joke">joke</string>
+    <string name="title_next">next</string>
+    <string name="title_message">Text Tools Message</string>
+    <!--banner-->
+    <string name="banner_prev">Banner Text Prev</string>
+    <string name="banner_joke">Banner Text Joke</string>
+    <string name="banner_next">Banner Text Next</string>
+</resources>
