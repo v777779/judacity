@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
                     mTextBanner.setText(R.string.banner_joke);
                     mImageBanner.setImageResource(getImageId());
-                    ActionBar actionBar = getSupportActionBar();
-                    actionBar.show();
+//                    ActionBar actionBar = getSupportActionBar();
+//                    actionBar.show();
 
                     return true;
 
@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
                     mTextBanner.setText(R.string.banner_next);
                     mImageBanner.setImageResource(getImageId());
-                    actionBar = getSupportActionBar();
-                    actionBar.hide();
+//                    actionBar = getSupportActionBar();
+//                    actionBar.hide();
                     return true;
             }
             return false;
