@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
                     mTextBanner.setText(R.string.banner_joke);
                     mImageBanner.setImageResource(getImageId());
+                    ActionBar actionBar = getSupportActionBar();
+                    actionBar.show();
+
                     return true;
 
                 case R.id.navigation_next:
@@ -89,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
                     mTextBanner.setText(R.string.banner_next);
                     mImageBanner.setImageResource(getImageId());
+                    actionBar = getSupportActionBar();
+                    actionBar.hide();
                     return true;
             }
             return false;
