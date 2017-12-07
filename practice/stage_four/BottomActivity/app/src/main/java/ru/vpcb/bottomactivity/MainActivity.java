@@ -2,7 +2,9 @@ package ru.vpcb.bottomactivity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,9 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
         mTextJoke.setText(mJoke.getJoke());
         mImageJoke.setImageResource(getImageId());
+        mTextBanner.setText(R.string.banner_joke);
+        mImageBanner.setImageResource(getImageId());
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
     }
 
@@ -60,11 +67,12 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_prev:
-                    mTextJoke.setText(mJoke.getPrev());
-                    mImageJoke.setImageResource(getImageId());
-
-                    mTextBanner.setText(R.string.banner_prev);
-                    mImageBanner.setImageResource(getImageId());
+//                    mTextJoke.setText(mJoke.getPrev());
+//                    mImageJoke.setImageResource(getImageId());
+//
+//                    mTextBanner.setText(R.string.banner_prev);
+//                    mImageBanner.setImageResource(getImageId());
+                    finish();
                     return true;
 
                 case R.id.navigation_dashboard:
