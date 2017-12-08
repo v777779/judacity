@@ -4,7 +4,7 @@
    https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/HelloEndpoints
 */
 
-package com.udacity.gradle.buiditbigger.backend;
+package ru.vpcb.builditbigger.backend;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -19,8 +19,8 @@ import javax.inject.Named;
         name = "myApi",
         version = "v1",
         namespace = @ApiNamespace(
-                ownerDomain = "backend.buiditbigger.gradle.udacity.com",
-                ownerName = "backend.buiditbigger.gradle.udacity.com",
+                ownerDomain = "backend.builditbigger.vpcb.ru",
+                ownerName = "backend.builditbigger.vpcb.ru",
                 packagePath = ""
         )
 )

@@ -1,4 +1,4 @@
-package com.udacity.gradle.buiditbigger.backend;
+package ru.vpcb.builditbigger.backend;
 
 /**
  * The object model for the data we are sending through endpoints

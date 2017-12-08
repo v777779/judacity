@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 
-import com.udacity.gradle.buiditbigger.backend.MyBean;
-import com.udacity.gradle.buiditbigger.backend.MyEndpoint;
+import ru.vpcb.builditbigger.backend.MyBean;
+import ru.vpcb.builditbigger.backend.MyEndpoint;
 
 import static ru.vpcb.basicactivity.MainActivity.INTENT_STRING_EXTRA;
 
