@@ -12,18 +12,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
-public static final String INTENT_STRING_EXTRA = "intent_streing_extra";
+    public static final String INTENT_STRING_EXTRA = "intent_string_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
- // custom widget Toolbar
+        // custom widget Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-         if(toolbar != null) {
+        if (toolbar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
         }
@@ -36,7 +36,7 @@ public static final String INTENT_STRING_EXTRA = "intent_streing_extra";
                         .setAction("Action", null).show();
 
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra(INTENT_STRING_EXTRA,"MainActivity FAB Action");
+                intent.putExtra(INTENT_STRING_EXTRA, "MainActivity FAB Action");
                 startActivity(intent);
             }
         });
@@ -58,7 +58,7 @@ public static final String INTENT_STRING_EXTRA = "intent_streing_extra";
 
 
         //noinspection SimplifiableIfStatement
-        if(id == android.R.id.home) {
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
