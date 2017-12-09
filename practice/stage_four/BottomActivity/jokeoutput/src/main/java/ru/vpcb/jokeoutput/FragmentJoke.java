@@ -1,24 +1,19 @@
 package ru.vpcb.jokeoutput;
 
-import android.support.annotation.NonNull;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.MobileAds;
-
+import java.util.Locale;
 import java.util.Random;
-
-import ru.vpcb.jokelibrary.JokeLibrary;
 
 public class FragmentJoke extends Fragment {
     private static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
@@ -38,6 +33,9 @@ public class FragmentJoke extends Fragment {
         mRnd = new Random();
         mTextJoke = rootView.findViewById(R.id.joke_text);
         mImageJoke = rootView.findViewById(R.id.joke_image);
+
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "font/times.ttf");
+        mTextJoke.setTypeface(typeface);
 
 
         Bundle args = getArguments();
