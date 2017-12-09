@@ -8,18 +8,6 @@
     android:background="@color/colorBackJoke"
     tools:context="ru.vpcb.bottomactivity.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/adview_banner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-
-    </FrameLayout>
-
     <!--<android.support.design.widget.BottomNavigationView-->
     <!--android:id="@+id/navigation"-->
     <!--android:layout_width="0dp"-->
@@ -36,6 +24,7 @@
 
     <!--</android.support.design.widget.BottomNavigationView>-->
 
+    >
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adview_banner"
@@ -49,23 +38,51 @@
         ads:adUnitId="@string/banner_ad_unit_id"
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintStart_toStartOf="parent">
+        ads:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteX="32dp">
 
     </com.google.android.gms.ads.AdView>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="32dp"
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/nested_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toTopOf="@+id/adview_banner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add_white_24dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
 
-        />
+        >
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_add_white_24dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+    <!--<FrameLayout-->
+    <!--android:id="@+id/fragment_container"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_marginLeft="0dp"-->
+    <!--android:visibility="gone"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/adview_banner"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent"-->
+    <!--app:layout_constraintVertical_bias="0.0">-->
+
+    <!--</FrameLayout>-->
 </android.support.constraint.ConstraintLayout>

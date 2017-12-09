@@ -3,6 +3,7 @@ package ru.vpcb.jokeoutput;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,9 @@ public class FragmentJoke extends Fragment {
     private Random mRnd;
     private TextView mTextJoke;
     private ImageView mImageJoke;
+    private FloatingActionButton mFab;
+    private FloatingActionButton mFabBack;
+
 
 
 
@@ -30,12 +34,23 @@ public class FragmentJoke extends Fragment {
 
         Log.d("Fragment", "thread = " + Thread.currentThread().getName());
 
+
+
         mRnd = new Random();
         mTextJoke = rootView.findViewById(R.id.joke_text);
         mImageJoke = rootView.findViewById(R.id.joke_image);
 
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "font/times.ttf");
         mTextJoke.setTypeface(typeface);
+
+        mFabBack = rootView.findViewById(R.id.fab_back);
+        mFabBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+
+            }
+        });
 
 
         Bundle args = getArguments();
