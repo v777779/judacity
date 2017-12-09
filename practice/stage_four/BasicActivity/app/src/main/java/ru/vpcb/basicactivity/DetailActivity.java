@@ -1,44 +1,20 @@
 package ru.vpcb.basicactivity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
-
-import ru.vpcb.builditbigger.backend.MyBean;
-import ru.vpcb.builditbigger.backend.MyEndpoint;
 
 import static ru.vpcb.basicactivity.MainActivity.INTENT_STRING_EXTRA;
 
 public class DetailActivity extends AppCompatActivity {
-    private static AsyncGEC mAsyncGec;
-    private static TextView mTextView;
-    private MyBean myBean;
-    private static MyEndpoint myEndpoint;
-
-
-    private static class AsyncGEC extends AsyncTask<Void, Void, MyBean> {
-        @Override
-        protected MyBean doInBackground(Void... params) {
-            if (myEndpoint == null) {
-                myEndpoint = new MyEndpoint();
-            }
-            return myEndpoint.sayHi("MyString");
-        }
-
-        @Override
-        protected void onPostExecute(MyBean myBean) {
-            if (myBean == null || myBean.getData() == null || myBean.getData().isEmpty()) {
-                return;
-            }
-            onComplete(myBean.getData());
-        }
-    }
+    private TextView mTextView;
+    private FloatingActionButton mFabBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +29,15 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         mTextView = findViewById(R.id.detail_text);
+        mFabBack = findViewById(R.id.fab_detail);
+        mFabBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+//                overridePendingTransition(R.anim.slide_in_main, R.anim.slide_out_main);
+//                overridePendingTransition(R.anim.slide_left, R.anim.slide_right_out);
+            }
+        });
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(INTENT_STRING_EXTRA)) {
@@ -61,7 +46,6 @@ public class DetailActivity extends AppCompatActivity {
             mTextView.setText(s);
         }
 
-        new AsyncGEC().execute();
 
     }
 
@@ -71,11 +55,6 @@ public class DetailActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    private static void onComplete(String s) {
-        mTextView.setText(s);
     }
 }

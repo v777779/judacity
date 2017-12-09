@@ -4,12 +4,15 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "ru.vpcb.myapplication"
+        applicationId "ru.vpcb.basicactivity"
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
     buildTypes {
         release {
@@ -17,26 +20,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    packagingOptions {
-        pickFirst 'com/google/appengine/repackaged/org/apache/commons/codec/language/bm/*.txt'
-        pickFirst 'com/google/appengine/repackaged/org/codehaus/jackson/impl/*.txt'
-        pickFirst 'com/google/appengine/repackaged/org/apache/commons/codec/language/*.txt'
-    }
+}
 
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.google.com' }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
-//        exclude group: 'com.google.code.findbugs'
     })
 
-//    compile project(path: ':backend')
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.1.0'
-    compile 'com.google.code.findbugs:jsr305:2.0.1'
+
     testCompile 'junit:junit:4.12'
-    compile project(path: ':backend')
+// backend
+    compile project(path:':backend', configuration: 'android-endpoints')
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
 }
