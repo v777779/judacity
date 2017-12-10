@@ -28,7 +28,7 @@ import java.util.Random;
 import ru.vpcb.jokelibrary.JokeLibrary;
 import ru.vpcb.jokeoutput.FragmentJoke;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     private static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
 
     //    private final int[] IMAGE_IDS = new int[]{
@@ -123,45 +123,24 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        mFab.setVisibility(View.VISIBLE);
+
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     public void onComplete(String s) {
-        if (s == null || s.isEmpty()) return;
+        if(s == null || s.isEmpty()) return;
 
         Fragment fragment = new FragmentJoke();
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle args = new Bundle();
         args.putString(BUNDLE_JOKE_STRING, s);
         fragment.setArguments(args);
-        fragmentManager.popBackStack("fragmentJoke", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack("fragmentJoke")
                 .commit();
 
-//        mFab.setVisibility(View.INVISIBLE);
     }
 
 //    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

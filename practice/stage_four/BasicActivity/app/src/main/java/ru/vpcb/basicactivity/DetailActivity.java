@@ -5,10 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 
 import static ru.vpcb.basicactivity.MainActivity.INTENT_STRING_EXTRA;
 
@@ -21,7 +19,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -29,13 +26,13 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         mTextView = findViewById(R.id.detail_text);
-        mFabBack = findViewById(R.id.fab_detail);
+        mFabBack = findViewById(R.id.fab_back);
         mFabBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
 //                overridePendingTransition(R.anim.slide_in_main, R.anim.slide_out_main);
-//                overridePendingTransition(R.anim.slide_left, R.anim.slide_right_out);
+                overridePendingTransition(R.anim.slide_left, R.anim.slide_right_out);
             }
         });
 
@@ -46,15 +43,5 @@ public class DetailActivity extends AppCompatActivity {
             mTextView.setText(s);
         }
 
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
