@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">BottomActivity</string>
+    <string name="title_prev">Exit</string>
+    <string name="title_joke">Joke</string>
+    <string name="title_next">Next</string>
+
+    <!--banner test-->
+    <string name="banner_ad_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_size">BANNER</string>
+
+
+</resources>
+
