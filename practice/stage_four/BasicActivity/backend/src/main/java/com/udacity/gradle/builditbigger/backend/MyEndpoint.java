@@ -27,6 +27,9 @@ import ru.vpcb.jokeprovider.JokeProvider;
         )
 )
 public class MyEndpoint {
+    public static final String REQUEST_GET_TEMPLATE = "get";
+    public static final String REQUEST_TEST_GET_TEMPLATE = "test";
+    public static final String REQUEST_TEST_OUT_TEMPLATE = "test joke received";
 
     /**
      * A simple endpoint method that takes a name and says Hi back
@@ -34,8 +37,12 @@ public class MyEndpoint {
     @ApiMethod(name = "sayHi")
     public MyBean sayHi(@Named("name") String name) {
         MyBean response = new MyBean();
-//        response.setData("Hi, " + name);
-        response.setData(new JokeProvider().getJoke());
+        if(name != null && name.toLowerCase().equals(REQUEST_TEST_GET_TEMPLATE)) {
+            response.setData(REQUEST_TEST_OUT_TEMPLATE);
+        }
+        else {
+            response.setData(new JokeProvider().getJoke());
+        }
         return response;
     }
 

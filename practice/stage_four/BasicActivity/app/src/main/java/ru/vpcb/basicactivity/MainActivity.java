@@ -15,6 +15,11 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements ICallback{
     public static final String INTENT_STRING_EXTRA = "intent_string_extra";
+    public static final String REQUEST_GET_TEMPLATE = "get";
+    public static final String REQUEST_TEST_GET_TEMPLATE = "test";
+    public static final String REQUEST_TEST_OUT_TEMPLATE = "test joke received";
+    public static final int CONNECT_TIMEOUT = 5;
+    public static final String MESSAGE_TEST_OK = "*** Endpont Test passed ***";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements ICallback{
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
 // endpoints
-                new EndpointsAsyncTask().execute(new Pair<Context, String>(MainActivity.this, "get"));
+                new EndpointsAsyncTask(MainActivity.this,REQUEST_GET_TEMPLATE).execute();
             }
         });
     }
