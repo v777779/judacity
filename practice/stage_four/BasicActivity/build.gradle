@@ -82,3 +82,17 @@ task stopServerManually {
         println("Stop Java Development Server")
     }
 }
+
+task startServerManually {
+    group "Verification.User Endpoint Test"
+    description "Start server"
+    dependsOn 'stopServerManually'
+    dependsOn ':backend:appengineRun'
+    mustRunAfter  'stopServerManually'
+    project(":backend").afterEvaluate() { backend ->
+        backend.extensions.appengine.daemon = true
+    }
+    doLast {
+        println("Java Development Server started")
+    }
+}
