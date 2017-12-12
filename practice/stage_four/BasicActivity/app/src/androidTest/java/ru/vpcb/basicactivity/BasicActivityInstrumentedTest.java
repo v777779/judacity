@@ -5,8 +5,10 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.junit.Assert.assertEquals;
 import static ru.vpcb.basicactivity.MainActivity.CONNECT_TIMEOUT;
 import static ru.vpcb.basicactivity.MainActivity.MESSAGE_TEST_OK;
@@ -20,37 +22,35 @@ import static ru.vpcb.basicactivity.MainActivity.REQUEST_TEST_OUT_TEMPLATE;
  */
 @RunWith(AndroidJUnit4.class)
 public class BasicActivityInstrumentedTest {
-    public static final String TAG = BasicActivityInstrumentedTest.class.getSimpleName();
-
+    private static final String TAG = BasicActivityInstrumentedTest.class.getSimpleName();
+    private final Object mSyncObject = new Object();
 
 
     private class EndpointsCallback implements ICallback {
-        private String result;
+        private String mResult;
 
         public EndpointsCallback() {
-            this.result = "";
+            this.mResult = "";
         }
 
         @Override
         public void onComplete(String s) {
-            result = s;
+            mResult = s;
+            assertEquals(REQUEST_TEST_OUT_TEMPLATE, mResult);
+            synchronized (mSyncObject) {
+                mSyncObject.notify();
+            }
         }
     }
 
     @Test
     public void useAppContext() throws Exception {
         EndpointsCallback endpointsCallback = new EndpointsCallback();
-
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
         new EndpointsAsyncTask(endpointsCallback, REQUEST_TEST_GET_TEMPLATE).execute();
-        int counter = CONNECT_TIMEOUT;
-        while (endpointsCallback.result.isEmpty() && counter > 0) {
-            Thread.sleep(1000);
-            counter--;
+
+        synchronized (mSyncObject) {
+            mSyncObject.wait();
         }
-//        assertEquals("joke test received", endpointsCallback.result);
-        assertEquals(REQUEST_TEST_OUT_TEMPLATE, endpointsCallback.result);
-        Log.i(TAG,MESSAGE_TEST_OK);
+        Log.i(TAG, MESSAGE_TEST_OK);
     }
 }
