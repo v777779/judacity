@@ -2,5 +2,7 @@
 <resources>
     <bool name="transition_light">false</bool>
     <bool name="transition_dark">false</bool>
+    <bool name="transition_left">false</bool>
+    <bool name="transition_right">false</bool>
 
 </resources>

@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class DetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
+            actionBar.setTitle("DetailActivity");
         }
 
         mTextView = findViewById(R.id.detail_text);
@@ -40,11 +42,31 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
+        if(intent.getBooleanExtra("EXIT",false)) {
+            Intent intent1 = new Intent(this, DetailActivity.class);
+            startActivity(intent1);
+            finish();
+        }
+
+
         if (intent != null && intent.hasExtra(INTENT_STRING_EXTRA)) {
             String s = intent.getStringExtra(INTENT_STRING_EXTRA);
             if (s == null) s = "";
             mTextView.setText(s);
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -53,7 +53,7 @@ task startServerManually {
     description "Start server"
     dependsOn 'stopServerManually'
     dependsOn ':backend:appengineRun'
-    mustRunAfter  'stopServerManually'
+    mustRunAfter 'stopServerManually'
     project(":backend").afterEvaluate() { backend ->
         backend.extensions.appengine.daemon = true
     }
