@@ -31,8 +31,11 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-//                overridePendingTransition(R.anim.slide_in_main, R.anim.slide_out_main);
-                overridePendingTransition(R.anim.slide_left, R.anim.slide_right_out);
+                if (getResources().getBoolean(R.bool.transition_light)) {
+                    overridePendingTransition(R.anim.slide_in_main, R.anim.slide_out_main);
+                } else if (getResources().getBoolean(R.bool.transition_dark)) {
+                    overridePendingTransition(R.anim.slide_left, R.anim.slide_right_out);
+                }
             }
         });
 

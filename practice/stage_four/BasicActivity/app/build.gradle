@@ -33,6 +33,9 @@ dependencies {
     // backend
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile 'com.google.code.findbugs:jsr305:2.0.1'
+// google play services
+    implementation 'com.google.android.gms:play-services-ads:11.6.2'
+
 }
 
 

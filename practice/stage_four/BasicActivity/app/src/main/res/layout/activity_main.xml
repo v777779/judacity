@@ -35,11 +35,27 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
 
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="64dp"
             android:layout_marginStart="32dp"
             android:src="@drawable/ic_add_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adview_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
+            ads:adSize="@string/banner_size"
+            ads:adUnitId="@string/banner_ad_unit_id"
+            ads:layout_constraintBottom_toBottomOf="parent"
+            ads:layout_constraintEnd_toEndOf="parent"
+            ads:layout_constraintStart_toStartOf="parent">
+
+        </com.google.android.gms.ads.AdView>
 
     </android.support.constraint.ConstraintLayout>
 

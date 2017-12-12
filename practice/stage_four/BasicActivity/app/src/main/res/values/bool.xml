@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="transition_light">false</bool>
+    <bool name="transition_dark">false</bool>
+
+</resources>

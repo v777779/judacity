@@ -13,6 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class MainActivity extends AppCompatActivity implements ICallback{
     public static final String INTENT_STRING_EXTRA = "intent_string_extra";
     public static final String REQUEST_GET_TEMPLATE = "get";
@@ -20,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements ICallback{
     public static final String REQUEST_TEST_OUT_TEMPLATE = "test joke received";
     public static final int CONNECT_TIMEOUT = 5;
     public static final String MESSAGE_TEST_OK = "*** Endpont Test passed ***";
+
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,18 @@ public class MainActivity extends AppCompatActivity implements ICallback{
                 new EndpointsAsyncTask(MainActivity.this,REQUEST_GET_TEMPLATE).execute();
             }
         });
+
+        // admob
+        MobileAds.initialize(this,getString(R.string.banner_ad_app_id));
+
+
+        mAdView = findViewById(R.id.adview_banner);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+
+
     }
 
     @Override
@@ -69,8 +87,11 @@ public class MainActivity extends AppCompatActivity implements ICallback{
         intent.putExtra(INTENT_STRING_EXTRA, s);
         startActivity(intent);
 
-//                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-        overridePendingTransition(R.anim.slide_right, R.anim.slide_left_out);
+        if(getResources().getBoolean(R.bool.transition_light)) {
+                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        }else if(getResources().getBoolean(R.bool.transition_dark)) {
+            overridePendingTransition(R.anim.slide_right, R.anim.slide_left_out);
+        }
 
     }
 }
