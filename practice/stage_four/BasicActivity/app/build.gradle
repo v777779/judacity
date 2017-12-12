@@ -15,6 +15,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+
+        }
     }
 }
 
@@ -32,3 +35,32 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:2.0.1'
 }
 
+
+task stopServerManually {
+    group "Verification.User Endpoint Test"
+    description "stop server"
+    dependsOn ':backend:appengineStop'
+    doLast {
+        println("Stop Java Development Server")
+    }
+}
+
+task startServerManually {
+    group "Verification.User Endpoint Test"
+    description "Start server"
+    dependsOn 'stopServerManually'
+    dependsOn ':backend:appengineRun'
+    mustRunAfter  'stopServerManually'
+    project(":backend").afterEvaluate() { backend ->
+        backend.extensions.appengine.daemon = true
+    }
+    doLast {
+        println("Java Development Server started")
+    }
+}
+
+// run auto in debug flow
+//tasks.whenTaskAdded { task ->
+//    if (task.name == 'assembleDebug')
+//        task.finalizedBy('startServerManually')
+//}
