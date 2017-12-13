@@ -57,39 +57,57 @@
         <item name="android:textAppearance">@style/TextHead</item>
     </style>
 
-    <style name="dialog_button_style4" parent="@style/Widget.AppCompat.Button">
+    <style name="button_blue" parent="@style/Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_blue</item>
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textAppearance">@style/TextHead</item>
     </style>
 
-    <style name="dialog_button_style5" parent="@style/Widget.AppCompat.Button">
+    <style name="button_blue_wide" parent="@style/button_blue">
+        <item name="android:textAppearance">@style/TextBold</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="button_red" parent="@style/Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_red</item>
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textAppearance">@style/TextHead</item>
     </style>
 
-    <style name="dialog_button_style6" parent="@style/Widget.AppCompat.Button">
+    <style name="button_green" parent="@style/Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_green</item>
         <item name="android:textColor">@color/colorTextGreenDark</item>
         <item name="android:textAppearance">@style/TextHead</item>
     </style>
 
-    <style name="dialog_button_style6w" parent="@style/Widget.AppCompat.Button">
-        <item name="android:background">@drawable/button_green</item>
-        <item name="android:textColor">@color/colorTextGreenDark</item>
+    <style name="button_green_wide" parent="@style/button_green">
         <item name="android:textAppearance">@style/TextBold</item>
         <item name="android:padding">12dp</item>
     </style>
-    <style name="dialog_button_style7" parent="@style/Widget.AppCompat.Button">
+
+    <style name="button_salad" parent="@style/Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_salad</item>
         <item name="android:textColor">@color/colorTextGreenDark</item>
         <item name="android:textAppearance">@style/TextHead</item>
     </style>
 
-    <style name="dialog_button_style8" parent="@style/Widget.AppCompat.Button">
+    <style name="button_salad_wide" parent="@style/button_salad">
+        <item name="android:textAppearance">@style/TextBold</item>
+        <item name="android:paddingLeft">32dp</item>
+        <item name="android:paddingRight">32dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    <style name="button_salad_dark" parent="@style/Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_salad_dark</item>
         <item name="android:textColor">@color/colorTextGreenDark</item>
         <item name="android:textAppearance">@style/TextHead</item>
     </style>
+    <style name="button_salad_dark_wide" parent="@style/button_salad_dark">
+        <item name="android:textAppearance">@style/TextBold</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+
 </resources>

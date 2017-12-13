@@ -35,7 +35,7 @@ dependencies {
 
 
     compile project(path: ':jokelibrary')
-    compile project(path: ':jokeoutput')
+
 
 
 }
