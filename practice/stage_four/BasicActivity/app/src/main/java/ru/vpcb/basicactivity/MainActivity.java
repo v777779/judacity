@@ -19,6 +19,8 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends AppCompatActivity implements ICallback {
+    private static boolean isActive;
+
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String INTENT_STRING_EXTRA = "intent_string_extra";
     public static final String REQUEST_GET_TEMPLATE = "get";
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     @Override
     protected void onResume() {
         super.onResume();
-
+        isActive = true;
 
 //        if(mInterstitialAd != null) {
 //            mInterstitialAd.setAdListener(new AdListener() {
@@ -167,6 +169,12 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 //        }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isActive = false;
+    }
+
     private String mJokeReceived;
 
     @Override
@@ -180,6 +188,9 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
     private void nextActivity() {
        if (!mIsOnComplete || !mIsOnAdClosed || mIsBlocked) return;  // if one of onComplete  and Interstitial not done
+
+        if(!isActive ) return;
+
 
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra(INTENT_STRING_EXTRA, mJokeReceived);
