@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Guideline;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +33,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -39,15 +42,16 @@ import ru.vpcb.jokelibrary.JokeLibrary;
 
 public class MainActivity extends AppCompatActivity implements ICallback {
     public static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
-    public static final String START_CLICK_STRING_RESOURCE = "CLICK the BUTTON or SELECT the IMAGE";
+    public static final String BUNDLE_POSITION = "bundle_position";
+    public static final String BUNDLE_JOKE_LIST = "bundle_joke_list";
+
     // recycler
     public static final int HIGH_SCALE_WIDTH = 240;     // dpi
-    public static final int HIGH_SCALE_HEIGHT = 140;     // dpi
-    public static final double SCALE_RATIO = 1.6;
-    public static final int MAX_SPAN = 6;
+    public static final int HIGH_SCALE_HEIGHT = 180;     // dpi
+    public static final double SCALE_RATIO = 1.8;
+
     public static final int MIN_SPAN = 1;
     public static final int MIN_HEIGHT = 100;
-    public static final double RECYCLER_HEIGHT_RATIO = 0.85 - 0.60;  // guides
 
 
     private AdView mAdView;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     private List<Integer> mList;
     private boolean mIsEndless;
     private int mImageId;
+    private int mPosition;
 
 
     private class AsyncJoke extends AsyncTask<Void, Void, String> {
@@ -119,47 +124,57 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             }
         });
 
-// recycler
-        mList = FragmentJoke.getJokeList();
-        SpanData sp = getDisplayMetrics();
 
-        mRecyclerView = findViewById(R.id.joke_recycler);  // appcompat design
-        int span = sp.spanY;
-        int orientation = GridLayout.HORIZONTAL;
-        if (getResources().getBoolean(R.bool.is_vert)) {
-            span = sp.spanX;
-            orientation = GridLayout.VERTICAL;
+        if (savedInstanceState != null) {
+            mList = savedInstanceState.getIntegerArrayList(BUNDLE_JOKE_LIST);
+            mPosition = savedInstanceState.getInt(BUNDLE_POSITION);
+        } else {
+            mList = FragmentJoke.getJokeList();
+            mPosition = 0;
         }
-        final GridLayoutManager layoutManager = new GridLayoutManager(this, span, orientation, false);
-        mRecyclerView.setLayoutManager(layoutManager);                          // connect to LayoutManager
-        mRecyclerView.setHasFixedSize(true);                                    // item size fixed
-        mRecyclerAdapter = new JokeAdapter(this,mList, sp);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (!mIsEndless) return;
+        if (getResources().getBoolean(R.bool.is_wide)) {
+// sharedPreference
+            mIsEndless = true;
+// recycler
+            SpanData sp = getDisplayMetrics();
+            mRecyclerView = findViewById(R.id.joke_recycler);  // appcompat design
+            int span = sp.spanY;
+            int orientation = GridLayout.HORIZONTAL;
+            if (getResources().getBoolean(R.bool.is_vert)) {
+                span = sp.spanX;
+                orientation = GridLayout.VERTICAL;
+            }
+            final GridLayoutManager layoutManager = new GridLayoutManager(this, span, orientation, false);
+            mRecyclerView.setLayoutManager(layoutManager);                          // connect to LayoutManager
+            mRecyclerView.setHasFixedSize(true);                                    // item size fixed
+            mRecyclerAdapter = new JokeAdapter(this, mList, sp);
+            mRecyclerView.setAdapter(mRecyclerAdapter);
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (!mIsEndless) return;
+                    int delta = getResources().getBoolean(R.bool.is_vert) ? dy : dx;
 
-                int delta = getResources().getBoolean(R.bool.is_vert)?dy:dx;
+                    if (delta > 0) {
+                        int visibleItemCount = layoutManager.getChildCount();
+                        int totalItemCount = layoutManager.getItemCount();
+                        int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                        mPosition = pastVisiblesItems;
 
-                if (delta > 0) {
-                    int visibleItemCount = layoutManager.getChildCount();
-                    int totalItemCount = layoutManager.getItemCount();
-                    int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-
-
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                        mList.addAll(FragmentJoke.getJokeList());
-                        mRecyclerAdapter.notifyDataSetChanged();
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            mList.addAll(FragmentJoke.getJokeList());
+                            mRecyclerAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
-            }
-        });
-// sharedPreference
-        mIsEndless = true;
+            });
+
+            mRecyclerView.scrollToPosition(mPosition);
+
+        }
 // fragment
 
-        onComplete(START_CLICK_STRING_RESOURCE);
+        onComplete(getString(R.string.welcome_message));
 
     }
 
@@ -184,27 +199,38 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         new AsyncJoke().execute();
     }
 
+    private double getPercent(int guideId) {
+        return ((ConstraintLayout.LayoutParams) findViewById(guideId).getLayoutParams()).guidePercent;
+    }
+
     private SpanData getDisplayMetrics() {
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
-        boolean isLand = dp.widthPixels > dp.heightPixels;
-        double width = dp.widthPixels / dp.density;
-        double height = dp.heightPixels / dp.density * RECYCLER_HEIGHT_RATIO;  // real height
+        Resources res = getResources();
+
+
+        double height_ratio = getPercent(R.id.guide_h2) - getPercent(R.id.guide_h1);  // tightened to layout
+        double width_ratio = getPercent(R.id.guide_v2) - getPercent(R.id.guide_v1);   // tightened to layout
+
+        double width = dp.widthPixels / dp.density * width_ratio;
+        double height = dp.heightPixels / dp.density * height_ratio;  // real height
 
 
         int spanInWidth = (int) Math.round(width / HIGH_SCALE_WIDTH);
-        int spanHeight = (int) (width * dp.density / spanInWidth / SCALE_RATIO);
+        int spanHeight = (int) (width * dp.density / spanInWidth / SCALE_RATIO);  // vertical only
         int spanInHeight = (int) Math.round(height / HIGH_SCALE_HEIGHT);
-        int spanWidth = (int) (height * dp.density / spanInHeight * SCALE_RATIO);
+        int spanWidth = (int) (height * dp.density / spanInHeight * SCALE_RATIO);  // horizontal only
 
 
         if (spanInWidth < MIN_SPAN) spanInWidth = MIN_SPAN;
-        if (spanInWidth > MAX_SPAN) spanInWidth = MAX_SPAN;
+//        if (spanInWidth > MAX_SPAN) spanInWidth = MAX_SPAN;
 
         if (spanInHeight < MIN_SPAN) spanInHeight = MIN_SPAN;
-        if (spanInHeight > MAX_SPAN) spanInHeight = MAX_SPAN;
+//        if (spanInHeight > MAX_SPAN) spanInHeight = MAX_SPAN;
 
-        int minWidth = (int) (MIN_HEIGHT * SCALE_RATIO);
+        if (spanHeight < MIN_HEIGHT) spanHeight = MIN_HEIGHT;
+
+        int minWidth = (int) (MIN_HEIGHT * SCALE_RATIO);  // horizontal
         if (spanWidth < minWidth) spanWidth = minWidth;
 
 // vertical
@@ -217,5 +243,17 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         return new SpanData(spanInWidth, spanInHeight, spanWidth, spanHeight);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList(BUNDLE_JOKE_LIST, new ArrayList<Integer>(mList));
+        outState.putInt(BUNDLE_POSITION, mPosition);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }

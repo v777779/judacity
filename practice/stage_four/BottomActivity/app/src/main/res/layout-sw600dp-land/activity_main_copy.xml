@@ -27,14 +27,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.62" />
+        app:layout_constraintGuide_percent="0.0" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_h2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_percent="0.75" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_v1"
@@ -48,7 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="1.0" />
+        app:layout_constraintGuide_percent="0.35" />
+
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adview_banner"
@@ -62,7 +63,8 @@
         ads:adUnitId="@string/banner_ad_unit_id"
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintRight_toRightOf="parent"
+        ads:layout_constraintStart_toStartOf="@+id/guide_v2"
         tools:adSize="BANNER">
 
     </com.google.android.gms.ads.AdView>
@@ -73,12 +75,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:text="GET THE JOKE"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/guide_h1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/joke_recycler" />
 
     <Button
         android:id="@+id/widget_button9"
@@ -86,11 +90,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="GET THE JOKE"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/adview_banner"
-        app:layout_constraintStart_toStartOf="@+id/guide_v2" />
+        app:layout_constraintEnd_toStartOf="@+id/guide_v2"
+         />
 
     <Button
         android:id="@+id/widget_button10"
@@ -118,32 +124,33 @@
         app:layout_constraintTop_toBottomOf="@+id/widget_button10" />
 
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/adview_banner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guide_v2"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/joke_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="2dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/widget_button9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guide_h1">
-
-    </android.support.v7.widget.RecyclerView>
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="785dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guide_h1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_container"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+    </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

@@ -1,7 +1,7 @@
 <resources>
 
     <!--banner test-->
-    <string name="banner_size">FULL_BANNER</string>
+    <string name="banner_size">LEADERBOARD</string>
     <!--messages-->
 
 

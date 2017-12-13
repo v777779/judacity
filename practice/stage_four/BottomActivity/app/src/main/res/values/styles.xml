@@ -22,8 +22,22 @@
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
 
+    <style name="TextHeadS" parent="TextNormal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/head_text_size</item>
+    </style>
+
+
+
     <style name="TextBold" parent="TextNormal">
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/bold_text_size</item>
+    </style>
+
+    <style name="TextBoldS" parent="TextNormal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/bold_text_size</item>
 
     </style>
@@ -33,9 +47,17 @@
         <item name="android:textSize">@dimen/bold_text_size</item>
     </style>
 
+
     <style name="TextExtra" parent="TextNormal">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:textSize">@dimen/extra_text_size</item>
+    </style>
+
+    <style name="TextExtraS" parent="TextNormal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/extra_text_size</item>
+
     </style>
 
     <!--button styles-->
@@ -87,16 +109,20 @@
 
     <style name="button_salad" parent="@style/Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_salad</item>
-        <item name="android:textColor">@color/colorTextGreenDark</item>
-        <item name="android:textAppearance">@style/TextHead</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textAppearance">@style/TextHeadS</item>
+        <item name="android:paddingLeft">@dimen/button_padding_side</item>
+        <item name="android:paddingRight">@dimen/button_padding_side</item>
+        <item name="android:paddingTop">@dimen/button_padding_top</item>
+        <item name="android:paddingBottom">@dimen/button_padding_top</item>
     </style>
 
     <style name="button_salad_wide" parent="@style/button_salad">
-        <item name="android:textAppearance">@style/TextBold</item>
-        <item name="android:paddingLeft">32dp</item>
-        <item name="android:paddingRight">32dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textAppearance">@style/TextBoldS</item>
+        <item name="android:paddingLeft">@dimen/button_padding_wide_side</item>
+        <item name="android:paddingRight">@dimen/button_padding_wide_side</item>
+        <item name="android:paddingTop">@dimen/button_padding_wide_top</item>
+        <item name="android:paddingBottom">@dimen/button_padding_wide_top</item>
     </style>
 
     <style name="button_salad_dark" parent="@style/Widget.AppCompat.Button">

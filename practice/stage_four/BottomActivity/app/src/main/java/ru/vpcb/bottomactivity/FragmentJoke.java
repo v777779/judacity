@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static ru.vpcb.bottomactivity.MainActivity.START_CLICK_STRING_RESOURCE;
 
 public class FragmentJoke extends Fragment {
     private static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
@@ -67,7 +66,7 @@ public class FragmentJoke extends Fragment {
 
             if (textJoke == null) textJoke = "";
             mTextJoke.setText(textJoke);
-            if (textJoke.equals(START_CLICK_STRING_RESOURCE)) {
+            if (textJoke.equals(getString(R.string.welcome_message))) {
                 mImageJoke.setImageResource(getFrontImageId());
             } else {
                 mImageJoke.setImageResource(getImageId(imageId));

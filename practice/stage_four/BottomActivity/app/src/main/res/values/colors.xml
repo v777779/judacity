@@ -26,7 +26,9 @@
 
     <!--background-->
     <color name="colorBackJoke">#80babab3</color>
-    <color name="colorBackText">#4aff8604</color>
+    <color name="colorBackText1">#4aff8604</color>
+
+    <color name="colorBackText">#ffddb7</color>
 
     <color name="colorBackPlay">#cbe7f2</color>
     <color name="colorTextJoke">#e7e7e1</color>
