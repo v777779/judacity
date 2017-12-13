@@ -2,5 +2,6 @@
 <resources>
     <bool name="is_land">false</bool>
     <bool name="is_wide">false</bool>
+    <bool name="is_vert">true</bool>
 
 </resources>

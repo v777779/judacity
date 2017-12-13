@@ -1,5 +1,6 @@
 package ru.vpcb.bottomactivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,22 +12,21 @@ import android.widget.ImageView;
 
 import java.util.List;
 
-import static ru.vpcb.bottomactivity.MainActivity.BUNDLE_JOKE_STRING;
 
 /**
  * Created by V1 on 13-Dec-17.
  */
 
 public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JKViewHolder> {
-    private ICallback mCallback;
+    Context mContext;
     private List<Integer> mList;
     private int mHeight;
+    private SpanData mSp;
 
-
-    public JokeAdapter(List<Integer> list, int height, ICallback callback) {
+    public JokeAdapter(Context context, List<Integer> list, SpanData sp) {
+        mContext = context;
         mList = list;
-        mHeight = height;
-        mCallback = callback;
+        mSp = sp;
 
     }
 
@@ -34,7 +34,12 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JKViewHolder> 
     public JKViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.joke_recycler_item, parent, false);
-        itemView.getLayoutParams().height = mHeight;
+
+        if (mContext.getResources().getBoolean(R.bool.is_vert)) {
+            itemView.getLayoutParams().height = mSp.height;
+        } else {
+            itemView.getLayoutParams().width = mSp.width;
+        }
 
         return new JKViewHolder(itemView);
     }
@@ -48,7 +53,7 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JKViewHolder> 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onComplete(position);
+                ((ICallback)mContext).onComplete(position);
             }
         });
 
@@ -67,6 +72,7 @@ public class JokeAdapter extends RecyclerView.Adapter<JokeAdapter.JKViewHolder> 
             super(itemView);
             mImage = itemView.findViewById(R.id.joke_item_image);
 //            mImage.getLayoutParams().height = mHeight;
+
         }
 
         private void fill(int position) {

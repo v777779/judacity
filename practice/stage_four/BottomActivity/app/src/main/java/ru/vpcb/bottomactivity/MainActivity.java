@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,16 +40,14 @@ import ru.vpcb.jokelibrary.JokeLibrary;
 public class MainActivity extends AppCompatActivity implements ICallback {
     public static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
     public static final String START_CLICK_STRING_RESOURCE = "CLICK the BUTTON or SELECT the IMAGE";
-
-
-    public static final int HIGH_WIDTH_PORTRAIT = 600;     // dpi  600
-    public static final int HIGH_WIDTH_LANDSCAPE = 900;    // dpi  900
-    public static final int HIGH_SCALE_PORTRAIT = 240;     // dpi
-    public static final int HIGH_SCALE_LANDSCAPE = 250;    // dpi
-    public static final double SCREEN_RATIO = 1.8;
+    // recycler
+    public static final int HIGH_SCALE_WIDTH = 240;     // dpi
+    public static final int HIGH_SCALE_HEIGHT = 140;     // dpi
+    public static final double SCALE_RATIO = 1.6;
     public static final int MAX_SPAN = 6;
     public static final int MIN_SPAN = 1;
     public static final int MIN_HEIGHT = 100;
+    public static final double RECYCLER_HEIGHT_RATIO = 0.85 - 0.60;  // guides
 
 
     private AdView mAdView;
@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
     private RecyclerView mRecyclerView;
     private JokeAdapter mRecyclerAdapter;
-    private int mSpan;
-    private int mSpanHeight;
     private List<Integer> mList;
     private boolean mIsEndless;
     private int mImageId;
@@ -122,19 +120,29 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         });
 
 // recycler
-        setDisplayMetrics();        // mSpan, mSpanHeight
         mList = FragmentJoke.getJokeList();
+        SpanData sp = getDisplayMetrics();
+
         mRecyclerView = findViewById(R.id.joke_recycler);  // appcompat design
-        final GridLayoutManager layoutManager = new GridLayoutManager(this, mSpan);
+        int span = sp.spanY;
+        int orientation = GridLayout.HORIZONTAL;
+        if (getResources().getBoolean(R.bool.is_vert)) {
+            span = sp.spanX;
+            orientation = GridLayout.VERTICAL;
+        }
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, span, orientation, false);
         mRecyclerView.setLayoutManager(layoutManager);                          // connect to LayoutManager
         mRecyclerView.setHasFixedSize(true);                                    // item size fixed
-        mRecyclerAdapter = new JokeAdapter(mList, mSpanHeight, this);
+        mRecyclerAdapter = new JokeAdapter(this,mList, sp);
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (!mIsEndless) return;
-                if (dy > 0) {
+
+                int delta = getResources().getBoolean(R.bool.is_vert)?dy:dx;
+
+                if (delta > 0) {
                     int visibleItemCount = layoutManager.getChildCount();
                     int totalItemCount = layoutManager.getItemCount();
                     int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
@@ -176,32 +184,38 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         new AsyncJoke().execute();
     }
 
-
-    /**
-     * Sets screen parameters for RecyclerView mSpan, mSpanHeight
-     */
-
-    private void setDisplayMetrics() {
+    private SpanData getDisplayMetrics() {
         DisplayMetrics dp = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dp);
-        Resources res = getResources();
-        boolean isLand = res.getBoolean(R.bool.is_land);
-        boolean mIsWide = res.getBoolean(R.bool.is_wide);
+        boolean isLand = dp.widthPixels > dp.heightPixels;
         double width = dp.widthPixels / dp.density;
+        double height = dp.heightPixels / dp.density * RECYCLER_HEIGHT_RATIO;  // real height
 
-        if (!isLand) {
-            mSpan = (int) Math.round(width / HIGH_SCALE_PORTRAIT);
-            mSpanHeight = (int) (dp.widthPixels / mSpan / SCREEN_RATIO);
 
-        } else {
-            mSpan = (int) Math.round(width / HIGH_SCALE_LANDSCAPE);
-            mSpanHeight = (int) (dp.widthPixels / mSpan / SCREEN_RATIO);
-        }
+        int spanInWidth = (int) Math.round(width / HIGH_SCALE_WIDTH);
+        int spanHeight = (int) (width * dp.density / spanInWidth / SCALE_RATIO);
+        int spanInHeight = (int) Math.round(height / HIGH_SCALE_HEIGHT);
+        int spanWidth = (int) (height * dp.density / spanInHeight * SCALE_RATIO);
 
-        if (mSpan < MIN_SPAN) mSpan = MIN_SPAN;
-        if (mSpan > MAX_SPAN) mSpan = MAX_SPAN;
-        if (mSpanHeight < MIN_HEIGHT) mSpanHeight = MIN_HEIGHT;
 
+        if (spanInWidth < MIN_SPAN) spanInWidth = MIN_SPAN;
+        if (spanInWidth > MAX_SPAN) spanInWidth = MAX_SPAN;
+
+        if (spanInHeight < MIN_SPAN) spanInHeight = MIN_SPAN;
+        if (spanInHeight > MAX_SPAN) spanInHeight = MAX_SPAN;
+
+        int minWidth = (int) (MIN_HEIGHT * SCALE_RATIO);
+        if (spanWidth < minWidth) spanWidth = minWidth;
+
+// vertical
+//        mSpan = spanInWidth;
+//        mSpanHeight = spanHeight;
+// horizontal
+//        mSpan = spanInHeight;
+//        mSpanWidth = spanWidth;
+
+        return new SpanData(spanInWidth, spanInHeight, spanWidth, spanHeight);
     }
+
 
 }
