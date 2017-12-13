@@ -4,6 +4,8 @@
     <!--widget-->
     <dimen name="widget_text_size">16sp</dimen>
     <dimen name="widget_head_size">18sp</dimen>
+    <dimen name="bold_text_size">22sp</dimen>
+    <dimen name="large_text_size">26sp</dimen>
 
     <!--frame margins-->
     <dimen name="navigation_margin">80dp</dimen>

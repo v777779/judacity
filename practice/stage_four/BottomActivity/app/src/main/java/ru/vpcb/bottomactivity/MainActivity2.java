@@ -3,33 +3,22 @@ package ru.vpcb.bottomactivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-
-import java.util.Random;
 
 import ru.vpcb.jokelibrary.JokeLibrary;
 import ru.vpcb.jokeoutput.FragmentJoke;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity2 extends AppCompatActivity  {
     private static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
 
     //    private final int[] IMAGE_IDS = new int[]{
@@ -85,6 +74,22 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        mRnd = new Random();
+//        mTextBanner = (TextView) findViewById(R.id.text_banner);
+//        mTextJoke = findViewById(R.id.joke_text);
+//        mImageJoke = findViewById(R.id.joke_image);
+//        mImageBanner = findViewById(R.id.image_banner);
+//        mJoke = new JokeLibrary();
+//
+//        mTextJoke.setText(mJoke.getJoke());
+//        mImageJoke.setImageResource(getImageId());
+//        mTextBanner.setText(R.string.banner_joke);
+//        mImageBanner.setImageResource(getImageId());
+
+//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.show();
 
@@ -97,8 +102,10 @@ public class MainActivity extends AppCompatActivity  {
         mAdView.loadAd(adRequest);
 
         Log.d("MainActivity", "thread = " + Thread.currentThread().getName());
+
         mAsyncJoke = new AsyncJoke();
-        mFab = findViewById(R.id.fab);
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +113,6 @@ public class MainActivity extends AppCompatActivity  {
 
             }
         });
-
 
 
     }
@@ -127,5 +133,56 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+//    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+//            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+//
+//        @Override
+//        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//            switch (item.getItemId()) {
+//                case R.id.navigation_prev:
+////                    mTextJoke.setText(mJoke.getPrev());
+////                    mImageJoke.setImageResource(getImageId());
+////
+////                    mTextBanner.setText(R.string.banner_prev);
+////                    mImageBanner.setImageResource(getImageId());
+//                    finish();
+//                    return true;
+//
+//                case R.id.navigation_dashboard:
+////                    mTextJoke.setText(mJoke.getJoke());
+////                    mImageJoke.setImageResource(getImageId());
+////
+////                    mTextBanner.setText(R.string.banner_joke);
+////                    mImageBanner.setImageResource(getImageId());
+////                    ActionBar actionBar = getSupportActionBar();
+////                    actionBar.show();
+//
+//                    return true;
+//
+//                case R.id.navigation_next:
+////                    mTextJoke.setText(mJoke.getNext());
+////                    mImageJoke.setImageResource(getImageId());
+////
+////                    mTextBanner.setText(R.string.banner_next);
+////                    mImageBanner.setImageResource(getImageId());
+////                    actionBar = getSupportActionBar();
+////                    actionBar.hide();
+//                    Fragment fragment = new FragmentJoke();
+//                    FragmentManager fragmentManager = getSupportFragmentManager();
+//                    fragmentManager.beginTransaction()
+//                            .replace(R.id.fragment_container, fragment)
+//                            .addToBackStack("fragmentjoke")
+//                            .commit();
+//
+//
+//                    return true;
+//            }
+//            return false;
+//        }
+//    };
+
+//    private int getImageId() {
+//        return IMAGE_IDS[mRnd.nextInt(IMAGE_IDS.length)];
+//    }
 
 }

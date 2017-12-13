@@ -49,7 +49,9 @@
         ads:adUnitId="@string/banner_ad_unit_id"
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintStart_toStartOf="parent">
+        ads:layout_constraintStart_toStartOf="parent"
+        tools:adSize="@string/banner_size"
+        >
 
     </com.google.android.gms.ads.AdView>
 

@@ -7,11 +7,73 @@
     <color name="colorPrimary">#9925a473</color>
     <color name="colorPrimaryDark">#cd1a704e</color>
     <!--<color name="colorAccent">#969fa6</color>-->
-    <!--background-->
-    <color name="colorBackJoke">#80babab3</color>
-    <color name="colorBackText">#4aff8604</color>
 
     <!--<color name="colorPrimary">#d592c288</color>-->
     <!--<color name="colorPrimaryDark">#cd25a473</color>-->
     <!--<color name="colorAccent">#969fa6</color>-->
+
+    <!--text colors-->
+    <color name="colorText">#3A3A3A</color>
+    <color name="colorBackLight">#ebdfd6</color>
+    <color name="colorBackDark">#f5d1a2</color>
+    <color name="colorBackHead">#daa573</color>
+    <color name="colorBackHeadText">#8bc8de</color>
+
+    <color name="colorTextGreenDark">#345953</color>
+    <color name="colorTextBlue">#5591f5</color>
+    <color name="colorTextGreenBlue">#4cb5ac</color>
+    <color name="colorTextBlueLight">#af94c3bf</color>
+
+    <!--background-->
+    <color name="colorBackJoke">#80babab3</color>
+    <color name="colorBackText">#4aff8604</color>
+
+    <color name="colorBackPlay">#cbe7f2</color>
+    <color name="colorTextJoke">#e7e7e1</color>
+
+
+
+    <!--custom button-->
+    <color name="colorButtonBackNormal">#5e7974</color>
+    <color name="colorButtonBackDark">#345953</color>
+    <color name="colorButtonBackLight">#689a92</color>
+    <color name="colorButtonBackExtra">#8dbab3</color>
+
+    <color name="colorBrownBackNormal">#d3b04e</color>
+    <color name="colorBrownBackDark">#967d36</color>
+    <color name="colorBrownBackLight">#e2c575</color>
+    <color name="colorBrownBackExtra">#ecdbac</color>
+
+    <color name="colorBlueBackNormal">#bde0f2</color>
+    <color name="colorBlueBackDark">#8abfda</color>
+    <color name="colorBlueBackLight">#cae6f5</color>
+    <color name="colorBlueBackExtra">#dceaf1</color>
+
+    <color name="colorRedBackNormal">#fab4c9</color>
+    <color name="colorRedBackDark">#da8ba3</color>
+    <color name="colorRedBackLight">#f5cfda</color>
+    <color name="colorRedBackExtra">#f9e0e7</color>
+
+    <color name="colorGreenBackNormal">#94c3bf</color>
+    <color name="colorGreenBackDark">#749b98</color>
+    <color name="colorGreenBackLight">#b4dbd8</color>
+    <color name="colorGreenBackExtra">#c8e6e3</color>
+
+    <!--<color name="colorSaladBackNormal">#a1d88d</color>-->
+    <!--<color name="colorSaladBackDark">#84b274</color>-->
+    <!--<color name="colorSaladBackLight">#bae2ab</color>-->
+    <!--<color name="colorSaladBackExtra">#d4eccc</color>-->
+
+    <color name="colorSaladBackNormal">#84be87</color>
+    <color name="colorSaladBackDark">#70a974</color>
+    <color name="colorSaladBackLight">#b0dbb2</color>
+    <color name="colorSaladBackExtra">#d2ecd3</color>
+
+    <color name="colorSaladDarkBackNormal">#75a978</color>
+    <color name="colorSaladDarkBackDark">#57845a</color>
+    <color name="colorSaladDarkBackLight">#a0cba2</color>
+    <color name="colorSaladDarkBackExtra">#b9dabb</color>
+
+
+
 </resources>
