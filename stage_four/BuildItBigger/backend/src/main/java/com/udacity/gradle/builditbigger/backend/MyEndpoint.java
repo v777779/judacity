@@ -14,6 +14,10 @@ import javax.inject.Named;
 
 import ru.vpcb.jokeprovider.JokeProvider;
 
+import static ru.vpcb.constants.Constants.REQUEST_TEST_GET_TEMPLATE;
+import static ru.vpcb.constants.Constants.REQUEST_TEST_OUT_TEMPLATE;
+
+
 /**
  * An endpoint class we are exposing
  */
@@ -27,9 +31,6 @@ import ru.vpcb.jokeprovider.JokeProvider;
         )
 )
 public class MyEndpoint {
-    public static final String REQUEST_GET_TEMPLATE = "get";
-    public static final String REQUEST_TEST_GET_TEMPLATE = "test";
-    public static final String REQUEST_TEST_OUT_TEMPLATE = "test joke received";
 
     /**
      * A simple endpoint method that takes a name and says Hi back

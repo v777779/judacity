@@ -27,4 +27,38 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+// backend
+    compile project(path: ':backend', configuration: 'android-endpoints')
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile project(path:':constants')
 }
+
+task stopServerManually {
+    group "Verification.User Endpoint Test"
+    description "stop server"
+    dependsOn ':backend:appengineStop'
+    doLast {
+        println("Stop Java Development Server")
+    }
+}
+
+task startServerManually {
+    group "Verification.User Endpoint Test"
+    description "Start server"
+    dependsOn 'stopServerManually'
+    dependsOn ':backend:appengineRun'
+    mustRunAfter 'stopServerManually'
+    project(":backend").afterEvaluate() { backend ->
+        backend.extensions.appengine.daemon = true
+    }
+    doLast {
+        println("Java Development Server started")
+    }
+}
+
+// run auto in debug flow
+//tasks.whenTaskAdded { task ->
+//    if (task.name == 'assembleDebug')
+//        task.finalizedBy('startServerManually')
+//}
