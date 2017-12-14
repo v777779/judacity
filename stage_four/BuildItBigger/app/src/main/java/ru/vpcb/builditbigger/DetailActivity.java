@@ -10,14 +10,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static ru.vpcb.constants.Constants.BUNDLE_JOKE_IMAGE_ID;
+import static ru.vpcb.constants.Constants.BUNDLE_JOKE_TEXT_ID;
 import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
 
 public class DetailActivity extends AppCompatActivity {
 
-// bind
+    // bind
     private Button mButton;
     private ImageView mJokeImage;
     private TextView mJokeText;
+    private String mJokeTextId;
+    private int mJokeImageId;
 
 
     @Override
@@ -44,20 +48,19 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-// intent
-        Intent intent = getIntent();
-        if (intent.getBooleanExtra("EXIT", false)) {
-            Intent intent1 = new Intent(this, DetailActivity.class);
-            startActivity(intent1);
-            finish();
+        if (savedInstanceState != null) {
+            mJokeTextId = savedInstanceState.getString(BUNDLE_JOKE_TEXT_ID);
+            mJokeImageId = savedInstanceState.getInt(BUNDLE_JOKE_IMAGE_ID);
+        } else {
+            Intent intent = getIntent();
+            if (intent != null && intent.hasExtra(INTENT_STRING_EXTRA)) {
+                mJokeTextId = intent.getStringExtra(INTENT_STRING_EXTRA);
+            }
+            if (mJokeTextId == null) mJokeTextId = "";
+            mJokeImageId = JokeUtils.getGridImage();
         }
-
-        if (intent != null && intent.hasExtra(INTENT_STRING_EXTRA)) {
-            String s = intent.getStringExtra(INTENT_STRING_EXTRA);
-            if (s == null) s = "";
-            mJokeText.setText(s);
-        }
-        mJokeImage.setImageResource(JokeImage.getImage());
+        mJokeText.setText(mJokeTextId);
+        mJokeImage.setImageResource(mJokeImageId);
 
     }
 
@@ -69,7 +72,14 @@ public class DetailActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_JOKE_TEXT_ID, mJokeTextId);
+        outState.putInt(BUNDLE_JOKE_IMAGE_ID, mJokeImageId);
+
     }
 }

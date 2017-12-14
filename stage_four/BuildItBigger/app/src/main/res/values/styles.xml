@@ -29,19 +29,24 @@
 
     <style name="TextHeadS" parent="TextNormal">
         <item name="fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
 
     <style name="TextLargeS" parent="TextNormal">
         <item name="fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/large_text_size</item>
     </style>
     <style name="TextTitleS" parent="TextNormal">
         <item name="fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/title_text_size</item>
+    </style>
+    <style name="TextExtraS" parent="TextNormal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/extra_text_size</item>
+    </style>
+    <style name="TextUltraS" parent="TextNormal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/ultra_text_size</item>
     </style>
 
     <!--button styles-->
@@ -49,20 +54,26 @@
         <item name="android:background">@drawable/button_salad</item>
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textAppearance">@style/TextHeadS</item>
-        <item name="android:paddingLeft">@dimen/button_padding_side</item>
-        <item name="android:paddingRight">@dimen/button_padding_side</item>
-        <item name="android:paddingTop">@dimen/button_padding_top</item>
-        <item name="android:paddingBottom">@dimen/button_padding_top</item>
+        <item name="android:paddingLeft">@dimen/frame_super_margin</item>
+        <item name="android:paddingRight">@dimen/frame_super_margin</item>
+        <item name="android:paddingTop">@dimen/frame_standard_margin</item>
+        <item name="android:paddingBottom">@dimen/frame_standard_margin</item>
     </style>
 
-    <style name="button_salad_wide" parent="@style/Widget.AppCompat.Button">
-        <item name="android:background">@drawable/button_salad</item>
-        <item name="android:textColor">@color/colorText</item>
+    <style name="button_salad_wide" parent="@style/button_salad">
         <item name="android:textAppearance">@style/TextHeadS</item>
-        <item name="android:paddingLeft">@dimen/button_padding_wide_side</item>
-        <item name="android:paddingRight">@dimen/button_padding_wide_side</item>
-        <item name="android:paddingTop">@dimen/button_padding_top</item>
-        <item name="android:paddingBottom">@dimen/button_padding_top</item>
+        <item name="android:paddingLeft">@dimen/frame_ultra_margin</item>
+        <item name="android:paddingRight">@dimen/frame_ultra_margin</item>
+        <item name="android:paddingTop">@dimen/frame_standard_margin</item>
+        <item name="android:paddingBottom">@dimen/frame_standard_margin</item>
+    </style>
+
+    <style name="button_salad_extra" parent="@style/button_salad">
+        <item name="android:textAppearance">@style/TextExtraS</item>
+        <item name="android:paddingLeft">@dimen/frame_extra_margin</item>
+        <item name="android:paddingRight">@dimen/frame_extra_margin</item>
+        <item name="android:paddingTop">@dimen/frame_large_margin</item>
+        <item name="android:paddingBottom">@dimen/frame_large_margin</item>
     </style>
 
 </resources>
