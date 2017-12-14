@@ -1,7 +1,10 @@
 package ru.vpcb.builditbigger;
 
 /**
- * Created by V1 on 14-Dec-17.
+ * Exercise for course : Android Developer Nanodegree
+ * Created: Vadim Voronov
+ * Date: 14-Dec-17
+ * Email: vadim.v.voronov@gmail.com
  */
 
 public class Constants {

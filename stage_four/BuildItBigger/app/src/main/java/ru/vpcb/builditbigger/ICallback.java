@@ -1,4 +1,4 @@
-package ru.vpcb.bottomactivity;
+package ru.vpcb.builditbigger;
 
 public interface ICallback {
     void onComplete(String s);
