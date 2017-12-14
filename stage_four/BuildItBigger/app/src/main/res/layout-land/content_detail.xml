@@ -11,11 +11,8 @@
     android:background="@color/colorBackJoke"
     >
 
-
-
-
     <android.support.v7.widget.CardView
-        android:id="@+id/front_image_card"
+        android:id="@+id/joke_image_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="2dp"
@@ -27,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/front_image"
+            android:id="@+id/joke_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
@@ -35,7 +32,7 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
-        android:id="@+id/front_text_card"
+        android:id="@+id/joke_text_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/frame_small_margin"
@@ -48,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/front_text"
+            android:id="@+id/joke_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorBackText"
@@ -56,40 +53,6 @@
             android:padding="@dimen/text_middle_padding"
             android:textAppearance="@style/TextLargeS" />
     </android.support.v7.widget.CardView>
-
-    <!--<ImageView-->
-    <!--android:id="@+id/front_image"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_marginEnd="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginStart="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginTop="@dimen/frame_small_padding"-->
-    <!--android:scaleType="centerCrop"-->
-    <!--ads:layout_constraintBottom_toTopOf="@+id/guide_h1"-->
-    <!--ads:layout_constraintEnd_toEndOf="parent"-->
-    <!--ads:layout_constraintStart_toStartOf="parent"-->
-    <!--ads:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/front_text"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-
-    <!--android:layout_marginBottom="@dimen/frame_small_padding"-->
-    <!--android:layout_marginEnd="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginStart="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginTop="@dimen/frame_small_padding"-->
-
-    <!--android:background="@color/colorBackText"-->
-    <!--android:gravity="center_horizontal"-->
-    <!--android:padding="@dimen/text_middle_padding"-->
-
-
-    <!--android:textAppearance="@style/TextLargeS"-->
-    <!--ads:layout_constraintBottom_toTopOf="@+id/adview_banner"-->
-    <!--ads:layout_constraintEnd_toEndOf="parent"-->
-    <!--ads:layout_constraintStart_toStartOf="parent"-->
-    <!--ads:layout_constraintTop_toTopOf="@+id/guide_h1" />-->
 
 
     <Button

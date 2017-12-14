@@ -1,16 +1,23 @@
 package ru.vpcb.builditbigger;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
 
 public class DetailActivity extends AppCompatActivity {
-// bind
-private Button mButton;
 
+// bind
+    private Button mButton;
+    private ImageView mJokeImage;
+    private TextView mJokeText;
 
 
     @Override
@@ -26,6 +33,10 @@ private Button mButton;
         }
 // bind
         mButton = findViewById(R.id.joke_button);
+        mJokeImage = findViewById(R.id.joke_image);
+        mJokeText = findViewById(R.id.joke_text);
+
+
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -33,7 +44,20 @@ private Button mButton;
             }
         });
 
+// intent
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("EXIT", false)) {
+            Intent intent1 = new Intent(this, DetailActivity.class);
+            startActivity(intent1);
+            finish();
+        }
 
+        if (intent != null && intent.hasExtra(INTENT_STRING_EXTRA)) {
+            String s = intent.getStringExtra(INTENT_STRING_EXTRA);
+            if (s == null) s = "";
+            mJokeText.setText(s);
+        }
+        mJokeImage.setImageResource(JokeImage.getImage());
 
     }
 
@@ -41,7 +65,7 @@ private Button mButton;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == android.R.id.home) {
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }

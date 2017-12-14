@@ -79,7 +79,7 @@
             android:background="@color/colorBackText"
             android:gravity="center_horizontal"
             android:padding="@dimen/text_middle_padding"
-            android:textAppearance="@style/TextLargeS" />
+            android:textAppearance="@style/TextTitleS" />
     </android.support.v7.widget.CardView>
 
     <!--<ImageView-->
