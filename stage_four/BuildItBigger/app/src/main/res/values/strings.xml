@@ -2,7 +2,7 @@
     <string name="app_name">BuildItBigger</string>
     <string name="action_settings">Settings</string>
 
-<!--messages-->
+    <!--messages-->
     <string name="hello_world">Hello world!</string>
     <string name="welcome_message">Welcome to Joke World!</string>
     <string name="next_message">Next joke ...</string>
@@ -19,5 +19,8 @@
     <!--interstitial test-->
     <string name="inter_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
 
+    <!--buttons-->
+    <string name="button_get">GET THE JOKE</string>
+    <string name="button_back">BACK</string>
 
 </resources>

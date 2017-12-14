@@ -1,5 +1,6 @@
 package ru.vpcb.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
 import static ru.vpcb.constants.Constants.AD_ACTIVATION_COUNTER;
+import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
 import static ru.vpcb.constants.Constants.REQUEST_GET_TEMPLATE;
 
 public class MainActivity extends AppCompatActivity implements ICallback {
@@ -40,15 +42,15 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     private int mAdCounter;
     private String mJokeReceived;
 
-// conditions
+    // conditions
     private boolean mIsWide;
     private boolean mIsLand;
 
 
-// fragment
+    // fragment
     private ImageView mFrontImage;
-    private TextView  mFrontText;
-
+    private TextView mFrontText;
+    private boolean mIsFirstTime;
 
 
     @Override
@@ -111,10 +113,11 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         });
 
 // layout
-        if(!mIsWide) {
+        mIsFirstTime = savedInstanceState == null;
+        if (!mIsWide) {
             mFrontImage = findViewById(R.id.front_image);
             mFrontText = findViewById(R.id.front_text);
-            setFront(false);
+
         }
     }
 
@@ -144,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     protected void onStart() {
         super.onStart();
         isActive = true;
+        setFront();
     }
 
     @Override
@@ -166,23 +170,21 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
     private void nextActivity() {
-        if (!mIsOnComplete || !mIsOnAdClosed || mIsBlocked) return;  // if one of onComplete  and Interstitial not done
+        if (!mIsOnComplete || !mIsOnAdClosed || mIsBlocked)
+            return;  // if one of onComplete  and Interstitial not done
 
-        if(!isActive ) return;
+        if (!isActive) return;
 
-
-//        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-//        intent.putExtra(INTENT_STRING_EXTRA, mJokeReceived);
-//        startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(INTENT_STRING_EXTRA, mJokeReceived);
+        startActivity(intent);
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mAdCounter++;
 
-// front
-        setFront(true);
     }
 
-// ad interstitial
+    // ad interstitial
     private InterstitialAd newInterstitialAd() {
         final InterstitialAd interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getString(R.string.inter_ad_unit_id));
@@ -235,13 +237,14 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         loadInterstitial();
     }
 
-    private void setFront(boolean mode) {
+    private void setFront() {
         mFrontImage.setImageResource(JokeImage.getFrontImage());
-        if(!mode) {
+        if (mIsFirstTime) {
             mFrontText.setText(R.string.welcome_message);
-        }else {
+        } else {
             mFrontText.setText(R.string.next_message);
         }
+        mIsFirstTime = false;
 
     }
 

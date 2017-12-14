@@ -29,13 +29,14 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!--<activity-->
-            <!--android:name=".BannerActivity"-->
-            <!--android:label="@string/title_activity_banner"></activity> &lt;!&ndash; Include the AdActivity configChanges and theme. &ndash;&gt;-->
+        <!-- <activity -->
+        <!-- android:name=".BannerActivity" -->
+        <!-- android:label="@string/title_activity_banner"></activity> &lt;!&ndash; Include the AdActivity configChanges and theme. &ndash;&gt; -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>

@@ -50,4 +50,14 @@
         <item name="android:paddingBottom">@dimen/button_padding_top</item>
     </style>
 
+    <style name="button_salad_wide" parent="@style/Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_salad</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textAppearance">@style/TextHeadS</item>
+        <item name="android:paddingLeft">@dimen/button_padding_wide_side</item>
+        <item name="android:paddingRight">@dimen/button_padding_wide_side</item>
+        <item name="android:paddingTop">@dimen/button_padding_top</item>
+        <item name="android:paddingBottom">@dimen/button_padding_top</item>
+    </style>
+
 </resources>

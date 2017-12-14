@@ -7,36 +7,9 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ru.vpcb.builditbigger.MainActivity"
-    tools:showIn="@layout/activity_main"
+    tools:showIn="@layout/activity_detail"
     android:background="@color/colorBackJoke"
     >
-
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:visibility="gone"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/adview_banner"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
-
-    <!-- view for AdMob Banner Ad -->
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adview_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:adSize="@string/banner_size"
-        app:adUnitId="@string/banner_ad_unit_id"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
     <android.support.v7.widget.CardView
@@ -63,11 +36,11 @@
         android:id="@+id/front_text_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/frame_small_margin"
+        android:layout_marginBottom="2dp"
         android:layout_marginEnd="@dimen/frame_small_margin"
         android:layout_marginStart="@dimen/frame_small_margin"
         android:layout_marginTop="@dimen/frame_small_margin"
-        app:layout_constraintBottom_toTopOf="@+id/adview_banner"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guide_h1">
@@ -82,51 +55,17 @@
             android:textAppearance="@style/TextLargeS" />
     </android.support.v7.widget.CardView>
 
-    <!--<ImageView-->
-    <!--android:id="@+id/front_image"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_marginEnd="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginStart="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginTop="@dimen/frame_small_padding"-->
-    <!--android:scaleType="centerCrop"-->
-    <!--ads:layout_constraintBottom_toTopOf="@+id/guide_h1"-->
-    <!--ads:layout_constraintEnd_toEndOf="parent"-->
-    <!--ads:layout_constraintStart_toStartOf="parent"-->
-    <!--ads:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/front_text"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-
-    <!--android:layout_marginBottom="@dimen/frame_small_padding"-->
-    <!--android:layout_marginEnd="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginStart="@dimen/frame_middle_padding"-->
-    <!--android:layout_marginTop="@dimen/frame_small_padding"-->
-
-    <!--android:background="@color/colorBackText"-->
-    <!--android:gravity="center_horizontal"-->
-    <!--android:padding="@dimen/text_middle_padding"-->
-
-
-    <!--android:textAppearance="@style/TextLargeS"-->
-    <!--ads:layout_constraintBottom_toTopOf="@+id/adview_banner"-->
-    <!--ads:layout_constraintEnd_toEndOf="parent"-->
-    <!--ads:layout_constraintStart_toStartOf="parent"-->
-    <!--ads:layout_constraintTop_toTopOf="@+id/guide_h1" />-->
-
 
     <Button
         android:id="@+id/joke_button"
-        style="@style/button_salad"
+        style="@style/button_salad_wide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:layout_marginBottom="@dimen/frame_standard_margin"
-        android:text="@string/button_get"
+        android:text="@string/button_back"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/adview_banner"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
