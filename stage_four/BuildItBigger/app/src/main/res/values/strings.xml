@@ -2,8 +2,11 @@
     <string name="app_name">BuildItBigger</string>
     <string name="action_settings">Settings</string>
 
-
+<!--messages-->
     <string name="hello_world">Hello world!</string>
+    <string name="welcome_message">Welcome to Joke World!</string>
+    <string name="next_message">Next joke ...</string>
+
     <!-- -
         This is an ad unit ID for a banner test ad. Replace with your own banner ad unit id.
         For more information, see https://support.google.com/admob/answer/3052638

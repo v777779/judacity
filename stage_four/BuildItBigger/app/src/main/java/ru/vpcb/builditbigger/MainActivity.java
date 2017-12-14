@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -38,6 +40,15 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     private int mAdCounter;
     private String mJokeReceived;
 
+// conditions
+    private boolean mIsWide;
+    private boolean mIsLand;
+
+
+// fragment
+    private ImageView mFrontImage;
+    private TextView  mFrontText;
+
 
 
     @Override
@@ -52,9 +63,14 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
+// bind
         mProgressBar = findViewById(R.id.progress_bar);
         mAdView = findViewById(R.id.adview_banner);
+
+// local
+        mIsWide = getResources().getBoolean(R.bool.is_wide);
+        mIsLand = getResources().getBoolean(R.bool.is_land);
+
 
 // adMob
         MobileAds.initialize(this, getString(R.string.banner_ad_app_id));
@@ -94,7 +110,12 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             }
         });
 
-
+// layout
+        if(!mIsWide) {
+            mFrontImage = findViewById(R.id.front_image);
+            mFrontText = findViewById(R.id.front_text);
+            setFront(false);
+        }
     }
 
     @Override
@@ -156,6 +177,9 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mAdCounter++;
+
+// front
+        setFront(true);
     }
 
 // ad interstitial
@@ -210,4 +234,15 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
     }
+
+    private void setFront(boolean mode) {
+        mFrontImage.setImageResource(JokeImage.getFrontImage());
+        if(!mode) {
+            mFrontText.setText(R.string.welcome_message);
+        }else {
+            mFrontText.setText(R.string.next_message);
+        }
+
+    }
+
 }

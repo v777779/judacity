@@ -33,6 +33,11 @@
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
 
+    <style name="TextLargeS" parent="TextNormal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+    </style>
 
     <!--button styles-->
     <style name="button_salad" parent="@style/Widget.AppCompat.Button">

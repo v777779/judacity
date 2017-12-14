@@ -16,6 +16,6 @@ public class Constants {
         public static final String REQUEST_TEST_OUT_TEMPLATE = "test joke received";
         public static final int CONNECT_TIMEOUT = 5;
         public static final String MESSAGE_TEST_OK = "*** Endpont Test passed ***";
-        public static final int AD_ACTIVATION_COUNTER = 3;
+        public static final int AD_ACTIVATION_COUNTER = 5;
 
 }

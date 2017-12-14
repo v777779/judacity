@@ -7,9 +7,10 @@
     <!--text sizes-->
     <dimen name="text_size">14sp</dimen>
     <dimen name="head_text_size">14sp</dimen>
-    <dimen name="bold_text_size">20sp</dimen>
-    <dimen name="extra_text_size">22sp</dimen>
-    <dimen name="large_text_size">24sp</dimen>
+    <dimen name="large_text_size">18sp</dimen>
+
+
+    <dimen name="text_middle_padding">16dp</dimen>
 
     <!--button-->
     <dimen name="button_padding_side">24dp</dimen>
@@ -18,5 +19,8 @@
     <dimen name="button_padding_wide_side">32dp</dimen>
     <dimen name="button_padding_wide_top">16dp</dimen>
 
+    <!--frame-->
+    <dimen name="frame_middle_padding">4dp</dimen>
+    <dimen name="frame_small_padding">2dp</dimen>
 
 </resources>
