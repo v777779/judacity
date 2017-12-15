@@ -16,6 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions ('tier')
+    productFlavors {
+        paid {
+            dimension 'tier'
+        }
+        free {
+            dimension 'tier'
+        }
+    }
 }
 
 dependencies {
@@ -29,6 +39,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 // cardview
     compile 'com.android.support:cardview-v7:26.1.0'
+// timber
+    compile 'com.jakewharton.timber:timber:4.6.0'
+// butterknife
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+
+
 // backend
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile 'com.google.code.findbugs:jsr305:2.0.1'
