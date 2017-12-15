@@ -25,3 +25,46 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
+task runThisUserEndpointTest {
+    group "Verification.User Endpoint Test"
+    description "Run connected test with start and stop server"
+    dependsOn = ['utilTask1', 'utilTask2', 'utilTask3']
+
+}
+
+task utilTask1 {
+    group "Verification.User Endpoint Test"
+    description "Start server"
+    dependsOn ':backend:appengineRun'
+
+    project(":backend").afterEvaluate() { backend ->
+        backend.extensions.appengine.daemon = true
+    }
+
+    doLast {
+        println("Java Development Server started")
+        println(project(":backend").extensions.appengine.daemon)
+    }
+}
+
+task utilTask2 {
+    group "Verification.User Endpoint Test"
+    description "Run connected test"
+    dependsOn ':app:connectedCheck'
+    mustRunAfter 'utilTask1'
+    doLast {
+        println("Connected test finished")
+    }
+}
+
+task utilTask3 {
+    group "Verification.User Endpoint Test"
+    description "Stop server"
+    dependsOn ':backend:appengineStop'
+    mustRunAfter 'utilTask2'
+    doLast {
+        println("Java Development Server stopped")
+    }
+}

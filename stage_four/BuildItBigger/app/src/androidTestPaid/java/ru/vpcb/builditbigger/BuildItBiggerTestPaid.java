@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
 import static ru.vpcb.constants.Constants.MESSAGE_TEST_OK;
+import static ru.vpcb.constants.Constants.MESSAGE_TEST_PAID_OK;
 import static ru.vpcb.constants.Constants.REQUEST_TEST_GET_TEMPLATE;
 import static ru.vpcb.constants.Constants.REQUEST_TEST_OUT_TEMPLATE;
 
@@ -17,8 +18,8 @@ import static ru.vpcb.constants.Constants.REQUEST_TEST_OUT_TEMPLATE;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class BuildItBiggerTest {
-    private static final String TAG = BuildItBiggerTest.class.getSimpleName();
+public class BuildItBiggerTestPaid {
+    private static final String TAG = BuildItBiggerTestPaid.class.getSimpleName();
     private final Object mSyncObject = new Object();
 
 
@@ -52,6 +53,6 @@ public class BuildItBiggerTest {
         synchronized (mSyncObject) {
             mSyncObject.wait();
         }
-        Log.i(TAG,MESSAGE_TEST_OK);
+        Log.i(TAG,MESSAGE_TEST_PAID_OK);
     }
 }

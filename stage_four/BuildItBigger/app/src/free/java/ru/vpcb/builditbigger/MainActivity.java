@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         mIsWide = getResources().getBoolean(R.bool.is_wide);
         mJokeImageId = 0;  // image to pass to fragment
         mContext = this;
+
 // log
-        // log
         if (!mIsTimber) {
             Timber.plant(new Timber.DebugTree());
             mIsTimber = true;

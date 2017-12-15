@@ -18,6 +18,9 @@ public class Constants {
     public static final String REQUEST_TEST_GET_TEMPLATE = "test";
     public static final String REQUEST_TEST_OUT_TEMPLATE = "test joke received";
     public static final int AD_ACTIVATION_COUNTER = 3;
+    public static final String MESSAGE_TEST_OK = "*** Endpoint Test passed ***";
+    public static final String MESSAGE_TEST_FREE_OK = "*** Endpoint Test Free passed ***";
+    public static final String MESSAGE_TEST_PAID_OK = "*** Endpoint Test Paid passed ***";
 
     // display    public static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
     public static final String BUNDLE_JOKE_LIST = "bundle_joke_list";
