@@ -35,36 +35,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/div_h2"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="2dp"-->
-        <!--android:src="@drawable/divider_bottom"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--android:contentDescription="@string/divider_descr"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--/>-->
-    <!--<ImageView-->
-        <!--android:id="@+id/div_v1"-->
-        <!--android:layout_width="2dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:src="@drawable/divider_left"-->
-        <!--android:contentDescription="@string/divider_descr"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<ImageView-->
-        <!--android:id="@+id/div_v2"-->
-        <!--android:layout_width="2dp"-->
-        <!--android:layout_height="match_parent"-->
-
-        <!--android:contentDescription="@string/divider_descr"-->
-        <!--android:src="@drawable/divider_right"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
 
     <ImageView
