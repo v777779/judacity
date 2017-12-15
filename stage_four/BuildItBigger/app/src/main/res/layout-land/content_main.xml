@@ -11,20 +11,6 @@
     android:background="@color/colorBackJoke"
     >
 
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:visibility="gone"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/adview_banner"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
-
     <!-- view for AdMob Banner Ad -->
     <com.google.android.gms.ads.AdView
         android:id="@+id/adview_banner"

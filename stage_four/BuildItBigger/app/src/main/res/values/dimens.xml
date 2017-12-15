@@ -12,7 +12,7 @@
     <dimen name="extra_text_size">18sp</dimen>
     <dimen name="ultra_text_size">22sp</dimen>
 
-    <dimen name="text_padding">16dp</dimen>
+    <dimen name="text_padding">8dp</dimen>
 
     <!--button-->
     <dimen name="button_padding_side">24dp</dimen>
