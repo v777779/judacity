@@ -41,18 +41,17 @@
     <!-- view for AdMob Banner Ad -->
     <com.google.android.gms.ads.AdView
         android:id="@+id/adview_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:background="@color/colorBackBanner"
         app:adSize="@string/banner_size"
         app:adUnitId="@string/banner_ad_unit_id"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guide_v2"
-        />
+        app:layout_constraintStart_toStartOf="@+id/guide_v2" />
 
 
     <Button
@@ -60,7 +59,7 @@
         style="@style/button_salad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/frame_margin_standard"
+        android:layout_marginBottom="@dimen/frame_margin_middle"
         android:text="@string/button_get"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/adview_banner"
@@ -73,9 +72,8 @@
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/frame_margin_small"
-        android:layout_marginEnd="@dimen/frame_margin_middle"
-        android:layout_marginTop="@dimen/frame_margin_middle"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="2dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/adview_banner"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,9 +88,9 @@
         android:id="@+id/joke_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/frame_margin_middle"
-        android:layout_marginStart="@dimen/frame_margin_middle"
-        android:layout_marginTop="@dimen/frame_margin_middle"
+        android:layout_marginBottom="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/div_v1"
         app:layout_constraintLeft_toLeftOf="parent"

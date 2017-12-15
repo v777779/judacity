@@ -43,7 +43,10 @@
         android:layout_marginTop="@dimen/frame_margin_small"
         android:background="@color/colorBackText"
         android:gravity="center_horizontal"
-        android:padding="@dimen/text_padding"
+        android:paddingLeft="@dimen/text_padding"
+        android:paddingRight="@dimen/text_padding"
+        android:paddingTop="@dimen/text_padding_top"
+
         android:textAppearance="@style/TextLargeS"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.65" />
+        app:layout_constraintGuide_percent="0.7" />
 
 
     <android.support.constraint.Guideline
@@ -53,7 +53,9 @@
         android:layout_height="0dp"
         android:background="@color/colorBackText"
         android:gravity="center_horizontal"
-        android:padding="@dimen/text_padding"
+        android:paddingLeft="@dimen/text_padding"
+        android:paddingRight="@dimen/text_padding"
+        android:paddingTop="@dimen/text_padding_top"
         android:textAppearance="@style/TextLargeS"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

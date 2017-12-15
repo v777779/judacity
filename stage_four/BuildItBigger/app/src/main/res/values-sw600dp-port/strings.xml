@@ -1,6 +1,7 @@
 <resources>
+
     <!--messages-->
-    <string name="welcome_message">Welcome to Joke World! \nClick on one of the images below to get the joke</string>
+    <string name="welcome_message">Welcome to Joke World!\n Click on the selected image to get the joke</string>
 
     <!--banner test-->
     <string name="banner_size">FULL_BANNER</string>

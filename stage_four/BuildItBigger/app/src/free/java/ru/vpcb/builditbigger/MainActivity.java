@@ -1,5 +1,6 @@
 package ru.vpcb.builditbigger;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,103 +36,117 @@ import timber.log.Timber;
 
 import static android.view.View.INVISIBLE;
 import static ru.vpcb.constants.Constants.AD_ACTIVATION_COUNTER;
+import static ru.vpcb.constants.Constants.BUNDLE_AD_COUNTER;
 import static ru.vpcb.constants.Constants.BUNDLE_FRONT_IMAGE_ID;
 import static ru.vpcb.constants.Constants.BUNDLE_FRONT_TEXT_ID;
 import static ru.vpcb.constants.Constants.BUNDLE_JOKE_LIST;
 import static ru.vpcb.constants.Constants.BUNDLE_POSITION;
-import static ru.vpcb.constants.Constants.BUNDLE_PROGRESS_BAR;
 import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
 import static ru.vpcb.constants.Constants.REQUEST_GET_TEMPLATE;
 
 public class MainActivity extends AppCompatActivity implements ICallback {
     /**
-     *  Boolean value used to reject calls from Java Development server when activity is done
+     * Context used to reject calls from Java Development server with old context
      */
-    private static boolean mIsActive;
+    private static Context mContext;
     /**
-     *  Boolean value used for making TimberTree one time only
+     * Boolean value used for making TimberTree one time only
      */
     private static boolean mIsTimber;
     /**
-     *  AdMob banner view object
+     * AdMob banner view object
      */
+
+    private static EndpointsAsyncTask mEndPointTask;
+
     @Nullable
-    @BindView(R.id.adview_banner)     AdView mAdView;
+    @BindView(R.id.adview_banner)
+    AdView mAdView;
     /**
      * Progress Bar view object
      */
-    @Nullable @BindView(R.id.progress_bar)  ProgressBar mProgressBar;
+    @Nullable
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
     /**
-     *  Button view object
+     * Button view object
      */
-    @Nullable @BindView(R.id.joke_button)  Button mButton;
+    @Nullable
+    @BindView(R.id.joke_button)
+    Button mButton;
     /**
      * Image view object for the  screen of Main Activity
      */
-    @Nullable @BindView(R.id.front_image) ImageView mFrontImage;
+    @Nullable
+    @BindView(R.id.front_image)
+    ImageView mFrontImage;
     /**
      * Text view object for the screen of Main Activity
      */
-    @Nullable @BindView(R.id.front_text)  TextView mFrontText;
+    @Nullable
+    @BindView(R.id.front_text)
+    TextView mFrontText;
     /**
      * RecyclerView with jokes support images used for wide screen devices only
      */
-    @Nullable  @BindView(R.id.joke_recycler) RecyclerView mRecycler;
+    @Nullable
+    @BindView(R.id.joke_recycler)
+    RecyclerView mRecycler;
 
     /**
-     *  Adapter for RecyclerView
+     * Adapter for RecyclerView
      */
     private JokeAdapter mAdapter;
     /**
-     *  Interstitial Ad object
+     * Interstitial Ad object
      */
     private InterstitialAd mInterstitialAd;
     /**
-     *  Boolean used to track if onComplete is done for
-     *  sync between EndPoint Callback and Interstitial Listener
+     * Boolean used to track if onComplete is done for
+     * sync between EndPoint Callback and Interstitial Listener
      */
     private boolean mIsOnComplete;
     /**
-     *  Boolean used to track if Interstitial Ad is closed for
-     *  sync between EndPoint Callback and Interstitial Listener
+     * Boolean used to track if Interstitial Ad is closed for
+     * sync between EndPoint Callback and Interstitial Listener
      */
     private boolean mIsOnAdClosed;
     /**
-     *  Boolean used to block start Detail Activity when user
-     *  clicked on Interstitial Ad
+     * Boolean used to block start Detail Activity when user
+     * clicked on Interstitial Ad
      */
     private boolean mIsBlocked;
     /**
-     *  Integer value Interstitial Ad counter used as ratio between Jokes and
-     *  Interstitial Ad, default value is 3 jokes for one Interstitial
+     * Integer value Interstitial Ad counter used as ratio between Jokes and
+     * Interstitial Ad, default value is 3 jokes for one Interstitial
      */
     private int mAdCounter;
     /**
-     *  String value   is the text received from EndPoint
+     * String value   is the text received from EndPoint
      */
     private String mJokeReceived;
     /**
-     *  Boolean value is wide screen used
+     * Boolean value is wide screen used
      */
     private boolean mIsWide;
     /**
-     *  Integer value is resource Id of text that used for Main Activity Screen
+     * Integer value is resource Id of text that used for Main Activity Screen
      */
     private int mFrontTextId;
     /**
-     *  Integer value is resource Id of image that used for Main Activity Screen
+     * Integer value is resource Id of image that used for Main Activity Screen
      */
     private int mFrontImageId;
     /**
-     *  Integer value is resource Id of image that passed to Detail Activity or Fragment screen
+     * Integer value is resource Id of image that passed to Detail Activity or Fragment screen
      */
     private int mJokeImageId;
     /**
-     *  List<Integer> is list of joke image Ids for RecyclerView
+     * List<Integer> is list of joke image Ids for RecyclerView
      */
     private List<Integer> mList;
     /**
-     *  Integer value of current position of RecyclerView
+     * Integer value of current position of RecyclerView
      */
     private int mPosition;
     /**
@@ -150,13 +165,13 @@ public class MainActivity extends AppCompatActivity implements ICallback {
      * Setup RecyclerView
      * Pass front text string value and imageId to JokeFragment and run Joke Fragment object
      *
-     * @param savedInstanceState  Bundle storage object with parameters. <br>
-     *  Bundle parameters: <br>
-     *  List<Integer>   mList of imageId that is used as data source for RecyclerView.<br>
-     *  Integer         mPosition   current position of RecyclerView.<br>
-     *  Integer         mFrontTextId    current text Id of welcome message of Main Activity Screen.<br>
-     *  Integer         mFrontImaged    current image Id of Main Activity Screen.<br>
-     *  ProgressBar     mProgressBar    current visibility state of ProgressBar view object.<br>
+     * @param savedInstanceState Bundle storage object with parameters. <br>
+     *                           Bundle parameters: <br>
+     *                           List<Integer>   mList of imageId that is used as data source for RecyclerView.<br>
+     *                           Integer         mPosition   current position of RecyclerView.<br>
+     *                           Integer         mFrontTextId  current text Id of welcome message of Main Activity Screen.<br>
+     *                           Integer         mFrontImaged  current image Id of Main Activity Screen.<br>
+     *                           Integer         mAdCounter    current vslue of AdMob delay counter
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,8 +191,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 // local
         mIsWide = getResources().getBoolean(R.bool.is_wide);
         mJokeImageId = 0;  // image to pass to fragment
-        mIsActive = true;
-
+        mContext = this;
 // log
         // log
         if (!mIsTimber) {
@@ -190,13 +204,14 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             mPosition = savedInstanceState.getInt(BUNDLE_POSITION);
             mFrontTextId = savedInstanceState.getInt(BUNDLE_FRONT_TEXT_ID);
             mFrontImageId = savedInstanceState.getInt(BUNDLE_FRONT_IMAGE_ID);
-            mProgressBar.setVisibility(savedInstanceState.getInt(BUNDLE_PROGRESS_BAR, INVISIBLE));
+            mAdCounter = savedInstanceState.getInt(BUNDLE_AD_COUNTER);
 
         } else {
             mList = JokeUtils.getImageList();
             mPosition = 0;
             mFrontTextId = R.string.welcome_message;
             mFrontImageId = JokeUtils.getFrontImage();
+            mAdCounter = 0;
             if (mIsWide) {
                 startFragment(getString(mFrontTextId), mFrontImageId); // for tablet only
             }
@@ -254,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     @Override
     protected void onStart() {
         super.onStart();
-        mIsActive = true;
         if (!mIsWide) {
             mFrontText.setText(mFrontTextId);
             mFrontImage.setImageResource(mFrontImageId);
@@ -271,54 +285,55 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     @Override
     protected void onStop() {
         super.onStop();
-        mIsActive = false;
     }
 
     /**
      * Destroys Activity.
-     *  Unbinds ButterKnife object.
+     * Unbinds ButterKnife object.
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mUnBinder.unbind();
+        mContext = null;
 
     }
 
     /**
-     *  Saves parameters to Bundle storage object
+     * Saves parameters to Bundle storage object
      *
      * @param outState Bundle storage object for parameters.
-     *  Bundle Parameters: <br>
-     *  List<Integer>   mList of imageId that is used as data source for RecyclerView.<br>
-     *  Integer         mPosition   current position of RecyclerView.<br>
-     *  Integer         mFrontTextId    current text Id of welcome message of Main Activity Screen.<br>
-     *  Integer         mFrontImaged    current image Id of Main Activity Screen.<br>
-     *  ProgressBar     mProgressBar    current visibility state of ProgressBar view object.<br>
-     *
+     *                 Bundle Parameters: <br>
+     *                 List<Integer>   mList of imageId that is used as data source for RecyclerView.<br>
+     *                 Integer         mPosition   current position of RecyclerView.<br>
+     *                 Integer         mFrontTextId    current text Id of welcome message of Main Activity Screen.<br>
+     *                 Integer         mFrontImaged    current image Id of Main Activity Screen.<br>
+     *                 Integer         mAdCounter    current vslue of AdMob delay counter
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);  // Attention!!! After bundle operations only
+
         outState.putIntegerArrayList(BUNDLE_JOKE_LIST, new ArrayList<Integer>(mList));
         outState.putInt(BUNDLE_POSITION, mPosition);
         outState.putInt(BUNDLE_FRONT_TEXT_ID, mFrontTextId);
         outState.putInt(BUNDLE_FRONT_IMAGE_ID, mFrontImageId);
-        outState.putInt(BUNDLE_PROGRESS_BAR, mProgressBar.getVisibility());
+        outState.putInt(BUNDLE_AD_COUNTER, mAdCounter);
+
     }
 
     /**
-     *  Callback for Endpoint AsyncTask object. Saves received Joke to mReceivedJoke variable.
-     *  Set flag mIsOnComplete = true
-     *  Calls nextActivity() method which runs DetailActivity or JokeFragment activities
-     *  There are two Async tasks : EndPoint onComplete() callback and
-     *  Interstitial Ad Listener onAdClosed() callback.
-     *  Any of them can be first, so to sync this, onComplete and onAdClosed()
-     *  set own flags when finished.
-     *  onComplete() and onAdClosed() calls nextActivity(), which checks both flags and
-     *  starts Activity if both flags set true.
+     * Callback for Endpoint AsyncTask object. Saves received Joke to mReceivedJoke variable.
+     * Set flag mIsOnComplete = true
+     * Calls nextActivity() method which runs DetailActivity or JokeFragment activities
+     * There are two Async tasks : EndPoint onComplete() callback and
+     * Interstitial Ad Listener onAdClosed() callback.
+     * Any of them can be first, so to sync this, onComplete and onAdClosed()
+     * set own flags when finished.
+     * onComplete() and onAdClosed() calls nextActivity(), which checks both flags and
+     * starts Activity if both flags set true.
      *
-     * @param s  String id Joke Text or Diagnostic message from Cloud EndPoint.
+     * @param s String id Joke Text or Diagnostic message from Cloud EndPoint.
      */
     @Override
     public void onComplete(String s) {
@@ -329,12 +344,12 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
     /**
-     *  Callback method for RecyclerView JKViewHolder.
-     *  Called when user clicked on RecyclerView Item.
-     *  Actual for wide screen devices only.
-     *  Passes integer value of imageId, that holds ViewHolder to mJokeImageId.
-     *  This imageId then passed to args bundle of JokeFragment and showed in
-     *  Fragment frame  ultimately.
+     * Callback method for RecyclerView JKViewHolder.
+     * Called when user clicked on RecyclerView Item.
+     * Actual for wide screen devices only.
+     * Passes integer value of imageId, that holds ViewHolder to mJokeImageId.
+     * This imageId then passed to args bundle of JokeFragment and showed in
+     * Fragment frame  ultimately.
      *
      * @param value
      */
@@ -347,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
     /**
      * Starts Detail Activity for smart phones or JokeFragment for tablets.
+     * Checks context and rejects requests from the old context
      * Checks flags from Endpoint onComplete(s) and Interstitial Ad onAdClosed() callbacks.
      * If both done and blocking flag mIsBlocked is false, the activity is started.
      * Joke text from Endpoint Async Task object is passed via Intent object to  DetailActivity.
@@ -356,14 +372,13 @@ public class MainActivity extends AppCompatActivity implements ICallback {
      * Set progress bar mProgressBar invisible
      */
     private void nextActivity() {
-        if (!mIsOnComplete || !mIsOnAdClosed || mIsBlocked)
-            return;  // if one of onComplete  and Interstitial not done
+        if (mContext != this) return;  // rejects requests from old context
 
-        if (!mIsActive) return;
+        if (!mIsOnComplete || !mIsOnAdClosed || mIsBlocked)
+            return;
 
         if (!mIsWide) {
             startActivity(mJokeReceived);
-
         } else {
             startFragment(mJokeReceived, mJokeImageId);  //  imageId = 0
             mJokeImageId = 0;
@@ -376,26 +391,30 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
     /**
      * Starts DetailActivity via Intent.
-     *  Saves string of text from Endpoint  to Intent object as parameter
+     * Saves string of text from Endpoint  to Intent object as parameter
+     * Sets flags to quick return to Main when requests spawn a bunch of intents
      *
-     * @param s  String of joke text from Endpoint AsyncTask object.
+     * @param s String of joke text from Endpoint AsyncTask object.
      */
     private void startActivity(String s) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra(INTENT_STRING_EXTRA, mJokeReceived);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
     /**
      * Starts Joke Fragment via Fragment transaction.
-     *  Saves string of text from Endpoint  to Bundle object as parameter.
-     *  Saves image Id of selected RecyclerView item or Front Image to Bundle object as parameter.
+     * Saves string of text from Endpoint  to Bundle object as parameter.
+     * Saves image Id of selected RecyclerView item or Front Image to Bundle object as parameter.
      *
      * @param s  String of joke text from Endpoint AsyncTask object.
-     * @param id  Integer  of imageId of selected RecyclerView item or
-     *            Front Image to Bundle object as parameter.
+     * @param id Integer  of imageId of selected RecyclerView item or
+     *           Front Image to Bundle object as parameter.
      */
     private void startFragment(String s, int id) {
+//        if (isFinishing()) return;                      // resolves conflicts with savedInstance
+
         Fragment fragment = JokeFragment.newInstance(s, id);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -404,10 +423,11 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
     /**
-     *  Returns  Interstitial Ad object with connected listener.
-     *  onAdClosed()            callback when user closed Interstitial Ad object.
-     *  onAdFailedToLoad()      callback when load ofInterstitial Ad object is failed.
-     *  onAdLeftApplication()   callback when user opened Interstitial Ad object.
+     * Returns  Interstitial Ad object with connected listener.
+     * onAdClosed()            callback when user closed Interstitial Ad object.
+     * onAdFailedToLoad()      callback when load ofInterstitial Ad object is failed.
+     * onAdLeftApplication()   callback when user opened Interstitial Ad object.
+     *
      * @return Interstitial Ad object
      */
     private InterstitialAd newInterstitialAd() {
@@ -445,6 +465,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
                 super.onAdFailedToLoad(i);
                 Timber.d("Ad did not load");
             }
+
             /**
              *  Callback method, called when user click on Interstitial Ad.
              *  Set flag mIsBlocked = true to prevent starting DetailActivity
@@ -461,10 +482,10 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
     /**
-     *  Shows Interstitial Ad object
-     *  Checks if Interstitial Ad object is loaded and shows content.
-     *  If loading is failed or Interstitial Ad object is not exist
-     *  puts message to Debug log and generates next Interstitial Ad object.
+     * Shows Interstitial Ad object
+     * Checks if Interstitial Ad object is loaded and shows content.
+     * If loading is failed or Interstitial Ad object is not exist
+     * puts message to Debug log and generates next Interstitial Ad object.
      */
     private void showInterstitial() {
         // Show the ad if it's ready. Otherwise toast and reload the ad.
@@ -478,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
 
     /**
-     *  Generated new  new request for Interstitial Ad object.
+     * Generated new  new request for Interstitial Ad object.
      */
     private void loadInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
@@ -488,7 +509,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
 
     /**
-     *  Creates new Interstitial Ad object and generates new request for it.
+     * Creates new Interstitial Ad object and generates new request for it.
      */
     private void nextInterstitial() {
         mInterstitialAd = newInterstitialAd();
@@ -497,11 +518,11 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
 
     /**
-     *  Creates Listener for "GET JOKE" Button.
-     *  Checks if Interstitial Ad counter is full and shows Interstitial Ad content.
-     *  Generate new request to Endpoint AsyncTask object for new Joke text.
-     *  Set flags according to application logic.
-     *  Shows progress bar, set mProgressBar is visible.
+     * Creates Listener for "GET JOKE" Button.
+     * Checks if Interstitial Ad counter is full and shows Interstitial Ad content.
+     * Generate new request to Endpoint AsyncTask object for new Joke text.
+     * Set flags according to application logic.
+     * Shows progress bar, set mProgressBar is visible.
      */
     private void setGetButton() {
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -515,14 +536,15 @@ public class MainActivity extends AppCompatActivity implements ICallback {
                     } else {
                         nextInterstitial();
                         mIsOnAdClosed = true;
-                        nextActivity();
+//                        nextActivity();
                     }
                     mAdCounter = 0;
                 } else {
                     mIsOnAdClosed = true; // skip ad
                 }
-// endpoints
-                new EndpointsAsyncTask(MainActivity.this, REQUEST_GET_TEMPLATE).execute();
+// endpoints static object
+                mEndPointTask = new EndpointsAsyncTask(MainActivity.this, REQUEST_GET_TEMPLATE);
+                mEndPointTask.execute();
                 mIsOnComplete = false;
                 mIsBlocked = false;
             }
@@ -548,15 +570,15 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
     /**
      * Setup RecyclerView object for wide screen devices
-     *  RecyclerView uses GridLayout with different scrolling direction
-     *  depending on orientation.
-     *  Setup JokeUtils.Span object with display parameters
-     *  using helper method JokeUtils.getDisplayMetrics().
-     *  JokeUtils.Span sp.spanX, sp.height  used for vertical scrolling
-     *  JokeUtils.Span sp.spanY, sp.width  used for horizontal scrolling
-     *  Setup Recycler Layout and  Adapter objects.
-     *  Setup listener which is emulates endless RecyclerView by adding copies of
-     *  imageIds to RecylerView data source mList<Integer> object.
+     * RecyclerView uses GridLayout with different scrolling direction
+     * depending on orientation.
+     * Setup JokeUtils.Span object with display parameters
+     * using helper method JokeUtils.getDisplayMetrics().
+     * JokeUtils.Span sp.spanX, sp.height  used for vertical scrolling
+     * JokeUtils.Span sp.spanY, sp.width  used for horizontal scrolling
+     * Setup Recycler Layout and  Adapter objects.
+     * Setup listener which is emulates endless RecyclerView by adding copies of
+     * imageIds to RecylerView data source mList<Integer> object.
      */
     private void setRecycler() {
 // recycler
@@ -586,7 +608,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
                     int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
                     mPosition = pastVisiblesItems;
 
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount - 2) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount - 5) {
                         mList.addAll(JokeUtils.getImageList());
                         mAdapter.notifyDataSetChanged();
                     }

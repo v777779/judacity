@@ -4,6 +4,7 @@
     <dimen name="head_text_size">18sp</dimen>
     <dimen name="large_text_size">22sp</dimen>
 
+    <dimen name="text_padding">16dp</dimen>
 
     <!--button-->
     <dimen name="button_padding_side">32dp</dimen>
