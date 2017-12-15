@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackJoke">
+    <!--android:id="@+id/container"-->
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_h"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_h2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <ImageView
+        android:id="@+id/div_h1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:contentDescription="@string/divider_descr"
+        android:src="@drawable/divider_bottom"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_h"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--<ImageView-->
+        <!--android:id="@+id/div_h2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="2dp"-->
+        <!--android:src="@drawable/divider_bottom"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--android:contentDescription="@string/divider_descr"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--/>-->
+    <!--<ImageView-->
+        <!--android:id="@+id/div_v1"-->
+        <!--android:layout_width="2dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:src="@drawable/divider_left"-->
+        <!--android:contentDescription="@string/divider_descr"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/div_v2"-->
+        <!--android:layout_width="2dp"-->
+        <!--android:layout_height="match_parent"-->
+
+        <!--android:contentDescription="@string/divider_descr"-->
+        <!--android:src="@drawable/divider_right"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+
+    <ImageView
+        android:id="@+id/joke_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/div_h1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/joke_text"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorBackText"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/text_padding"
+        android:textAppearance="@style/TextLargeS"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_h" />
+
+    <!--</android.support.constraint.ConstraintLayout>-->
+
+
+
+
+</android.support.constraint.ConstraintLayout>
