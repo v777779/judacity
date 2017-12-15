@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -217,12 +216,12 @@ public class MainActivity extends AppCompatActivity implements ICallback {
      * @param menu Menu object.
      * @return boolean value.
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
 
     /**
      * Processes Home and settings menu items clicks.
@@ -311,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     /**
      *  Callback for Endpoint AsyncTask object. Saves received Joke to mReceivedJoke variable.
      *  Set flag mIsOnComplete = true
-     *  Calls nextActivity() methid which runs DetailActivity or JokeFragment activities
+     *  Calls nextActivity() method which runs DetailActivity or JokeFragment activities
      *  There are two Async tasks : EndPoint onComplete() callback and
      *  Interstitial Ad Listener onAdClosed() callback.
      *  Any of them can be first, so to sync this, onComplete and onAdClosed()
@@ -502,6 +501,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
      *  Checks if Interstitial Ad counter is full and shows Interstitial Ad content.
      *  Generate new request to Endpoint AsyncTask object for new Joke text.
      *  Set flags according to application logic.
+     *  Shows progress bar, set mProgressBar is visible.
      */
     private void setGetButton() {
         mButton.setOnClickListener(new View.OnClickListener() {

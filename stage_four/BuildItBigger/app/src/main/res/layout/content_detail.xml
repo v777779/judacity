@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="@dimen/frame_margin_banner"
         android:text="@string/button_back"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

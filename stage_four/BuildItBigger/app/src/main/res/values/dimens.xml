@@ -28,5 +28,6 @@
     <dimen name="frame_margin_super">24dp</dimen>
     <dimen name="frame_margin_extra">32dp</dimen>
     <dimen name="frame_margin_ultra">48dp</dimen>
+    <dimen name="frame_margin_banner">56dp</dimen>
 
 </resources>
