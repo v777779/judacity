@@ -1,0 +1,12 @@
+<resources>
+
+    <!--text sizes-->
+    <dimen name="head_text_size">18sp</dimen>
+    <dimen name="large_text_size">20sp</dimen>
+
+
+    <!--button-->
+    <dimen name="button_padding_side">32dp</dimen>
+    <dimen name="button_padding_top">16dp</dimen>
+
+</resources>

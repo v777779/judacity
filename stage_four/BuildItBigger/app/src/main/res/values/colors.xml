@@ -14,6 +14,8 @@
     <!--background-->
     <color name="colorBackJoke">#80babab3</color>
     <color name="colorBackText">#ffddb7</color>
+    <color name="colorBackJokeLight">#80e1e1d8</color>
+    <color name="colorBackJokeDark">#8c8c8c</color>
 
     <!--button-->
     <color name="colorSaladBackNormal">#84be87</color>

@@ -99,28 +99,23 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             mPosition = savedInstanceState.getInt(BUNDLE_POSITION);
             mFrontTextId = savedInstanceState.getInt(BUNDLE_FRONT_TEXT_ID);
             mFrontImageId = savedInstanceState.getInt(BUNDLE_FRONT_IMAGE_ID);
-            mProgressBar.setVisibility(savedInstanceState.getInt(BUNDLE_PROGRESS_BAR,INVISIBLE));
+            mProgressBar.setVisibility(savedInstanceState.getInt(BUNDLE_PROGRESS_BAR, INVISIBLE));
 
         } else {
             mList = JokeUtils.getImageList();
             mPosition = 0;
             mFrontTextId = R.string.welcome_message;
             mFrontImageId = JokeUtils.getFrontImage();
-            if(mIsWide) {
+            if (mIsWide) {
                 startFragment(getString(mFrontTextId), mFrontImageId); // for tablet only
             }
         }
 
         setAdMob();
         setGetButton();
-        if(!mIsWide) {
-            mFrontText.setText(mFrontTextId);
-            mFrontImage.setImageResource(mFrontImageId);
-        }
-        else {
+        if (mIsWide) {
             setRecycler();  // for tablet only
         }
-
 
     }
 
@@ -149,6 +144,10 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     protected void onStart() {
         super.onStart();
         mIsActive = true;
+        if (!mIsWide) {
+            mFrontText.setText(mFrontTextId);
+            mFrontImage.setImageResource(mFrontImageId);
+        }
 
     }
 
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         outState.putInt(BUNDLE_POSITION, mPosition);
         outState.putInt(BUNDLE_FRONT_TEXT_ID, mFrontTextId);
         outState.putInt(BUNDLE_FRONT_IMAGE_ID, mFrontImageId);
-        outState.putInt(BUNDLE_PROGRESS_BAR,mProgressBar.getVisibility());
+        outState.putInt(BUNDLE_PROGRESS_BAR, mProgressBar.getVisibility());
     }
 
     @Override
@@ -197,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             mJokeImageId = 0;
         }
 
+        mFrontTextId = R.string.next_message;
         mProgressBar.setVisibility(INVISIBLE);
         mAdCounter++;
     }
@@ -267,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
     }
-
 
 
     // button

@@ -22,4 +22,7 @@
     <string name="button_get">GET THE JOKE</string>
     <string name="button_back">BACK</string>
 
+    <!--images-->
+    <string name="divider_descr">divider</string>
+
 </resources>

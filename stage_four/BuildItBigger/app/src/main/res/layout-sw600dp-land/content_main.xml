@@ -57,12 +57,10 @@
 
     <Button
         android:id="@+id/joke_button"
-        style="@style/button_salad_extra"
+        style="@style/button_salad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="@dimen/frame_margin_standard"
         android:text="@string/button_get"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/adview_banner"
@@ -75,9 +73,9 @@
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginTop="4dp"
+
+        android:layout_marginEnd="@dimen/frame_margin_middle"
+        android:layout_marginTop="@dimen/frame_margin_middle"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/adview_banner"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,18 +86,24 @@
 
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/div_v1"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+
+        android:contentDescription="@string/divider_descr"
+        android:src="@drawable/divider_left"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v2" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/joke_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/frame_margin_middle"
+        android:layout_marginStart="@dimen/frame_margin_middle"
+        android:layout_marginTop="@dimen/frame_margin_middle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guide_v2"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/div_v1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
