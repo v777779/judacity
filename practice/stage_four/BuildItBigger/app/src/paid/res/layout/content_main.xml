@@ -5,38 +5,24 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackJoke"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ru.vpcb.builditbigger.MainActivity"
-    tools:showIn="@layout/activity_main"
-    android:background="@color/colorBackJoke"
-    >
+    tools:showIn="@layout/activity_main">
 
 
     <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
+    <!--android:id="@+id/fab"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|end"-->
 
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:visibility="gone"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/adview_banner"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
-
-    <!-- view for AdMob Banner Ad -->
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adview_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:adSize="@string/banner_size"
-        app:adUnitId="@string/banner_ad_unit_id"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:layout_marginEnd="16dp"-->
+    <!--android:visibility="gone"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/adview_banner"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
 
 
     <android.support.v7.widget.CardView
@@ -63,11 +49,11 @@
         android:id="@+id/front_text_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/frame_margin_small"
+        android:layout_marginBottom="2dp"
         android:layout_marginEnd="@dimen/frame_margin_small"
         android:layout_marginStart="@dimen/frame_margin_small"
         android:layout_marginTop="@dimen/frame_margin_small"
-        app:layout_constraintBottom_toTopOf="@+id/adview_banner"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guide_h1">
@@ -117,32 +103,19 @@
     <!--ads:layout_constraintTop_toTopOf="@+id/guide_h1" />-->
 
 
-    <Button
-        android:id="@+id/joke_button"
-        style="@style/button_salad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="@dimen/frame_margin_standard"
-        android:text="@string/button_get"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/adview_banner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <android.support.constraint.Guideline
         android:id="@+id/guide_h1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.65" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_h2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_begin="409dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_v1"
@@ -158,6 +131,18 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
+    <Button
+        android:id="@+id/joke_button"
+        style="@style/button_salad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="32dp"
+        android:text="@string/button_get"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

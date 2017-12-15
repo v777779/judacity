@@ -10,9 +10,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -114,15 +114,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             }
         }
 
-        if(mIsPaid) {
-            setGetButtonPaid();
-            mAdView.setVisibility(View.GONE);
-        }
-        else {
-            setAdMob();
-            setGetButton();
-        }
-
+//           setAdMob();
+        setGetButton();
         if (mIsWide) {
             setRecycler();  // for tablet only
         }
@@ -226,74 +219,6 @@ public class MainActivity extends AppCompatActivity implements ICallback {
                 .commit();
     }
 
-    // ad interstitial
-    private InterstitialAd newInterstitialAd() {
-        final InterstitialAd interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.inter_ad_unit_id));
-
-        interstitialAd.setAdListener(new AdListener() {
-            final InterstitialAd nInterstitialAd = interstitialAd;
-
-            @Override
-            public void onAdClosed() {
-                nInterstitialAd.loadAd(new AdRequest.Builder().build());
-                mIsOnAdClosed = true;
-                nextActivity();
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                Log.d(TAG, "Ad did not load");
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-                mIsBlocked = true;
-                mProgressBar.setVisibility(INVISIBLE);
-            }
-        });
-        return interstitialAd;
-    }
-
-    private void showInterstitial() {
-        // Show the ad if it's ready. Otherwise toast and reload the ad.
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-            Log.d(TAG, "Ad did not load");
-            nextInterstitial();
-        }
-    }
-
-    private void loadInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        mInterstitialAd.loadAd(adRequest);
-    }
-
-    private void nextInterstitial() {
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
-    }
-
-    private void setGetButtonPaid() {
-
-        mButton = findViewById(R.id.joke_button);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mProgressBar.setVisibility(View.VISIBLE);                           // progress bar
-                mIsOnAdClosed = true;
-// endpoints
-                new EndpointsAsyncTask(MainActivity.this, REQUEST_GET_TEMPLATE).execute();
-                mIsOnComplete = false;
-                mIsBlocked = false;
-            }
-        });
-    }
-
     // button
     private void setGetButton() {
 
@@ -302,40 +227,13 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             @Override
             public void onClick(View view) {
                 mProgressBar.setVisibility(View.VISIBLE);                           // progress bar
-                if (mAdCounter >= AD_ACTIVATION_COUNTER) {                          // interstitial
-                    if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
-                        mIsOnAdClosed = false;
-                    } else {
-                        nextInterstitial();
-                        mIsOnAdClosed = true;
-                        nextActivity();
-                    }
-                    mAdCounter = 0;
-                } else {
-                    mIsOnAdClosed = true; // skip ad
-                }
+                mIsOnAdClosed = true; // skip ad
 // endpoints
                 new EndpointsAsyncTask(MainActivity.this, REQUEST_GET_TEMPLATE).execute();
                 mIsOnComplete = false;
                 mIsBlocked = false;
             }
         });
-    }
-
-    // adMob
-    private void setAdMob() {
-        MobileAds.initialize(this, getString(R.string.banner_ad_app_id));
-// banner
-//        mAdView = findViewById(R.id.adview_banner);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mAdView.loadAd(adRequest);
-// interstitial
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
-
     }
 
 
