@@ -14,8 +14,8 @@ import javax.inject.Named;
 
 import ru.vpcb.jokeprovider.JokeProvider;
 
-import static ru.vpcb.constants.Constants.REQUEST_TEST_GET_TEMPLATE;
-import static ru.vpcb.constants.Constants.REQUEST_TEST_OUT_TEMPLATE;
+import static ru.vpcb.constants.Constants.TEST_REQUEST;
+import static ru.vpcb.constants.Constants.TEST_RESPONSE;
 
 
 /**
@@ -38,8 +38,8 @@ public class MyEndpoint {
     @ApiMethod(name = "sayHi")
     public MyBean sayHi(@Named("name") String name) {
         MyBean response = new MyBean();
-        if(name != null && name.toLowerCase().equals(REQUEST_TEST_GET_TEMPLATE)) {
-            response.setData(REQUEST_TEST_OUT_TEMPLATE);
+        if(name != null && name.toLowerCase().equals(TEST_REQUEST)) {
+            response.setData(TEST_RESPONSE);
         }
         else {
             response.setData(new JokeProvider().getJoke());

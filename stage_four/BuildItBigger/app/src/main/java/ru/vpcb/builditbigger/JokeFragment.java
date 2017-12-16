@@ -55,6 +55,7 @@ public class JokeFragment extends Fragment {
         mJokeText.setText(mJokeTextId);
         mJokeImage.setImageResource(mJokeImageId);
 
+        ((ICallback)getActivity()).onCompleteIdling(); // test procedure
         return rootView;
     }
 

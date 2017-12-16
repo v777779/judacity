@@ -3,7 +3,10 @@ package ru.vpcb.builditbigger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -41,8 +44,10 @@ import static ru.vpcb.constants.Constants.BUNDLE_FRONT_IMAGE_ID;
 import static ru.vpcb.constants.Constants.BUNDLE_FRONT_TEXT_ID;
 import static ru.vpcb.constants.Constants.BUNDLE_JOKE_LIST;
 import static ru.vpcb.constants.Constants.BUNDLE_POSITION;
+import static ru.vpcb.constants.Constants.GET_REQUEST;
+import static ru.vpcb.constants.Constants.INTENT_REQUEST_CODE;
 import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
-import static ru.vpcb.constants.Constants.REQUEST_GET_TEMPLATE;
+import static ru.vpcb.constants.Constants.TEST_REQUEST;
 
 public class MainActivity extends AppCompatActivity implements ICallback {
     /**
@@ -52,13 +57,15 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     /**
      * Boolean value used for making TimberTree one time only
      */
-    private static boolean mIsTimber;
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public static boolean mIsTimber;
     /**
-     * AdMob banner view object
+     * Static Endpoint AsyncTask
      */
-
     private static EndpointsAsyncTask mEndPointTask;
-
+    /**
+     * AdView Ad Banner object
+     */
     @Nullable
     @BindView(R.id.adview_banner)
     AdView mAdView;
@@ -153,6 +160,15 @@ public class MainActivity extends AppCompatActivity implements ICallback {
      * ButterKnife object, used to close all binds on destroy.
      */
     private Unbinder mUnBinder;
+    /**
+     * Boolean flag is true when test mode on and all responses from Endpoint will the same
+     */
+    private boolean mIsTest;
+    /**
+     * IdlingResource used for Endpoint Callback tests
+     */
+    @Nullable
+    private EndpointIdling mEndpointIdling;
 
     /**
      * Initializes Main Activity
@@ -198,6 +214,9 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             Timber.plant(new Timber.DebugTree());
             mIsTimber = true;
         }
+// test
+        setIdlingResource();
+        mIsTest = false;
 
         if (savedInstanceState != null) {
             mList = savedInstanceState.getIntegerArrayList(BUNDLE_JOKE_LIST);
@@ -361,6 +380,16 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
     /**
+     *  Unlocks IdlingResource after mJokeText object was set
+     *  by DetailActivity or JokeFragment to new value
+     *  received from EndPointAsyncTask response.
+     */
+    @Override
+    public void onCompleteIdling() {
+        unlockEndpointIdling();
+    }
+
+    /**
      * Starts Detail Activity for smart phones or JokeFragment for tablets.
      * Checks context and rejects requests from the old context
      * Checks flags from Endpoint onComplete(s) and Interstitial Ad onAdClosed() callbacks.
@@ -390,9 +419,28 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
     /**
+     * Callback from DetailActivity when mJokeText was filled by value received from MainActivity
+     * Calls onCompleteIdling to unlock IdlingResource
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == INTENT_REQUEST_CODE) {
+            onCompleteIdling();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
      * Starts DetailActivity via Intent.
      * Saves string of text from Endpoint  to Intent object as parameter
      * Sets flags to quick return to Main when requests spawn a bunch of intents
+     * Starts intent for result to get response from DetailActivity when mJokeText is set
      *
      * @param s String of joke text from Endpoint AsyncTask object.
      */
@@ -400,7 +448,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra(INTENT_STRING_EXTRA, mJokeReceived);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        startActivityForResult(intent,INTENT_REQUEST_CODE);
+
     }
 
     /**
@@ -543,8 +592,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
                     mIsOnAdClosed = true; // skip ad
                 }
 // endpoints static object
-                mEndPointTask = new EndpointsAsyncTask(MainActivity.this, REQUEST_GET_TEMPLATE);
-                mEndPointTask.execute();
+                makeEndpOintRequest(mIsTest);
+
                 mIsOnComplete = false;
                 mIsBlocked = false;
             }
@@ -618,5 +667,74 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
         mRecycler.scrollToPosition(mPosition);
 
+    }
+
+    /**
+     * Makes request to EndpointAsyncTask object.
+     * mIsTask flag defines if request is GET_REQUEST or TEST_REQUEST
+     * Test request gets fixed value in response
+     * Normal request gets random joke in response
+     * Locks IdlingResource object until onIdlingComplete() is executed
+     */
+    private void makeEndpOintRequest(boolean isTest) {
+        String request = GET_REQUEST;
+        if (isTest) {
+            request = TEST_REQUEST;
+        }
+        mEndPointTask = new EndpointsAsyncTask(MainActivity.this, request);
+        mEndPointTask.execute();
+        lockEndpointIdling();
+    }
+
+    /**
+     * Returns Idling Resource for EndpointAsyncTask callback test
+     * Visible as private for all types of flavor, but public while test
+     *
+     * @return IdlingResource object
+     */
+    @NonNull
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public IdlingResource getIdlingResource() {
+        if (mEndpointIdling == null) {
+            mEndpointIdling = new EndpointIdling();
+        }
+        return mEndpointIdling;
+    }
+
+    /**
+     * Creates IdlingResource object and saves it to mEndpointIdling
+     */
+    private void setIdlingResource() {
+        if (mIsTest && mEndpointIdling == null) {
+            mEndpointIdling = new EndpointIdling();
+        }
+    }
+
+    /**
+     * Locks IdlingResource while operation is going on
+     */
+    private void lockEndpointIdling() {
+        if (mIsTest && mEndpointIdling != null) {
+            mEndpointIdling.setIdleState(false);
+        }
+    }
+
+    /**
+     * UnLocks IdlingResource after operation is completed
+     */
+    private void unlockEndpointIdling() {
+        if (mIsTest && mEndpointIdling != null) {
+            mEndpointIdling.setIdleState(true);
+        }
+    }
+
+    /**
+     * Sets MainActivity to test mode
+     * While test mode all IdlingResource  methods are active and request type is TEST_REQUEST
+     */
+    @NonNull
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public void setTestMode() {
+        mIsTest = true;
     }
 }

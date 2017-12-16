@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import static ru.vpcb.constants.Constants.BUNDLE_JOKE_IMAGE_ID;
 import static ru.vpcb.constants.Constants.BUNDLE_JOKE_TEXT_ID;
+import static ru.vpcb.constants.Constants.INTENT_REQUEST_CODE;
 import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
 
 public class DetailActivity extends AppCompatActivity {
@@ -68,6 +69,7 @@ public class DetailActivity extends AppCompatActivity {
         mJokeText.setText(mJokeTextId);
         mJokeImage.setImageResource(mJokeImageId);
 
+        setResult(INTENT_REQUEST_CODE);
     }
 
 

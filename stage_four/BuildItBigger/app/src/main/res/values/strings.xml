@@ -26,8 +26,9 @@
     <string name="divider_descr">divider</string>
 
     <!--test-->
-    <string name="test_message">*** Endpont Test passed ***</string>
     <string name="test_request">test</string>
     <string name="test_respond">test joke received</string>
+
+    <string name="test_message">Endpont Test for %1$s passed</string>
 
 </resources>

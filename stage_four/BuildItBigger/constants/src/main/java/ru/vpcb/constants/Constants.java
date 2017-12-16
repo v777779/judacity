@@ -13,14 +13,10 @@ public class Constants {
     public static final String INTENT_STRING_EXTRA = "intent_string_extra";
     public static final String INTENT_IMAGE_EXTRA = "intent_image_extra";
     public static final int MESSAGE_JOKE_ID = 1223;
+    public static final int INTENT_REQUEST_CODE = 1224;
 
-    public static final String REQUEST_GET_TEMPLATE = "get";
-    public static final String REQUEST_TEST_GET_TEMPLATE = "test";
-    public static final String REQUEST_TEST_OUT_TEMPLATE = "test joke received";
+    public static final String GET_REQUEST = "get";
     public static final int AD_ACTIVATION_COUNTER = 3;
-    public static final String MESSAGE_TEST_OK = "*** Endpoint Test passed ***";
-    public static final String MESSAGE_TEST_FREE_OK = "*** Endpoint Test Free passed ***";
-    public static final String MESSAGE_TEST_PAID_OK = "*** Endpoint Test Paid passed ***";
 
     // display    public static final String BUNDLE_JOKE_STRING = "bundle_joke_string";
     public static final String BUNDLE_JOKE_LIST = "bundle_joke_list";
@@ -42,5 +38,17 @@ public class Constants {
     public static final int MIN_SPAN = 1;
     public static final int MIN_HEIGHT = 100;
     public static final int MIN_WIDTH = 200;
+
+    // tests
+    public static final String TEST_REQUEST = "test";
+    public static final String TEST_RESPONSE = "test joke received";
+
+    public static final String MESSAGE_TEST_OK = "*** Endpoint Test passed ***";
+    public static final String TEST_MESSAGE_OK_FREE = "*** Endpoint Test Free passed ***";
+    public static final String TEST_MESSAGE_OK_PAID = "*** Endpoint Test Paid passed ***";
+
+    public static final int TEST_POSITION_0 = 0;
+    public static final int TEST_POSITION_5 = 5;
+    public static final int TEST_POSITION_10 = 10;
 
 }
