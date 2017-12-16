@@ -43,6 +43,16 @@ import static ru.vpcb.constants.Constants.INTENT_REQUEST_CODE;
 import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
 import static ru.vpcb.constants.Constants.TEST_REQUEST;
 
+/**
+ *  MainActivity class is main activity of application
+ *  Creates first page layout
+ *  Sends request to EndpointAsyncTask object.
+ *  Receives response and send it to DetailACtivity or Fragment
+ *  Creates different layouts for non tablets and tablets devices
+ *  Uses Intent to DetailActivity for non tablets devices
+ *  Uses Bundle to JokeFragemnt and creates RecyclerView for tablets
+ *  Supports test with IdlingResource
+ */
 public class MainActivity extends AppCompatActivity implements ICallback {
     /**
      * Context used to reject calls from Java Development server with old context

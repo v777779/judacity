@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNot.not;
 import static ru.vpcb.constants.Constants.TEST_POSITION_0;
 import static ru.vpcb.constants.Constants.TEST_POSITION_5;
+import static ru.vpcb.constants.Constants.TEST_POSITION_10;
 import static ru.vpcb.constants.Constants.TEST_RESPONSE;
 
 /**
@@ -111,27 +112,55 @@ public class BuildItBiggerTestFree {
         }
         registerIdlingResource();
 
-// timber
         if (!mainActivityRule.getActivity().mIsTimber) {
             Timber.plant(new Timber.DebugTree());
             mainActivityRule.getActivity().mIsTimber = true;
         }
-
     }
 
+    /**
+     *  Waits IdlingResource and check if TextView object matches to TEST_RESPONSE value.
+     */
     private void checkAnswer() {
-        mText = onView(withText(TEST_RESPONSE));
+        mText = onView(withId(R.id.joke_text));
         while (!mIdlingResource.isIdleNow()) {
         }
-        mText = onView(withText(TEST_RESPONSE));
+        mText.check(matches(withText(TEST_RESPONSE)));
         mText.check(matches(isDisplayed()));
     }
 
+    /**
+     *  Test method for Application
+     *  Application set to test mode, so any request will get the same TEST_RESPONSE
+     *
+     *  Free Flavor does not have button in wide screen devices which width between 600 and 800dp
+     *  So the test of button is absent for Free Flavor.
+     *  Non Tablet device test includes: <br>
+     *  Check TextView with front message and visibility.
+     *  Check Button with button text and visibility.
+     *  Perform Button click
+     *  Waits IdlingResource and check if TextView object matches to TEST_RESPONSE value
+     *  Check TextView with new message TEST_RESPONSE and visibility
+     *
+     *  Tablet device test includes: <br>
+     *  Check TextView with front message and visibility.
 
+     *  Check Button with button text and visibility.
+     *  Perform Button click
+     *  Waits IdlingResource and check if TextView object matches to TEST_RESPONSE value
+     *  Check TextView with new message TEST_RESPONSE and visibility
+     *  Clear TextView before RecyclerView testing
+     *
+
+     *  Check RecyclerView scroll and visibility for 0, 5 and 10 item positions.
+     *  Perform Recycler click on 0 Item position
+     *  Waits IdlingResource and check if TextView object matches to TEST_RESPONSE value
+     *  Check TextView with new message TEST_RESPONSE and visibility
+     *
+     */
     @Test
     public void useAppContext() throws Exception {
         if (!mIsWide) {
-// text
             mText = onView(withId(R.id.front_text));
             mText.check(matches(withText(mRes.getString(R.string.welcome_message))));
             mText.check(matches(isDisplayed()));
@@ -143,17 +172,19 @@ public class BuildItBiggerTestFree {
             mButton.perform(click());
             checkAnswer();
         } else {
-// text
+
             mText = onView(withId(R.id.joke_text));
             mText.check(matches(withText(mRes.getString(R.string.welcome_message))));
             mText.check(matches(isDisplayed()));
-// recycler
+
             mRecycler = onView(allOf(withId(R.id.joke_recycler), isDisplayed()));
             mItem = mRecycler.perform(actionOnItemAtPosition(TEST_POSITION_0, scrollTo()));
             mItem.check(matches(isDisplayed()));
             mItem = mRecycler.perform(actionOnItemAtPosition(TEST_POSITION_5, scrollTo()));
             mItem.check(matches(isDisplayed()));
-//click
+            mItem = mRecycler.perform(actionOnItemAtPosition(TEST_POSITION_10, scrollTo()));
+            mItem.check(matches(isDisplayed()));
+
             mRecycler.perform(actionOnItemAtPosition(TEST_POSITION_0, click()));
             checkAnswer();
         }
@@ -161,25 +192,48 @@ public class BuildItBiggerTestFree {
         Timber.i(mRes.getString(R.string.test_message, mRes.getString(R.string.app_name)));
     }
 
-
+    /**
+     * Unregister Idling Resource
+     *
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         unregisterIdlingResource();
     }
 
+    /**
+     * Register Idling Resource
+     *  IdlingRegistry.getInstance() method used to get access to IdlingRegistry
+     *  IdlingRegistry is Singleton so the access will be always to the same object.
+     *
+     */
     public void registerIdlingResource() {
         mIdlingResource = mainActivityRule.getActivity().getIdlingResource();
         IdlingRegistry.getInstance().register(mIdlingResource);
     }
 
 
+    /**
+     *  Unregister Idling Resource
+     *  IdlingRegistry.getInstance() method used to get access to IdlingRegistry
+     *  IdlingRegistry is Singleton so the access will be always to the same object.
+     *
+     */
     public void unregisterIdlingResource() {
         if (mIdlingResource != null) {
             IdlingRegistry.getInstance().unregister(mIdlingResource);
         }
     }
 
-
+    /**
+     *  Returns Custom ViewAction object
+     *  Allows change TextView value
+     *  Standard ViewAction works with TextEdit only
+     *
+     * @aram value String new value
+     * @return VewAction wich allows to change TextView value
+     */
     private  ViewAction setTextInTextView(final String value){
         return new ViewAction() {
             @SuppressWarnings("unchecked")

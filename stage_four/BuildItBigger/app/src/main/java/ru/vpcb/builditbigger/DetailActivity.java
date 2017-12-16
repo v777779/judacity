@@ -17,16 +17,46 @@ import static ru.vpcb.constants.Constants.BUNDLE_JOKE_TEXT_ID;
 import static ru.vpcb.constants.Constants.INTENT_REQUEST_CODE;
 import static ru.vpcb.constants.Constants.INTENT_STRING_EXTRA;
 
+/**
+ * DetailActivity class
+ * Receives message from MainActivity via Intent and shows message and random image
+ * Send back to MainActivity result to unlock IdlingResource, used for testing
+ */
 public class DetailActivity extends AppCompatActivity {
 
-    // bind
+    /**
+     * Button object used to back to MainActivity
+     */
     private Button mButton;
+    /**
+     * ImageView used to show random image from local storage
+     */
     private ImageView mJokeImage;
+    /**
+     * TextView used to output joke message received from MainActivity
+     */
     private TextView mJokeText;
+    /**
+     * String  value of joke message, used for rotation support
+     */
     private String mJokeTextId;
+    /**
+     * Integer value of companion image imageId, used for rotation support
+     */
     private int mJokeImageId;
 
-
+    /**
+     * Creates layout of Detail Activity
+     * Extract received String joke message and int imageId values
+     * Set joke message and image values to show.
+     * Set button and listener which closes activity in click.
+     * Unlocks IdlingResource of MainActivity via calling setResult() method
+     *
+     * @param savedInstanceState Bundle storage of parameters <br>
+     *                           Bundle parameters: <br>
+     *                           String      mJokeTextId      value of joke message.<br>
+     *                           Integer     mJokeImageId     value of joke companion imageId.<br>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +68,8 @@ public class DetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
-
-
         }
 
-// bind
         mButton = findViewById(R.id.joke_button);
         mJokeImage = findViewById(R.id.joke_image);
         mJokeText = findViewById(R.id.joke_text);
@@ -72,7 +99,13 @@ public class DetailActivity extends AppCompatActivity {
         setResult(INTENT_REQUEST_CODE);
     }
 
-
+    /**
+     * Processes Home and settings menu items clicks.
+     * Settings Menu is empty.
+     *
+     * @param item MenuItem object that was selected.
+     * @return true if item was processed.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -83,6 +116,14 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Saves parameters to Bundle storage object
+     *
+     * @param outState Bundle storage object for parameters.
+     *                 Bundle Parameters: <br>
+     *                 String      mJokeTextId      value of joke message
+     *                 Integer     mJokeImageId     value of joke companion imageId
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
