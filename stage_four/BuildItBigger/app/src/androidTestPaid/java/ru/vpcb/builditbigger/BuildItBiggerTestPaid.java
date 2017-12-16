@@ -147,7 +147,6 @@ public class BuildItBiggerTestPaid {
             mText = onView(withId(R.id.joke_text));
             mText.check(matches(withText(mRes.getString(R.string.welcome_message))));
             mText.check(matches(isDisplayed()));
-
 // button   paid flavor wide screens all have button
             mButton = onView(withId(R.id.joke_button));
             mButton.check(matches(withText(mRes.getString(R.string.button_get))));
@@ -155,7 +154,6 @@ public class BuildItBiggerTestPaid {
             mButton.perform(click());
             checkAnswer();
             mText.perform(setTextInTextView(""));
-
 // recycler
             mRecycler = onView(allOf(withId(R.id.joke_recycler), isDisplayed()));
             mItem = mRecycler.perform(actionOnItemAtPosition(TEST_POSITION_0, scrollTo()));

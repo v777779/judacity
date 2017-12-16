@@ -143,20 +143,12 @@ public class BuildItBiggerTestFree {
             mButton.perform(click());
             checkAnswer();
         } else {
-// paid flavor wide screens all have button
+// text
             mText = onView(withId(R.id.joke_text));
             mText.check(matches(withText(mRes.getString(R.string.welcome_message))));
             mText.check(matches(isDisplayed()));
-// button
-//            mButton = onView(withId(R.id.joke_button));
-//            mButton.check(matches(withText(mRes.getString(R.string.button_get))));
-//            mButton.check(matches(isDisplayed()));
-//            mButton.perform(click());
-//            checkAnswer();
-//            mText.perform(setTextInTextView(""));
 // recycler
             mRecycler = onView(allOf(withId(R.id.joke_recycler), isDisplayed()));
-
             mItem = mRecycler.perform(actionOnItemAtPosition(TEST_POSITION_0, scrollTo()));
             mItem.check(matches(isDisplayed()));
             mItem = mRecycler.perform(actionOnItemAtPosition(TEST_POSITION_5, scrollTo()));
