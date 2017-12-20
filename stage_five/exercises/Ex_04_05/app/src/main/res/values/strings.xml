@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Ex_04_05</string>
+    <string name="action_settings">Settings</string>
+    <string name="text_1">Flower of field color white.</string>
+    <string name="text_2">Travel in mobile network, 2000.</string>
+    <string name="text_3">
+        religion, and spent time as a
+        Protestant missionary in southern Belgium.
+        He drifted in ill health and solitude before
+        taking up painting in 1881, having moved back
+        home with his parents. His younger brother
+        Theo supported him financially, and the two
+        kept up a long correspondence by letter.
+        His early works, mostly still lifes and
+        depictions of peasant labourers, contain
+        few signs of the vivid colour that distinguished
+        his later work. In 1886, he moved to Paris, where</string>
+    <string name="text_4">he met members of the avant-garde, including Émile
+        Bernard and Paul Gauguin, who were reacting
+        against the Impressionist sensibility. A</string>
+</resources>
