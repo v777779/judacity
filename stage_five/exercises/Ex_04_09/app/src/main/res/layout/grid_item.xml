@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="144dp"
+    android:layout_height="144dp">
+
+<ImageView
+    android:id="@+id/image_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    android:transitionName="@string/transition_photo"
+    />
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center"
+
+    android:textColor="@android:color/white"
+    android:textSize="20sp"
+    android:padding="8dp"
+    tools:text = "Item Text"
+
+
+    />
+
+    <!--android:transitionName="hero"-->
+</FrameLayout>
