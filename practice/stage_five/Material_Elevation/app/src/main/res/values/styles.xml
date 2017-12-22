@@ -17,4 +17,51 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!--text styles-->
+    <style name="TextNormal" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
+    <!--button-->
+    <style name="TextButton" parent="TextNormal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+    </style>
+
+    <!--button styles-->
+    <style name="button_salad_base" parent="@style/Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_salad</item>
+        <item name="android:stateListAnimator">@animator/button_salad</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textAppearance">@style/TextButton</item>
+        <item name="android:paddingLeft">@dimen/button_padding_side</item>
+        <item name="android:paddingRight">@dimen/button_padding_side</item>
+        <item name="android:paddingTop">@dimen/button_padding_top</item>
+        <item name="android:paddingBottom">@dimen/button_padding_top</item>
+    </style>
+    <style name="button_salad" parent="@style/button_salad_base">
+        <item name="android:background">@drawable/button_salad</item>
+        <item name="android:stateListAnimator">@animator/button_salad</item>
+    </style>
+
+    <style name="button_salad_ns" parent="@style/button_salad_base">
+        <item name="android:background">@drawable/button_salad_ns</item>
+        <item name="android:stateListAnimator">@animator/button_salad</item>
+    </style>
+
+    <style name="button_salad_oval" parent="@style/button_salad_base">
+        <item name="android:background">@drawable/button_salad_oval</item>
+        <item name="android:stateListAnimator">@animator/button_salad_oval</item>
+    </style>
+
+    <style name="button_salad_oval_ns" parent="@style/button_salad_base">
+        <item name="android:background">@drawable/button_salad_oval_ns</item>
+        <item name="android:stateListAnimator">@animator/button_salad_oval</item>
+    </style>
+
+
 </resources>

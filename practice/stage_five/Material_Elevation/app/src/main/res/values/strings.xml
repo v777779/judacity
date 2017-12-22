@@ -3,4 +3,6 @@
     <string name="action_close">Close</string>
     <string name="action_info">Info</string>
     <string name="action_home">Home</string>
+
+    <string name="button_get">GET THE JOKE</string>
 </resources>

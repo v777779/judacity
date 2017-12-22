@@ -1,4 +1,14 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="layout_size">80dp</dimen>
+    <dimen name="layout_size">40dp</dimen>
+
+    <!--text sizes-->
+    <dimen name="text_size">14sp</dimen>
+    <dimen name="button_text_size">14sp</dimen>
+
+    <!--button-->
+    <dimen name="button_padding_side">24dp</dimen>
+    <dimen name="button_padding_top">8dp</dimen>
+
+
 </resources>

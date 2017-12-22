@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#f6303f9f</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!--background-->
     <color name="colorBackJoke">#80babab3</color>
     <color name="colorBackText">#ffddb7</color>
     <color name="colorBackJokeLight">#e1db9f</color>
@@ -11,5 +12,14 @@
     <!--action bar-->
     <color name="colorBarStart">#303F9F</color>
     <color name="colorBarEnd">#648d98da</color>
+
+    <!--text colors-->
+    <color name="colorText">#3A3A3A</color>
+
+    <!--button salad-->
+    <color name="colorSaladBackNormal">#84be87</color>
+    <color name="colorSaladBackDark">#70a974</color>
+    <color name="colorSaladBackLight">#b0dbb2</color>
+    <color name="colorSaladBackExtra">#d2ecd3</color>
 
 </resources>
