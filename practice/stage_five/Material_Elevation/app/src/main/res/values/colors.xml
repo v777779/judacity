@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#643f51b5</color>
+    <color name="colorPrimaryDark">#f6303f9f</color>
     <color name="colorAccent">#FF4081</color>
-
 
     <color name="colorBackJoke">#80babab3</color>
     <color name="colorBackText">#ffddb7</color>
     <color name="colorBackJokeLight">#e1db9f</color>
 
-
+    <!--action bar-->
+    <color name="colorBarStart">#303F9F</color>
+    <color name="colorBarEnd">#648d98da</color>
 
 </resources>

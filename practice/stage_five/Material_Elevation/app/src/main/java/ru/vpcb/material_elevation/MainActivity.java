@@ -2,7 +2,7 @@ package ru.vpcb.material_elevation;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,6 +17,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("no");
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+//        actionBar.hide();
+            actionBar.setTitle("");
+//        actionBar.setLogo(R.drawable.ic_close_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_home_24dp);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
@@ -51,7 +62,12 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_close ) {
+            onBackPressed();
+            return true;
+        }
+        if (id == android.R.id.home ) {
+            onBackPressed();
             return true;
         }
 
