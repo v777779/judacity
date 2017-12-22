@@ -9,15 +9,17 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/action_bar_shape"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="@dimen/toolbar_size"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:titleTextAppearance="@style/ToolbarText"
+            />
+        <!--android:layout_height="?attr/actionBarSize"-->
 
     </android.support.design.widget.AppBarLayout>
 

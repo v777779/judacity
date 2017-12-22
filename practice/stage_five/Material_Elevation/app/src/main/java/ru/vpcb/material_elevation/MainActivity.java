@@ -1,5 +1,6 @@
 package ru.vpcb.material_elevation;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,16 +20,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("no");
+        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-//        actionBar.hide();
-            actionBar.setTitle("");
+        if (actionBar != null) {
 //        actionBar.setLogo(R.drawable.ic_close_24dp);
+            actionBar.setTitle("XYZ Reader");
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_home_24dp);
         }
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +47,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+//            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
+//                        View.SYSTEM_UI_FLAG_LOW_PROFILE
+//        );
+    }
+
+    private int getNavigationBarHeight() {
+        int height = 0;
+        int statusId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (statusId > 0) {
+            height = getResources().getDimensionPixelSize(statusId);
+        }
+
+        return height;
+    }
+    private int getStatusBarHeight() {
+        int height = 0;
+        int statusId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (statusId > 0) {
+            height = getResources().getDimensionPixelSize(statusId);
+        }
+
+        return height;
     }
 
     @Override
@@ -62,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_close ) {
+        if (id == R.id.action_close) {
             onBackPressed();
             return true;
         }
-        if (id == android.R.id.home ) {
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }

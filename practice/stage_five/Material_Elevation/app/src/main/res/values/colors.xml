@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#643f51b5</color>
-    <color name="colorPrimaryDark">#f6303f9f</color>
+    <!--<color name="colorPrimary">#643f51b5</color>-->
+    <!--<color name="colorPrimaryDark">#f6303f9f</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+
+    <color name="colorPrimary">#2e9ba4d3</color>
+    <color name="colorPrimaryDark">#ad757994</color>
     <color name="colorAccent">#FF4081</color>
+
+
 
     <!--background-->
     <color name="colorBackJoke">#80babab3</color>
     <color name="colorBackText">#ffddb7</color>
     <color name="colorBackJokeLight">#e1db9f</color>
 
+    <color name="colorBackImage">#1b02ffd1</color>
+
     <!--action bar-->
-    <color name="colorBarStart">#303F9F</color>
+    <color name="colorBarStart">#6c6a6a</color>
     <color name="colorBarEnd">#648d98da</color>
 
     <!--text colors-->

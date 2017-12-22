@@ -8,16 +8,38 @@
     <!--tools:showIn="@layout/activity_main"-->
     <!--&gt;-->
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <FrameLayout
+        android:id="@+id/image_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+        <ImageView
+            android:id="@+id/front_image"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_007"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBackImage" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="Hello World!"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/image_frame" />
 
 
     <android.support.v7.widget.CardView
@@ -150,9 +172,9 @@
 
     <Button
         android:id="@+id/button"
+        style="@style/button_salad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/button_salad"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/button_get"
@@ -161,16 +183,15 @@
 
     <Button
         android:id="@+id/button2"
+        style="@style/button_salad_ns"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/button_salad_ns"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
 
         android:text="@string/button_get"
         app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_layout3"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/constraint_layout3" />
 
     <Button
         android:id="@+id/button3"
