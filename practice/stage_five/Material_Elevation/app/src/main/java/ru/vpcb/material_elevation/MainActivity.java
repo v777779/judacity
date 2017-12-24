@@ -3,6 +3,10 @@ package ru.vpcb.material_elevation;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.OnApplyWindowInsetsListener;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.WindowInsetsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
 
@@ -47,12 +51,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
 //        getWindow().getDecorView().setSystemUiVisibility(
 //                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
 //            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
 //                        View.SYSTEM_UI_FLAG_LOW_PROFILE
 //        );
+
+//        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), new OnApplyWindowInsetsListener() {
+//            @Override
+//            public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+//                int n = insets.getSystemWindowInsetTop();
+//                toolbar.setTranslationY(n);
+//                toolbar.getLayoutParams().height+=n;
+//                   MainActivity.this.getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimaryDark));
+//                return insets;
+//            }
+//        });
+// set statusBar color
+//        getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+
     }
 
     private int getNavigationBarHeight() {

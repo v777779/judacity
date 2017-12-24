@@ -20,7 +20,7 @@
             app:titleTextAppearance="@style/ToolbarText"
             />
         <!--android:layout_height="?attr/actionBarSize"-->
-
+        <!--android:layout_height="@dimen/toolbar_size"-->
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
