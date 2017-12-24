@@ -25,7 +25,7 @@
         android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/theme_primary"
+        android:background="@drawable/toolbar_background"
         android:elevation="8dp">
 
         <android.support.v7.widget.Toolbar
@@ -40,7 +40,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo"
+                android:src="@drawable/xyz_logo52"
                 android:contentDescription="@string/app_name" />
 
         </android.support.v7.widget.Toolbar>
