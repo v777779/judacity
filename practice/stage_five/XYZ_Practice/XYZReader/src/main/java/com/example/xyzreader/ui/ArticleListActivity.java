@@ -53,24 +53,45 @@ public class ArticleListActivity extends AppCompatActivity implements
     // Most time functions can only handle 1902 - 2037
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
 
+    private BroadcastReceiver mRefreshingReceiver;
+    private boolean mIsRefreshing = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
 //***error*** set background, set style in XML
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-
         final View toolbarContainerView = findViewById(R.id.toolbar_container);
+
 //***error*** set Listener
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
-            refresh();
+//            refresh();
         }
+
+
+        mRefreshingReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                    mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+                    updateRefreshingUI();
+                }
+            }
+        };
+
     }
 
     private void refresh() {
@@ -90,17 +111,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         unregisterReceiver(mRefreshingReceiver);
     }
 
-    private boolean mIsRefreshing = false;
-
-    private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
-                updateRefreshingUI();
-            }
-        }
-    };
 
     private void updateRefreshingUI() {
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
