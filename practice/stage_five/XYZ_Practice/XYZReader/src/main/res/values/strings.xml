@@ -9,4 +9,8 @@
 
     <string name="up">Up</string>
 
+    <!--preferences-->
+    <string name="pref_reload_time_key">pref_load_time_key</string>
+    <string name="pref_reload_delay_key">pref_load_delay_key</string>
+
 </resources>

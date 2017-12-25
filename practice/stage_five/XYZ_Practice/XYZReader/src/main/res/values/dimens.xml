@@ -10,4 +10,7 @@
 
     <dimen name="layout_width">@dimen/match_parent</dimen>
 
+
+    <dimen name="progress_bar_size">48dp</dimen>
+    <dimen name="progress_bar_large_size">76dp</dimen>
 </resources>

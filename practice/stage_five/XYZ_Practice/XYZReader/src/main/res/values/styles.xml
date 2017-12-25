@@ -19,10 +19,33 @@
 
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="Theme.Bacon.Detail">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="MyProgressTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:progressTint">@color/colorAccent</item>
+        <item name="android:secondaryProgressTint">@color/colorAccent</item>
+        <item name="android:indeterminateTint">@color/colorAccent</item>
+     </style>
+
+    <style name="MyProgressStyle" parent="@style/MyProgressTheme"  >
+        <item name="android:minWidth">@dimen/progress_bar_size</item>
+        <item name="android:maxWidth">@dimen/progress_bar_size</item>
+        <item name="android:minHeight">@dimen/progress_bar_size</item>
+        <item name="android:maxHeight">@dimen/progress_bar_size</item>
+    </style>
+
+    <style name="MyProgressStyle.Large" parent="@style/MyProgressTheme">
+        <item name="android:minWidth">@dimen/progress_bar_large_size</item>
+        <item name="android:maxWidth">@dimen/progress_bar_large_size</item>
+        <item name="android:minHeight">@dimen/progress_bar_large_size</item>
+        <item name="android:maxHeight">@dimen/progress_bar_large_size</item>
+    </style>
+
+    <style name="MyProgressStyle.Example" parent="@android:style/Widget.ProgressBar">
+    </style>
 </resources>

@@ -17,16 +17,19 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+import com.example.xyzreader.remote.Config;
+import com.example.xyzreader.remote.RemoteEndpointUtil;
+import com.example.xyzreader.remote.VolleyQueueSingleton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +45,12 @@ import java.util.GregorianCalendar;
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = ArticleListActivity.class.toString();
+
+    public static final String TAG = ArticleListActivity.class.toString();
+    private static final String ACTION_TIME_REFRESH = "action_time_refresh";
+    public static final String ACTION_SWIPE_REFRESH = "action_swipe_refresh";
+
+
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -51,26 +59,37 @@ public class ArticleListActivity extends AppCompatActivity implements
     // Use default locale format
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
-    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
+    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
 
     private BroadcastReceiver mRefreshingReceiver;
     private boolean mIsRefreshing = false;
+
+    private ProgressBar mProgressBar;
+    private Context mContext;
+    private boolean mIsSwipeRefresh;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-//***error*** set background, set style in XML
+// error!!! set background, set style in XML
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
-//***error*** set Listener
+        ImageView toolbarLogo = findViewById(R.id.toolbar_logo);
+        int toolbarHeight = (int)(toolbarLogo.getLayoutParams().height*1);
+        toolbarLogo.getLayoutParams().height = toolbarHeight;
+        toolbarLogo.getLayoutParams().width = (int)( toolbarHeight*3.333);
+
+
+// error!!! set Listener
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+                mIsSwipeRefresh = true;
+                refresh(ACTION_SWIPE_REFRESH);
             }
         });
 
@@ -78,7 +97,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
-//            refresh();
+               refresh(ACTION_TIME_REFRESH);
         }
 
 
@@ -88,14 +107,22 @@ public class ArticleListActivity extends AppCompatActivity implements
                 if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                     mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
                     updateRefreshingUI();
+
                 }
             }
         };
 
+// progress bar
+        mProgressBar = findViewById(R.id.progress_bar);
+
+// volley singleton
+        VolleyQueueSingleton.getInstance(this);
+
     }
 
-    private void refresh() {
-        startService(new Intent(this, UpdaterService.class));
+
+    private void refresh(String action) {
+        startService(new Intent(action, null,this, UpdaterService.class));
     }
 
     @Override
@@ -109,11 +136,24 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         unregisterReceiver(mRefreshingReceiver);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VolleyQueueSingleton.getInstance().getRequestQueue().cancelAll(TAG);
     }
 
 
+
     private void updateRefreshingUI() {
-        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+        if(mIsSwipeRefresh) {
+            mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+            mIsSwipeRefresh = mIsRefreshing;        // switch mIsRefresh at second broadcastReceive
+        }else {
+            mProgressBar.setVisibility(mIsRefreshing? View.VISIBLE:View.INVISIBLE);
+        }
     }
 
     @Override
@@ -130,6 +170,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(sglm);
+
+
     }
 
     @Override
@@ -192,8 +234,8 @@ public class ArticleListActivity extends AppCompatActivity implements
             } else {
                 holder.subtitleView.setText(Html.fromHtml(
                         outputFormat.format(publishedDate)
-                        + "<br/>" + " by "
-                        + mCursor.getString(ArticleLoader.Query.AUTHOR)));
+                                + "<br/>" + " by "
+                                + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
             holder.thumbnailView.setImageUrl(
                     mCursor.getString(ArticleLoader.Query.THUMB_URL),
