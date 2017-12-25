@@ -46,6 +46,12 @@ public class UpdaterService extends IntentService {
     public static final String EXTRA_REFRESHING
             = "com.example.xyzreader.intent.extra.REFRESHING";
 
+    public static final String BROADCAST_ACTION_NO_NETWORK
+            = "com.example.xyzreader.intent.action.NO_NETWORK";
+
+    public static final String EXTRA_EMPTY_CURSOR
+            = "com.example.xyzreader.intent.extra.EMPTY_CURSOR";
+
     public UpdaterService() {
         super(TAG);
     }
@@ -107,23 +113,23 @@ public class UpdaterService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         boolean isUpdate = false;
 
-        if (!RemoteEndpointUtil.isOnline(this)) {
-            Log.v(TAG, "No online, no refreshing.");
-            return;
-        }
-
 // check swipe
         String action = intent.getAction();
         if (action != null && action.equals(ACTION_SWIPE_REFRESH)) {
             isUpdate = true;
         }
-
-// error!!!
+// correction!!!
 // check swipe, cursor, timeout
-        if (!isUpdate && !isCursorEmpty(this) && !isReloadTimeout(this)) {
+        boolean isCursorEmpty = isCursorEmpty(this);
+        if (!isUpdate && !isCursorEmpty && !isReloadTimeout(this)) {
             return;
         }
-
+        if (!RemoteEndpointUtil.isOnline(this)) {
+            sendBroadcast(
+                    new Intent(BROADCAST_ACTION_NO_NETWORK).putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
+            Log.v(TAG, "No online, no refreshing.");
+            return;
+        }
 
         sendBroadcast(
                 new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
@@ -134,7 +140,7 @@ public class UpdaterService extends IntentService {
 
         // Delete all items
         cpo.add(ContentProviderOperation.newDelete(dirUri).build());  // delete for batch operation
-// error!!!  замена JsonNArray()
+// correction!!!  замена JsonNArray()
         try {
             JSONArray array = RemoteEndpointUtil.getJsonArray();   // null if no result
             if (array == null) {

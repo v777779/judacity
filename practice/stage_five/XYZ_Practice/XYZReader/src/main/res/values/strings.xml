@@ -13,4 +13,20 @@
     <string name="pref_reload_time_key">pref_load_time_key</string>
     <string name="pref_reload_delay_key">pref_load_delay_key</string>
 
+    <!--dialog-->
+    <string name="error_title">Error connecton</string>
+    <string name="empty_title">The database of recipes is empty</string>
+    <string name="message_error">Error connection! Local data used. </string>
+    <string name="message_close">Please close program! </string>
+    <string name="message_error_line1">There is no connection to the Internet</string>
+    <string name="message_error_line2">Please retry or exit from the program</string>
+    <string name="message_error_line3"> </string>
+    <string name="message_error_line4">Please restart program to load recipes</string>
+
+    <string name="error_retry">RETRY</string>
+    <string name="error_close">CLOSE</string>
+    <string name="error_exit">EXIT</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
 </resources>

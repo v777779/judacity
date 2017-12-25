@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 //import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -36,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+
 /**
  * An activity representing a list of Articles. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
@@ -43,12 +48,14 @@ import java.util.GregorianCalendar;
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, IFragmentHelper {
 
 
     public static final String TAG = ArticleListActivity.class.toString();
     private static final String ACTION_TIME_REFRESH = "action_time_refresh";
     public static final String ACTION_SWIPE_REFRESH = "action_swipe_refresh";
+    public static final String FRAGMENT_ERROR_NAME = "fragment_error_name";
+    public static final String FRAGMENT_ERROR_TAG = "fragment_error_tag";
 
 
     private Toolbar mToolbar;
@@ -78,9 +85,15 @@ public class ArticleListActivity extends AppCompatActivity implements
         final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
         ImageView toolbarLogo = findViewById(R.id.toolbar_logo);
-        int toolbarHeight = (int)(toolbarLogo.getLayoutParams().height*0.75);
+        int toolbarHeight = (int) (toolbarLogo.getLayoutParams().height * 0.75);
         toolbarLogo.getLayoutParams().height = toolbarHeight;
-        toolbarLogo.getLayoutParams().width = (int)( toolbarHeight*4);
+        toolbarLogo.getLayoutParams().width = (int) (toolbarHeight * 4);
+        toolbarLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
@@ -100,17 +113,29 @@ public class ArticleListActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
-               refresh(ACTION_TIME_REFRESH);
+            refresh(ACTION_TIME_REFRESH);
         }
 
-
+// broadcast receiver, receives  messages from service
+// intent.boolean  true/false  on/off progressbar or swipe refresh
         mRefreshingReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                if (intent == null) return;
+                String action = intent.getAction();
+
+                if (action == null || action.isEmpty()) return;
+                if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(action)) {
                     mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
                     updateRefreshingUI();
-
+                }
+// correction!!!
+                if (UpdaterService.BROADCAST_ACTION_NO_NETWORK.equals(action)) {
+                    boolean isCursorEmpty = intent.getBooleanExtra(UpdaterService.EXTRA_EMPTY_CURSOR, false);
+//                    Toast.makeText(ArticleListActivity.this, "No Network data: " + isCursorEmpty, Toast.LENGTH_SHORT).show();
+                    if(isCursorEmpty) {
+                        showErrorDialog();
+                    }
                 }
             }
         };
@@ -123,16 +148,25 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
+    private void showErrorDialog() {
+        FragmentError fragmentError = FragmentError.newInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.add(fragmentError, FRAGMENT_ERROR_TAG);
+        ft.commit();
+    }
 
     private void refresh(String action) {
-        startService(new Intent(action, null,this, UpdaterService.class));
+        startService(new Intent(action, null, this, UpdaterService.class));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(mRefreshingReceiver,
-                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UpdaterService.BROADCAST_ACTION_STATE_CHANGE);
+        intentFilter.addAction(UpdaterService.BROADCAST_ACTION_NO_NETWORK);
+        registerReceiver(mRefreshingReceiver, intentFilter);
     }
 
     @Override
@@ -149,13 +183,12 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
 
-
     private void updateRefreshingUI() {
-        if(mIsSwipeRefresh) {
+        if (mIsSwipeRefresh) {
             mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
             mIsSwipeRefresh = mIsRefreshing;        // switch mIsRefresh at second broadcastReceive
-        }else {
-            mProgressBar.setVisibility(mIsRefreshing? View.VISIBLE:View.INVISIBLE);
+        } else {
+            mProgressBar.setVisibility(mIsRefreshing ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
@@ -180,6 +213,12 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
+    }
+
+
+    @Override
+    public void showError() {
+        refresh(ACTION_TIME_REFRESH);
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {

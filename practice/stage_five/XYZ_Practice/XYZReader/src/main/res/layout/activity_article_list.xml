@@ -28,16 +28,7 @@
         android:background="@drawable/toolbar_background"
         android:elevation="8dp">
 
-        <ImageView
-            android:id="@+id/toolbar_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="?actionBarSize"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/xyz_logo_rounded"
-            android:layout_gravity="left|bottom"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="8dp"
-            />
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -49,6 +40,18 @@
 
 
         </android.support.v7.widget.Toolbar>
+
+        <ImageView
+            android:id="@+id/toolbar_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="?actionBarSize"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/xyz_logo_rounded"
+            android:layout_gravity="left|bottom"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="8dp"
+            android:clickable="true"
+            />
     </FrameLayout>
 
     <ProgressBar

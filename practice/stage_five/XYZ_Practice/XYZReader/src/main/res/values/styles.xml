@@ -48,4 +48,48 @@
 
     <style name="MyProgressStyle.Example" parent="@android:style/Widget.ProgressBar">
     </style>
+
+    <!--text styles-->
+    <style name="TextNormal" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+    <style name="TextBold" parent="TextNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/bold_text_size</item>
+
+    </style>
+
+    <style name="TextHead" parent="TextNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/head_text_size</item>
+    </style>
+
+    <style name="TextLarge" parent="TextNormal">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/head_text_size</item>
+    </style>
+
+    <!--dialog-->
+    <style name="CustomDialog" parent="@style/Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowTitleStyle">@style/dialog_title_style</item>
+        <item name="android:buttonStyle">@style/dialog_button_style</item>
+    </style>
+
+    <style name="dialog_title_style" parent="android:Widget.TextView">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textAppearance">@style/TextHead</item>
+    </style>
+
+    <style name="dialog_button_style" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/colorButtonText</item>
+
+    </style>
+
 </resources>
