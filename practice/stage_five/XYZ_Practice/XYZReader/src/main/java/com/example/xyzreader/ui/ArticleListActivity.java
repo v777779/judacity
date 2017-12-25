@@ -78,9 +78,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
         ImageView toolbarLogo = findViewById(R.id.toolbar_logo);
-        int toolbarHeight = (int)(toolbarLogo.getLayoutParams().height*1);
+        int toolbarHeight = (int)(toolbarLogo.getLayoutParams().height*0.75);
         toolbarLogo.getLayoutParams().height = toolbarHeight;
-        toolbarLogo.getLayoutParams().width = (int)( toolbarHeight*3.333);
+        toolbarLogo.getLayoutParams().width = (int)( toolbarHeight*4);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
 
 
 // error!!! set Listener

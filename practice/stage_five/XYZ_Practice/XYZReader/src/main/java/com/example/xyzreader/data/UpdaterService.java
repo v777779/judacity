@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.example.xyzreader.remote.RemoteEndpointUtil.isCursorEmpty;
+import static com.example.xyzreader.remote.RemoteEndpointUtil.isReloadTimeout;
 import static com.example.xyzreader.ui.ArticleListActivity.ACTION_SWIPE_REFRESH;
 
 public class UpdaterService extends IntentService {
@@ -106,7 +108,7 @@ public class UpdaterService extends IntentService {
         boolean isUpdate = false;
 
         if (!RemoteEndpointUtil.isOnline(this)) {
-            Log.w(TAG, "Not online, not refreshing.");
+            Log.v(TAG, "No online, no refreshing.");
             return;
         }
 
@@ -118,7 +120,7 @@ public class UpdaterService extends IntentService {
 
 // error!!!
 // check swipe, cursor, timeout
-        if (!isUpdate && !RemoteEndpointUtil.isCursorEmpty(this) && !RemoteEndpointUtil.isReloadTimeout(this)) {
+        if (!isUpdate && !isCursorEmpty(this) && !isReloadTimeout(this)) {
             return;
         }
 
