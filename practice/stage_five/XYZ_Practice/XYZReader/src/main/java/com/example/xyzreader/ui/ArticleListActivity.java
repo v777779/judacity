@@ -84,6 +84,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
+// correction!!!
         ImageView toolbarLogo = findViewById(R.id.toolbar_logo);
         int toolbarHeight = (int) (toolbarLogo.getLayoutParams().height * 0.75);
         toolbarLogo.getLayoutParams().height = toolbarHeight;
@@ -94,7 +95,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                 onBackPressed();
             }
         });
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
 
