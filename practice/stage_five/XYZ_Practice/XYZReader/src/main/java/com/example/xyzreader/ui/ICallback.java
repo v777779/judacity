@@ -8,16 +8,17 @@ package com.example.xyzreader.ui;
  */
 
 
+import android.net.Uri;
+
 /**
- *  IFragmentHelper callback interface for RecyclerView items
+ *  ICallback callback interface for RecyclerView items
  */
-public interface IFragmentHelper {
+public interface ICallback {
     /**
      *  Performs callback processing when onClick() for CLOSE
      *  button of FrameError fragment called. Not used.
      */
-    void onRetry();
-    void onClose();
-    void onExit();
+    void onCallback(Uri uri);
+    void onCallback(int mode);
 
 }

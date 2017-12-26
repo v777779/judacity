@@ -1,7 +1,6 @@
 package com.example.xyzreader.ui;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -10,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.android.volley.toolbox.StringRequest;
 import com.example.xyzreader.R;
+
+import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
+import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
+import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
 
 
 /**
@@ -20,7 +22,7 @@ import com.example.xyzreader.R;
  */
 public class FragmentError extends DialogFragment implements View.OnClickListener {
     public static final String BUNDLE_FRAGMENT_IS_CURSOR_EMPTY = "bundle_fragment_is_cursor_empty";
-    private IFragmentHelper mCallback;
+    private ICallback mCallback;
     private int mLayoutId;
     private boolean mIsCursorEmpty;
 
@@ -72,7 +74,7 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
             getDialog().setTitle(getString(R.string.empty_title));
         }
 
-        mCallback = (IFragmentHelper) getActivity();
+        mCallback = (ICallback) getActivity();
 
         Bundle args = getArguments();
         if (args != null) {
@@ -98,10 +100,10 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
     }
 
     /**
-     *  Set callback IFragmentHelper object
+     *  Set callback ICallback object
      *  Used to call showError() method in MainActivity onClick()
      *
-     //  * @param mCallback IFragmentHelper callback object  // DOES NOT WORK HERE AFTER ROTATION
+     //  * @param mCallback ICallback callback object  // DOES NOT WORK HERE AFTER ROTATION
      */
 //    public void setCallback() {
 //        this.mCallback = mCallback;
@@ -115,13 +117,13 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
     public void onClick(View v) {
         String s = ((Button) v).getText().toString();
         if (s.equals(getString(R.string.error_retry))) {
-            mCallback.onRetry();
+            mCallback.onCallback(CALLBACK_FRAGMENT_RETRY);
         }
         if (s.equals(getString(R.string.error_close))) {
-            mCallback.onClose();
+            mCallback.onCallback( CALLBACK_FRAGMENT_CLOSE);
         }
         if (s.equals(getString(R.string.error_exit))) {
-            mCallback.onExit();
+            mCallback.onCallback( CALLBACK_FRAGMENT_EXIT);
 
         }
         dismiss();

@@ -18,4 +18,11 @@ public class Config {
     public static final String FRAGMENT_ERROR_NAME = "fragment_error_name";
     public static final String FRAGMENT_ERROR_TAG = "fragment_error_tag";
 
+    public static final int CALLBACK_ACTIVITY = 0;
+    public static final int CALLBACK_FRAGMENT = 1;
+
+    public static final int CALLBACK_FRAGMENT_RETRY = 2;
+    public static final int CALLBACK_FRAGMENT_CLOSE = 3;
+    public static final int CALLBACK_FRAGMENT_EXIT = 5;
+
 }
