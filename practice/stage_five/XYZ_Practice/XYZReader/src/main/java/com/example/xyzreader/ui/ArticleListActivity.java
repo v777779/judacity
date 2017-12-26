@@ -14,33 +14,25 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 //import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.format.DateUtils;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+import com.example.xyzreader.remote.Config;
 import com.example.xyzreader.remote.VolleyQueueSingleton;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
-import static com.example.xyzreader.remote.Config.CALLBACK_ACTIVITY;
-import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
@@ -105,14 +97,23 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
 
+
+
+
+        Config.Span sp = Config.getDisplayMetrics(this,1,1);
+        int columnCount = sp.getSpanX();
+        int columnHeight = sp.getHeight();
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        ArticleAdapter adapter = new ArticleAdapter(this);
+        ArticleListAdapter adapter = new ArticleListAdapter(this, sp);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(sglm);
+//        StaggeredGridLayoutManager sglm =
+//                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, columnCount, GridLayout.VERTICAL, false);
+
+//        mRecyclerView.setLayoutManager(sglm);
+        mRecyclerView.setLayoutManager(layoutManager);
 
 
 
@@ -150,6 +151,23 @@ public class ArticleListActivity extends AppCompatActivity implements
 // volley singleton
         VolleyQueueSingleton.getInstance(this);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.refresh) {
+            refresh(ACTION_SWIPE_REFRESH);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void showErrorDialog(boolean isCursorEmpty) {
@@ -207,10 +225,11 @@ public class ArticleListActivity extends AppCompatActivity implements
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newAllArticlesInstance(this);
     }
-// correction !!!
+
+    // correction !!!
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        ((ArticleAdapter)mRecyclerView.getAdapter()).setCursor(cursor);
+        ((ArticleListAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
 
     }
 

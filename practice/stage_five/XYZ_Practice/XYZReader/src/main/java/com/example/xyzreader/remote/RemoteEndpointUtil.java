@@ -20,11 +20,53 @@ import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.ui.ArticleListActivity;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONTokener;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class RemoteEndpointUtil {
     private static final String TAG = "RemoteEndpointUtil";
 
+// okhttp3
+    public static JSONArray fetchJsonArray() {
+        try {
+            JSONArray jsonArray = new JSONArray(fetchPlainText(Config.BASE_URL));
+            return jsonArray;
+        } catch (IOException|JSONException e) {
+            Log.e(TAG, "Error parsing items JSON", e);
+        }
+        return null;
+    }
+
+    static String fetchPlainText(String address) throws IOException {
+        URL  url = new URL(address );
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String result = "";
+        if (!response.isSuccessful()) return result;
+
+        result = response.body().string();
+        response.close();
+        return result;
+    }
+
+
+
+
+// volley
     public static JSONArray getJsonArray() {
         String url = Config.BASE_URL;
         RequestFuture<JSONArray> future = RequestFuture.newFuture();

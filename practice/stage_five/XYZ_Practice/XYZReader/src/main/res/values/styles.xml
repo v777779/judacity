@@ -73,6 +73,20 @@
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
 
+    <!--card-->
+    <style name="CardTextNormal" parent="TextNormal">
+        <item name="android:textColor">@color/colorCardText</item>
+        <item name="android:textSize">@dimen/card_text_size</item>
+
+    </style>
+
+    <style name="CardTextHead" parent="TextNormal">
+        <item name="android:textColor">@color/colorCardHead</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/card_head_size</item>
+    </style>
+
+
     <!--dialog-->
     <style name="CustomDialog" parent="@style/Theme.AppCompat.Dialog.Alert">
         <item name="android:windowNoTitle">false</item>

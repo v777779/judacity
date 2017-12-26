@@ -1,10 +1,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frame_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,7 +18,7 @@
             android:paddingBottom="28dp"
             android:paddingLeft="@dimen/list_side_margin"
             android:paddingRight="@dimen/list_side_margin"
-            android:paddingTop="116dp"
+            android:paddingTop="80dp"
             android:scrollbarStyle="outsideOverlay" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -45,23 +46,24 @@
             android:id="@+id/toolbar_logo"
             android:layout_width="wrap_content"
             android:layout_height="?actionBarSize"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/xyz_logo_rounded"
             android:layout_gravity="left|bottom"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="8dp"
             android:clickable="true"
-            />
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/xyz_logo_rounded" />
     </FrameLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="@style/MyProgressStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/MyProgressStyle"
         android:layout_gravity="center"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
     <!--style="?android:attr/progressBarStyle"-->
     <!--android:theme="@style/MyProgressTheme"-->
+
+
 </FrameLayout>
+
