@@ -28,8 +28,8 @@ public class ItemsContract {
 	}
 
 	public static class Items implements ItemsColumns {
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/ru.vpcb.items";
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/ru.vpcb.items";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/com.example.xyz.items";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/com.example.xyz.items";
 
         public static final String DEFAULT_SORT = PUBLISHED_DATE + " DESC";
 

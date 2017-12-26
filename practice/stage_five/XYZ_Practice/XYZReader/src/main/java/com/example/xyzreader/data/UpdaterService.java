@@ -35,9 +35,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.isCursorEmpty;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.isReloadTimeout;
-import static com.example.xyzreader.ui.ArticleListActivity.ACTION_SWIPE_REFRESH;
+
 
 public class UpdaterService extends IntentService {
     private static final String TAG = "UpdaterService";
@@ -119,12 +120,15 @@ public class UpdaterService extends IntentService {
         if (action != null && action.equals(ACTION_SWIPE_REFRESH)) {
             isUpdate = true;
         }
+
 // correction!!!
 // check swipe, cursor, timeout
         boolean isCursorEmpty = isCursorEmpty(this);
         if (!isUpdate && !isCursorEmpty && !isReloadTimeout(this)) {
             return;
         }
+
+// network update start point
         if (!RemoteEndpointUtil.isOnline(this)) {
             sendBroadcast(
                     new Intent(BROADCAST_ACTION_NO_NETWORK).putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
@@ -141,6 +145,7 @@ public class UpdaterService extends IntentService {
 
         // Delete all items
         cpo.add(ContentProviderOperation.newDelete(dirUri).build());  // delete for batch operation
+
 // correction!!!  замена JsonNArray()
         try {
             JSONArray array = RemoteEndpointUtil.getJsonArray();   // null if no result
@@ -171,76 +176,7 @@ public class UpdaterService extends IntentService {
 // correction!!!  when error load  close or exit dialog
             sendBroadcast(
                     new Intent(BROADCAST_ACTION_NO_NETWORK).putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
-
         }
-
-        sendBroadcast(
-                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
-    }
-
-//    @Override
-    protected void onHandleIntent2(Intent intent) {
-        boolean isUpdate = false;
-
-// check swipe
-        String action = intent.getAction();
-        if (action == null && action.equals(ACTION_SWIPE_REFRESH)) {
-            isUpdate = true;
-        }
-// correction!!!
-// check swipe, cursor, timeout
-        boolean isCursorEmpty = isCursorEmpty(this);
-        if (!isUpdate && !isCursorEmpty && !isReloadTimeout(this)) {
-            return;
-        }
-        if (!RemoteEndpointUtil.isOnline(this)) {
-            sendBroadcast(
-                    new Intent(BROADCAST_ACTION_NO_NETWORK).putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
-            Log.v(TAG, "No online, no refreshing.");
-            return;
-        }
-
-        sendBroadcast(
-                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
-
-        // Don't even inspect the intent, we only do one thing, and that's fetch content.
-        ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
-        Uri dirUri = ItemsContract.Items.buildDirUri();
-
-        // Delete all items
-        cpo.add(ContentProviderOperation.newDelete(dirUri).build());  // delete for batch operation
-// correction!!!  замена JsonNArray()
-        try {
-            List<ItemModel> list = RemoteEndpointUtil.startRetrofitLoader();
-            if (list == null || list.isEmpty()) {
-                throw new JSONException("Invalid parsed item array");
-            }
-
-            for (int i = 0; i < list.size(); i++) {
-                ContentValues values = new ContentValues();
-                ItemModel item  = list.get(i);
-                values.put(ItemsContract.Items.SERVER_ID, item.getId());
-                values.put(ItemsContract.Items.AUTHOR, item.getAuthor());
-                values.put(ItemsContract.Items.TITLE, item.getTitle());
-                values.put(ItemsContract.Items.BODY, item.getBody());
-                values.put(ItemsContract.Items.THUMB_URL, item.getThumb());
-                values.put(ItemsContract.Items.PHOTO_URL, item.getPhoto());
-                values.put(ItemsContract.Items.ASPECT_RATIO, item.getAspect_ratio());
-                values.put(ItemsContract.Items.PUBLISHED_DATE, item.getPublished_date());
-                cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
-            }
-
-            getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
-
-            RemoteEndpointUtil.saveReLoadTimePreference(this);  // save timestamp
-
-        } catch (JSONException | RemoteException | OperationApplicationException e) {
-            Log.e(TAG, "Error updating content.", e);
-// correction!!!
-            sendBroadcast(
-                    new Intent(BROADCAST_ACTION_NO_NETWORK).putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
-        }
-
         sendBroadcast(
                 new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
     }

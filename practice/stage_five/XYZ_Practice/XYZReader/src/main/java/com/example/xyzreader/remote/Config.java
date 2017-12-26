@@ -6,18 +6,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Config {
-    public static final URL BASE_URL;
     private static String TAG = Config.class.toString();
 
-    static {
-        URL url = null;
-        try {
-            url = new URL("https://go.udacity.com/xyz-reader-json" );
-        } catch (MalformedURLException ignored) {
-            // TODO: throw a real error
-            Log.e(TAG, "Please check your internet connection.");
-        }
+// remoteEndpointUtil
+// correction!!! hardcoded url
+    public static final String BASE_URL = "https://go.udacity.com/xyz-reader-json" ;
 
-        BASE_URL = url;
-    }
+// articleListActivity
+    public static final String ACTION_TIME_REFRESH = "action_time_refresh";
+    public static final String ACTION_SWIPE_REFRESH = "action_swipe_refresh";
+    public static final String FRAGMENT_ERROR_NAME = "fragment_error_name";
+    public static final String FRAGMENT_ERROR_TAG = "fragment_error_tag";
+
 }

@@ -41,20 +41,29 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/error_text_line1" />
 
-    <TextView
-        android:id="@+id/error_text_line3"
+
+
+    <Button
+        android:id="@+id/error_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="0dp"
-        android:paddingBottom="0dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="0dp"
-        android:text="@string/message_error_line3"
-        android:textAppearance="@style/TextLarge"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        android:text="@string/error_retry"
+        android:textAppearance="@style/TextHead"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error_text_line2" />
+
+    <Button
+        android:id="@+id/error_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/error_exit"
+        android:textAppearance="@style/TextHead"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/error_text_line2" />
 
 
@@ -62,41 +71,12 @@
         android:id="@+id/error_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/error_close"
         android:textAppearance="@style/TextHead"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text_line3"
         android:visibility="invisible"
-        />
-
-    <Button
-        android:id="@+id/error_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/error_retry"
-        android:textAppearance="@style/TextHead"
-        app:layout_constraintLeft_toRightOf="@+id/error_close"
-        app:layout_constraintRight_toLeftOf="@+id/error_exit"
-        app:layout_constraintTop_toBottomOf="@+id/error_text_line3"
-        app:layout_constraintHorizontal_bias="0.50"
-
-        />
-
-    <Button
-        android:id="@+id/error_exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextHead"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/error_exit"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text_line3" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error_text_line2" />
 
 </android.support.constraint.ConstraintLayout>

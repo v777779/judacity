@@ -40,6 +40,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
+import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
+import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -52,10 +55,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
     public static final String TAG = ArticleListActivity.class.toString();
-    private static final String ACTION_TIME_REFRESH = "action_time_refresh";
-    public static final String ACTION_SWIPE_REFRESH = "action_swipe_refresh";
-    public static final String FRAGMENT_ERROR_NAME = "fragment_error_name";
-    public static final String FRAGMENT_ERROR_TAG = "fragment_error_tag";
 
 
     private Toolbar mToolbar;
@@ -214,18 +213,18 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
     }
-
+// correction!!! frameError support
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
     }
 
-
+// correction!!! frameError support
     @Override
     public void onRetry() {
-        refresh(ACTION_TIME_REFRESH);
+        refresh(mIsSwipeRefresh ? ACTION_SWIPE_REFRESH : ACTION_TIME_REFRESH);
     }
-
+// correction!!! frameError support
     @Override
     public void onExit() {
         finish();

@@ -24,6 +24,10 @@
             </intent-filter>
         </activity>
 
+        <!--correction !!!   -->
+        <!--android:scheme="content"-->
+        <!--android:mimeType="vnd.android.cursor.item/ru.com.example.xyz.items" />-->
+
         <activity
             android:name=".ui.ArticleDetailActivity"
             android:parentActivityName=".ui.ArticleListActivity">
@@ -31,23 +35,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:mimeType="vnd.android.cursor.item/ru.vpcb.items"
-                    android:scheme="content" />
-            </intent-filter>
-
-            <!--correction !!!   -->
-            <!--android:scheme="content"-->
-            <!--android:mimeType="vnd.android.cursor.item/ru.com.example.xyz.items" />-->
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:mimeType="vnd.android.cursor.dir/vnd.google.note"
-                    android:scheme="http" />
+                android:scheme="content"
+                android:mimeType="vnd.android.cursor.item/com.example.xyz.items" />
             </intent-filter>
 
             <meta-data
