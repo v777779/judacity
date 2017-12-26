@@ -16,15 +16,19 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.data.ItemModel;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.ui.ArticleListActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +37,8 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RemoteEndpointUtil {
     private static final String TAG = "RemoteEndpointUtil";
@@ -226,6 +232,28 @@ public class RemoteEndpointUtil {
         editor.apply();
     }
 
+
+    public static final String RECIPES_BASE = "https://go.udacity.com/";
+    public static final String RECIPES_QUERY = "xyz-reader-json";
+    private Retrofit mRetrofit;
+    private IRetrofitAPI mRetrofitAPI;
+
+    public static List<ItemModel>  startRetrofitLoader() {
+// setup Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RECIPES_BASE) //Базовая часть адреса
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IRetrofitAPI retrofitAPI = retrofit.create(IRetrofitAPI.class);
+        try {
+            retrofit2.Response<List<ItemModel>> response = retrofitAPI.getData(null).execute();
+            return response.body();
+        } catch (Exception e) {
+            Log.d(TAG, "retrofit failure: " + e.getMessage());
+        }
+        return null;
+
+    }
 
 }
 

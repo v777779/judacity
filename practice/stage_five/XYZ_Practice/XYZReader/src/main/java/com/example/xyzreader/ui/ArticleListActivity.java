@@ -132,10 +132,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 // correction!!!
                 if (UpdaterService.BROADCAST_ACTION_NO_NETWORK.equals(action)) {
                     boolean isCursorEmpty = intent.getBooleanExtra(UpdaterService.EXTRA_EMPTY_CURSOR, false);
-//                    Toast.makeText(ArticleListActivity.this, "No Network data: " + isCursorEmpty, Toast.LENGTH_SHORT).show();
-                    if(isCursorEmpty) {
-                        showErrorDialog();
-                    }
+                    showErrorDialog(isCursorEmpty);
+
                 }
             }
         };
@@ -148,8 +146,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
-    private void showErrorDialog() {
-        FragmentError fragmentError = FragmentError.newInstance();
+    private void showErrorDialog(boolean isCursorEmpty) {
+        FragmentError fragmentError = FragmentError.newInstance(isCursorEmpty);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.add(fragmentError, FRAGMENT_ERROR_TAG);
@@ -182,6 +180,13 @@ public class ArticleListActivity extends AppCompatActivity implements
         VolleyQueueSingleton.getInstance().getRequestQueue().cancelAll(TAG);
     }
 
+
+    private void hideRefreshingUI() {
+        mIsSwipeRefresh = false;
+        mIsRefreshing = false;
+        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+        mProgressBar.setVisibility(mIsRefreshing ? View.VISIBLE : View.INVISIBLE);
+    }
 
     private void updateRefreshingUI() {
         if (mIsSwipeRefresh) {
@@ -217,8 +222,19 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
     @Override
-    public void showError() {
+    public void onRetry() {
         refresh(ACTION_TIME_REFRESH);
+    }
+
+    @Override
+    public void onExit() {
+        finish();
+    }
+
+    @Override
+    public void onClose() {
+        hideRefreshingUI();
+
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {

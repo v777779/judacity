@@ -16,6 +16,8 @@ public interface IFragmentHelper {
      *  Performs callback processing when onClick() for CLOSE
      *  button of FrameError fragment called. Not used.
      */
-    void showError();
+    void onRetry();
+    void onClose();
+    void onExit();
 
 }
