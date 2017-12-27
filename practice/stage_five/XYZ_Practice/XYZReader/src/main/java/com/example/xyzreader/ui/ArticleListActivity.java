@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,7 +63,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     private ProgressBar mProgressBar;
     private Context mContext;
     private boolean mIsSwipeRefresh;
-
+    // refresh inside menu
+    private Menu mOptionsMenu;
+    private boolean mItemRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +97,19 @@ public class ArticleListActivity extends AppCompatActivity implements
             public void onRefresh() {
                 mIsSwipeRefresh = true;
                 refresh(ACTION_SWIPE_REFRESH);
+//                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
+        DisplayMetrics dp = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dp);
+
+// correction!!!
+        int offset = 200;
+        mSwipeRefreshLayout.setProgressViewEndTarget(true, offset);
 
 
-
-        Config.Span sp = Config.getDisplayMetrics(this,1,1);
+        Config.Span sp = Config.getDisplayMetrics(this, 1, 1);
         int columnCount = sp.getSpanX();
         int columnHeight = sp.getHeight();
 
@@ -114,7 +123,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 //        mRecyclerView.setLayoutManager(sglm);
         mRecyclerView.setLayoutManager(layoutManager);
-
 
 
         getSupportLoaderManager().initLoader(0, null, this);
@@ -153,21 +161,35 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        mOptionsMenu = menu;
         return super.onCreateOptionsMenu(menu);
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.refresh) {
+            mItemRefresh = true;
             refresh(ACTION_SWIPE_REFRESH);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private int getNavigationBarHeight() {
+        int height = 0;
+        int statusId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (statusId > 0) {
+            height = getResources().getDimensionPixelSize(statusId);
+        }
+
+        return height;
     }
 
     private void showErrorDialog(boolean isCursorEmpty) {
@@ -208,14 +230,33 @@ public class ArticleListActivity extends AppCompatActivity implements
     private void hideRefreshingUI() {
         mIsSwipeRefresh = false;
         mIsRefreshing = false;
+        mItemRefresh = false;
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
         mProgressBar.setVisibility(mIsRefreshing ? View.VISIBLE : View.INVISIBLE);
+        setRefreshActionButtonState(mIsRefreshing);
     }
 
     private void updateRefreshingUI() {
+
+//        mProgressBar.setVisibility(mIsRefreshing ? View.VISIBLE : View.INVISIBLE);
+//        mIsSwipeRefresh = mIsRefreshing;        // switch mIsRefresh at second broadcastReceive
+//        mItemRefresh = mIsRefreshing;
+
+
+//        if(mItemRefresh) {
+//            setRefreshActionButtonState(mIsRefreshing);
+//            mItemRefresh = mIsRefreshing;
+//        }else {
+//            mProgressBar.setVisibility(mIsRefreshing ? View.VISIBLE : View.INVISIBLE);
+//            mIsSwipeRefresh = mIsRefreshing;        // switch mIsRefresh at second broadcastReceive
+//        }
+
         if (mIsSwipeRefresh) {
             mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
             mIsSwipeRefresh = mIsRefreshing;        // switch mIsRefresh at second broadcastReceive
+        } else if (mItemRefresh) {
+            setRefreshActionButtonState(mIsRefreshing);
+            mItemRefresh = mIsRefreshing;
         } else {
             mProgressBar.setVisibility(mIsRefreshing ? View.VISIBLE : View.INVISIBLE);
         }
@@ -263,4 +304,18 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
+    public void setRefreshActionButtonState(boolean refreshing) {
+        if (mOptionsMenu == null) {
+            return;
+        }
+
+        final MenuItem refreshItem = mOptionsMenu.findItem(R.id.refresh);
+        if (refreshItem != null) {
+            if (refreshing) {
+                refreshItem.setActionView(R.layout.actionbar_progress);
+            } else {
+                refreshItem.setActionView(null);
+            }
+        }
+    }
 }

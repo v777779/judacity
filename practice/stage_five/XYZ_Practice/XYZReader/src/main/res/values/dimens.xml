@@ -24,5 +24,7 @@
     <dimen name="card_text_size">12sp</dimen>
     <dimen name="card_head_size">16sp</dimen>
 
-
+<!--progress-->
+    <dimen name="action_button_min_width">56dp</dimen>
+    <dimen name="indeterminate_progress_size">32dp</dimen>
 </resources>
