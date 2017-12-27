@@ -1,15 +1,8 @@
 package com.example.xyzreader.remote;
 
-import android.app.Activity;
-import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
-
-import com.example.xyzreader.R;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class Config {
     private static String TAG = Config.class.toString();
@@ -103,7 +96,7 @@ public class Config {
      * @param guideId int resource Id of guideline of ConstraintLayout
      * @return double value from 0.0 to 1.0 the width between to guideline of ConstraintLayout
      */
-    private static double getPercent(Activity context, int guideId) {
+    private static double getPercent(AppCompatActivity context, int guideId) {
         return ((ConstraintLayout.LayoutParams)
                 context.findViewById(guideId).getLayoutParams()).guidePercent;
     }
@@ -115,10 +108,9 @@ public class Config {
      * @param context Context of calling activity
      * @return Span class object with number and size of items in width and height.
      */
-    public static Span getDisplayMetrics(Activity context, double dx, double dy) {
+    public static Span getDisplayMetrics(AppCompatActivity context, double dx, double dy) {
         DisplayMetrics dp = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(dp);
-        Resources res = context.getResources();
 
         double width_ratio = dx;
         double height_ratio = dy;

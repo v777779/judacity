@@ -1,22 +1,21 @@
 package com.example.xyzreader.ui;
 
-import android.app.LoaderManager;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-//import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +29,7 @@ import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.remote.Config;
 import com.example.xyzreader.remote.VolleyQueueSingleton;
+
 
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
@@ -117,7 +117,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 
-        getLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
             refresh(ACTION_TIME_REFRESH);

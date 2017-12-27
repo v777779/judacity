@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 
-
 /**
  * Glide Configuration Class used to configure OkHttip client
  *

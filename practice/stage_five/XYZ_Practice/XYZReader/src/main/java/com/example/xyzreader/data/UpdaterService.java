@@ -1,39 +1,23 @@
 package com.example.xyzreader.data;
 
+
+
 import android.app.IntentService;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.OperationApplicationException;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.preference.PreferenceManager;
-import android.text.format.Time;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.example.xyzreader.remote.Config;
 import com.example.xyzreader.remote.RemoteEndpointUtil;
-import com.example.xyzreader.remote.VolleyQueueSingleton;
-import com.example.xyzreader.ui.ArticleListActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.isCursorEmpty;

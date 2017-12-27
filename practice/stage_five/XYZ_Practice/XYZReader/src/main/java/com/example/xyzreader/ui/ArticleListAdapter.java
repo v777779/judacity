@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;

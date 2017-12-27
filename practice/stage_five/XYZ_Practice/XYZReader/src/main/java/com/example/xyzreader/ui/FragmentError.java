@@ -1,7 +1,6 @@
 package com.example.xyzreader.ui;
 
-import android.app.Activity;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -86,6 +85,7 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
             v.findViewById(R.id.error_close).setVisibility(View.VISIBLE);
         }
 
+        setCancelable(!mIsCursorEmpty);  // prevents click off the dialog when cursor is empty
         return v;
     }
 
@@ -131,20 +131,5 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
     }
 
 
-    /**
-     * Recreates activity with SDK version support.
-     */
-    private void recreate() {
-        Activity parent = getActivity();
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-//Code for recreate
-            parent.recreate();
 
-        } else {
-//Code for Intent
-            Intent intent = parent.getIntent();
-            parent.finish();
-            startActivity(intent);
-        }
-    }
 }

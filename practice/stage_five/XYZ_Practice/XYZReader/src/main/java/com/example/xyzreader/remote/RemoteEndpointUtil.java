@@ -1,5 +1,6 @@
 package com.example.xyzreader.remote;
 
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -9,22 +10,16 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
-import com.example.xyzreader.ui.ArticleListActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONTokener;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -40,14 +35,14 @@ public class RemoteEndpointUtil {
         try {
             JSONArray jsonArray = new JSONArray(fetchPlainText(Config.BASE_URL));
             return jsonArray;
-        } catch (IOException|JSONException e) {
+        } catch (IOException |JSONException e) {
             Log.e(TAG, "Error parsing items JSON", e);
         }
         return null;
     }
 
     static String fetchPlainText(String address) throws IOException {
-        URL  url = new URL(address );
+        URL url = new URL(address );
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
