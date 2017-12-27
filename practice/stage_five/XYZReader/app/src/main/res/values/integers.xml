@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--preferences-->
+    <integer name="pref_reload_time_default">0</integer>
+    <integer name="pref_reload_delay_default">60</integer>
+
+</resources>
