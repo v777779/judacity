@@ -28,4 +28,19 @@
     </style>
 
 
+
+    <!--progress bar-->
+    <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:progressTint">@color/colorProgressBar</item>
+        <item name="android:secondaryProgressTint">@color/colorProgressBar</item>
+        <item name="android:indeterminateTint">@color/colorProgressBar</item>
+    </style>
+    <style name="ProgressBarStyle" parent="@style/ProgressBarTheme"  >
+        <item name="android:minWidth">@dimen/progress_bar_size</item>
+        <item name="android:maxWidth">@dimen/progress_bar_size</item>
+        <item name="android:minHeight">@dimen/progress_bar_size</item>
+        <item name="android:maxHeight">@dimen/progress_bar_size</item>
+    </style>
+
+
 </resources>

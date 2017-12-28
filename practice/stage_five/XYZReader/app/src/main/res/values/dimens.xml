@@ -1,6 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
-    <!--fix-->
+    <!--toolbar fix-->
     <dimen name="status_bar_height">24dp</dimen>
+
+    <!--progress bar-->
+    <dimen name="progress_bar_size">48dp</dimen>
 </resources>
