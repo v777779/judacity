@@ -4,6 +4,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
+import com.example.xyzreader.R;
+
 public class Config {
     private static String TAG = Config.class.toString();
 
@@ -108,20 +110,15 @@ public class Config {
      * @param context Context of calling activity
      * @return Span class object with number and size of items in width and height.
      */
-    public static Span getDisplayMetrics(AppCompatActivity context, double dx, double dy) {
+    public static Span getDisplayMetrics(AppCompatActivity context) {
         DisplayMetrics dp = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(dp);
-
-        double width_ratio = dx;
-        double height_ratio = dy;
-//        if (dx == 0 || dy == 0) {
-//            height_ratio = getPercent(context, R.id.guide_h2) - getPercent(context, R.id.guide_h1);  // tightened to layout
-//            width_ratio = getPercent(context, R.id.guide_v2) - getPercent(context, R.id.guide_v1);   // tightened to layout
-//        }
+// tightened to layout
+        double height_ratio = getPercent(context, R.id.guide_h2) - getPercent(context, R.id.guide_h1);
+        double width_ratio = getPercent(context, R.id.guide_v2) - getPercent(context, R.id.guide_v1);
 
         double width = dp.widthPixels / dp.density * width_ratio;
         double height = dp.heightPixels / dp.density * height_ratio;  // real height
-
 
         int spanInWidth = (int) Math.round(width / HIGH_SCALE_WIDTH);
         int spanHeight = (int) (width * dp.density / spanInWidth / SCALE_RATIO_VERT);  // vertical only

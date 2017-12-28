@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ArticleListActivity"
+            android:name=".ui.ArticleListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,8 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--detailactivity-->
 
+        <!--service-->
+        <!--provider-->
+        <service
+            android:name=".data.UpdaterService"
+            android:exported="false" />
 
+        <provider
+            android:name=".data.ItemsProvider"
+            android:authorities="com.example.xyzreader"
+            android:exported="false" />
 
 
     </application>

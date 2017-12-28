@@ -7,7 +7,19 @@
     <string name="pref_reload_delay_key">pref_load_delay_key</string>
 
 
-    <string name="demo_text" >
+    <!--dialog-->
+    <string name="error_title">Error connection</string>
+    <string name="message_error_line1">There is no connection to the Internet</string>
+    <string name="message_error_line2">Please retry or exit from the program</string>
+    <string name="error_retry">RETRY</string>
+    <string name="error_close">CLOSE</string>
+    <string name="error_exit">EXIT</string>
+
+
+
+
+    <!--test-->
+    <string name="demo_text">
 "package com.example.xyzreader;
 
 import android.os.Bundle;
