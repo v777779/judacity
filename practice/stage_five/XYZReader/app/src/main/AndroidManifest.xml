@@ -22,10 +22,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--detailactivity-->
 
-        <!--service-->
-        <!--provider-->
+        <!-- detailactivity -->
+        <activity
+            android:name=".ui.ArticleDetailActivity"
+            android:label="@string/title_activity_article_detail"
+            android:theme="@style/AppTheme.NoActionBarDetail">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="content"
+                    android:mimeType="vnd.android.cursor.item/com.example.xyz.items" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ArticleListActivity" />
+
+        </activity>
+
+        <!-- service -->
+        <!-- provider -->
         <service
             android:name=".data.UpdaterService"
             android:exported="false" />

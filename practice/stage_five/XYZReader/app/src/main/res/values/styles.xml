@@ -17,6 +17,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.NoActionBarDetail">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimaryDetail</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDetail</item>
+
+    </style>
     <!--appbar-->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -36,6 +43,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size</item>
     </style>
+
     <style name="TextBold" parent="TextNormal">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/bold_text_size</item>
@@ -53,14 +61,14 @@
     </style>
 
 
-
     <!--progress bar-->
     <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="android:progressTint">@color/colorProgressBar</item>
         <item name="android:secondaryProgressTint">@color/colorProgressBar</item>
         <item name="android:indeterminateTint">@color/colorProgressBar</item>
     </style>
-    <style name="ProgressBarStyle" parent="@style/ProgressBarTheme"  >
+
+    <style name="ProgressBarStyle" parent="@style/ProgressBarTheme">
         <item name="android:minWidth">@dimen/progress_bar_size</item>
         <item name="android:maxWidth">@dimen/progress_bar_size</item>
         <item name="android:minHeight">@dimen/progress_bar_size</item>

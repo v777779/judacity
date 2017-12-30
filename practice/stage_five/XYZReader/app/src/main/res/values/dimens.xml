@@ -26,5 +26,11 @@
     <dimen name="normal_margin">8dp</dimen>
     <dimen name="large_margin">16dp</dimen>
 
+    <!--appbar-->
+
+    <dimen name="app_bar_height">240dp</dimen>
+    <dimen name="image_back_size">100dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
 
 </resources>

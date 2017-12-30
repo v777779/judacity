@@ -127,7 +127,9 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("");
+        if(actionBar != null) {
+            actionBar.setTitle("");
+        }
 //        mSysBarHeight = getResources().getDimensionPixelSize(R.dimen.status_bar_height) +
 //                mToolbar.getLayoutParams().height;
 

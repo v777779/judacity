@@ -15,6 +15,13 @@
     <!--<color name="colorToolbarLight">#99485b8c</color>-->
     <!--<color name="colorToolbarDark">#bb1f2c4c</color>-->
 
+    <color name="colorImageLight">#00000000</color>
+    <color name="colorImageDark">#505b7392</color>
+
+    <!--scrim-->
+    <color name="colorPrimaryDetail">#99485b8c</color>
+    <color name="colorPrimaryDarkDetail">#4d6298</color>
+
 
     <!--text colors-->
     <color name="colorText">#3A3A3A</color>
