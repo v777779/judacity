@@ -93,7 +93,6 @@
     <style name="CardTextNormal" parent="TextNormal">
         <item name="android:textColor">@color/colorCardText</item>
         <item name="android:textSize">@dimen/card_text_size</item>
-
     </style>
 
     <style name="CardTextHead" parent="TextNormal">
