@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.xyzreader.R;
 
@@ -27,7 +29,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
         }
 
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,5 +37,13 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+// test!!!
+        Typeface mCaecillia = Typeface.createFromAsset(getAssets(), "caecilia-light-webfont.ttf");
+        TextView mBodyText = findViewById(R.id.article_body);
+        mBodyText.setTypeface(mCaecillia);
+
+
     }
 }

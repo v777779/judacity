@@ -16,6 +16,12 @@
     <string name="error_exit">EXIT</string>
 
 
+    <!--title-->
+    <string name="article_title">Ebooks, Neither E, Nor Books</string>
+    <string name="article_byline">Feb 1, 2004 by Cory Doctorow</string>
+
+
+
     <!--test-->
     <string name="demo_text">
 "package com.example.xyzreader;

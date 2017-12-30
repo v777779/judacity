@@ -27,6 +27,17 @@
     <color name="colorText">#3A3A3A</color>
     <color name="colorButtonText">#4cb5ac</color>
 
+    <!--title colors-->
+    <color name="colorTitle">#FFFFFF</color>
+    <color name="colorTitleByLine">#C0FFFFFF</color>
+    <!--calculated!!!-->
+    <color name="colorTitleBack">#FF384038</color>
+
+    <color name="colorBody">#FF000000</color>
+    <color name="colorBodyBack">#FFFBEBD1</color>
+
+
+
     <!--card-->
     <color name="colorCardText">#3A3A3A</color>
     <color name="colorCardHead">#d63a3a3a</color>

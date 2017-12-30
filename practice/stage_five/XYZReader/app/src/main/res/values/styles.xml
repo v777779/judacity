@@ -47,7 +47,6 @@
     <style name="TextBold" parent="TextNormal">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/bold_text_size</item>
-
     </style>
 
     <style name="TextHead" parent="TextNormal">
@@ -60,6 +59,21 @@
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
 
+    <style name="TextTitle" parent="TextNormal">
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+
+    </style>
+    <style name="TextByline" parent="TextNormal">
+        <item name="android:textColor">@color/colorTitleByLine</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextBody" parent="TextNormal">
+        <item name="android:textColor">@color/colorBody</item>
+    </style>
 
     <!--progress bar-->
     <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
