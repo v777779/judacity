@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowInsets;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -66,19 +67,17 @@ public class ArticleListActivity extends AppCompatActivity implements
     ProgressBar mProgressBar;
 
     private Unbinder mUnBinder;
-
     private BroadcastReceiver mRefreshingReceiver;
     private boolean mIsSwipeRefresh;
     private boolean mIsRefreshing;
-    private int mSysBarHeight;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+
 
 // bind
         mUnBinder = ButterKnife.bind(this);
@@ -90,6 +89,36 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 // toolbar
+
+        mToolbar.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+                return null;
+            }
+        });
+
+        mToolbar.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+                view.onApplyWindowInsets(windowInsets);
+                Resources res = getResources();
+                int sysBarHeight = windowInsets.getSystemWindowInsetTop() + mToolbar.getLayoutParams().height;
+                int offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + sysBarHeight;
+                int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
+                int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
+
+                mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
+
+                offsetTop = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
+                mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetTop);
+
+
+                return windowInsets;
+            }
+        });
+
+
+        setSupportActionBar(mToolbar);
         mToolbarLogo = mToolbar.findViewById(R.id.toolbar_logo);
         mToolbarLogo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +128,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("");
-        mSysBarHeight = getResources().getDimensionPixelSize(R.dimen.status_bar_height) +
-                mToolbar.getLayoutParams().height;
+//        mSysBarHeight = getResources().getDimensionPixelSize(R.dimen.status_bar_height) +
+//                mToolbar.getLayoutParams().height;
+
 
 // fab
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -243,12 +273,11 @@ public class ArticleListActivity extends AppCompatActivity implements
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
         Resources res = getResources();
-        int offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + mSysBarHeight;
 
-        int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
-        int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
-
-        mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
+//        int offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + mSysBarHeight;
+//        int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
+//        int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
+//        mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
 
 
         Timber.d("status/navigation : " + getStatusBarHeight() + ", " + getNavigationBarHeight());
@@ -264,8 +293,8 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
 
-        int offsetTop = getResources().getDimensionPixelSize(R.dimen.progress_swipe_offset)+mSysBarHeight;
-        mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetTop);
+//        int offsetTop = getResources().getDimensionPixelSize(R.dimen.progress_swipe_offset) + mSysBarHeight;
+//        mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetTop);
 
         mRefreshingReceiver = new BroadcastReceiver() {
             @Override
