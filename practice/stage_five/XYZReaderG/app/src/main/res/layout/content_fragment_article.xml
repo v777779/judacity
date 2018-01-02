@@ -2,6 +2,7 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nested_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBodyBack"
@@ -9,10 +10,10 @@
     tools:context="com.example.xyzreader.ui.ArticleDetailActivity">
     <!--tools:showIn="@layout/activity_article_detail"-->
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/detail_constraint"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/title_constraint"
@@ -50,28 +51,63 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/article_title" />
 
-
         </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/article_body"
-            style="@style/TextBody"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/linear_body"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            >
 
-            android:text="@string/article_no_body"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_constraint"
+            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/article_body"&ndash;&gt;-->
+            <!--&lt;!&ndash;style="@style/TextBody"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_margin="@dimen/text_margin"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_marginBottom="8dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_marginStart="8dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_marginTop="8dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:singleLine="false"&ndash;&gt;-->
+            <!--&lt;!&ndash;tools:text="@string/article_no_body"&ndash;&gt;-->
+            <!--&lt;!&ndash;/>&ndash;&gt;-->
 
-            />
+        </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+
+        <!--<ListView-->
+            <!--android:id="@+id/article_body_listview"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:text="@string/article_no_body"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent">-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/article_body"-->
+            <!--style="@style/TextBody"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/text_margin"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:singleLine="false"-->
+            <!--tools:text="@string/article_no_body"-->
+            <!--/>-->
+
+        <!--</ListView>-->
+
+    </LinearLayout>
+
 
 </android.support.v4.widget.NestedScrollView>

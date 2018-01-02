@@ -5,6 +5,9 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -12,7 +15,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -25,6 +30,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
     private ViewPager mPager;
     private ArticleDetailAdapter mPagerAdapter;
+//    private ScreenSlidePagerAdapter mPagerAdapter;
     private Cursor mCursor;
     private long mStartId;
 
@@ -69,17 +75,14 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         mPager = findViewById(R.id.viewpager_container);
         mPagerAdapter = new ArticleDetailAdapter(getSupportFragmentManager(), mCursor);
         mPager.setAdapter(mPagerAdapter);
-
         mPager.setPageMargin((int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                         res.getInteger(R.integer.pager_side_margin), res.getDisplayMetrics()));
-
         mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
 
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -91,9 +94,27 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
+
+//        mPager = (ViewPager) findViewById(R.id.viewpager_container);
+//        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+//        mPager.setAdapter(mPagerAdapter);
+//        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                // When changing pages, reset the action bar actions since they are dependent
+//                // on which page is currently active. An alternative approach is to have each
+//                // fragment expose actions itself (rather than the activity exposing actions),
+//                // but for simplicity, the activity provides the actions in this sample.
+//                invalidateOptionsMenu();
+//            }
+//        });
+
+        mPager.setVisibility(View.GONE);
+//        mPager.setCurrentItem(4);
+
+
         getSupportLoaderManager().initLoader(0,null,this);
     }
 
@@ -106,16 +127,22 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return;
         mCursor = cursor;
+//        mPagerAdapter.notifyDataSetChanged();
         mPagerAdapter.swap(mCursor);
+
+
 
         if (mStartId == 0) return;
 
-        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
-            if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
-                mPager.setCurrentItem(mCursor.getPosition(), false);
-                break;
-            }
-        }
+//        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+//            if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
+//                mPager.setCurrentItem(mCursor.getPosition(), false);
+//                break;
+//            }
+//        }
+        mPager.setCurrentItem(3);
+        mPager.setVisibility(View.VISIBLE);
+
         mStartId = 0;
     }
 
@@ -125,5 +152,26 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         mPagerAdapter.notifyDataSetChanged();
     }
 
+//    /**
+//     * A simple pager adapter that represents 5 {@link ArticleDetailFragment} objects, in
+//     * sequence.
+//     */
+//    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+//        public ScreenSlidePagerAdapter(FragmentManager fm) {
+//            super(fm);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//            Log.d("Detail","lifecycle detail: getItem() position: "+position);
+//            return ArticleDetailFragment.newInstance(position, this);
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            if(mCursor == null) return 0;
+//            return mCursor.getCount();
+//        }
+//    }
 
 }

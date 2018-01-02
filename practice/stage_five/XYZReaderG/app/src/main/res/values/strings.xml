@@ -21,7 +21,7 @@
     <string name="article_byline">Feb 1, 2004 by Cory Doctorow</string>
 
     <string name="article_no_title">Sorry, but text not available</string>
-    <string name="article_no_byline"></string>
+    <string name="article_no_byline">Sorry, but byline text not available</string>
     <string name="article_no_body"> "Example of text\n\nThis text is provided as placeholder to evaluate font properties"</string>
 
   <!--date-->

@@ -67,7 +67,7 @@ public class ScreenSlideActivity extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 // When changing pages, reset the action bar actions since they are dependent
@@ -78,7 +78,7 @@ public class ScreenSlideActivity extends FragmentActivity {
             }
         });
 
-        mPager.setCurrentItem(3);
+
     }
 
     @Override
@@ -116,7 +116,8 @@ public class ScreenSlideActivity extends FragmentActivity {
             case R.id.action_next:
                 // Advance to the next step in the wizard. If there is no next step, setCurrentItem
                 // will do nothing.
-                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+//                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                mPager.setCurrentItem(3);
                 return true;
         }
 

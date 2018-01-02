@@ -20,21 +20,8 @@ public class ArticleDetailAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        int counter = 0;
-//        for(mCursor.moveToFirst();!mCursor.isAfterLast();mCursor.moveToNext()) {
-//            Timber.d("lifecycle detail  : getItem():"+
-//                            mCursor.getString(ArticleLoader.Query.TITLE)+" " +
-//                            mCursor.getString(ArticleLoader.Query.AUTHOR)+" "+
-//                    counter++);
-//        }
-
-
         mCursor.moveToPosition(position);
         Timber.d("lifecycle detail  : getItem():"+position);
-
-
-
-
         return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
     }
 
