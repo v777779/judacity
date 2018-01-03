@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -69,8 +70,12 @@ public class ArticleDetailFragment extends Fragment implements
 //    private ArticleArrayAdapter mArrayAdapter;
     private List<String> mList;
     private int mListIndex;
-    private final int SIZE_TEXT = 4000;
+    private final int SIZE_TEXT = 2000;
     private LinearLayout.LayoutParams mLayoutParams;
+
+// fab
+    private FloatingActionButton fabLeft;
+    private FloatingActionButton fabRight;
 
 
     public static Fragment newInstance(long itemId) {
@@ -130,7 +135,7 @@ public class ArticleDetailFragment extends Fragment implements
 //        mListView.setAdapter(mArrayAdapter);
         mLayoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         int side_margin = getResources().getDimensionPixelSize(R.dimen.large_margin);
-        mLayoutParams.setMargins(side_margin,0,side_margin,0);
+        mLayoutParams.setMargins(side_margin, 0, side_margin, 0);
 
 
         mNestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -144,7 +149,7 @@ public class ArticleDetailFragment extends Fragment implements
                 if (dY > 0) {
                     mLineY = dY;
 
-                    if (mLineY > mLastY && mLineY > mLinearLayout.getHeight() - 700) {
+                    if (mLineY > mLastY && mLineY > mLinearLayout.getHeight() - 700 && mTextSize < mTextSource.length()) {
 
 
 //                        String subText = htmlConvert(mTextSource.substring(mTextSize, mTextSize + 1000));
@@ -161,11 +166,17 @@ public class ArticleDetailFragment extends Fragment implements
                         TextView textView = item.findViewById(R.id.article_body_ext);
                         textView.setTypeface(mCaecilia);
 
-
+                        String subText = "";
                         int pos = mTextSource.indexOf("\n", mTextSize + SIZE_TEXT);
-                        if (mTextSource.substring(pos - 1, pos).equals("\r")) pos = pos - 1;
-                        String subText = mTextSource.substring(mTextSize, pos);
-                        mTextSize = pos; // last not used position
+                        if (pos > 0) {
+                            if (mTextSource.substring(pos - 1, pos).equals("\r")) pos = pos - 1;
+                            subText = mTextSource.substring(mTextSize, pos);
+                            mTextSize = pos; // last not used position
+                        } else {
+                            subText = mTextSource.substring(mTextSize);     // up to the end
+                            mTextSize = mTextSource.length();     // block next addition
+                        }
+
 
                         subText = htmlConvert(subText);
                         textView.setText(subText);
@@ -178,6 +189,13 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
+
+
+// fab
+        fabLeft = mRootView.findViewById(R.id.fab_left);
+        fabRight = mRootView.findViewById(R.id.fab_right);
+        fabLeft.animate().alpha(0).setDuration(500).start();
+        fabRight.animate().alpha(0).setDuration(500).start();
 
         return mRootView;
     }

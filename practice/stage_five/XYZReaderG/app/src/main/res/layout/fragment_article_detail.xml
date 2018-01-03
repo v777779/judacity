@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -59,5 +60,26 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_share" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|start"
+        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
+        android:alpha="0.5"
+        app:srcCompat="@drawable/ic_skip_prev" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        android:alpha="0.5"
+        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
+        app:srcCompat="@drawable/ic_skip_next" />
+
 
 </android.support.design.widget.CoordinatorLayout>
