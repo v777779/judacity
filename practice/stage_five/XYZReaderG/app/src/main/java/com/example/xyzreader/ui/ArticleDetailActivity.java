@@ -130,17 +130,15 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 //        mPagerAdapter.notifyDataSetChanged();
         mPagerAdapter.swap(mCursor);
 
-
-
         if (mStartId == 0) return;
 
-//        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
-//            if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
-//                mPager.setCurrentItem(mCursor.getPosition(), false);
-//                break;
-//            }
-//        }
-        mPager.setCurrentItem(3);
+        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+            if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
+                mPager.setCurrentItem(mCursor.getPosition(), true);
+                break;
+            }
+        }
+
         mPager.setVisibility(View.VISIBLE);
 
         mStartId = 0;

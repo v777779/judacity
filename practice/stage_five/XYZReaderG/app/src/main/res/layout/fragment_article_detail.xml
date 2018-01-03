@@ -68,6 +68,7 @@
         android:visibility="visible"
         android:background="@color/colorBackBottom"
         android:elevation="6dp"
+        android:alpha="0.0"
         app:layout_behavior="com.example.xyzreader.ui.ArticleDetailScroll"
         >
 

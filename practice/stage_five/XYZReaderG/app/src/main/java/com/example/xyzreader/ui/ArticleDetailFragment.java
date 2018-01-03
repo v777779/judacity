@@ -18,11 +18,10 @@ import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
-import android.view.WindowInsets;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -59,7 +58,7 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private long mItemId;
     private Typeface mCaecilia;
-    private Resources mRes;
+
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     private SimpleDateFormat mOutputFormat = new SimpleDateFormat();
     private GregorianCalendar mStartOfEpoch = new GregorianCalendar(2, 1, 1);
@@ -69,11 +68,9 @@ public class ArticleDetailFragment extends Fragment implements
     private LinearLayout mLinearLayout;
     private String mTextSource;
     private int mTextSize;
-    //    private ListView mListView;
-//    private ArticleArrayAdapter mArrayAdapter;
-    private List<String> mList;
-    private int mListIndex;
-    private final int SIZE_TEXT = 2000;
+
+    private final int FRAGMENT_TEXT_SIZE = 2000;
+    private final int FRAGMENT_TEXT_OFFSET = 700;
     private LinearLayout.LayoutParams mLayoutParams;
 
     // fab
@@ -101,7 +98,6 @@ public class ArticleDetailFragment extends Fragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
         mCaecilia = Typeface.createFromAsset(context.getAssets(), "caecilia-light-webfont.ttf");
-        mRes = getResources();
 
         Timber.d("lifecycle fragment: onAttach()");
     }
@@ -118,50 +114,41 @@ public class ArticleDetailFragment extends Fragment implements
 
     }
 
-    private int mCounterId = 1221;
-
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-//        mBodyText = mRootView.findViewById(R.id.article_body);
-//        mBodyText.setTypeface(mCaecilia);
 
-
-        mDateFormat = new SimpleDateFormat(mRes.getString(R.string.calendar_format));
+        Resources res = getResources();
+        mDateFormat = new SimpleDateFormat(getString(R.string.calendar_format));
         mOutputFormat = new SimpleDateFormat();
         mStartOfEpoch = new GregorianCalendar(
-                mRes.getInteger(R.integer.calendar_year),
-                mRes.getInteger(R.integer.calendar_moanth),
-                mRes.getInteger(R.integer.calendar_day)
+                res.getInteger(R.integer.calendar_year),
+                res.getInteger(R.integer.calendar_moanth),
+                res.getInteger(R.integer.calendar_day)
         );
 
         mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
 
+// linear
         mLinearLayout = mRootView.findViewById(R.id.linear_body);
-
         mLinearLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if (mIsSkipToEnd && mTextSize >= mTextSource.length()) {
+                if (mIsSkipToEnd && mTextSize >= mTextSource.length()) {                // scroll to end
                     mNestedScrollView.scrollTo(0, mLinearLayout.getHeight());
                     mIsSkipToEnd = false;
-                    mProgressBar.setVisibility(View.INVISIBLE);
 
                 }
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
 
         mInflater = inflater;
 
-        mList = new ArrayList<>();
-//        mListView = mRootView.findViewById(R.id.article_body_listview);
-//        mArrayAdapter = new ArticleArrayAdapter(getContext(), mList);
-//        mListView.setAdapter(mArrayAdapter);
         mLayoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         int side_margin = getResources().getDimensionPixelSize(R.dimen.large_margin);
         mLayoutParams.setMargins(side_margin, 0, side_margin, 0);
-
 
         mNestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             int mLineY = 0;
@@ -169,111 +156,58 @@ public class ArticleDetailFragment extends Fragment implements
 
             @Override
             public void onScrollChanged() {
-                int dY = mNestedScrollView.getScrollY();
-//                float y = mNestedScrollView.getY();
-//                if(dY == 0) {
-//                    mProgressBar.setVisibility(View.INVISIBLE);
-//                }
+                mLineY = mNestedScrollView.getScrollY();
+                if (mLineY > 0 &&                                                       // scroll down
+                        mLineY > mLastY &&                                              // after last
+                        mLineY > mLinearLayout.getHeight() - FRAGMENT_TEXT_OFFSET &&    // before the end
+                        mTextSize < mTextSource.length()) {                             // not all loaded
 
-                if (dY > 0) {
-                    mLineY = dY;
-
-                    if (mLineY > mLastY && mLineY > mLinearLayout.getHeight() - 700 && mTextSize < mTextSource.length()) {
-
-
-//                        String subText = htmlConvert(mTextSource.substring(mTextSize, mTextSize + 1000));
-//
-//                        View item = mInflater.inflate(R.layout.fragment_text_item, null);
-//                        TextView textView = item.findViewById(R.id.article_body_ext);
-//                        textView.setText(subText);
-//                        mLinearLayout.addView(textView);
-//
-//                        mLastY = mLineY;
-//                        mTextSize += subText.length();
-
-                        View item = mInflater.inflate(R.layout.fragment_text_item, null);
-                        TextView textView = item.findViewById(R.id.article_body_ext);
-                        textView.setTypeface(mCaecilia);
-
-                        String subText = "";
-                        int pos = mTextSource.indexOf("\n", mTextSize + SIZE_TEXT);
-                        if (pos > 0) {
-                            if (mTextSource.substring(pos - 1, pos).equals("\r")) pos = pos - 1;
-                            subText = mTextSource.substring(mTextSize, pos);
-                            mTextSize = pos; // last not used position
-                        } else {
-                            subText = mTextSource.substring(mTextSize);     // up to the end
-                            mTextSize = mTextSource.length();     // block next addition
-                        }
-
-
-                        subText = htmlConvert(subText);
-                        textView.setText(subText);
-                        mLinearLayout.addView(textView);
-
-                        mLastY = mLineY;
-
-                    }
+                    loadTextToLayout();
+                    mLastY = mLineY;        // last position
                 }
             }
         });
 
 
-// fab
-        fabLeft = mRootView.findViewById(R.id.fab_left);
-        fabRight = mRootView.findViewById(R.id.fab_right);
-        fabLeft.animate().alpha(0).setDuration(500).start();
-        fabRight.animate().alpha(0).setDuration(500).start();
-
+// image buttons
+        mConstraintBottom = mRootView.findViewById(R.id.bottom_toolbar);
         mImageButtonLeft = mRootView.findViewById(R.id.image_bitton_left);
         mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
 
         mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int k = 1;
                 ArticleDetailScroll.setContinue();
-//                mProgressBar.setVisibility(View.VISIBLE);
                 mNestedScrollView.scrollTo(0, 0);
-
-
             }
         });
+
         mImageButtonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int k = 1;
-
                 ArticleDetailScroll.setContinue();
                 if (mTextSize < mTextSource.length()) {
                     mIsSkipToEnd = true;
-
                     mProgressBar.setVisibility(View.VISIBLE);
 
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
+                            // add textView
+                            View item = mInflater.inflate(R.layout.fragment_text_item, null);
+                            TextView textView = item.findViewById(R.id.article_body_ext);
+                            textView.setTypeface(mCaecilia);
 
-//                            mProgressBar.callOnClick();
-                            if (mIsSkipToEnd) {
-                                // add textView
-                                View item = mInflater.inflate(R.layout.fragment_text_item, null);
-                                TextView textView = item.findViewById(R.id.article_body_ext);
-                                textView.setTypeface(mCaecilia);
+                            String subText = "";
+                            subText = mTextSource.substring(mTextSize);     // up to the end
+                            mTextSize = mTextSource.length();     // block next addition
 
-                                String subText = "";
-                                subText = mTextSource.substring(mTextSize);     // up to the end
-                                mTextSize = mTextSource.length();     // block next addition
-
-                                subText = htmlConvert(subText);
-                                textView.setText(subText);
-                                mLinearLayout.addView(textView);
-                                mProgressBar.setVisibility(View.INVISIBLE);
-                            }
-
+                            subText = htmlConvert(subText);
+                            textView.setText(subText);
+                            mLinearLayout.addView(textView);
+                            mProgressBar.setVisibility(View.INVISIBLE);
                         }
                     });
-
 
                 } else {
                     mNestedScrollView.scrollTo(0, mLinearLayout.getHeight());
@@ -281,38 +215,15 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        mConstraintBottom = mRootView.findViewById(R.id.bottom_toolbar);
-        mConstraintBottom.setAlpha(0.0f);
-//        mConstraintBottom.animate().alpha(0).setDuration(500).start();
 // progress bar
         mProgressBar = mRootView.findViewById(R.id.progress_bar);
+        mProgressBar.setVisibility(View.VISIBLE);
 
-        mProgressBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                if (mIsSkipToEnd) {
-                    // add textView
-                    View item = mInflater.inflate(R.layout.fragment_text_item, null);
-                    TextView textView = item.findViewById(R.id.article_body_ext);
-                    textView.setTypeface(mCaecilia);
-
-                    String subText = "";
-                    subText = mTextSource.substring(mTextSize);     // up to the end
-                    mTextSize = mTextSource.length();     // block next addition
-
-                    subText = htmlConvert(subText);
-                    textView.setText(subText);
-                    mLinearLayout.addView(textView);
-                }
-
-            }
-        });
 
 
         return mRootView;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {   // set adapter
@@ -372,13 +283,9 @@ public class ArticleDetailFragment extends Fragment implements
 
 
     private void bindViews() {
-
-
         if (mRootView == null || mCursor == null || mCursor.getCount() == 0) {
             return;
         }
-
-
         TextView titleView = mRootView.findViewById(R.id.article_title);
         TextView bylineView = mRootView.findViewById(R.id.article_byline);
 
@@ -391,116 +298,21 @@ public class ArticleDetailFragment extends Fragment implements
                             System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                             DateUtils.FORMAT_ABBREV_ALL).toString()
                             + " by " + mCursor.getString(ArticleLoader.Query.AUTHOR)));
-
-            CharSequence cs = DateUtils.getRelativeTimeSpanString(
-                    publishedDate.getTime(),
-                    System.currentTimeMillis(),
-                    DateUtils.HOUR_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_ALL);
-
-            String s2 = " by <font color='#ffffff'>" + mCursor.getString(ArticleLoader.Query.AUTHOR) + "</font>";
-
         } else {
             // If date is before 1902, just show the string
             bylineView.setText(Html.fromHtml(
-                    mOutputFormat.format(publishedDate) + " by <font color='#ffffff'>"
+                    mOutputFormat.format(publishedDate) + " by "
                             + mCursor.getString(ArticleLoader.Query.AUTHOR)
-                            + "</font>"));
+            ));
 
         }
 
         String text = mCursor.getString(ArticleLoader.Query.BODY);
         mTextSource = text;
+        mTextSize = 0;
 
+        loadTextToLayout();
 
-// 3
-//        List<String> list = new ArrayList<>(Arrays.asList(text.split("\r\n")));
-//
-//        List<String> subList = list.subList(0, 25); // 25 subblocks
-//        mList.addAll(subList);
-//        mArrayAdapter.notifyDataSetChanged();
-//        mListView.getLayoutParams().height = 200;
-//        final int size =  25;
-//        final int height = 25*40;
-//        mListView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                if(motionEvent.getAction()== MotionEvent.ACTION_MOVE) {
-//                    if(mListView.getLayoutParams().height < height) {
-//                        mListView.getLayoutParams().height = height;
-//                        mArrayAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//                return false;
-//            }
-//
-//        });
-
-
-// 2
-        View item = mInflater.inflate(R.layout.fragment_text_item, null);
-        TextView textView = item.findViewById(R.id.article_body_ext);
-        textView.setTypeface(mCaecilia);
-//        textView.setLayoutParams(mLayoutParams);
-
-
-        int pos = text.indexOf("\n", SIZE_TEXT);
-        if (text.substring(pos - 1, pos).equals("\r")) pos = pos - 1;
-        String subText = text.substring(0, pos);
-        mTextSize = pos; // last not used position
-
-
-        subText = htmlConvert(subText);
-        textView.setText(subText);
-        mLinearLayout.addView(textView);
-
-
-// 1
-//        mBodyText.setText(htmlConvert(subText));
-//        int counter = 0;
-//        for (int i = 0; i < 5; i++) {
-//            View item = mInflater.inflate(R.layout.fragment_text_item, null);
-//            TextView textView = item.findViewById(R.id.article_body_ext);
-//            String subText = text.substring(counter, counter + 200);
-//            textView.setText(subText);
-//            mLinearLayout.addView(textView);
-//            counter += 200;
-//        }
-
-//        mAdapter.notifyDataSetChanged();
-
-//        new BindTask().execute(text);
-
-
-//            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-//        ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
-//                .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
-//                    @Override
-//                    public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-//                        Bitmap bitmap = imageContainer.getBitmap();
-//                        if (bitmap != null) {
-//
-//                            Palette p = Palette.generate(bitmap, 12);
-//                            mMutedColor = p.getDarkMutedColor(0xFF333333);
-//                            mPhotoView.setImageBitmap(imageContainer.getBitmap());
-//                            mRootView.findViewById(R.id.meta_bar)
-//                                    .setBackgroundColor(mMutedColor);
-//                            updateStatusBar();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onErrorResponse(VolleyError volleyError) {
-//
-//                    }
-//                });
-
-
-    }
-
-    private String htmlConvertLight(String text) {
-        text = text.replaceAll("(\r\n\r\n)", "<br/><br/>");//&emsp;");
-        return Html.fromHtml(text).toString();
     }
 
 
@@ -512,19 +324,27 @@ public class ArticleDetailFragment extends Fragment implements
         return Html.fromHtml(text).toString();
     }
 
+    private void loadTextToLayout() {
+        View item = mInflater.inflate(R.layout.fragment_text_item, null);
+        TextView textView = item.findViewById(R.id.article_body_ext);
+        textView.setTypeface(mCaecilia);
 
-    private class BindTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            if (strings == null || strings.length == 0 || strings[0] == null || strings[0].length() == 0)
-                return "";
-
-            return htmlConvert(strings[0]);
+        String subText = "";
+        int pos = mTextSource.indexOf("\n", mTextSize + FRAGMENT_TEXT_SIZE);
+        if (pos > 0) {
+            if (mTextSource.substring(pos - 1, pos).equals("\r")) pos = pos - 1;
+            subText = mTextSource.substring(mTextSize, pos);
+            mTextSize = pos; // last not used position
+        } else {
+            subText = mTextSource.substring(mTextSize);     // up to the end
+            mTextSize = mTextSource.length();     // block next addition
         }
 
-        @Override
-        protected void onPostExecute(String s) {
-            mBodyText.setText(s);
-        }
+        subText = htmlConvert(subText);
+        textView.setText(subText);
+        mLinearLayout.addView(textView);
+
     }
+
+
 }
