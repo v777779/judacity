@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.Random;
 
+import static ru.vpcb.ex_04_07.MainActivity.IMAGE_IDS;
+
 public class GridAdapter extends BaseAdapter {
     AppCompatActivity mActivity;
 
@@ -37,7 +39,7 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final int [] IMAGE_IDS = new int[] {R.drawable.image_001, R.drawable.image_002, R.drawable.image_003};
+
 
         if (convertView == null) {
             convertView = mActivity.getLayoutInflater().inflate(R.layout.grid_item, parent, false);

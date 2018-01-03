@@ -11,6 +11,8 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.widget.ImageView;
 
+import static ru.vpcb.ex_04_07.MainActivity.BUNDLE_IMAGE_RESOURCE;
+
 public class DetailActivity extends AppCompatActivity {
 
     @Override
@@ -23,9 +25,15 @@ public class DetailActivity extends AppCompatActivity {
         imageView.setImageResource(R.drawable.image_002);
         setAvatar();
 
+        Bundle args = getIntent().getExtras();
+        if (args != null) {
+            int imageId = args.getInt(BUNDLE_IMAGE_RESOURCE);
+            imageView.setImageResource(imageId);
 
-        Transition move = TransitionInflater.from(this).inflateTransition(R.transition.move);
-        getWindow().setSharedElementEnterTransition(move);
+        }
+
+//        Transition move = TransitionInflater.from(this).inflateTransition(R.transition.move);
+//        getWindow().setSharedElementEnterTransition(move);
 
 
     }

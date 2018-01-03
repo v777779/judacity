@@ -45,6 +45,7 @@
             android:src="@drawable/ic_access_time_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_view1"
+            android:transitionName="hero"
 
             />
 

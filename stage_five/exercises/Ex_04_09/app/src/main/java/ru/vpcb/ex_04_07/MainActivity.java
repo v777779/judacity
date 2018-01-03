@@ -9,6 +9,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int[] IMAGE_IDS = new int[]{R.drawable.image_001, R.drawable.image_002, R.drawable.image_003};
+    public static final String BUNDLE_IMAGE_RESOURCE = "bundle_image_resource";
+
     private boolean isHero;
 
     @Override
@@ -23,17 +26,19 @@ public class MainActivity extends AppCompatActivity {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this, DetailActivity.class),
-                        ActivityOptions.makeSceneTransitionAnimation(
-                                MainActivity.this,
-                                view,
-                                view.findViewById(R.id.image_view).getTransitionName()  // можно задать руками или взять из поля
-                        ).toBundle());
+//                startActivity(new Intent(MainActivity.this, DetailActivity.class),
+//                        ActivityOptions.makeSceneTransitionAnimation(
+//                                MainActivity.this,
+//                                view,
+//                                view.findViewById(R.id.image_view).getTransitionName()  // можно задать руками или взять из поля
+//                        ).toBundle());
 // with  bundle
-//                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this
-//                        , view, "hero").toBundle();
-//                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-//                startActivity(intent, bundle);
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this
+                        , view, "transition_photo").toBundle();
+
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra(BUNDLE_IMAGE_RESOURCE, IMAGE_IDS[position % IMAGE_IDS.length]);
+                startActivity(intent, bundle);
 
             }
         });
