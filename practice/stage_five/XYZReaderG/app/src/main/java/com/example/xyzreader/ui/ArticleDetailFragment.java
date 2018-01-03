@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -20,8 +21,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowInsets;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
@@ -79,6 +83,11 @@ public class ArticleDetailFragment extends Fragment implements
     private ImageButton mImageButtonRight;
     private ConstraintLayout mConstraintBottom;
 
+    // progress
+    private ProgressBar mProgressBar;
+
+    // skip
+    private boolean mIsSkipToEnd;
 
     public static Fragment newInstance(long itemId) {
         Bundle arguments = new Bundle();
@@ -106,6 +115,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         }
         Timber.d("lifecycle fragment: onCreate():" + mItemId);
+
     }
 
     private int mCounterId = 1221;
@@ -129,6 +139,19 @@ public class ArticleDetailFragment extends Fragment implements
         mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
 
         mLinearLayout = mRootView.findViewById(R.id.linear_body);
+
+        mLinearLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if (mIsSkipToEnd && mTextSize >= mTextSource.length()) {
+                    mNestedScrollView.scrollTo(0, mLinearLayout.getHeight());
+                    mIsSkipToEnd = false;
+                    mProgressBar.setVisibility(View.INVISIBLE);
+
+                }
+            }
+        });
+
         mInflater = inflater;
 
         mList = new ArrayList<>();
@@ -147,7 +170,11 @@ public class ArticleDetailFragment extends Fragment implements
             @Override
             public void onScrollChanged() {
                 int dY = mNestedScrollView.getScrollY();
-                float y = mNestedScrollView.getY();
+//                float y = mNestedScrollView.getY();
+//                if(dY == 0) {
+//                    mProgressBar.setVisibility(View.INVISIBLE);
+//                }
+
                 if (dY > 0) {
                     mLineY = dY;
 
@@ -205,18 +232,84 @@ public class ArticleDetailFragment extends Fragment implements
             @Override
             public void onClick(View view) {
                 int k = 1;
+                ArticleDetailScroll.setContinue();
+//                mProgressBar.setVisibility(View.VISIBLE);
+                mNestedScrollView.scrollTo(0, 0);
+
+
             }
         });
         mImageButtonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int k = 1;
+
+                ArticleDetailScroll.setContinue();
+                if (mTextSize < mTextSource.length()) {
+                    mIsSkipToEnd = true;
+
+                    mProgressBar.setVisibility(View.VISIBLE);
+
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+
+//                            mProgressBar.callOnClick();
+                            if (mIsSkipToEnd) {
+                                // add textView
+                                View item = mInflater.inflate(R.layout.fragment_text_item, null);
+                                TextView textView = item.findViewById(R.id.article_body_ext);
+                                textView.setTypeface(mCaecilia);
+
+                                String subText = "";
+                                subText = mTextSource.substring(mTextSize);     // up to the end
+                                mTextSize = mTextSource.length();     // block next addition
+
+                                subText = htmlConvert(subText);
+                                textView.setText(subText);
+                                mLinearLayout.addView(textView);
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                            }
+
+                        }
+                    });
+
+
+                } else {
+                    mNestedScrollView.scrollTo(0, mLinearLayout.getHeight());
+                }
             }
         });
 
         mConstraintBottom = mRootView.findViewById(R.id.bottom_toolbar);
         mConstraintBottom.setAlpha(0.0f);
 //        mConstraintBottom.animate().alpha(0).setDuration(500).start();
+// progress bar
+        mProgressBar = mRootView.findViewById(R.id.progress_bar);
+
+        mProgressBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (mIsSkipToEnd) {
+                    // add textView
+                    View item = mInflater.inflate(R.layout.fragment_text_item, null);
+                    TextView textView = item.findViewById(R.id.article_body_ext);
+                    textView.setTypeface(mCaecilia);
+
+                    String subText = "";
+                    subText = mTextSource.substring(mTextSize);     // up to the end
+                    mTextSize = mTextSource.length();     // block next addition
+
+                    subText = htmlConvert(subText);
+                    textView.setText(subText);
+                    mLinearLayout.addView(textView);
+                }
+
+            }
+        });
+
 
         return mRootView;
     }

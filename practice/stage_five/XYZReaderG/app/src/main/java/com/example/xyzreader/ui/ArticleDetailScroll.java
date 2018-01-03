@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -17,55 +16,16 @@ import static android.support.v4.view.ViewCompat.SCROLL_AXIS_VERTICAL;
  */
 
 public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
-    private static Runnable mRunnable;
-    private AnimateCountDownTimer mCountDownTimer;
 
-    private class AnimateCountDownTimer extends CountDownTimer {
-        private View mChild;
-        private boolean mIsActive;
-
-        public AnimateCountDownTimer(long millisInFuture) {
-            super(millisInFuture, millisInFuture + 1);
-
-        }
-
-        @Override
-        public void onTick(long l) {
-
-        }
-
-        @Override
-        public void onFinish() {
-            if (mChild != null) {
-//                mView.animate().alpha(0).setDuration(500).start();
-                mChild.animate().translationY(mChild.getHeight()).setInterpolator(new LinearInterpolator()).start();
-            }
-            setActive(false);
-        }
-
-        private void startTimer() {
-            super.start();
-            setActive(true);
-        }
-
-        private synchronized boolean isActive() {
-            return mIsActive;
-        }
-
-        private synchronized void setActive(boolean isActive) {
-            mIsActive = isActive;
-        }
-
-    }
-
+    private CountDownTimer mCountDownTimer;
+    public static ArticleDetailScroll mInstance;
+    private View mChild;
+    private boolean mIsActive;
 
     // to inflate from XML this constructor
     public ArticleDetailScroll(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mCountDownTimer = new AnimateCountDownTimer(2500);
-
     }
-
 
     @Override
     public void onNestedScroll(
@@ -74,29 +34,8 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
             @NonNull View target,
             int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
-
-        if (child.getVisibility() == View.VISIBLE && dyConsumed > 0) {
-//            child.animate().alpha(1.0f).setDuration(100).start();
-            if(!mCountDownTimer.isActive()) {
-                child.setAlpha(1.0f);
-                child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
-            }
-            mCountDownTimer.cancel();
-            mCountDownTimer.mChild = child;
-            mCountDownTimer.start();
-
-
-        } else if (child.getVisibility() == View.VISIBLE && dyConsumed < 0) {
-//            child.animate().alpha(1.0f).setDuration(100).start();
-            if(!mCountDownTimer.isActive()) {
-                child.setAlpha(1.0f);
-                child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
-            }
-
-            mCountDownTimer.cancel();
-            mCountDownTimer.mChild = child;
-            mCountDownTimer.start();
-        }
+        setContinue(child);
+        mInstance = this;
     }
 
 
@@ -111,5 +50,52 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
         return axes == SCROLL_AXIS_VERTICAL;
     }
 
+    private void setTimer(final View child) {
+        if (child == null) return;
+
+        if (!isActive()) {
+            child.setAlpha(1.0f);
+            child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
+        }
+
+        if (mCountDownTimer != null)  mCountDownTimer.cancel();
+
+        mCountDownTimer = new CountDownTimer(2500, 2500) {
+            @Override
+            public void onTick(long l) {
+            }
+            @Override
+            public void onFinish() {
+                setActive(false);
+                if (child == null) return;
+//                child.animate().alpha(0).setDuration(500).start();
+                child.animate().translationY(mChild.getHeight()).setInterpolator(new LinearInterpolator()).start();
+                mCountDownTimer = null;
+            }
+        };
+        mCountDownTimer.start();
+        setActive(true);
+        mChild = child;
+    }
+
+    private synchronized boolean isActive() {
+        return mIsActive;
+    }
+
+    private synchronized void setActive(boolean isActive) {
+        mIsActive = isActive;
+    }
+
+    public void setContinue(View child) {
+
+        setTimer(child);
+
+    }
+
+
+    public static void setContinue() {
+        if (mInstance == null) return;
+        mInstance.setContinue(mInstance.mChild);
+    }
 
 }

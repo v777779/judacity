@@ -138,5 +138,11 @@
     <!--android:layout_gravity="bottom|center_horizontal"-->
     <!--app:menu="@menu/navigation"-->
     <!--app:itemIconTint="@android:color/white"/>-->
-
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/ProgressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
 </android.support.design.widget.CoordinatorLayout>
