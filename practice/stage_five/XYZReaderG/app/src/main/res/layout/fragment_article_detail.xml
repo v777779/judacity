@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.xyzreader.ui.ArticleDetailActivity"
-    >
+    tools:context="com.example.xyzreader.ui.ArticleDetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -61,25 +60,83 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_share" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_left"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottom_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_gravity="bottom|start"
-        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
-        android:alpha="0.5"
-        app:srcCompat="@drawable/ic_skip_prev" />
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="visible"
+        android:background="@color/colorBackBottom"
+        android:elevation="6dp"
+        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailScroll"
+        >
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_gravity="bottom|end"
-        android:alpha="0.5"
-        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
-        app:srcCompat="@drawable/ic_skip_next" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:alpha="0.5"
+            app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_skip_prev"
+            android:visibility="gone"
+            />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:alpha="0.5"
+            app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_skip_next"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/image_bitton_left"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_skip_prev"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/fab_left"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/image_button_right"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_skip_next"
+            android:stateListAnimator="@animator/fab_animator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+    </android.support.constraint.ConstraintLayout>
+    <!--<android.support.design.widget.BottomNavigationView-->
+    <!--android:id="@+id/navigation"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginEnd="0dp"-->
+    <!--android:layout_marginStart="0dp"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:alpha="0.75"-->
+    <!--android:layout_gravity="bottom|center_horizontal"-->
+    <!--app:menu="@menu/navigation"-->
+    <!--app:itemIconTint="@android:color/white"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

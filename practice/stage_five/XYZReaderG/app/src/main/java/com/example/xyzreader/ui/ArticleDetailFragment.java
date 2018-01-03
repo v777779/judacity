@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -16,12 +17,11 @@ import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
@@ -30,7 +30,6 @@ import com.example.xyzreader.data.ArticleLoader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -73,9 +72,12 @@ public class ArticleDetailFragment extends Fragment implements
     private final int SIZE_TEXT = 2000;
     private LinearLayout.LayoutParams mLayoutParams;
 
-// fab
+    // fab
     private FloatingActionButton fabLeft;
     private FloatingActionButton fabRight;
+    private ImageButton mImageButtonLeft;
+    private ImageButton mImageButtonRight;
+    private ConstraintLayout mConstraintBottom;
 
 
     public static Fragment newInstance(long itemId) {
@@ -190,12 +192,31 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
 
-
 // fab
         fabLeft = mRootView.findViewById(R.id.fab_left);
         fabRight = mRootView.findViewById(R.id.fab_right);
         fabLeft.animate().alpha(0).setDuration(500).start();
         fabRight.animate().alpha(0).setDuration(500).start();
+
+        mImageButtonLeft = mRootView.findViewById(R.id.image_bitton_left);
+        mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
+
+        mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int k = 1;
+            }
+        });
+        mImageButtonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int k = 1;
+            }
+        });
+
+        mConstraintBottom = mRootView.findViewById(R.id.bottom_toolbar);
+        mConstraintBottom.setAlpha(0.0f);
+//        mConstraintBottom.animate().alpha(0).setDuration(500).start();
 
         return mRootView;
     }

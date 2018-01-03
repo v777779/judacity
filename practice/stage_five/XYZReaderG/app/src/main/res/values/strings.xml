@@ -27,6 +27,12 @@
   <!--date-->
     <string name="calendar_format">yyyy-MM-dd\u0027T\u0027HH:mm:ss.sss</string>
 
+    <!--bottom-->
+    <string name="title_prev">Begin</string>
+    <string name="title_rew">Back</string>
+    <string name="title_fwd">Forward</string>
+    <string name="title_next">End</string>
+
     <!--test-->
     <string name="demo_text">
 "package com.example.xyzreader;
