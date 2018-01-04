@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -54,17 +56,10 @@ public class DetailActivity extends AppCompatActivity {
 
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
 
-//// set an enter transition
-//        getWindow().setEnterTransition(new Explode());
-//        getWindow().setSharedElementEnterTransition(new Explode());
-
+        Transition move = TransitionInflater.from(this).inflateTransition(R.transition.move);
 // set an exit transition
         getWindow().setExitTransition(new Explode());
-        getWindow().setSharedElementExitTransition(new Explode());
-
-// set an return transition
-//        getWindow().setReturnTransition(new Fade());
-//        getWindow().setSharedElementReturnTransition(new Fade());
+        getWindow().setSharedElementExitTransition(move);
 
 
         setContentView(R.layout.activity_detail);

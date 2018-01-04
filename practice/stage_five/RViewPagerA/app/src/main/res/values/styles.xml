@@ -18,49 +18,5 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <!--<style name="AppTheme.Home" parent="AppTheme">-->
-        <!--<item name="android:windowSharedElementEnterTransition">@transition/move_custom</item>-->
-    <!--</style>-->
-
-    <!--&lt;!&ndash;exit&ndash;&gt;-->
-    <!--<style name="AppTheme.Home.Stay" parent="AppTheme.Home">-->
-        <!--<item name="android:windowSharedElementEnterTransition">@transition/move</item>-->
-
-    <!--</style>-->
-
-
-    <style name="AppTheme.NoActionBar.Explode" parent="AppTheme.NoActionBar">
-        <item name="android:windowContentTransitions">true</item>
-
-        <item name="android:windowEnterTransition">@transition/change_image_transform</item>
-        <item name="android:windowExitTransition">@transition/change_image_transform</item>
-
-        <!-- specify shared element transitions -->
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/change_image_transform</item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/change_image_transform</item>
-    </style>
-
-
-    <style name="AppTheme.NoActionBar.Fade" parent="AppTheme.NoActionBar">
-        <item name="android:windowContentTransitions">true</item>
-
-    </style>
-
-
-    <!--<style name="AppTheme.NoActionBar.ExplodeA" parent="AppTheme.NoActionBar">-->
-        <!--<item name="android:windowSharedElementEnterTransition">@transition/move_custom</item>-->
-        <!--<item name="android:windowExitTransition">@transition/grid_exit</item>-->
-        <!--&lt;!&ndash;<item name="android:windowContentTransitions">true</item>&ndash;&gt;-->
-    <!--</style>-->
-
-    <!--<style name="AppTheme.NoActionBar.FadeA" parent="AppTheme.NoActionBar">-->
-        <!--<item name="android:windowSharedElementEnterTransition">@transition/move_custom</item>-->
-        <!--<item name="android:windowEnterTransition">@transition/slide_fade</item>-->
-        <!--<item name="android:windowTransitionBackgroundFadeDuration">200</item>-->
-        <!--&lt;!&ndash;<item name="android:windowSharedElementEnterTransition">@transition/hero</item>&ndash;&gt;-->
-    <!--</style>-->
-
 
 </resources>

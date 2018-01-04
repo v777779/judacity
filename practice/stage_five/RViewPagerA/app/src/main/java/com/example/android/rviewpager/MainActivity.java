@@ -17,8 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.AutoTransition;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,19 +66,18 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-// set an enter transition
-        getWindow().setEnterTransition(new Explode());
-        getWindow().setSharedElementEnterTransition(new Explode());
-// set an exit transition
-        getWindow().setExitTransition(new Explode());
-        getWindow().setSharedElementExitTransition(new Explode());
-// set an reenter transition
-        getWindow().setReenterTransition(new Explode());
-        getWindow().setSharedElementReenterTransition(new Explode());
 
-// set an return transition
-//        getWindow().setReturnTransition(new Fade());
-//        getWindow().setSharedElementReturnTransition(new Fade());
+        Transition move = TransitionInflater.from(this).inflateTransition(R.transition.move);
+//// set an enter transition
+//        getWindow().setEnterTransition(new Explode());
+//        getWindow().setSharedElementEnterTransition(move);
+//// set an exit transition
+        getWindow().setExitTransition(new Explode());
+        getWindow().setSharedElementExitTransition(move);
+//// set an reenter transition
+//        getWindow().setReenterTransition(new Explode());
+//        getWindow().setSharedElementReenterTransition(move);
+
 
 
         setContentView(R.layout.activity_main);
