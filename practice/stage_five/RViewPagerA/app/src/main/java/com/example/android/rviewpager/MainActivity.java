@@ -18,6 +18,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
+import android.transition.Fade;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,8 +65,18 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
 // set an enter transition
         getWindow().setEnterTransition(new Explode());
+        getWindow().setSharedElementEnterTransition(new Explode());
 // set an exit transition
         getWindow().setExitTransition(new Explode());
+        getWindow().setSharedElementExitTransition(new Explode());
+// set an reenter transition
+        getWindow().setReenterTransition(new Explode());
+        getWindow().setSharedElementReenterTransition(new Explode());
+
+// set an return transition
+//        getWindow().setReturnTransition(new Fade());
+//        getWindow().setSharedElementReturnTransition(new Fade());
+
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
