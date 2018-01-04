@@ -32,8 +32,8 @@ public class DetailActivity extends AppCompatActivity {
 
         }
 
-//        Transition move = TransitionInflater.from(this).inflateTransition(R.transition.move);
-//        getWindow().setSharedElementEnterTransition(move);
+        Transition move = TransitionInflater.from(this).inflateTransition(R.transition.move);
+        getWindow().setSharedElementEnterTransition(move);
 
 
     }
