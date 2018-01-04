@@ -12,21 +12,33 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
+
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 
@@ -86,6 +98,8 @@ public class ArticleDetailFragment extends Fragment implements
     // skip
     private boolean mIsSkipToEnd;
 
+    private ActionBar mActionBar;
+
     public static Fragment newInstance(long itemId) {
         Bundle arguments = new Bundle();
         arguments.putLong(BUNDLE_FRAGMENT_ID, itemId);
@@ -99,8 +113,10 @@ public class ArticleDetailFragment extends Fragment implements
         super.onAttach(context);
         mCaecilia = Typeface.createFromAsset(context.getAssets(), "caecilia-light-webfont.ttf");
 
+
         Timber.d("lifecycle fragment: onAttach()");
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {  // get bundle
@@ -118,6 +134,25 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+
+
+        Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle("");
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finish();
+            }
+        });
 
         Resources res = getResources();
         mDateFormat = new SimpleDateFormat(getString(R.string.calendar_format));
@@ -220,7 +255,6 @@ public class ArticleDetailFragment extends Fragment implements
         mProgressBar.setVisibility(View.VISIBLE);
 
 
-
         return mRootView;
     }
 
@@ -231,6 +265,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         getLoaderManager().initLoader(0, null, this);
     }
+
 
 
     @Override
@@ -288,6 +323,8 @@ public class ArticleDetailFragment extends Fragment implements
         }
         TextView titleView = mRootView.findViewById(R.id.article_title);
         TextView bylineView = mRootView.findViewById(R.id.article_byline);
+        ImageView imageView = mRootView.findViewById(R.id.toolbar_image);
+
 
         titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
         Date publishedDate = parsePublishedDate();
@@ -305,6 +342,16 @@ public class ArticleDetailFragment extends Fragment implements
                             + mCursor.getString(ArticleLoader.Query.AUTHOR)
             ));
 
+        }
+
+        String imageURL = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
+        if (imageURL != null && !imageURL.isEmpty()) {
+            Glide.with(this)
+                    .load(imageURL)
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.empty_loading)
+                            .error(R.drawable.error_loading))
+                    .into(imageView);
         }
 
         String text = mCursor.getString(ArticleLoader.Query.BODY);

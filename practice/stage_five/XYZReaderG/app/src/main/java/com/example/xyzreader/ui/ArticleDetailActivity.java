@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.xyzreader.R;
@@ -117,6 +118,11 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
         getSupportLoaderManager().initLoader(0,null,this);
     }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
