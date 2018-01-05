@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="pin" />
-            <!--android:transitionName="@string/transition_image"-->
+
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -54,7 +54,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:transitionName="@string/transition_fab"
             app:srcCompat="@android:drawable/ic_dialog_email" />
     </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

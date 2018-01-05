@@ -2,34 +2,39 @@ package com.example.android.rviewpager;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.io.InputStream;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
-import static com.example.android.rviewpager.MainActivity.BUNDLE_IMAGE_RESOURCE;
+import static com.example.android.rviewpager.MainActivity.BUNDLE_CURRENT_IMAGE_RESOURCE;
+import static com.example.android.rviewpager.MainActivity.BUNDLE_STARTING_IMAGE_RESOURCE;
 
 public class FragmentDetail extends Fragment {
 
@@ -49,32 +54,38 @@ public class FragmentDetail extends Fragment {
     @BindView(R.id.fab)
     FloatingActionButton mFab;
 
-    private String mImageId;
+    @Nullable
+    @BindView(R.id.detail_text)
+    TextView mText;
+
+
+    private String mStartingImageId;
+    private String mCurrentImageId;
     private Unbinder mUnbinder;
 
     private Activity mActivity;
     private View mRootView;
     private String transitionName;
     private boolean mIsVisibleToUser;
+    private ICallbackImage mCallbackImage;
 
 
-    public static Fragment newInstance(String itemId) {
+    public static Fragment newInstance(String currentImageId, String startingImageId) {
         Bundle arguments = new Bundle();
-        arguments.putString(BUNDLE_IMAGE_RESOURCE, itemId);
+        arguments.putString(BUNDLE_STARTING_IMAGE_RESOURCE, startingImageId);
+        arguments.putString(BUNDLE_CURRENT_IMAGE_RESOURCE, currentImageId);
         FragmentDetail fragment = new FragmentDetail();
         fragment.setArguments(arguments);
         return fragment;
-    }
-
-    public void setTransitionName(String s) {
-        transitionName = s;
     }
 
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ActivityCompat.startPostponedEnterTransition(getActivity());
+
+// enter transition ***setUserVisibility***
+//        ActivityCompat.startPostponedEnterTransition(getActivity());
     }
 
     @Override
@@ -82,11 +93,22 @@ public class FragmentDetail extends Fragment {
         super.onCreate(savedInstanceState);
         mActivity = (AppCompatActivity) getActivity();
 
+// enter transition ***setUserVisibility***
+//        Transition move = TransitionInflater.from(getContext()).inflateTransition(R.transition.move);
+//        setSharedElementEnterTransition(move);
 
-        Transition move = TransitionInflater.from(getContext()).inflateTransition(R.transition.move);
-        setSharedElementEnterTransition(move);
+        mCallbackImage = new ICallbackImage() {
+            @Override
+            public void onSuccess() {
+                startPostponedEnterTransition();
+            }
 
-//        setSharedElementReturnTransition(null);
+            @Override
+            public void onError() {
+                startPostponedEnterTransition();
+            }
+        };
+
     }
 
     @Nullable
@@ -112,7 +134,6 @@ public class FragmentDetail extends Fragment {
             }
         });
 
-
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,24 +141,12 @@ public class FragmentDetail extends Fragment {
             }
         });
 
-
-        Intent intent = mActivity.getIntent();
-        if (intent != null && intent.hasExtra(BUNDLE_IMAGE_RESOURCE)) {
-            mImageId = intent.getStringExtra(BUNDLE_IMAGE_RESOURCE);
-        }
-
         Bundle args = getArguments();
         if (args != null) {
-            mImageId = args.getString(BUNDLE_IMAGE_RESOURCE);
+            mStartingImageId = args.getString(BUNDLE_STARTING_IMAGE_RESOURCE);
+            mCurrentImageId = args.getString(BUNDLE_CURRENT_IMAGE_RESOURCE);
         }
 
-        loadImageFromAssets(mImageId);
-        transitionName = getString(R.string.transition_image);
-        if (mIsVisibleToUser) {
-            mToolbarImage.setTransitionName(transitionName);
-        }else {
-            mToolbarImage.setTransitionName("");
-        }
 
         mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             private boolean isActive;
@@ -165,11 +174,13 @@ public class FragmentDetail extends Fragment {
                     }).start();
 
                 }
-
-
             }
         });
 
+
+
+
+        bindViews();
         return mRootView;
     }
 
@@ -185,25 +196,86 @@ public class FragmentDetail extends Fragment {
 
     }
 
+// enter transition ***setUserVisibility***
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         mIsVisibleToUser = isVisibleToUser;
-        if(mToolbarImage != null ) {
-            mToolbarImage.setTransitionName(!isVisibleToUser?"":getString(R.string.transition_image));
+
+        if(mFab != null  ) {
+            mFab.setTransitionName(!isVisibleToUser?"":getString(R.string.transition_fab));
+        }
+        if(mText != null  ) {
+            mText.setTransitionName(!isVisibleToUser?"":getString(R.string.transition_text));
         }
     }
 
-    private void loadImageFromAssets(String imageName) {
-        try {
-            InputStream in = mActivity.getAssets().open("images/" + imageName);
-            Drawable drawable = Drawable.createFromStream(in, null);
-            mToolbarImage.setImageDrawable(drawable);
-
-        } catch (Exception e) {
-            Timber.d(e.getMessage());
+    @Override
+    public void startPostponedEnterTransition() {
+        if (mCurrentImageId == mStartingImageId) {
+            mToolbarImage.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    mToolbarImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                    getActivity().startPostponedEnterTransition();
+                    return true;
+                }
+            });
         }
     }
 
+    private void bindViews() throws  NullPointerException{
 
+// glide
+            String imageURL = "file:///android_asset/images/" + mCurrentImageId;
+            Glide.with(this).load(imageURL)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e,
+                                                    Object model,
+                                                    Target<Drawable> target,
+                                                    boolean isFirstResource) {
+                            mCallbackImage.onError();
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource,
+                                                       Object model,
+                                                       Target<Drawable> target,
+                                                       DataSource dataSource,
+                                                       boolean isFirstResource) {
+                            mCallbackImage.onSuccess();
+                            return false;
+                        }
+                    })
+                    .into(mToolbarImage);
+
+        mToolbarImage.setTransitionName(mCurrentImageId);
+// enter transition ***setUserVisibility***
+        mFab.setTransitionName(!mIsVisibleToUser?"":getString(R.string.transition_fab));
+        mText.setTransitionName(!mIsVisibleToUser?"":getString(R.string.transition_text));
+
+
+
+//// input stream
+//        try {
+//            InputStream in = mActivity.getAssets().open("images/" + mCurrentImageId);
+//            Drawable drawable = Drawable.createFromStream(in, null);
+//            mToolbarImage.setImageDrawable(drawable);
+//            mToolbarImage.setTransitionName(mCurrentImageId);
+//
+//        } catch (Exception e) {
+//            Timber.d(e.getMessage());
+//        }
+    }
+
+    @Nullable
+    public List<View> getSharedViews() {
+        List<View> list = new ArrayList<>();
+        list.add(mToolbarImage);
+        list.add(mFab);
+        list.add(mText);
+        return list;
+    }
 }

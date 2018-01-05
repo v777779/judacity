@@ -22,4 +22,6 @@ public interface ICallback {
     void onCallback(Uri uri, View view);
     void onCallback(int mode);
     void onCallback(View view, int position);
+    void onCallback(FragmentDetail fragment);
+
 }

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,30 +26,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Context mContext;
     private int mHeight;
 
-    public RecyclerAdapter(Context context,int height) {
+    public RecyclerAdapter(Context context, int height) {
         mContext = context;
         mHeight = height;
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
                 .inflate(R.layout.content_main_item, parent, false);
-
         view.getLayoutParams().height = mHeight;
         return new ViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.fill(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ICallback) mContext).onCallback(view, position);
-
+                ((ICallback) mContext).onCallback(holder.mItemImage, position);
             }
         });
     }
@@ -65,7 +64,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
         @Nullable
         @BindView(R.id.item_image)
         ImageView mItemImage;
@@ -76,19 +74,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
 
         private void fill(int position) {
+            String imageName = mList.get(position);
+            String imageURL = "file:///android_asset/images/" + mList.get(position);  // string URL
 
-            String imageURL = "file:///android_asset/images/"+ mList.get(position);  // string URL
-            Uri uri = Uri.parse(imageURL);
-            if (imageURL != null && !imageURL.isEmpty()) {
-                Glide.with(mContext)
-                        .load(Uri.parse(imageURL))
-                        .apply(new RequestOptions()
-                                .placeholder(R.drawable.empty_loading)
-                                .error(R.drawable.error_loading))
-                        .into(mItemImage);
-            } else {
-                mItemImage.setImageResource(R.drawable.error_loading);
-            }
+            Glide.with(mContext).load(imageURL).into(mItemImage);
+            mItemImage.setTransitionName(imageName);
         }
 
     }

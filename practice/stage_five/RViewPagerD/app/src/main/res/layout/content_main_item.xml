@@ -9,7 +9,6 @@
 
     <ImageView
         android:id="@+id/item_image"
-        android:transitionName="@string/transition_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="2dp"
