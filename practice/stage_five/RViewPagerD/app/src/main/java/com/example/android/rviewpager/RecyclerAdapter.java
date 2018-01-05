@@ -76,7 +76,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         private void fill(int position) {
             String imageName = mList.get(position);
             String imageURL = "file:///android_asset/images/" + mList.get(position);  // string URL
-
+//            Picasso.with(mContext).load(imageURL).into(mItemImage);
             Glide.with(mContext).load(imageURL).into(mItemImage);
             mItemImage.setTransitionName(imageName);
         }

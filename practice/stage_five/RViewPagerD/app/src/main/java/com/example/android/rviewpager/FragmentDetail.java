@@ -187,7 +187,9 @@ public class FragmentDetail extends Fragment {
             getActivity().getWindow().getSharedElementEnterTransition().addListener(new TransitionListenerAdapter() {
                 @Override
                 public void onTransitionEnd(Transition transition) {
-                    mLargeText.animate().setDuration(1000).alpha(1f);
+                    if (mLargeText != null) {
+                        mLargeText.animate().setDuration(1000).alpha(1f);
+                    }
                 }
             });
         }
@@ -240,6 +242,7 @@ public class FragmentDetail extends Fragment {
 
 // glide
         String imageURL = "file:///android_asset/images/" + mCurrentImageId;
+//            Picasso.with(mContext).load(imageURL).into(mItemImage);
         Glide.with(this).load(imageURL)
                 .listener(new RequestListener<Drawable>() {
                     @Override
