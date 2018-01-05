@@ -16,4 +16,7 @@ RViewPagerB		= версия с styles 		установками
 
 RViewPagerC		= Activity >> Activity >> Fragment transition ok
 RViewPagerD		= полный комплект переходов с отслеживанием RecyclerView ViewPager
+					= через две Activity to Fragment  
+					= RecyclerView to ViewPager и обратно
+					= Animation after Transition
 				
