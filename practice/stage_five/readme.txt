@@ -15,4 +15,5 @@ RViewPagerA		= версия с getWindow() 	методами
 RViewPagerB		= версия с styles 		установками
 
 RViewPagerC		= Activity >> Activity >> Fragment transition ok
+RViewPagerD		= полный комплект переходов с отслеживанием RecyclerView ViewPager
 				

@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,9 @@ public class FragmentDetail extends Fragment {
     @BindView(R.id.detail_text)
     TextView mText;
 
+    @Nullable
+    @BindView(R.id.large_text)
+    TextView mLargeText;
 
     private String mStartingImageId;
     private String mCurrentImageId;
@@ -68,7 +72,7 @@ public class FragmentDetail extends Fragment {
     private String transitionName;
     private boolean mIsVisibleToUser;
     private ICallbackImage mCallbackImage;
-
+    private boolean mIsTransitioning;
 
     public static Fragment newInstance(String currentImageId, String startingImageId) {
         Bundle arguments = new Bundle();
@@ -92,6 +96,14 @@ public class FragmentDetail extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (AppCompatActivity) getActivity();
+
+        Bundle args = getArguments();
+        if (args != null) {
+            mStartingImageId = args.getString(BUNDLE_STARTING_IMAGE_RESOURCE);
+            mCurrentImageId = args.getString(BUNDLE_CURRENT_IMAGE_RESOURCE);
+        }
+
+        mIsTransitioning = savedInstanceState == null && mStartingImageId.equals(mCurrentImageId);
 
 // enter transition ***setUserVisibility***
 //        Transition move = TransitionInflater.from(getContext()).inflateTransition(R.transition.move);
@@ -130,7 +142,7 @@ public class FragmentDetail extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               mActivity.onBackPressed();
+                mActivity.onBackPressed();
             }
         });
 
@@ -140,12 +152,6 @@ public class FragmentDetail extends Fragment {
                 mActivity.onBackPressed();
             }
         });
-
-        Bundle args = getArguments();
-        if (args != null) {
-            mStartingImageId = args.getString(BUNDLE_STARTING_IMAGE_RESOURCE);
-            mCurrentImageId = args.getString(BUNDLE_CURRENT_IMAGE_RESOURCE);
-        }
 
 
         mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -176,9 +182,15 @@ public class FragmentDetail extends Fragment {
                 }
             }
         });
-
-
-
+        if (mIsTransitioning) {
+            mLargeText.setAlpha(0f);
+            getActivity().getWindow().getSharedElementEnterTransition().addListener(new TransitionListenerAdapter() {
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                    mLargeText.animate().setDuration(1000).alpha(1f);
+                }
+            });
+        }
 
         bindViews();
         return mRootView;
@@ -196,17 +208,17 @@ public class FragmentDetail extends Fragment {
 
     }
 
-// enter transition ***setUserVisibility***
+    // enter transition ***setUserVisibility***
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         mIsVisibleToUser = isVisibleToUser;
 
-        if(mFab != null  ) {
-            mFab.setTransitionName(!isVisibleToUser?"":getString(R.string.transition_fab));
+        if (mFab != null) {
+            mFab.setTransitionName(!isVisibleToUser ? "" : getString(R.string.transition_fab));
         }
-        if(mText != null  ) {
-            mText.setTransitionName(!isVisibleToUser?"":getString(R.string.transition_text));
+        if (mText != null) {
+            mText.setTransitionName(!isVisibleToUser ? "" : getString(R.string.transition_text));
         }
     }
 
@@ -224,38 +236,37 @@ public class FragmentDetail extends Fragment {
         }
     }
 
-    private void bindViews() throws  NullPointerException{
+    private void bindViews() throws NullPointerException {
 
 // glide
-            String imageURL = "file:///android_asset/images/" + mCurrentImageId;
-            Glide.with(this).load(imageURL)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e,
-                                                    Object model,
-                                                    Target<Drawable> target,
-                                                    boolean isFirstResource) {
-                            mCallbackImage.onError();
-                            return false;
-                        }
+        String imageURL = "file:///android_asset/images/" + mCurrentImageId;
+        Glide.with(this).load(imageURL)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e,
+                                                Object model,
+                                                Target<Drawable> target,
+                                                boolean isFirstResource) {
+                        mCallbackImage.onError();
+                        return false;
+                    }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource,
-                                                       Object model,
-                                                       Target<Drawable> target,
-                                                       DataSource dataSource,
-                                                       boolean isFirstResource) {
-                            mCallbackImage.onSuccess();
-                            return false;
-                        }
-                    })
-                    .into(mToolbarImage);
+                    @Override
+                    public boolean onResourceReady(Drawable resource,
+                                                   Object model,
+                                                   Target<Drawable> target,
+                                                   DataSource dataSource,
+                                                   boolean isFirstResource) {
+                        mCallbackImage.onSuccess();
+                        return false;
+                    }
+                })
+                .into(mToolbarImage);
 
         mToolbarImage.setTransitionName(mCurrentImageId);
 // enter transition ***setUserVisibility***
-        mFab.setTransitionName(!mIsVisibleToUser?"":getString(R.string.transition_fab));
-        mText.setTransitionName(!mIsVisibleToUser?"":getString(R.string.transition_text));
-
+        mFab.setTransitionName(!mIsVisibleToUser ? "" : getString(R.string.transition_fab));
+        mText.setTransitionName(!mIsVisibleToUser ? "" : getString(R.string.transition_text));
 
 
 //// input stream
@@ -277,5 +288,27 @@ public class FragmentDetail extends Fragment {
         list.add(mFab);
         list.add(mText);
         return list;
+    }
+
+    private class TransitionListenerAdapter implements Transition.TransitionListener {
+        @Override
+        public void onTransitionStart(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+        }
     }
 }
