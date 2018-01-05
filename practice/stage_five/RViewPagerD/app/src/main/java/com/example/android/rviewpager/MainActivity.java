@@ -13,8 +13,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
+import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -113,10 +115,10 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 //        getWindow().setEnterTransition(new Explode());
 //        getWindow().setSharedElementEnterTransition(move);
 //// set an exit transition
-//        getWindow().setExitTransition(new Explode());
+        getWindow().setExitTransition(new Explode());
 //        getWindow().setSharedElementExitTransition(move);
 //// set an reenter transition
-//        getWindow().setReenterTransition(new Explode());
+        getWindow().setReenterTransition(new Slide(Gravity.TOP));
 //        getWindow().setSharedElementReenterTransition(move);
 
         setExitSharedElementCallback(mCallback);

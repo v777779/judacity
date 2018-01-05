@@ -39,15 +39,15 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.setTitle("");
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        ActionBar actionBar = getSupportActionBar();
+//
+//        if (actionBar != null) {
+//            actionBar.setTitle("");
+//            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
 
 // bundle
         if (savedInstanceState == null) {

@@ -115,7 +115,7 @@ public class FragmentDetail extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mRootView = inflater.inflate(R.layout.activity_detail, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mUnbinder = ButterKnife.bind(this, mRootView);
 
         Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
@@ -130,7 +130,7 @@ public class FragmentDetail extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+               mActivity.onBackPressed();
             }
         });
 

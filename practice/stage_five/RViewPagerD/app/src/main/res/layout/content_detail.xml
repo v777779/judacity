@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.android.rviewpager.DetailActivity"
-    tools:showIn="@layout/activity_detail">
+    tools:showIn="@layout/fragment_detail">
 
     <TextView
         android:id="@+id/detail_text"
