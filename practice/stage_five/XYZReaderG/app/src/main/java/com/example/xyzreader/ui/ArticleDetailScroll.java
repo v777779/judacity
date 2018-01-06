@@ -13,6 +13,8 @@ import com.example.xyzreader.R;
 
 import static android.support.v4.view.ViewCompat.SCROLL_AXIS_VERTICAL;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_DELAY_HIDE;
+import static com.example.xyzreader.remote.Config.BOTTOM_BAR_FAST_HIDE;
+import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLLY_THRESHOLD;
 
 /**
  * Created by V1 on 03-Jan-18.
@@ -24,7 +26,7 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
     public static ArticleDetailScroll mInstance;
     private View mChild;
     private boolean mIsActive;
-//    private boolean mIsLowScrollY;
+    private boolean mIsLowScrollY;
 
     // to inflate from XML this constructor
     public ArticleDetailScroll(Context context, AttributeSet attrs) {
@@ -38,7 +40,7 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
             @NonNull View target,
             int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
-//        mIsLowScrollY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < 200;
+        mIsLowScrollY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < BOTTOM_BAR_SCROLLY_THRESHOLD;
 
         setContinue(child);
         mInstance = this;
@@ -59,7 +61,7 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
     private void setTimer(final View child) {
         if (child == null) return;
 
-//        if(!isActive() && mIsLowScrollY) return;  // выйти если неактивно
+        if(!isActive() && mIsLowScrollY) return;  // выйти если неактивно
 
         if (!isActive()) {
             child.setAlpha(1.0f);
@@ -68,9 +70,9 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
 
         if (mCountDownTimer != null) mCountDownTimer.cancel();
 
-//        int timerValue = mIsLowScrollY ? 10 : 2500;  // если активно сократить
+        int timerValue = mIsLowScrollY ? BOTTOM_BAR_FAST_HIDE : BOTTOM_BAR_DELAY_HIDE;  // если активно сократить
 
-        mCountDownTimer = new CountDownTimer(BOTTOM_BAR_DELAY_HIDE, BOTTOM_BAR_DELAY_HIDE) {
+        mCountDownTimer = new CountDownTimer(timerValue, timerValue) {
             @Override
             public void onTick(long l) {
             }

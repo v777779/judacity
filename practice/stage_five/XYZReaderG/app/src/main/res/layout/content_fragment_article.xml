@@ -8,9 +8,8 @@
     android:background="@color/colorBodyBack"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.xyzreader.ui.ArticleDetailActivity"
-    android:scrollbars="vertical"
-
     >
+    <!--android:scrollbars="vertical"-->
     <!--tools:showIn="@layout/activity_article_detail"-->
 
     <android.support.constraint.ConstraintLayout
