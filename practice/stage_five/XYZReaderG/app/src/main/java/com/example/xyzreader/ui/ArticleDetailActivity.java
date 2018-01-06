@@ -135,7 +135,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         mCursor = cursor;
 //        mPagerAdapter.notifyDataSetChanged();
         mPagerAdapter.swap(mCursor);
-
+        mPager.setVisibility(View.VISIBLE);
         if (mStartId == 0) return;
 
         for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
@@ -145,7 +145,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
             }
         }
 
-        mPager.setVisibility(View.VISIBLE);
+
 
         mStartId = 0;
     }

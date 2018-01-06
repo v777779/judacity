@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,9 +39,15 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -212,7 +219,7 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArticleDetailScroll.setContinue();
+//                ArticleDetailScroll.setContinue();
                 mNestedScrollView.scrollTo(0, 0);
             }
         });
@@ -220,7 +227,7 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArticleDetailScroll.setContinue();
+//                ArticleDetailScroll.setContinue();
                 if (mTextSize < mTextSource.length()) {
                     mIsSkipToEnd = true;
                     mProgressBar.setVisibility(View.VISIBLE);
@@ -323,7 +330,7 @@ public class ArticleDetailFragment extends Fragment implements
         }
         TextView titleView = mRootView.findViewById(R.id.article_title);
         TextView bylineView = mRootView.findViewById(R.id.article_byline);
-        ImageView imageView = mRootView.findViewById(R.id.toolbar_image);
+        final ImageView imageView = mRootView.findViewById(R.id.toolbar_image);
 
 
         titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
@@ -344,6 +351,8 @@ public class ArticleDetailFragment extends Fragment implements
 
         }
 
+
+
         String imageURL = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
         if (imageURL != null && !imageURL.isEmpty()) {
             Glide.with(this)
@@ -351,9 +360,22 @@ public class ArticleDetailFragment extends Fragment implements
                     .apply(new RequestOptions()
                             .placeholder(R.drawable.empty_loading)
                             .error(R.drawable.error_loading))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                            imageView.animate().alpha(1.0f).setStartDelay(0).setDuration(250).start();
+                            return false;
+                        }
+                    })
+                    .transition(withCrossFade())
                     .into(imageView);
         }
-
+        imageView.setAlpha(1f);
         String text = mCursor.getString(ArticleLoader.Query.BODY);
         mTextSource = text;
         mTextSize = 0;
