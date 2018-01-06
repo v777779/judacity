@@ -6,14 +6,12 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
@@ -24,10 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -51,10 +45,8 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -159,7 +151,7 @@ public class ArticleDetailFragment extends Fragment implements
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                getActivity().onBackPressed();
             }
         });
 
@@ -281,6 +273,7 @@ public class ArticleDetailFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {   // set adapter
         super.onActivityCreated(savedInstanceState);
 
+        ActivityCompat.startPostponedEnterTransition(getActivity());
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -340,14 +333,14 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
         TextView titleView = mRootView.findViewById(R.id.article_title);
-        TextView bylineView = mRootView.findViewById(R.id.article_byline);
+        TextView subTitleView = mRootView.findViewById(R.id.article_subtitle);
         final ImageView imageView = mRootView.findViewById(R.id.toolbar_image);
 
 
         titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
         Date publishedDate = parsePublishedDate();
         if (!publishedDate.before(mStartOfEpoch.getTime())) {
-            bylineView.setText(Html.fromHtml(
+            subTitleView.setText(Html.fromHtml(
                     DateUtils.getRelativeTimeSpanString(
                             publishedDate.getTime(),
                             System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
@@ -355,7 +348,7 @@ public class ArticleDetailFragment extends Fragment implements
                             + " by " + mCursor.getString(ArticleLoader.Query.AUTHOR)));
         } else {
             // If date is before 1902, just show the string
-            bylineView.setText(Html.fromHtml(
+            subTitleView.setText(Html.fromHtml(
                     mOutputFormat.format(publishedDate) + " by "
                             + mCursor.getString(ArticleLoader.Query.AUTHOR)
             ));

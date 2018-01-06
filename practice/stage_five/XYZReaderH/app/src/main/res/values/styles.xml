@@ -67,8 +67,8 @@
         <item name="android:lineSpacingMultiplier">0.9</item>
 
     </style>
-    <style name="TextByline" parent="TextNormal">
-        <item name="android:textColor">@color/colorTitleByLine</item>
+    <style name="TextSubTitle" parent="TextNormal">
+        <item name="android:textColor">@color/colorTitleSubTitle</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 

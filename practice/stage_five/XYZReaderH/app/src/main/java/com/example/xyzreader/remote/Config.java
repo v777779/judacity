@@ -26,6 +26,8 @@ public class Config {
     public static final int CALLBACK_FRAGMENT_CLOSE = 3;
     public static final int CALLBACK_FRAGMENT_EXIT = 51;
 
+    public static final String BUNDLE_ARTICLE_ITEM_URI = "bundle_article_item_uri";
+
 
     // recycler
     public static final int HIGH_SCALE_WIDTH = 200;     // dpi

@@ -15,10 +15,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -38,6 +42,13 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+//        getWindow().setExitTransition(new Explode());
+//        getWindow().setReenterTransition(new Slide(Gravity.TOP));
+
+        postponeEnterTransition();
+
         setContentView(R.layout.activity_article_detail);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);

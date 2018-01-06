@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--tools:context="com.example.xyzreader.ui.ArticleListActivity"-->
-    <!--tools:showIn="@layout/activity_article_list"-->
+    <!--tools:showIn="@layactivity_article_mainlist"-->
 
 
     <android.support.constraint.Guideline
@@ -50,8 +50,10 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            >
+            android:clipToPadding="false" >
+
+            <!--android:clipToPadding="false"-->
+            <!--allows recycler padding at the end of content-->
 
         </android.support.v7.widget.RecyclerView>
 

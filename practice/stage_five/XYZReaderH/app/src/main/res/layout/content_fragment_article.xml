@@ -42,14 +42,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/article_byline"
-                style="@style/TextByline"
+                android:id="@+id/article_subtitle"
+                style="@style/TextSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/article_no_byline"
+                android:text="@string/article_no_sub_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/article_title" />

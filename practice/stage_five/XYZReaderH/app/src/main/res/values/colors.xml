@@ -29,7 +29,7 @@
 
     <!--title colors-->
     <color name="colorTitle">#FFFFFF</color>
-    <color name="colorTitleByLine">#C0FFFFFF</color>
+    <color name="colorTitleSubTitle">#C0FFFFFF</color>
     <!--calculated!!!-->
     <color name="colorTitleBack">#FF384038</color>
 

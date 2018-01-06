@@ -10,10 +10,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -45,6 +49,7 @@ import timber.log.Timber;
 
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
+import static com.example.xyzreader.remote.Config.BUNDLE_ARTICLE_ITEM_URI;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
@@ -77,16 +82,18 @@ public class ArticleListActivity extends AppCompatActivity implements
     private boolean mIsRefreshing;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        getWindow().setExitTransition(new Explode());
-        getWindow().setReenterTransition(new Slide(Gravity.TOP));
 
-        setContentView(R.layout.activity_article_list);
+        Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.explode);
+        Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide_top);
+        getWindow().setExitTransition(explode);
+        getWindow().setReenterTransition(new Slide(Gravity.TOP).setDuration(1000));
+
+        setContentView(R.layout.activity_article_main);
 
 // bind
         mUnBinder = ButterKnife.bind(this);
@@ -136,7 +143,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setTitle("");
         }
 //        mSysBarHeight = getResources().getDimensionPixelSize(R.dimen.status_bar_height) +
@@ -225,23 +232,41 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onCallback(Uri uri) {
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    public void onCallback(Uri uri, View view) {
+        View mImage = view.findViewById(R.id.article_image);
+        View mTitle = view.findViewById(R.id.article_title);
+        View mSubTitle = view.findViewById(R.id.article_subtitle);
+
+
+//        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+
+        Intent intent = new Intent(this, ArticleDetailActivity.class);
+        intent.putExtra(BUNDLE_ARTICLE_ITEM_URI, uri);                  // start position Id
+
+        Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
+        Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
+        Pair<View, String> p3 = Pair.create(mSubTitle, mSubTitle.getTransitionName());
+
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, p1);
+
+        startActivity(intent, optionsCompat.toBundle());
+
     }
 
     public void onCallback(int mode) {
-        switch (mode) {
-            case CALLBACK_FRAGMENT_RETRY:
-                refresh(mIsSwipeRefresh ? ACTION_SWIPE_REFRESH : ACTION_TIME_REFRESH);
-                break;
-            case CALLBACK_FRAGMENT_CLOSE:
-                hideRefreshingUI();
-                break;
-            case CALLBACK_FRAGMENT_EXIT:
-                finish();
-                break;
-            default:
-        }
+//        switch (mode) {
+//            case CALLBACK_FRAGMENT_RETRY:
+//                refresh(mIsSwipeRefresh ? ACTION_SWIPE_REFRESH : ACTION_TIME_REFRESH);
+//                break;
+//            case CALLBACK_FRAGMENT_CLOSE:
+//                hideRefreshingUI();
+//                break;
+//            case CALLBACK_FRAGMENT_EXIT:
+//                finish();
+//                break;
+//            default:
+//        }
 
     }
 
@@ -342,11 +367,11 @@ public class ArticleListActivity extends AppCompatActivity implements
 //        return height;
 //    }
 
-    private  int getNavigationBarHeight() {
+    private int getNavigationBarHeight() {
         TypedValue tv = new TypedValue();
-        int value  = 0;
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))     {
-            value = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        int value = 0;
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            value = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
         return value;
     }

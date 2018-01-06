@@ -18,10 +18,10 @@
 
     <!--title-->
     <string name="article_title">Ebooks, Neither E, Nor Books</string>
-    <string name="article_byline">Feb 1, 2004 by Cory Doctorow</string>
+    <string name="article_sub_title">Feb 1, 2004 by Cory Doctorow</string>
 
     <string name="article_no_title"></string>
-    <string name="article_no_byline"></string>
+    <string name="article_no_sub_title"></string>
     <string name="article_no_body"> "Loading text..."</string>
 
   <!--date-->
@@ -32,6 +32,13 @@
     <string name="title_rew">Back</string>
     <string name="title_fwd">Forward</string>
     <string name="title_next">End</string>
+
+    <!--transition-->
+    <string name="transition_image">transition_image_%1$d</string>
+    <string name="transition_title">transition_title_%1$d</string>
+    <string name="transition_sub_title">transition_image_%1$d</string>
+
+
 
     <!--test-->
     <string name="demo_text">

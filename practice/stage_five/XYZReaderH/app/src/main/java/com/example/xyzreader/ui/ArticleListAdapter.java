@@ -89,7 +89,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             @Override
             public void onClick(View view) {
                 Uri uri = ItemsContract.Items.buildItemUri(itemId);
-                ((ICallback) mContext).onCallback(uri);
+                ((ICallback) mContext).onCallback(uri, view);
 
             }
         });
@@ -152,28 +152,28 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             mProgressBarImage.setVisibility(View.VISIBLE);
 
             String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
-            if (imageURL != null && !imageURL.isEmpty()) {
-                Glide.with(mContext)
-                        .load(imageURL)
-                        .apply(new RequestOptions()
-                                .placeholder(R.drawable.empty_loading)
-                                .error(R.drawable.error_loading))
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                return false;
-                            }
 
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                mProgressBarImage.setVisibility(View.INVISIBLE);
-                                return false;
-                            }
-                        })
-                        .into(mItemImage);
-            } else {
-                mItemImage.setImageResource(R.drawable.error_loading);
-            }
+            Glide.with(mContext)
+                    .load(imageURL)
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.empty_loading)
+                            .error(R.drawable.error_loading))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            mProgressBarImage.setVisibility(View.INVISIBLE);
+                            return false;
+                        }
+                    })
+                    .into(mItemImage);
+            mItemImage.setTransitionName(mContext.getString(R.string.transition_image,getItemId()));
+            mItemTitle.setTransitionName(mContext.getString(R.string.transition_title,getItemId()));
+            mItemSubtitle.setTransitionName(mContext.getString(R.string.transition_sub_title,getItemId()));
         }
 
     }
