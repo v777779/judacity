@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
+import com.example.xyzreader.R;
+
 import static android.support.v4.view.ViewCompat.SCROLL_AXIS_VERTICAL;
 
 /**
@@ -21,6 +23,7 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
     public static ArticleDetailScroll mInstance;
     private View mChild;
     private boolean mIsActive;
+//    private boolean mIsLowScrollY;
 
     // to inflate from XML this constructor
     public ArticleDetailScroll(Context context, AttributeSet attrs) {
@@ -34,6 +37,8 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
             @NonNull View target,
             int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
+//        mIsLowScrollY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < 200;
+
         setContinue(child);
         mInstance = this;
     }
@@ -53,17 +58,22 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
     private void setTimer(final View child) {
         if (child == null) return;
 
+//        if(!isActive() && mIsLowScrollY) return;  // выйти если неактивно
+
         if (!isActive()) {
             child.setAlpha(1.0f);
             child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
         }
 
-        if (mCountDownTimer != null)  mCountDownTimer.cancel();
+        if (mCountDownTimer != null) mCountDownTimer.cancel();
+
+//        int timerValue = mIsLowScrollY ? 10 : 2500;  // если активно сократить
 
         mCountDownTimer = new CountDownTimer(2500, 2500) {
             @Override
             public void onTick(long l) {
             }
+
             @Override
             public void onFinish() {
                 setActive(false);
