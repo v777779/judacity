@@ -2,13 +2,18 @@ XYZReader		= основная версия
 
 XYZReaderF		= добавлен ViewPager
 
-XYZReaderG		= ViewPager
+XYZReaderG_004	= ViewPager
 					= TextView  load
 					= bottom popup menu
 					= Handler ProgressBar setup
+					= ВНИМАНИЕ.  Здесь установлено что Handler позволяет в Background задавать textView		
 					
-					
-ВНИМАНИЕ.  Здесь установлено что Handler позволяет в Background задавать textView		
+XYZReaderG					= bottom popup menu доработан
+								= viewpager visible постоянно
+								= progress bar different for text and image
+									= glide listener
+								= recycler individual progress bars for item image
+									= glide listener
 
 
 RViewPager		= двойной shared component
