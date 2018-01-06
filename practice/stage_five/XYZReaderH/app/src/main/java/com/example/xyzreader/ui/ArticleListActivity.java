@@ -20,9 +20,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.view.WindowInsets;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -76,8 +81,12 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_list);
 
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setExitTransition(new Explode());
+        getWindow().setReenterTransition(new Slide(Gravity.TOP));
+
+        setContentView(R.layout.activity_article_list);
 
 // bind
         mUnBinder = ButterKnife.bind(this);
@@ -324,14 +333,22 @@ public class ArticleListActivity extends AppCompatActivity implements
         startService(new Intent(action, null, this, UpdaterService.class));
     }
 
-    private int getNavigationBarHeight() {
-        int height = 0;
-        int statusId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-        if (statusId > 0) {
-            height = getResources().getDimensionPixelSize(statusId);
-        }
+//    private int getNavigationBarHeight() {   // provides correct results for land only
+//        int height = 0;
+//        int statusId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+//        if (statusId > 0) {
+//            height = getResources().getDimensionPixelSize(statusId);
+//        }
+//        return height;
+//    }
 
-        return height;
+    private  int getNavigationBarHeight() {
+        TypedValue tv = new TypedValue();
+        int value  = 0;
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))     {
+            value = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+        return value;
     }
 
     private int getStatusBarHeight() {
@@ -340,7 +357,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (statusId > 0) {
             height = getResources().getDimensionPixelSize(statusId);
         }
-
         return height;
     }
+
 }
