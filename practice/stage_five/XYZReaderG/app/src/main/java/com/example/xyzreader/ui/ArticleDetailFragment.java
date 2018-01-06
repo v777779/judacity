@@ -97,7 +97,8 @@ public class ArticleDetailFragment extends Fragment implements
     private FloatingActionButton fabRight;
     private ImageButton mImageButtonLeft;
     private ImageButton mImageButtonRight;
-    private ConstraintLayout mConstraintBottom;
+    private ImageButton mImageButtonHome;
+
 
     // progress
     private ProgressBar mProgressBar;
@@ -145,7 +146,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setTitle("");
@@ -212,9 +213,9 @@ public class ArticleDetailFragment extends Fragment implements
 
 
 // image buttons
-        mConstraintBottom = mRootView.findViewById(R.id.bottom_toolbar);
         mImageButtonLeft = mRootView.findViewById(R.id.image_bitton_left);
         mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
+        mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
 
         mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,9 +258,16 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
+        mImageButtonHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
 // progress bar
         mProgressBar = mRootView.findViewById(R.id.progress_bar);
-        mProgressBar.setVisibility(View.VISIBLE);
+//        mProgressBar.setVisibility(View.VISIBLE);
 
 
         return mRootView;
