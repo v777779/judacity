@@ -228,12 +228,10 @@ public class ArticleListActivity extends AppCompatActivity implements
         View mSubTitle = view.findViewById(R.id.article_subtitle);
 
 
-//        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-
-        Intent intent = new Intent(this, ArticleDetailActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));                 // start position Id
-
-        Intent intent2 = new Intent(Intent.ACTION_VIEW, uri);
+//        Intent intent = new Intent(this, ArticleDetailActivity.class);
+//        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));
 
         Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
         Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
@@ -242,7 +240,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this, p1);
 
-        startActivity(intent2, optionsCompat.toBundle());
+        startActivity(intent, optionsCompat.toBundle());
 
     }
 

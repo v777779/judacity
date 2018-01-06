@@ -60,15 +60,18 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
 
 // bundle
+// works but not used
+//            if (getIntent() != null && getIntent().getData() != null) {
+//                mStartingItemId = ItemsContract.Items.getItemId(getIntent().getData());  // from Uri
+//            }
         if (savedInstanceState == null) {
-            if (getIntent() != null && getIntent().getData() != null) {
-                mStartingItemId = ItemsContract.Items.getItemId(getIntent().getData());  // from Uri
+            if(getIntent()!=null) {
+                mStartingItemId = getIntent().getLongExtra(BUNDLE_STARTING_ITEM_ID,0);
             }
             mCurrentItemId = mStartingItemId;
         } else {
             mStartingItemId = savedInstanceState.getLong(BUNDLE_STARTING_ITEM_ID);
             mCurrentItemId = savedInstanceState.getLong(BUNDLE_CURRENT_ITEM_ID);
-
         }
         mIsStartingActivity = savedInstanceState == null;
 
@@ -89,10 +92,6 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
             @Override
             public void onPageSelected(int position) {
-                if (mCursor == null) return;
-
-                mCursor.moveToPosition(position);
-                mCurrentItemId = mCursor.getLong(ArticleLoader.Query._ID);
 
             }
 
