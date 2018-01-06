@@ -22,9 +22,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +39,7 @@ import android.widget.ProgressBar;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.remote.Config;
 
@@ -47,6 +51,7 @@ import timber.log.Timber;
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
 import static com.example.xyzreader.remote.Config.BUNDLE_ARTICLE_ITEM_URI;
+import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
@@ -57,23 +62,15 @@ public class ArticleListActivity extends AppCompatActivity implements
     private static boolean mIsTimber;
 
 
-    @Nullable
-    @BindView(R.id.toolbar_main)
-    Toolbar mToolbar;
-    @Nullable
-    @BindView(R.id.toolbar_logo)
-    ImageView mToolbarLogo;
-    @Nullable
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    @Nullable
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-    @Nullable
-    @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
 
-    private Unbinder mUnBinder;
+
+    private Toolbar mToolbar;
+    private ImageView mToolbarLogo;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
+
+
     private BroadcastReceiver mRefreshingReceiver;
     private boolean mIsSwipeRefresh;
     private boolean mIsRefreshing;
@@ -82,19 +79,15 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-
-        Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.explode);
-        Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide_top);
-        getWindow().setExitTransition(explode);
-        getWindow().setReenterTransition(slide);
-//        getWindow().setReenterTransition(new Slide(Gravity.TOP).setDuration(1000));
-
-        setContentView(R.layout.activity_article_main);
+        setContentView(R.layout.activity_article_main);  // transition set in styles
 
 // bind
-        mUnBinder = ButterKnife.bind(this);
+        mToolbar = findViewById(R.id.toolbar_main);
+        mToolbarLogo = findViewById(R.id.toolbar_logo);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mProgressBar = findViewById(R.id.progress_bar);
+
 // timber
         if (!mIsTimber) {
             Timber.plant(new Timber.DebugTree());
@@ -126,14 +119,13 @@ public class ArticleListActivity extends AppCompatActivity implements
                 offsetTop = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
                 mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetTop);
 
-
                 return windowInsets;
             }
         });
 
 
         setSupportActionBar(mToolbar);
-        mToolbarLogo = mToolbar.findViewById(R.id.toolbar_logo);
+
         mToolbarLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -210,7 +202,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mUnBinder.unbind();
+
     }
 
     // callbacks
@@ -239,7 +231,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 //        startActivity(new Intent(Intent.ACTION_VIEW, uri));
 
         Intent intent = new Intent(this, ArticleDetailActivity.class);
-        intent.putExtra(BUNDLE_ARTICLE_ITEM_URI, uri);                  // start position Id
+        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));                 // start position Id
+
+        Intent intent2 = new Intent(Intent.ACTION_VIEW, uri);
 
         Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
         Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
@@ -248,7 +242,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this, p1);
 
-        startActivity(intent, optionsCompat.toBundle());
+        startActivity(intent2, optionsCompat.toBundle());
 
     }
 
@@ -267,6 +261,11 @@ public class ArticleListActivity extends AppCompatActivity implements
                 break;
             default:
         }
+
+    }
+
+    @Override
+    public void onCallback(ArticleDetailFragment fragment) {  // DetailActivity transition support
 
     }
 
@@ -314,9 +313,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 //        int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
 //        int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
 //        mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
-
-
-        Timber.d("status/navigation : " + getStatusBarHeight() + ", " + getNavigationBarHeight());
+//        Timber.d("status/navigation : " + getStatusBarHeight() + ", " + getNavigationBarHeight());
 
     }
 
@@ -353,12 +350,13 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
-
     private void refresh(String action) {
         startService(new Intent(action, null, this, UpdaterService.class));
     }
+
+
 // service methods
-//    private int getNavigationBarHeight() {   // provides correct results for land only
+//    private int getNavigationBarHeightFromParam() {   // provides correct results for land only
 //        int height = 0;
 //        int statusId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
 //        if (statusId > 0) {
@@ -366,23 +364,23 @@ public class ArticleListActivity extends AppCompatActivity implements
 //        }
 //        return height;
 //    }
-
-    private int getNavigationBarHeight() {
-        TypedValue tv = new TypedValue();
-        int value = 0;
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            value = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-        }
-        return value;
-    }
-
-    private int getStatusBarHeight() {
-        int height = 0;
-        int statusId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (statusId > 0) {
-            height = getResources().getDimensionPixelSize(statusId);
-        }
-        return height;
-    }
+//
+//    private int getNavigationBarHeight() {
+//        TypedValue tv = new TypedValue();
+//        int value = 0;
+//        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+//            value = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+//        }
+//        return value;
+//    }
+//
+//    private int getStatusBarHeight() {
+//        int height = 0;
+//        int statusId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+//        if (statusId > 0) {
+//            height = getResources().getDimensionPixelSize(statusId);
+//        }
+//        return height;
+//    }
 
 }

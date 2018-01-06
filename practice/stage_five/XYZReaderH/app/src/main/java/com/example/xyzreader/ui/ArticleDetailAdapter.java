@@ -12,17 +12,29 @@ import timber.log.Timber;
 
 public class ArticleDetailAdapter extends FragmentStatePagerAdapter {
     private Cursor mCursor;
+    private ICallback mCallback;
+    private long mStartingItemId;
+    private long mCurrentItemId;
 
-    public ArticleDetailAdapter(FragmentManager fm, Cursor cursor) {
+
+    public ArticleDetailAdapter(FragmentManager fm, ICallback callback) {
         super(fm);
-        mCursor = cursor;
+        mCallback =  callback;
+    }
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        super.setPrimaryItem(container, position, object);
+        mCallback.onCallback((ArticleDetailFragment)object);
     }
 
     @Override
     public Fragment getItem(int position) {
         mCursor.moveToPosition(position);
-        Timber.d("lifecycle detail  : getItem():"+position);
-        return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
+        mCurrentItemId = mCursor.getLong(ArticleLoader.Query._ID);
+
+        Timber.d("lifecycle detail  : getItem():" + position);
+        return ArticleDetailFragment.newInstance(mStartingItemId, mCurrentItemId);
     }
 
     @Override
@@ -30,9 +42,10 @@ public class ArticleDetailAdapter extends FragmentStatePagerAdapter {
         return (mCursor != null) ? mCursor.getCount() : 0;
     }
 
-    public  void swap(Cursor cursor) {
-        if(cursor == null || cursor.getCount()==0) return;
+    public void swap(Cursor cursor, long startingItemId) {
+        if (cursor == null || cursor.getCount() == 0) return;
         mCursor = cursor;
+        mStartingItemId = startingItemId;
         notifyDataSetChanged();
     }
 }

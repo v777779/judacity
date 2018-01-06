@@ -15,15 +15,10 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBarDetail">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimaryDetail</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkDetail</item>
 
-    </style>
     <!--appbar-->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -32,6 +27,16 @@
     <!--toolbar-->
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
 
+    </style>
+
+    <style name="AppTheme.NoActionBar.Main" parent="AppTheme.NoActionBar">
+        <item name="android:windowExitTransition">@transition/explode</item>
+        <item name="android:windowReenterTransition">@transition/slide_top</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.Detail" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimaryDetail</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDetail</item>
     </style>
 
 
@@ -67,6 +72,7 @@
         <item name="android:lineSpacingMultiplier">0.9</item>
 
     </style>
+
     <style name="TextSubTitle" parent="TextNormal">
         <item name="android:textColor">@color/colorTitleSubTitle</item>
         <item name="android:fontFamily">sans-serif</item>

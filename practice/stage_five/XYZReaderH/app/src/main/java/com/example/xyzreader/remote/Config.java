@@ -27,6 +27,8 @@ public class Config {
     public static final int CALLBACK_FRAGMENT_EXIT = 51;
 
     public static final String BUNDLE_ARTICLE_ITEM_URI = "bundle_article_item_uri";
+    public static final String BUNDLE_STARTING_ITEM_ID = "bundle_starting_item_id";
+    public static final String BUNDLE_CURRENT_ITEM_ID = "bundle_current_item_id";
 
 
     // recycler
@@ -40,7 +42,13 @@ public class Config {
     public static final int MIN_WIDTH = 100;
 
     // article detail fragment
-    public static final String BUNDLE_FRAGMENT_ID = "bundle_fragment_id";
+    public static final String BUNDLE_FRAGMENT_STARTING_ID = "bundle_fragment_starting_id";
+    public static final String BUNDLE_FRAGMENT_CURRENT_ID = "bundle_fragment_current_id";
+    public static final int FRAGMENT_TEXT_SIZE = 2000;
+    public static final int FRAGMENT_TEXT_OFFSET = 700;
+
+    public static final boolean LOAD_ALL_PAGES = false;
+    public static final boolean LOAD_NEXT_PAGE = true;
 
     // article detail scroll
     public static final int BOTTOM_BAR_DELAY_HIDE = 2500;

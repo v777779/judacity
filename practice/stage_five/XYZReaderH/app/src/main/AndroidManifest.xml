@@ -15,7 +15,7 @@
         <activity
             android:name=".ui.ArticleListActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,15 +27,15 @@
         <activity
             android:name=".ui.ArticleDetailActivity"
             android:label="@string/title_activity_article_detail"
-            android:theme="@style/AppTheme.NoActionBarDetail">
+            android:theme="@style/AppTheme.NoActionBar.Detail">
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<data-->
-                    <!--android:scheme="content"-->
-                    <!--android:mimeType="vnd.android.cursor.item/com.example.xyz.items" />-->
-            <!--</intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="content"
+                    android:mimeType="vnd.android.cursor.item/com.example.xyz.items" />
+            </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

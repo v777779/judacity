@@ -1,9 +1,11 @@
 package com.example.xyzreader.ui;
 
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,62 +32,50 @@ import com.example.xyzreader.data.ItemsContract;
 
 import timber.log.Timber;
 
+import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
+import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
+
 public class ArticleDetailActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private ViewPager mPager;
     private ArticleDetailAdapter mPagerAdapter;
-//    private ScreenSlidePagerAdapter mPagerAdapter;
+    //    private ScreenSlidePagerAdapter mPagerAdapter;
     private Cursor mCursor;
-    private long mStartId;
+
+    private long mStartingItemId;
+    private long mCurrentItemId;
+    private boolean mIsStartingActivity;
+
+    // transition
+    private ArticleDetailFragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-//        getWindow().setExitTransition(new Explode());
-//        getWindow().setReenterTransition(new Slide(Gravity.TOP));
-
         postponeEnterTransition();
 
         setContentView(R.layout.activity_article_detail);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        ActionBar actionBar = getSupportActionBar();
-//
-//        if (actionBar != null) {
-//            actionBar.setTitle("");
-//            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
+
 
 // bundle
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
-                mStartId = ItemsContract.Items.getItemId(getIntent().getData());  // by Uri
+                mStartingItemId = ItemsContract.Items.getItemId(getIntent().getData());  // from Uri
             }
+            mCurrentItemId = mStartingItemId;
+        } else {
+            mStartingItemId = savedInstanceState.getLong(BUNDLE_STARTING_ITEM_ID);
+            mCurrentItemId = savedInstanceState.getLong(BUNDLE_CURRENT_ITEM_ID);
+
         }
-// fab
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-
-// test!!!
-//        Typeface mCaecillia = Typeface.createFromAsset(getAssets(), "caecilia-light-webfont.ttf");
-//        TextView mBodyText = findViewById(R.id.article_body);
-//        mBodyText.setTypeface(mCaecillia);
+        mIsStartingActivity = savedInstanceState == null;
 
 // viewpager
         Resources res = getResources();
         mPager = findViewById(R.id.viewpager_container);
-        mPagerAdapter = new ArticleDetailAdapter(getSupportFragmentManager(), mCursor);
+        mPagerAdapter = new ArticleDetailAdapter(getSupportFragmentManager(), this);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageMargin((int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -99,9 +89,11 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
             @Override
             public void onPageSelected(int position) {
-//                if (mCursor != null) {
-//                    mCursor.moveToPosition(position);
-//                }
+                if (mCursor == null) return;
+
+                mCursor.moveToPosition(position);
+                mCurrentItemId = mCursor.getLong(ArticleLoader.Query._ID);
+
             }
 
             @Override
@@ -127,13 +119,22 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 //        mPager.setCurrentItem(4);
 
 
-        getSupportLoaderManager().initLoader(0,null,this);
+        getSupportLoaderManager().initLoader(0, null, this);
     }
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        return super.onOptionsItemSelected(item);
 //    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(BUNDLE_STARTING_ITEM_ID, mStartingItemId);
+        outState.putLong(BUNDLE_CURRENT_ITEM_ID, mCurrentItemId);
+
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -144,21 +145,19 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return;
         mCursor = cursor;
-//        mPagerAdapter.notifyDataSetChanged();
-        mPagerAdapter.swap(mCursor);
-        mPager.setVisibility(View.VISIBLE);
-        if (mStartId == 0) return;
 
-        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
-            if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
-                mPager.setCurrentItem(mCursor.getPosition(), true);
-                break;
+        mPagerAdapter.swap(mCursor, mStartingItemId);
+        mPager.setVisibility(View.VISIBLE);
+
+        if (mIsStartingActivity) {
+            for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+                if (mCursor.getLong(ArticleLoader.Query._ID) == mStartingItemId) {
+                    break;
+                }
             }
+            mPager.setCurrentItem(mCursor.getPosition(), true);
         }
 
-
-
-        mStartId = 0;
     }
 
     @Override
@@ -167,26 +166,20 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         mPagerAdapter.notifyDataSetChanged();
     }
 
-//    /**
-//     * A simple pager adapter that represents 5 {@link ArticleDetailFragment} objects, in
-//     * sequence.
-//     */
-//    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-//        public ScreenSlidePagerAdapter(FragmentManager fm) {
-//            super(fm);
-//        }
-//
-//        @Override
-//        public Fragment getItem(int position) {
-//            Log.d("Detail","lifecycle detail: getItem() position: "+position);
-//            return ArticleDetailFragment.newInstance(position, this);
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            if(mCursor == null) return 0;
-//            return mCursor.getCount();
-//        }
-//    }
+    @Override
+    public void onCallback(Uri uri, View view) {
+
+    }
+
+    @Override
+    public void onCallback(int mode) {
+
+    }
+
+    @Override
+    public void onCallback(ArticleDetailFragment fragment) {
+        mCurrentFragment = fragment;
+    }
+
 
 }

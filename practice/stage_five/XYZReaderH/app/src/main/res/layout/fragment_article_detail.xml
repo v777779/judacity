@@ -82,45 +82,15 @@
         app:layout_behavior="com.example.xyzreader.ui.ArticleDetailScroll"
         >
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:alpha="0.5"
-            app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_skip_prev"
-            android:visibility="gone"
-            />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:alpha="0.5"
-            app:layout_behavior="com.example.xyzreader.ui.ArticleDetailFabScroll"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_skip_next"
-            android:visibility="gone"
-            />
-
         <ImageButton
-            android:id="@+id/image_bitton_left"
+            android:id="@+id/image_button_left"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_prev"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/fab_left"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
@@ -144,7 +114,7 @@
             android:src="@drawable/ic_home"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_button_right"
-            app:layout_constraintStart_toEndOf="@+id/image_bitton_left"
+            app:layout_constraintStart_toEndOf="@+id/image_button_left"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

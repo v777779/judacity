@@ -8,6 +8,7 @@ package com.example.xyzreader.ui;
  */
 
 
+import android.database.Cursor;
 import android.net.Uri;
 import android.view.View;
 
@@ -21,5 +22,6 @@ public interface ICallback {
      */
     void onCallback(Uri uri, View view);
     void onCallback(int mode);
+    void onCallback(ArticleDetailFragment fragment);
 
 }

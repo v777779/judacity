@@ -153,6 +153,12 @@ public class FragmentDetail extends Fragment {
             }
         });
 
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int k = 1;
+            }
+        });
 
         mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             private boolean isActive;
