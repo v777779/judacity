@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator;
 import com.example.xyzreader.R;
 
 import static android.support.v4.view.ViewCompat.SCROLL_AXIS_VERTICAL;
+import static com.example.xyzreader.remote.Config.BOTTOM_BAR_DELAY_HIDE;
 
 /**
  * Created by V1 on 03-Jan-18.
@@ -69,7 +70,7 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
 
 //        int timerValue = mIsLowScrollY ? 10 : 2500;  // если активно сократить
 
-        mCountDownTimer = new CountDownTimer(2500, 2500) {
+        mCountDownTimer = new CountDownTimer(BOTTOM_BAR_DELAY_HIDE, BOTTOM_BAR_DELAY_HIDE) {
             @Override
             public void onTick(long l) {
             }

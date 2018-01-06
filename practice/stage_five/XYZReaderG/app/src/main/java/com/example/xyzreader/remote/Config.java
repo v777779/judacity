@@ -40,6 +40,10 @@ public class Config {
     // article detail fragment
     public static final String BUNDLE_FRAGMENT_ID = "bundle_fragment_id";
 
+    // article detail scroll
+    public static final int BOTTOM_BAR_DELAY_HIDE = 2500;
+    public static final int BOTTOM_BAR_FAST_HIDE = 10;
+    public static final int BOTTOM_BAR_SCROLLY_THRESHOLD = 200;
 
 
 
