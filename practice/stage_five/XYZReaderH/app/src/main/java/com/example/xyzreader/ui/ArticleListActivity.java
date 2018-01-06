@@ -22,12 +22,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,7 +58,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
     @Nullable
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @Nullable
     @BindView(R.id.toolbar_logo)
@@ -91,7 +88,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.explode);
         Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide_top);
         getWindow().setExitTransition(explode);
-        getWindow().setReenterTransition(new Slide(Gravity.TOP).setDuration(1000));
+        getWindow().setReenterTransition(slide);
+//        getWindow().setReenterTransition(new Slide(Gravity.TOP).setDuration(1000));
 
         setContentView(R.layout.activity_article_main);
 
@@ -254,19 +252,21 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
-    public void onCallback(int mode) {
-//        switch (mode) {
-//            case CALLBACK_FRAGMENT_RETRY:
-//                refresh(mIsSwipeRefresh ? ACTION_SWIPE_REFRESH : ACTION_TIME_REFRESH);
-//                break;
-//            case CALLBACK_FRAGMENT_CLOSE:
-//                hideRefreshingUI();
-//                break;
-//            case CALLBACK_FRAGMENT_EXIT:
-//                finish();
-//                break;
-//            default:
-//        }
+
+    @Override
+    public void onCallback(int mode) {  // FragmentError Support
+        switch (mode) {
+            case CALLBACK_FRAGMENT_RETRY:
+                refresh(mIsSwipeRefresh ? ACTION_SWIPE_REFRESH : ACTION_TIME_REFRESH);
+                break;
+            case CALLBACK_FRAGMENT_CLOSE:
+                hideRefreshingUI();
+                break;
+            case CALLBACK_FRAGMENT_EXIT:
+                finish();
+                break;
+            default:
+        }
 
     }
 
@@ -357,7 +357,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private void refresh(String action) {
         startService(new Intent(action, null, this, UpdaterService.class));
     }
-
+// service methods
 //    private int getNavigationBarHeight() {   // provides correct results for land only
 //        int height = 0;
 //        int statusId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");

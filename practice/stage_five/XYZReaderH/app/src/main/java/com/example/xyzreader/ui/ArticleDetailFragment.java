@@ -137,7 +137,7 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
 
-        Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
