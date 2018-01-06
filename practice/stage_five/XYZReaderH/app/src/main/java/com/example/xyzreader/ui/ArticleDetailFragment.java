@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
 
@@ -21,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
+import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +49,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import timber.log.Timber;
@@ -132,6 +135,23 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         Timber.d("lifecycle fragment: onCreate():" + mCurrentItemId);
+
+        getActivity().getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
+            private boolean mIsTransition = false;
+
+            @Override
+            public void onTransitionStart(Transition transition) {
+                if (mIsTransition && mFab != null) {
+                    mFab.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                mIsTransition = true;
+            }
+        });
+
 
     }
 
@@ -224,6 +244,7 @@ public class ArticleDetailFragment extends Fragment implements
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
+
             }
         });
 // image buttons
@@ -271,6 +292,13 @@ public class ArticleDetailFragment extends Fragment implements
         return mRootView;
     }
 
+
+    public void closeFab() {
+        if (mFab != null) {
+            mFab.setVisibility(View.INVISIBLE);
+
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {   // set adapter
@@ -381,7 +409,7 @@ public class ArticleDetailFragment extends Fragment implements
                 .into(mToolbarImage);
 
 
-        mToolbarImage.setTransitionName(getString(R.string.transition_image,mCurrentItemId));
+        mToolbarImage.setTransitionName(getString(R.string.transition_image, mCurrentItemId));
         mTitleView.setTransitionName(getString(R.string.transition_title, mCurrentItemId));
         mSubTitleView.setTransitionName(getString(R.string.transition_sub_title, mCurrentItemId));
 
@@ -420,6 +448,29 @@ public class ArticleDetailFragment extends Fragment implements
         textView.setText(subText);
         mLinearLayout.addView(textView);
 
+    }
+
+
+    private class TransitionAdapter implements Transition.TransitionListener {
+        @Override
+        public void onTransitionStart(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+        }
     }
 
 

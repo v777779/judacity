@@ -61,6 +61,7 @@
 
     <include layout="@layout/content_fragment_article" />
 
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -70,17 +71,17 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_share" />
 
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bottom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:visibility="visible"
+        android:alpha="0.0"
         android:background="@color/colorBackBottom"
         android:elevation="6dp"
-        android:alpha="0.0"
-        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailScroll"
-        >
+        android:visibility="visible"
+        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailScroll">
 
         <ImageButton
             android:id="@+id/image_button_left"

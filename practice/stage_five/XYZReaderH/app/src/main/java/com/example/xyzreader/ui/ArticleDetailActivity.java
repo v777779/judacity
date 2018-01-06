@@ -53,7 +53,6 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         postponeEnterTransition();
 
         setContentView(R.layout.activity_article_detail);
