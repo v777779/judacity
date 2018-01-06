@@ -93,7 +93,7 @@ public class DetailActivity extends AppCompatActivity implements ICallback {
 
 // transition support
         postponeEnterTransition();
-        setEnterSharedElementCallback(mCallback);
+//        setEnterSharedElementCallback(mCallback);
 
         setContentView(R.layout.activity_detail);
 

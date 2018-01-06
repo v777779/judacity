@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         getWindow().setReenterTransition(new Slide(Gravity.TOP));
 //        getWindow().setSharedElementReenterTransition(move);
 
-        setExitSharedElementCallback(mCallback);
+//        setExitSharedElementCallback(mCallback);
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -255,7 +255,9 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this, p1, p2, p3);
-
+// test!!!
+       optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,mImage, "transition_demo");
         startActivity(intent, optionsCompat.toBundle());
 
     }

@@ -226,7 +226,7 @@ public class FragmentDetail extends Fragment {
 
     @Override
     public void startPostponedEnterTransition() {
-        if (mCurrentImageId == mStartingImageId) {
+        if (mCurrentImageId.equals(mStartingImageId)) {
             mToolbarImage.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -266,7 +266,12 @@ public class FragmentDetail extends Fragment {
                 })
                 .into(mToolbarImage);
 
+
         mToolbarImage.setTransitionName(mCurrentImageId);
+// test!!!
+        if(mStartingImageId.equals(mCurrentImageId))
+        mToolbarImage.setTransitionName("transition_demo");
+
 // enter transition ***setUserVisibility***
         mFab.setTransitionName(!mIsVisibleToUser ? "" : getString(R.string.transition_fab));
         mText.setTransitionName(!mIsVisibleToUser ? "" : getString(R.string.transition_text));

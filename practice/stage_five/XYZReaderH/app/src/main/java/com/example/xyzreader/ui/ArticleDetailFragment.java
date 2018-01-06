@@ -377,7 +377,7 @@ public class ArticleDetailFragment extends Fragment implements
                         return false;
                     }
                 })
-//                .transition(withCrossFade())
+                .transition(withCrossFade())
                 .into(mToolbarImage);
 
 
