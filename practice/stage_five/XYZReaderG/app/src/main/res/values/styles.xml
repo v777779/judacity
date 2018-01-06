@@ -91,6 +91,14 @@
         <item name="android:maxHeight">@dimen/progress_bar_size</item>
     </style>
 
+    <style name="ProgressBarImage" parent="@style/ProgressBarTheme">
+        <item name="android:progressTint">@color/colorProgressBarImage</item>
+        <item name="android:secondaryProgressTint">@color/colorProgressBarImage</item>
+        <item name="android:indeterminateTint">@color/colorProgressBarImage</item>
+
+    </style>
+
+
     <!--card-->
     <style name="CardTextNormal" parent="TextNormal">
         <item name="android:textColor">@color/colorCardText</item>

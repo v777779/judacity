@@ -48,6 +48,14 @@
                 app:layout_collapseMode="parallax"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+            <ProgressBar
+                android:id="@+id/progress_bar_image"
+                style="@style/ProgressBarImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -152,10 +160,11 @@
     <!--app:menu="@menu/navigation"-->
     <!--app:itemIconTint="@android:color/white"/>-->
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progress_bar_text"
         style="@style/ProgressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="invisible" />
+
 </android.support.design.widget.CoordinatorLayout>

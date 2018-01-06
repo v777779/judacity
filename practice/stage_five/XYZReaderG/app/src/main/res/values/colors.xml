@@ -44,6 +44,7 @@
 
     <!--progress bar-->
     <color name="colorProgressBar">#99530456</color>
+    <color name="colorProgressBarImage">#e59d9c9d</color>
 
     <!--fab-->
     <color name="colorFab">#04561A</color>

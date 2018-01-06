@@ -101,7 +101,8 @@ public class ArticleDetailFragment extends Fragment implements
 
 
     // progress
-    private ProgressBar mProgressBar;
+    private ProgressBar mProgressBarText;
+    private ProgressBar mProgressBarImage;
 
     // skip
     private boolean mIsSkipToEnd;
@@ -183,7 +184,7 @@ public class ArticleDetailFragment extends Fragment implements
                     mIsSkipToEnd = false;
 
                 }
-                mProgressBar.setVisibility(View.INVISIBLE);
+                mProgressBarText.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -231,7 +232,7 @@ public class ArticleDetailFragment extends Fragment implements
 //                ArticleDetailScroll.setContinue();
                 if (mTextSize < mTextSource.length()) {
                     mIsSkipToEnd = true;
-                    mProgressBar.setVisibility(View.VISIBLE);
+                    mProgressBarText.setVisibility(View.VISIBLE);
 
                     new Handler().post(new Runnable() {
                         @Override
@@ -248,7 +249,7 @@ public class ArticleDetailFragment extends Fragment implements
                             subText = htmlConvert(subText);
                             textView.setText(subText);
                             mLinearLayout.addView(textView);
-                            mProgressBar.setVisibility(View.INVISIBLE);
+                            mProgressBarText.setVisibility(View.INVISIBLE);
                         }
                     });
 
@@ -266,9 +267,11 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
 // progress bar
-        mProgressBar = mRootView.findViewById(R.id.progress_bar);
-//        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
+        mProgressBarText.setVisibility(View.VISIBLE);
+        mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
 
+        mProgressBarImage.setVisibility(View.VISIBLE);
 
         return mRootView;
     }
@@ -377,6 +380,7 @@ public class ArticleDetailFragment extends Fragment implements
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 //                            imageView.animate().alpha(1.0f).setStartDelay(0).setDuration(250).start();
+                            mProgressBarImage.setVisibility(View.INVISIBLE);
                             return false;
                         }
                     })
