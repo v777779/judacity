@@ -1,6 +1,7 @@
 package com.example.xyzreader.ui;
 
 
+import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -30,6 +31,10 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import timber.log.Timber;
 
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
@@ -49,11 +54,57 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
     // transition
     private ArticleDetailFragment mCurrentFragment;
+    private boolean mIsReturning;
+
+    private List<View> getSharedViews(View view) {
+        List<View> list = new ArrayList<>();
+        list.add(view.findViewById(R.id.article_image));
+        list.add(view.findViewById(R.id.article_title));
+        list.add(view.findViewById(R.id.article_subtitle));
+        return list;
+    }
+
+    public final SharedElementCallback mSharedCallback = new SharedElementCallback() {
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            if (mIsReturning) {
+                View fab = mCurrentFragment.getView().findViewById(R.id.fab);  // off FAB
+                fab.setVisibility(View.GONE);
+
+                List<View> list = getSharedViews(mCurrentFragment.getView());
+                View sharedElement = list.get(0);
+
+                if (sharedElement == null) {
+                    // If shared element is null, then it has been scrolled off screen and
+                    // no longer visible. In this case we cancel the shared element transition by
+                    // removing the shared element from the shared elements map.
+                    names.clear();
+                    sharedElements.clear();
+                } else if (mStartingItemId != mCurrentItemId) {
+                    // If the user has swiped to a different ViewPager page, then we need to
+                    // remove the old shared element and replace it with the new shared element
+                    // that should be transitioned instead.
+                    names.clear();
+                    names.add(sharedElement.getTransitionName());
+                    sharedElements.clear();
+                    sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+                    sharedElement = list.get(1);
+                    sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+                    sharedElement = list.get(2);
+                    sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+
+                }
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         postponeEnterTransition();
+        setEnterSharedElementCallback(mSharedCallback);
 
         setContentView(R.layout.activity_article_detail);
 
@@ -64,8 +115,8 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 //                mStartingItemId = ItemsContract.Items.getItemId(getIntent().getData());  // from Uri
 //            }
         if (savedInstanceState == null) {
-            if(getIntent()!=null) {
-                mStartingItemId = getIntent().getLongExtra(BUNDLE_STARTING_ITEM_ID,0);
+            if (getIntent() != null) {
+                mStartingItemId = getIntent().getLongExtra(BUNDLE_STARTING_ITEM_ID, 0);
             }
             mCurrentItemId = mStartingItemId;
         } else {
@@ -134,6 +185,16 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
     }
 
+
+    @Override
+    public void finishAfterTransition() {
+        mIsReturning = true;                            // before super()
+        Intent intent = new Intent();
+        intent.putExtra(BUNDLE_STARTING_ITEM_ID, mStartingItemId);
+        intent.putExtra(BUNDLE_CURRENT_ITEM_ID, mCurrentItemId);
+        setResult(RESULT_OK, intent);
+        super.finishAfterTransition();
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

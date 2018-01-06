@@ -135,22 +135,20 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         Timber.d("lifecycle fragment: onCreate():" + mCurrentItemId);
-
-        getActivity().getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
-            private boolean mIsTransition = false;
-
-            @Override
-            public void onTransitionStart(Transition transition) {
-                if (mIsTransition && mFab != null) {
-                    mFab.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                mIsTransition = true;
-            }
-        });
+// fab ***hiding***
+//        getActivity().getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
+//            private boolean mIsTransition = false;
+//            @Override
+//            public void onTransitionStart(Transition transition) {
+//                if (mIsTransition && mFab != null) {
+//                    mFab.setVisibility(View.GONE);
+//                }
+//            }
+//            @Override
+//            public void onTransitionEnd(Transition transition) {
+//                mIsTransition = true;
+//            }
+//        });
 
 
     }
@@ -450,28 +448,28 @@ public class ArticleDetailFragment extends Fragment implements
 
     }
 
-
-    private class TransitionAdapter implements Transition.TransitionListener {
-        @Override
-        public void onTransitionStart(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-        }
-    }
+// fab ***hiding***
+//    private class TransitionAdapter implements Transition.TransitionListener {
+//        @Override
+//        public void onTransitionStart(Transition transition) {
+//        }
+//
+//        @Override
+//        public void onTransitionEnd(Transition transition) {
+//        }
+//
+//        @Override
+//        public void onTransitionCancel(Transition transition) {
+//        }
+//
+//        @Override
+//        public void onTransitionPause(Transition transition) {
+//        }
+//
+//        @Override
+//        public void onTransitionResume(Transition transition) {
+//        }
+//    }
 
 
 }
