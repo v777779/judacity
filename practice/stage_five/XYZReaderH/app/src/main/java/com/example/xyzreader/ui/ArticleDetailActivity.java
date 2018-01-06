@@ -135,6 +135,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
     }
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newAllArticlesInstance(this);

@@ -228,17 +228,17 @@ public class ArticleListActivity extends AppCompatActivity implements
         View mSubTitle = view.findViewById(R.id.article_subtitle);
 
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));                 // start position Id
-//        Intent intent = new Intent(this, ArticleDetailActivity.class);
-//        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));
+//        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));                 // start position Id
+        Intent intent = new Intent(this, ArticleDetailActivity.class);
+        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));
 
-        Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
+        Pair<View, String> p1 = Pair.create(mImage,mImage.getTransitionName());  // unique name
         Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
         Pair<View, String> p3 = Pair.create(mSubTitle, mSubTitle.getTransitionName());
 
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this, p1);
+                this, p1,p2,p3);
 
         startActivity(intent, optionsCompat.toBundle());
 

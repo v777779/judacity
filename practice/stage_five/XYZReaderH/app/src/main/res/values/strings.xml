@@ -36,7 +36,7 @@
     <!--transition-->
     <string name="transition_image">transition_image_%1$d</string>
     <string name="transition_title">transition_title_%1$d</string>
-    <string name="transition_sub_title">transition_image_%1$d</string>
+    <string name="transition_sub_title">transition_sub_title_%1$d</string>
 
 
 

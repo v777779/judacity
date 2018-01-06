@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import android.support.v4.widget.NestedScrollView;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ActionBarOverlayLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -51,13 +49,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import timber.log.Timber;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_CURRENT_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_STARTING_ID;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_OFFSET;
@@ -96,7 +89,7 @@ public class ArticleDetailFragment extends Fragment implements
     private SimpleDateFormat mDateFormat;
     private SimpleDateFormat mOutputFormat;
     private GregorianCalendar mStartOfEpoch;
-// text
+    // text
     private LayoutInflater mInflater;
     private String mTextSource;
     private int mTextSize;
@@ -154,7 +147,7 @@ public class ArticleDetailFragment extends Fragment implements
 // text
         mTitleView = mRootView.findViewById(R.id.article_title);
         mSubTitleView = mRootView.findViewById(R.id.article_subtitle);
-        mToolbarImage = mRootView.findViewById(R.id.toolbar_image);
+        mToolbarImage = mRootView.findViewById(R.id.article_image);
 // button
         mFab = mRootView.findViewById(R.id.fab);
         mImageButtonLeft = mRootView.findViewById(R.id.image_button_left);
@@ -282,10 +275,6 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {   // set adapter
         super.onActivityCreated(savedInstanceState);
-
-        ActivityCompat.startPostponedEnterTransition(getActivity());
-
-
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -295,7 +284,6 @@ public class ArticleDetailFragment extends Fragment implements
         super.onDestroyView();
 
     }
-
 
     // callbacks
     @Override
@@ -374,6 +362,7 @@ public class ArticleDetailFragment extends Fragment implements
                                                 Object model,
                                                 Target<Drawable> target,
                                                 boolean isFirstResource) {
+                        ActivityCompat.startPostponedEnterTransition(getActivity());
                         return false;
                     }
 
@@ -384,13 +373,18 @@ public class ArticleDetailFragment extends Fragment implements
                                                    DataSource dataSource,
                                                    boolean isFirstResource) {
                         mProgressBarImage.setVisibility(View.INVISIBLE);
+                        ActivityCompat.startPostponedEnterTransition(getActivity());
                         return false;
                     }
                 })
-                .transition(withCrossFade())
+//                .transition(withCrossFade())
                 .into(mToolbarImage);
 
-        mToolbarImage.setAlpha(1.0f);
+
+        mToolbarImage.setTransitionName(getString(R.string.transition_image,mCurrentItemId));
+        mTitleView.setTransitionName(getString(R.string.transition_title, mCurrentItemId));
+        mSubTitleView.setTransitionName(getString(R.string.transition_sub_title, mCurrentItemId));
+
 
         mTextSource = mCursor.getString(ArticleLoader.Query.BODY);  // load all text
         mTextSize = 0;
