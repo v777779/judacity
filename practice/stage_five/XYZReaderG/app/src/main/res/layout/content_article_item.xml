@@ -70,6 +70,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guide_h2"
             tools:text="Subtitle Text Line" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_image"
+            style="@style/ProgressBarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/article_image"
+            app:layout_constraintEnd_toEndOf="@+id/article_image"
+            app:layout_constraintStart_toStartOf="@+id/article_image"
+            app:layout_constraintTop_toTopOf="@+id/article_image" />
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
