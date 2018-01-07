@@ -49,7 +49,9 @@ import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_NO_NETWORK;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_FINISHED;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_STARTED;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
+import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
+import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
@@ -214,19 +216,14 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
-
-
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
         mTmpReenterState = new Bundle(data.getExtras());
-        long startingItemId = mTmpReenterState.getLong(BUNDLE_STARTING_ITEM_ID);
-        long currentItemid = mTmpReenterState.getLong(BUNDLE_CURRENT_ITEM_ID);
-        if (startingItemId != currentItemid) {
-
-
-            int current = 5;
-            mRecyclerView.scrollToPosition(current);
+        int startingItemPosition = mTmpReenterState.getInt(BUNDLE_STARTING_ITEM_POS);
+        int currentItemPosition = mTmpReenterState.getInt(BUNDLE_CURRENT_ITEM_POS);
+        if (startingItemPosition != currentItemPosition) {
+            mRecyclerView.scrollToPosition(currentItemPosition); // scroll RecyclerView
         }
         postponeEnterTransition();
         mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -258,26 +255,29 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onCallback(Uri uri, View view) {
+    public void onCallback( View view, int pos) {
         if (mIsRefreshing) {
             showErrorDialog(FRAGMENT_ERROR_WAIT);
             return;
         }
 
+        long id = mRecyclerView.getAdapter().getItemId(pos);
+        Uri uri = ItemsContract.Items.buildItemUri(id);
+
         View mImage = view.findViewById(R.id.article_image);
         View mTitle = view.findViewById(R.id.article_title);
         View mSubTitle = view.findViewById(R.id.article_subtitle);
 
-
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));
+        intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
+        intent.putExtra(BUNDLE_STARTING_ITEM_POS, pos);
+
 // works but no used
 //        Intent intent = new Intent(this, ArticleDetailActivity.class);
 //        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));
 
         Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
         Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
-        Pair<View, String> p3 = Pair.create(mSubTitle, mSubTitle.getTransitionName());
 
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this, p1, p2);
@@ -404,17 +404,16 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     }
 
-    private List<View> getSharedViews(RecyclerView.ViewHolder holder) {
-        if (holder == null || holder.itemView == null) return new ArrayList<>();
+    private List<View> getSharedViews(int position) {
+        RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
+        List<View> list = new ArrayList<>();
+        if (holder == null || holder.itemView == null) {
+            return list;
+        }
 
         View view = holder.itemView;
-        List<View> list = new ArrayList<>();
         list.add(view.findViewById(R.id.article_image));
         list.add(view.findViewById(R.id.article_title));
-        list.add(view.findViewById(R.id.article_subtitle));
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) == null) list.remove(i);
-        }
         return list;
     }
 
@@ -424,10 +423,10 @@ public class ArticleListActivity extends AppCompatActivity implements
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                 if (mTmpReenterState != null) {
-                    long startingItemId = mTmpReenterState.getLong(BUNDLE_STARTING_ITEM_ID);
-                    long currentItemId = mTmpReenterState.getLong(BUNDLE_CURRENT_ITEM_ID);
-                    if (startingItemId != currentItemId) {
-                        List<View> list = getSharedViews(mRecyclerView.findViewHolderForItemId(currentItemId));
+                    int startingItemPosition = mTmpReenterState.getInt(BUNDLE_STARTING_ITEM_POS);
+                    int currentItemPosition = mTmpReenterState.getInt(BUNDLE_CURRENT_ITEM_POS);
+                    if (startingItemPosition != currentItemPosition) {
+                        List<View> list = getSharedViews(currentItemPosition);
 
                         if (list.isEmpty()) {
                             defaultTransition(names, sharedElements);

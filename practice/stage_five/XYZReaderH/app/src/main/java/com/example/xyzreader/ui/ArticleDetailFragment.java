@@ -4,10 +4,12 @@ package com.example.xyzreader.ui;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -47,6 +49,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -409,7 +412,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         mToolbarImage.setTransitionName(getString(R.string.transition_image, mCurrentItemId));
         mTitleView.setTransitionName(getString(R.string.transition_title, mCurrentItemId));
-        mSubTitleView.setTransitionName(getString(R.string.transition_sub_title, mCurrentItemId));
 
 
         mTextSource = mCursor.getString(ArticleLoader.Query.BODY);  // load all text
@@ -471,5 +473,30 @@ public class ArticleDetailFragment extends Fragment implements
 //        }
 //    }
 
+
+    //     * Returns true if {@param view} is contained within {@param container}'s bounds.
+    private boolean isViewInBounds(@NonNull View container, @NonNull View view) {
+        Rect containerBounds = new Rect();
+        container.getHitRect(containerBounds);
+        return view.getLocalVisibleRect(containerBounds);
+    }
+
+
+    @Nullable
+    public List<View> getSharedViews() {
+        List<View> list = new ArrayList<>();
+
+        View decorView = getActivity().getWindow().getDecorView();
+
+        if (isViewInBounds(decorView, mToolbarImage)) {     // check image in bounds
+            list.add(mToolbarImage);
+        }
+        if (isViewInBounds(decorView, mTitleView)) {        // check text in bounds
+            list.add(mTitleView);
+        }
+
+
+        return list;
+    }
 
 }

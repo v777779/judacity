@@ -16,6 +16,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowActivityTransitions">true</item>-->
+
     </style>
 
 
@@ -32,6 +33,7 @@
     <style name="AppTheme.NoActionBar.Main" parent="AppTheme.NoActionBar">
         <item name="android:windowExitTransition">@transition/explode</item>
         <item name="android:windowReenterTransition">@transition/slide_top</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar.Detail" parent="AppTheme.NoActionBar">

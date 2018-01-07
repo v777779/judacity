@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_IS_CURSOR_EMPTY;
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_PARAMETERS;
@@ -30,6 +35,20 @@ import static com.example.xyzreader.remote.Config.FRAGMENT_INDEX_TITLE;
  */
 public class FragmentError extends DialogFragment implements View.OnClickListener {
 
+    @Nullable
+    @BindView(R.id.text_line1)
+    TextView textLine1;
+    @Nullable
+    @BindView(R.id.text_line2)
+    TextView textLine2;
+    @Nullable
+    @BindView(R.id.button1)
+    Button button1;
+    @Nullable
+    @BindView(R.id.button2)
+    Button button2;
+
+    private Unbinder mUnbinder;
 
     private ICallback mCallback;
     private int[] mParams;
@@ -39,7 +58,6 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
      * Sets default layout for MainActivity
      */
     public FragmentError() {
-
     }
 
 
@@ -52,6 +70,17 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args == null) {
+            throw new IllegalArgumentException();
+        }
+        mParams = args.getIntArray(BUNDLE_FRAGMENT_PARAMETERS);
+        mCallback = (ICallback) getActivity();
+
+    }
 
     /**
      * Creates FragmentError main View
@@ -67,18 +96,12 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Bundle args = getArguments();
-        if (args == null) throw new IllegalArgumentException();
+        View rootView = inflater.inflate(mParams[FRAGMENT_INDEX_LAYOUT], null);
+        mUnbinder = ButterKnife.bind(this, rootView);
 
-        mParams = args.getIntArray(BUNDLE_FRAGMENT_PARAMETERS);
 
-        View v = inflater.inflate(mParams[FRAGMENT_INDEX_LAYOUT], null);
         getDialog().setTitle(getString(mParams[FRAGMENT_INDEX_TITLE]));
-
-        TextView textLine1 = v.findViewById(R.id.text_line1);
-        TextView textLine2 = v.findViewById(R.id.text_line2);
-        Button button1 = v.findViewById(R.id.button1);
-        Button button2 = v.findViewById(R.id.button2);
+        setCancelable(false);                                                   // prevents click off the dialog when cursor is empty
 
         textLine1.setText(getString(mParams[FRAGMENT_INDEX_LINE1]));
         textLine2.setText(getString(mParams[FRAGMENT_INDEX_LINE2]));
@@ -87,12 +110,14 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
 
-        mCallback = (ICallback) getActivity();
-
-        setCancelable(false);  // prevents click off the dialog when cursor is empty
-        return v;
+        return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
 
     /**
      * OnClick method, recreate MainActivity on RETRY or finish() any activity on EXIT.

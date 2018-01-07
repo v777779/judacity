@@ -29,6 +29,8 @@ public class Config {
     public static final String BUNDLE_ARTICLE_ITEM_URI = "bundle_article_item_uri";
     public static final String BUNDLE_STARTING_ITEM_ID = "bundle_starting_item_id";
     public static final String BUNDLE_CURRENT_ITEM_ID = "bundle_current_item_id";
+    public static final String BUNDLE_STARTING_ITEM_POS = "bundle_starting_item_pos";
+    public static final String BUNDLE_CURRENT_ITEM_POS = "bundle_current_item_pos";
 
     public static final int ARTICLE_LIST_LOADER_ID = 1221;
     public static final int ARTICLE_DETAIL_LOADER_ID = 1222;
@@ -46,6 +48,9 @@ public class Config {
     // article detail fragment
     public static final String BUNDLE_FRAGMENT_STARTING_ID = "bundle_fragment_starting_id";
     public static final String BUNDLE_FRAGMENT_CURRENT_ID = "bundle_fragment_current_id";
+    public static final String BUNDLE_FRAGMENT_STARTING_POS = "bundle_fragment_starting_pos";
+    public static final String BUNDLE_FRAGMENT_CURRENT_POS = "bundle_fragment_current_pos";
+
     public static final int FRAGMENT_TEXT_SIZE = 2000;
     public static final int FRAGMENT_TEXT_OFFSET = 700;
 
@@ -88,7 +93,7 @@ public class Config {
             R.string.text_title_wait,   // title
             R.string.text_line1_wait,   // line1
             R.string.text_line2_wait,   // line2
-            R.string.button_wait,       // button left
+            R.string.button_close,       // button left
             R.string.button_exit        // button right
     };
 

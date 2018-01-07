@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 
 import com.example.xyzreader.data.ArticleLoader;
 
-import timber.log.Timber;
-
 public class ArticleDetailAdapter extends FragmentStatePagerAdapter {
     private Cursor mCursor;
     private ICallback mCallback;
@@ -19,21 +17,19 @@ public class ArticleDetailAdapter extends FragmentStatePagerAdapter {
 
     public ArticleDetailAdapter(FragmentManager fm, ICallback callback) {
         super(fm);
-        mCallback =  callback;
+        mCallback = callback;
     }
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         super.setPrimaryItem(container, position, object);
-        mCallback.onCallback((ArticleDetailFragment)object);
+        mCallback.onCallback((ArticleDetailFragment) object);
     }
 
     @Override
     public Fragment getItem(int position) {
         mCursor.moveToPosition(position);
         mCurrentItemId = mCursor.getLong(ArticleLoader.Query._ID);
-
-        Timber.d("lifecycle detail  : getItem():" + position);
         return ArticleDetailFragment.newInstance(mStartingItemId, mCurrentItemId);
     }
 

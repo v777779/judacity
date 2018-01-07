@@ -18,10 +18,11 @@
     <!--wait-->
     <string name="text_title_wait">Wait connection</string>
     <string name="text_line1_wait">Loading from the Internet in progress</string>
-    <string name="text_line2_wait">Please wait or exit from the program</string>
+    <string name="text_line2_wait">Please close dialog or exit from the program</string>
     <string name="button_wait">WAIT</string>
 
-
+   <!--cursor-->
+    <string name="cursor_message">Cursor data updated, reload application</string>
 
     <!--title-->
     <string name="article_title">Ebooks, Neither E, Nor Books</string>

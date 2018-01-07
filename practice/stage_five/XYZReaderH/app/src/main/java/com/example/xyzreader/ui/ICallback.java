@@ -20,7 +20,7 @@ public interface ICallback {
      *  Performs callback processing when onClick() for CLOSE
      *  button of FrameError fragment called. Not used.
      */
-    void onCallback(Uri uri, View view);
+    void onCallback(View view, int pos);
     void onCallback(int mode);
     void onCallback(ArticleDetailFragment fragment);
 

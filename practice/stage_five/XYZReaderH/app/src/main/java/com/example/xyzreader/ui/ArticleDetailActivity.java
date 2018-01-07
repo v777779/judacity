@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -33,6 +35,7 @@ import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +44,9 @@ import timber.log.Timber;
 import static com.example.xyzreader.remote.Config.ARTICLE_DETAIL_LOADER_ID;
 import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
+import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
+import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
 
 public class ArticleDetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -52,20 +57,14 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     private Cursor mCursor;
 
     private long mStartingItemId;
-    private long mCurrentItemId;
+    private int mStartingItemPosition;
+    private int mCurrentItemPosition;
     private boolean mIsStartingActivity;
 
     // transition
     private ArticleDetailFragment mCurrentFragment;
     private boolean mIsReturning;
 
-    private List<View> getSharedViews(View view) {
-        List<View> list = new ArrayList<>();
-        list.add(view.findViewById(R.id.article_image));
-        list.add(view.findViewById(R.id.article_title));
-        list.add(view.findViewById(R.id.article_subtitle));
-        return list;
-    }
 
     public SharedElementCallback mSharedCallback;
 
@@ -90,11 +89,12 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             if (getIntent() != null) {
                 mStartingItemId = getIntent().getLongExtra(BUNDLE_STARTING_ITEM_ID, 0);
+                mStartingItemPosition = getIntent().getIntExtra(BUNDLE_STARTING_ITEM_POS, 0);
             }
-            mCurrentItemId = mStartingItemId;
+            mCurrentItemPosition = mStartingItemPosition;
         } else {
-            mStartingItemId = savedInstanceState.getLong(BUNDLE_STARTING_ITEM_ID);
-            mCurrentItemId = savedInstanceState.getLong(BUNDLE_CURRENT_ITEM_ID);
+            mStartingItemPosition = savedInstanceState.getInt(BUNDLE_STARTING_ITEM_POS);
+            mCurrentItemPosition = savedInstanceState.getInt(BUNDLE_CURRENT_ITEM_POS);
         }
         mIsStartingActivity = savedInstanceState == null;
 
@@ -115,7 +115,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
             @Override
             public void onPageSelected(int position) {
-                mCurrentItemId = mCursor.getLong(ArticleLoader.Query._ID);
+                mCurrentItemPosition = position;
             }
 
             @Override
@@ -153,8 +153,8 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(BUNDLE_STARTING_ITEM_ID, mStartingItemId);
-        outState.putLong(BUNDLE_CURRENT_ITEM_ID, mCurrentItemId);
+        outState.putLong(BUNDLE_STARTING_ITEM_POS, mStartingItemPosition);
+        outState.putLong(BUNDLE_CURRENT_ITEM_POS, mCurrentItemPosition);
 
     }
 
@@ -163,8 +163,8 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     public void finishAfterTransition() {
         mIsReturning = true;                            // before super()
         Intent intent = new Intent();
-        intent.putExtra(BUNDLE_STARTING_ITEM_ID, mStartingItemId);
-        intent.putExtra(BUNDLE_CURRENT_ITEM_ID, mCurrentItemId);
+        intent.putExtra(BUNDLE_STARTING_ITEM_POS, mStartingItemPosition);
+        intent.putExtra(BUNDLE_CURRENT_ITEM_POS, mCurrentItemPosition);
         setResult(RESULT_OK, intent);
         super.finishAfterTransition();
     }
@@ -180,18 +180,20 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         mCursor = cursor;
 
         mPagerAdapter.swap(mCursor, mStartingItemId);
+        mPager.setCurrentItem(mCurrentItemPosition);
         mPager.setVisibility(View.VISIBLE);
 
         if (mIsStartingActivity) {
             for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
                 if (mCursor.getLong(ArticleLoader.Query._ID) == mStartingItemId) {
-                    mPager.setCurrentItem(mCursor.getPosition(), true);
                     return;
                 }
             }
-// bug fix
-            finish();           // old cursor exit from activity
+// TODO stop loading service optimization
+// bug fix  if cursor obsoleted exit from activity
 
+            Toast.makeText(this,getString(R.string.cursor_message), Toast.LENGTH_SHORT).show();
+            finish();
         }
 
     }
@@ -203,12 +205,33 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onCallback(Uri uri, View view) {
-
+    public void onCallback(View view, int position) {
     }
 
     @Override
     public void onCallback(int mode) {
+    }
+
+
+    private List<View> getSharedViews(View view) {
+        List<View> list = new ArrayList<>();
+        list.add(view.findViewById(R.id.article_image));
+        list.add(view.findViewById(R.id.article_title));
+        return list;
+    }
+
+    private void copySystemSharedElements(List<String> names, Map<String, View> sharedElements) {
+        List<String> cloneList = new ArrayList<>(names);
+        Map<String, View> cloneMap = new HashMap<>(sharedElements);
+        names.clear();
+        sharedElements.clear();
+        for (int i = 0; i < cloneList.size(); i++) {
+            String name = cloneList.get(i);
+            if (name.contains("android")) {
+                names.add(name);
+                sharedElements.put(name, cloneMap.get(name));
+            }
+        }
 
     }
 
@@ -226,31 +249,11 @@ public class ArticleDetailActivity extends AppCompatActivity implements
                     View fab = mCurrentFragment.getView().findViewById(R.id.fab);  // off FAB
                     fab.setVisibility(View.GONE);
 
-                    List<View> list = getSharedViews(mCurrentFragment.getView());
-                    View sharedElement = list.get(0);
-
-                    if (sharedElement == null) {
-                        // If shared element is null, then it has been scrolled off screen and
-                        // no longer visible. In this case we cancel the shared element transition by
-                        // removing the shared element from the shared elements map.
-                        names.clear();
-                        sharedElements.clear();
-                    } else if (mStartingItemId != mCurrentItemId) {
-                        // If the user has swiped to a different ViewPager page, then we need to
-                        // remove the old shared element and replace it with the new shared element
-                        // that should be transitioned instead.
-                        names.clear();
-                        sharedElements.clear();
-
+                    List<View> list = mCurrentFragment.getSharedViews();
+                    copySystemSharedElements(names, sharedElements);             // smart clear
+                    for (View sharedElement : list) {
                         sharedElements.put(sharedElement.getTransitionName(), sharedElement);
                         names.add(sharedElement.getTransitionName());
-                        sharedElement = list.get(1);
-                        sharedElements.put(sharedElement.getTransitionName(), sharedElement);
-                        names.add(sharedElement.getTransitionName());
-                        sharedElement = list.get(2);
-                        sharedElements.put(sharedElement.getTransitionName(), sharedElement);
-                        names.add(sharedElement.getTransitionName());
-
                     }
                 }
             }
