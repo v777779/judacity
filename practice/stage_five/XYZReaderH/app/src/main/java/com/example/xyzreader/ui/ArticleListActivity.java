@@ -272,11 +272,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onCallback(Uri uri, View view) {
-// TODO if click before loader finished hide progress bar and cancel loader
-
         if(!mIsLoaderComplete) return;
-
-
 
         View mImage = view.findViewById(R.id.article_image);
         View mTitle = view.findViewById(R.id.article_title);
