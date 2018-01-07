@@ -1,7 +1,6 @@
 package com.example.xyzreader.data;
 
 
-
 import android.app.IntentService;
 import android.content.ContentProviderOperation;
 import android.content.ContentValues;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.example.xyzreader.remote.RemoteEndpointUtil;
 
@@ -20,26 +18,21 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
+import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_NO_NETWORK;
+import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_FINISHED;
+import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_STARTED;
+import static com.example.xyzreader.remote.Config.EXTRA_EMPTY_CURSOR;
+import static com.example.xyzreader.remote.Config.EXTRA_REFRESHING;
+import static com.example.xyzreader.remote.Config.UPDATE_SERVICE_TAG;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.isCursorEmpty;
+import static com.example.xyzreader.remote.RemoteEndpointUtil.isOnline;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.isReloadTimeout;
 
 
 public class UpdaterService extends IntentService {
-    private static final String TAG = "UpdaterService";
-
-    public static final String BROADCAST_ACTION_STATE_CHANGE
-            = "com.example.xyzreader.intent.action.STATE_CHANGE";
-    public static final String EXTRA_REFRESHING
-            = "com.example.xyzreader.intent.extra.REFRESHING";
-
-    public static final String BROADCAST_ACTION_NO_NETWORK
-            = "com.example.xyzreader.intent.action.NO_NETWORK";
-
-    public static final String EXTRA_EMPTY_CURSOR
-            = "com.example.xyzreader.intent.extra.EMPTY_CURSOR";
 
     public UpdaterService() {
-        super(TAG);
+        super(UPDATE_SERVICE_TAG);
     }
 
 //    @Override
@@ -54,7 +47,7 @@ public class UpdaterService extends IntentService {
 //        }
 //
 //        sendStickyBroadcast(
-//                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
+//                new Intent(BROADCAST_ACTION_UPDATE_STARTED).putExtra(EXTRA_REFRESHING, true));
 //
 //        // Don't even inspect the intent, we only do one thing, and that's fetch content.
 //        ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
@@ -92,7 +85,7 @@ public class UpdaterService extends IntentService {
 //        }
 //
 //        sendStickyBroadcast(
-//                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
+//                new Intent(BROADCAST_ACTION_UPDATE_STARTED).putExtra(EXTRA_REFRESHING, false));
 //    }
 
     @Override
@@ -114,15 +107,13 @@ public class UpdaterService extends IntentService {
         }
 
 // network update start point
-        if (!RemoteEndpointUtil.isOnline(this)) {
-            sendBroadcast(
-                    new Intent(BROADCAST_ACTION_NO_NETWORK).putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
-            Log.v(TAG, "No online, no refreshing.");
+        if (!isOnline(this)) {                                     // no network
+            sendBroadcast(new Intent(BROADCAST_ACTION_NO_NETWORK)
+                    .putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
             return;
         }
 
-        sendBroadcast(
-                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
+        sendBroadcast(new Intent(BROADCAST_ACTION_UPDATE_STARTED));         // started
 
         // Don't even inspect the intent, we only do one thing, and that's fetch content.
         ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
@@ -137,7 +128,7 @@ public class UpdaterService extends IntentService {
 
             JSONArray array = RemoteEndpointUtil.fetchJsonArray();
 
-            if (array == null ) {
+            if (array == null) {
                 throw new JSONException("Invalid parsed item array");
             }
 
@@ -160,13 +151,11 @@ public class UpdaterService extends IntentService {
             RemoteEndpointUtil.saveReLoadTimePreference(this);  // save timestamp
 
         } catch (JSONException | RemoteException | OperationApplicationException e) {
-            Log.e(TAG, "Error updating content.", e);
-// correction!!!  when error load  close or exit dialog
-            sendBroadcast(
-                    new Intent(BROADCAST_ACTION_NO_NETWORK).putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
+            sendBroadcast(new Intent(BROADCAST_ACTION_NO_NETWORK)       // network error dialog
+                    .putExtra(EXTRA_EMPTY_CURSOR, isCursorEmpty));
+
         }
-        sendBroadcast(
-                new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
+        sendBroadcast(new Intent(BROADCAST_ACTION_UPDATE_FINISHED));  // finished
     }
 
 }

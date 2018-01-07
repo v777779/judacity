@@ -9,8 +9,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,17 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.WindowInsets;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -48,20 +39,21 @@ import com.example.xyzreader.remote.Config;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import timber.log.Timber;
 
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
 import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
-import static com.example.xyzreader.remote.Config.BUNDLE_ARTICLE_ITEM_URI;
+import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_NO_NETWORK;
+import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_FINISHED;
+import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_STARTED;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
+import static com.example.xyzreader.remote.Config.EXTRA_EMPTY_CURSOR;
+import static com.example.xyzreader.remote.Config.EXTRA_REFRESHING;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_CLOSE;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_EXIT;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
@@ -76,7 +68,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO Cancel loader when click if not finished  , made simple block on click
 // TODO ProgressBar on ScrollY() ???
 // TODO Layouts on WXGA
-
+// TODO BROADCAST ACTION in Exception of UpdateService and mIsRefreshing
 
     private static boolean mIsTimber;
 
@@ -90,13 +82,12 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private BroadcastReceiver mRefreshingReceiver;
     private boolean mIsSwipeRefresh;
-    private boolean mIsRefreshing;
+    private boolean mIsRefreshing;   // progress and check enter to second activity
 
     // transition
     private Bundle mTmpReenterState;
     private SharedElementCallback mSharedCallback;
 
-    private boolean mIsLoaderComplete;
 
 
     @Override
@@ -163,17 +154,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setTitle("");
         }
-//        mSysBarHeight = getResources().getDimensionPixelSize(R.dimen.status_bar_height) +
-//                mToolbar.getLayoutParams().height;
-
-
-// fab
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
 
         setupRecycler();
         setupSwipeRefresh();
@@ -213,8 +193,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UpdaterService.BROADCAST_ACTION_STATE_CHANGE);
-        intentFilter.addAction(UpdaterService.BROADCAST_ACTION_NO_NETWORK);
+        intentFilter.addAction(BROADCAST_ACTION_UPDATE_STARTED);
+        intentFilter.addAction(BROADCAST_ACTION_NO_NETWORK);
+        intentFilter.addAction(BROADCAST_ACTION_UPDATE_FINISHED);
         registerReceiver(mRefreshingReceiver, intentFilter);
 
     }
@@ -265,7 +246,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         ((ArticleListAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
-        mIsLoaderComplete = true;
+
     }
 
     @Override
@@ -275,7 +256,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onCallback(Uri uri, View view) {
-        if (!mIsLoaderComplete) {
+        if (mIsRefreshing) {
             showErrorDialog(FRAGMENT_ERROR_WAIT);
             return;
         }
@@ -340,6 +321,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         } else {
             mProgressBar.setVisibility(mIsRefreshing ? View.VISIBLE : View.INVISIBLE);
         }
+
     }
 
     private void showErrorDialog(int[] parameters) {
@@ -365,12 +347,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRecyclerView.setLayoutManager(layoutManager);
         Resources res = getResources();
 
-//        int offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + mSysBarHeight;
-//        int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
-//        int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
-//        mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
-//        Timber.d("status/navigation : " + getStatusBarHeight() + ", " + getNavigationBarHeight());
-
     }
 
     private void setupSwipeRefresh() {
@@ -382,9 +358,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
 
-//        int offsetTop = getResources().getDimensionPixelSize(R.dimen.progress_swipe_offset) + mSysBarHeight;
-//        mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetTop);
-
         mRefreshingReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -392,14 +365,18 @@ public class ArticleListActivity extends AppCompatActivity implements
                 String action = intent.getAction();
 
                 if (action == null || action.isEmpty()) return;
-                if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(action)) {
-                    mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+                if (BROADCAST_ACTION_UPDATE_STARTED.equals(action)) {
+                    mIsRefreshing = true;
                     updateRefreshingUI();
                 }
-
-                if (UpdaterService.BROADCAST_ACTION_NO_NETWORK.equals(action)) {
-                    boolean isCursorEmpty = intent.getBooleanExtra(UpdaterService.EXTRA_EMPTY_CURSOR, false);
+                if (BROADCAST_ACTION_UPDATE_FINISHED.equals(action)) {
+                    mIsRefreshing = false;
+                    updateRefreshingUI();
+                }
+                if (BROADCAST_ACTION_NO_NETWORK.equals(action)) {
+                    boolean isCursorEmpty = intent.getBooleanExtra(EXTRA_EMPTY_CURSOR, false);
                     showErrorDialog(isCursorEmpty ? FRAGMENT_ERROR_EXIT : FRAGMENT_ERROR_CLOSE);
+                    mIsRefreshing = false; // no Internet no loading
                 }
             }
         };
@@ -407,38 +384,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     private void refresh(String action) {
-        mIsLoaderComplete = false;
         startService(new Intent(action, null, this, UpdaterService.class));
     }
-
-
-// service methods
-//    private int getNavigationBarHeightFromParam() {   // provides correct results for land only
-//        int height = 0;
-//        int statusId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-//        if (statusId > 0) {
-//            height = getResources().getDimensionPixelSize(statusId);
-//        }
-//        return height;
-//    }
-//
-//    private int getNavigationBarHeight() {
-//        TypedValue tv = new TypedValue();
-//        int value = 0;
-//        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-//            value = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-//        }
-//        return value;
-//    }
-//
-//    private int getStatusBarHeight() {
-//        int height = 0;
-//        int statusId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-//        if (statusId > 0) {
-//            height = getResources().getDimensionPixelSize(statusId);
-//        }
-//        return height;
-//    }
 
     private SharedElementCallback setupSharedCallback() {
         return new SharedElementCallback() {

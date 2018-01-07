@@ -92,6 +92,23 @@ public class Config {
             R.string.button_exit        // button right
     };
 
+    // update service
+    public static final String UPDATE_SERVICE_TAG = "UpdaterService";
+
+    public static final String BROADCAST_ACTION_UPDATE_STARTED
+            = "com.example.xyzreader.intent.action.STATE_CHANGE";
+    public static final String BROADCAST_ACTION_UPDATE_FINISHED
+            = "com.example.xyzreader.intent.action.UPDATE_FINISHED";
+
+    public static final String EXTRA_REFRESHING
+            = "com.example.xyzreader.intent.extra.REFRESHING";
+
+    public static final String BROADCAST_ACTION_NO_NETWORK
+            = "com.example.xyzreader.intent.action.NO_NETWORK";
+
+    public static final String EXTRA_EMPTY_CURSOR
+            = "com.example.xyzreader.intent.extra.EMPTY_CURSOR";
+
 
     /**
      * Span class used for RecyclerView as storage of display item parameters
