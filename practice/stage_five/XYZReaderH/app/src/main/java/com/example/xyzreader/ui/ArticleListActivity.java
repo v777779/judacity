@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.widget.GridLayout;
@@ -43,6 +45,9 @@ import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.remote.Config;
 
+import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -50,7 +55,9 @@ import timber.log.Timber;
 
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
+import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_ARTICLE_ITEM_URI;
+import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
@@ -59,6 +66,15 @@ import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
 
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
+
+// TODO Palette to Detail Load status bar
+// TODO Glide load support when transition
+// TODO Landscape bottom bar to mode to side and add side margins to text
+// TODO Cancel loader when click if not finished  , made simple block on click
+// TODO ProgressBar on ScrollY() ???
+// TODO Layouts on WXGA
+
+
     private static boolean mIsTimber;
 
 
@@ -73,10 +89,20 @@ public class ArticleListActivity extends AppCompatActivity implements
     private boolean mIsSwipeRefresh;
     private boolean mIsRefreshing;
 
+    // transition
+    private Bundle mTmpReenterState;
+    private SharedElementCallback mSharedCallback;
+
+    private boolean mIsLoaderComplete;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+// transition
+        mSharedCallback = setupSharedCallback();
+        setExitSharedElementCallback(mSharedCallback);
+
         setContentView(R.layout.activity_article_main);  // transition set in styles
 
 // bind
@@ -154,7 +180,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             refresh(ACTION_TIME_REFRESH);
         }
 
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
 
     }
 
@@ -203,6 +229,30 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        mTmpReenterState = new Bundle(data.getExtras());
+        long startingItemId = mTmpReenterState.getLong(BUNDLE_STARTING_ITEM_ID);
+        long currentItemid = mTmpReenterState.getLong(BUNDLE_CURRENT_ITEM_ID);
+        if (startingItemId != currentItemid) {
+
+            int currentPosition = -1;
+
+            mRecyclerView.scrollToPosition(currentPosition);
+        }
+        postponeEnterTransition();
+        mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                mRecyclerView.requestLayout();
+                startPostponedEnterTransition();
+                return true;
+            }
+        });
+    }
+
     // callbacks
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -212,6 +262,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         ((ArticleListAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
+        mIsLoaderComplete = true;
     }
 
     @Override
@@ -221,6 +272,12 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onCallback(Uri uri, View view) {
+// TODO if click before loader finished hide progress bar and cancel loader
+
+        if(!mIsLoaderComplete) return;
+
+
+
         View mImage = view.findViewById(R.id.article_image);
         View mTitle = view.findViewById(R.id.article_title);
         View mSubTitle = view.findViewById(R.id.article_subtitle);
@@ -258,7 +315,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                 break;
             default:
         }
-
     }
 
     @Override
@@ -348,6 +404,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     private void refresh(String action) {
+        mIsLoaderComplete = false;
         startService(new Intent(action, null, this, UpdaterService.class));
     }
 
@@ -380,4 +437,47 @@ public class ArticleListActivity extends AppCompatActivity implements
 //        return height;
 //    }
 
+    private SharedElementCallback setupSharedCallback() {
+        return new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                if (mTmpReenterState != null) {
+                    int startingItemId = mTmpReenterState.getInt(BUNDLE_STARTING_ITEM_ID);
+                    int currentItemId = mTmpReenterState.getInt(BUNDLE_CURRENT_ITEM_ID);
+                    if (startingItemId != currentItemId) {
+//                        String newTransitionName = mList.get(currentPosition);
+////                    View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
+//                        RecyclerAdapter.ViewHolder holder = (RecyclerAdapter.ViewHolder) mRecyclerView.findViewHolderForAdapterPosition(currentPosition);
+//                        View newSharedElement = holder.mItemImage;
+//
+//                        if (newSharedElement != null) {
+//                            names.clear();
+//                            names.add(newTransitionName);
+//                            sharedElements.clear();
+//                            sharedElements.put(newTransitionName, newSharedElement);
+//// fab
+//                            sharedElements.put(mFab.getTransitionName(),mFab);
+//// text
+//                            sharedElements.put(mText.getTransitionName(),mText);
+//                        }
+                    }
+
+                    mTmpReenterState = null;
+                } else {
+                    // If mTmpReenterState is null, then the activity is exiting.
+                    View navigationBar = findViewById(android.R.id.navigationBarBackground);
+                    View statusBar = findViewById(android.R.id.statusBarBackground);
+                    if (navigationBar != null) {
+                        names.add(navigationBar.getTransitionName());
+                        sharedElements.put(navigationBar.getTransitionName(), navigationBar);
+                    }
+                    if (statusBar != null) {
+                        names.add(statusBar.getTransitionName());
+                        sharedElements.put(statusBar.getTransitionName(), statusBar);
+                    }
+                }
+            }
+        };
+
+    }
 }

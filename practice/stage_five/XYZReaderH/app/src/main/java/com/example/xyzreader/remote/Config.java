@@ -30,6 +30,8 @@ public class Config {
     public static final String BUNDLE_STARTING_ITEM_ID = "bundle_starting_item_id";
     public static final String BUNDLE_CURRENT_ITEM_ID = "bundle_current_item_id";
 
+    public static final int ARTICLE_LIST_LOADER_ID = 1221;
+    public static final int ARTICLE_DETAIL_LOADER_ID = 1222;
 
     // recycler
     public static final int HIGH_SCALE_WIDTH = 200;     // dpi

@@ -37,6 +37,8 @@ import java.util.Map;
 
 import timber.log.Timber;
 
+import static com.example.xyzreader.remote.Config.ARTICLE_DETAIL_LOADER_ID;
+import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 
@@ -64,45 +66,15 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         return list;
     }
 
-    public final SharedElementCallback mSharedCallback = new SharedElementCallback() {
-        @Override
-        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-            if (mIsReturning) {
-                View fab = mCurrentFragment.getView().findViewById(R.id.fab);  // off FAB
-                fab.setVisibility(View.GONE);
-
-                List<View> list = getSharedViews(mCurrentFragment.getView());
-                View sharedElement = list.get(0);
-
-                if (sharedElement == null) {
-                    // If shared element is null, then it has been scrolled off screen and
-                    // no longer visible. In this case we cancel the shared element transition by
-                    // removing the shared element from the shared elements map.
-                    names.clear();
-                    sharedElements.clear();
-                } else if (mStartingItemId != mCurrentItemId) {
-                    // If the user has swiped to a different ViewPager page, then we need to
-                    // remove the old shared element and replace it with the new shared element
-                    // that should be transitioned instead.
-                    names.clear();
-                    names.add(sharedElement.getTransitionName());
-                    sharedElements.clear();
-                    sharedElements.put(sharedElement.getTransitionName(), sharedElement);
-                    sharedElement = list.get(1);
-                    sharedElements.put(sharedElement.getTransitionName(), sharedElement);
-                    sharedElement = list.get(2);
-                    sharedElements.put(sharedElement.getTransitionName(), sharedElement);
-
-                }
-            }
-        }
-    };
+    public SharedElementCallback mSharedCallback;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+// transition
+        mSharedCallback = setupSharedCallback();
         postponeEnterTransition();
         setEnterSharedElementCallback(mSharedCallback);
 
@@ -142,7 +114,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
             @Override
             public void onPageSelected(int position) {
-
+                mCurrentItemId = mCursor.getLong(ArticleLoader.Query._ID);
             }
 
             @Override
@@ -168,7 +140,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 //        mPager.setCurrentItem(4);
 
 
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(ARTICLE_DETAIL_LOADER_ID, null, this);
     }
 
 //    @Override
@@ -241,5 +213,43 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         mCurrentFragment = fragment;
     }
 
+    private SharedElementCallback setupSharedCallback() {
+        return new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                if (mIsReturning) {
+                    View fab = mCurrentFragment.getView().findViewById(R.id.fab);  // off FAB
+                    fab.setVisibility(View.GONE);
+
+                    List<View> list = getSharedViews(mCurrentFragment.getView());
+                    View sharedElement = list.get(0);
+
+                    if (sharedElement == null) {
+                        // If shared element is null, then it has been scrolled off screen and
+                        // no longer visible. In this case we cancel the shared element transition by
+                        // removing the shared element from the shared elements map.
+                        names.clear();
+                        sharedElements.clear();
+                    } else if (mStartingItemId != mCurrentItemId) {
+                        // If the user has swiped to a different ViewPager page, then we need to
+                        // remove the old shared element and replace it with the new shared element
+                        // that should be transitioned instead.
+                        names.clear();
+                        sharedElements.clear();
+
+                        sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+                        names.add(sharedElement.getTransitionName());
+                        sharedElement = list.get(1);
+                        sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+                        names.add(sharedElement.getTransitionName());
+                        sharedElement = list.get(2);
+                        sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+                        names.add(sharedElement.getTransitionName());
+
+                    }
+                }
+            }
+        };
+    }
 
 }
