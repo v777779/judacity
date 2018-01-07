@@ -52,6 +52,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
+    public long getItemId(int position) {
+        return 1221+position;
+    }
+
+    @Override
     public int getItemCount() {
         if (mList == null) return 0;
         return mList.size();

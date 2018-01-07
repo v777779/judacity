@@ -205,9 +205,10 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
     private void setupRecycler() {
         mSpan = 2;
-        mHeight = 200;
+        mHeight = 350;
 
         mRecyclerAdapter = new RecyclerAdapter(this, mHeight);
+        mRecyclerAdapter.setHasStableIds(true);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mRecyclerAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(

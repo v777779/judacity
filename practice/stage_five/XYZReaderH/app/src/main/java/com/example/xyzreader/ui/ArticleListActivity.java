@@ -36,6 +36,7 @@ import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.remote.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO Palette to Detail Load status bar
 // TODO Glide load support when transition
 // TODO Landscape bottom bar to mode to side and add side margins to text
+// TODO landscape add instructive movement
 // TODO Cancel loader when click if not finished  , made simple block on click
 // TODO ProgressBar on ScrollY() ???
 // TODO Layouts on WXGA
@@ -87,7 +89,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     // transition
     private Bundle mTmpReenterState;
     private SharedElementCallback mSharedCallback;
-
 
 
     @Override
@@ -387,46 +388,64 @@ public class ArticleListActivity extends AppCompatActivity implements
         startService(new Intent(action, null, this, UpdaterService.class));
     }
 
+    private void defaultTransition(List<String> names, Map<String, View> sharedElements) {
+        // If mTmpReenterState is null, then the activity is exiting.
+        View navigationBar = findViewById(android.R.id.navigationBarBackground);
+        View statusBar = findViewById(android.R.id.statusBarBackground);
+        if (navigationBar != null) {
+            names.add(navigationBar.getTransitionName());
+            sharedElements.put(navigationBar.getTransitionName(), navigationBar);
+        }
+        if (statusBar != null) {
+            names.add(statusBar.getTransitionName());
+            sharedElements.put(statusBar.getTransitionName(), statusBar);
+        }
+    }
+
+    private List<View> getSharedViews(RecyclerView.ViewHolder holder) {
+        if (holder == null || holder.itemView == null) return new ArrayList<>();
+
+        View view = holder.itemView;
+        List<View> list = new ArrayList<>();
+        list.add(view.findViewById(R.id.article_image));
+        list.add(view.findViewById(R.id.article_title));
+        list.add(view.findViewById(R.id.article_subtitle));
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == null) list.remove(i);
+        }
+        return list;
+    }
+
+
     private SharedElementCallback setupSharedCallback() {
         return new SharedElementCallback() {
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                 if (mTmpReenterState != null) {
-                    int startingItemId = mTmpReenterState.getInt(BUNDLE_STARTING_ITEM_ID);
-                    int currentItemId = mTmpReenterState.getInt(BUNDLE_CURRENT_ITEM_ID);
+                    long startingItemId = mTmpReenterState.getLong(BUNDLE_STARTING_ITEM_ID);
+                    long currentItemId = mTmpReenterState.getLong(BUNDLE_CURRENT_ITEM_ID);
                     if (startingItemId != currentItemId) {
-//                        String newTransitionName = mList.get(currentPosition);
-////                    View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
-//                        RecyclerAdapter.ViewHolder holder = (RecyclerAdapter.ViewHolder) mRecyclerView.findViewHolderForAdapterPosition(currentPosition);
-//                        View newSharedElement = holder.mItemImage;
-//
-//                        if (newSharedElement != null) {
-//                            names.clear();
-//                            names.add(newTransitionName);
-//                            sharedElements.clear();
-//                            sharedElements.put(newTransitionName, newSharedElement);
-//// fab
-//                            sharedElements.put(mFab.getTransitionName(),mFab);
-//// text
-//                            sharedElements.put(mText.getTransitionName(),mText);
-//                        }
-                    }
+                        List<View> list = getSharedViews(mRecyclerView.findViewHolderForItemId(currentItemId));
 
-                    mTmpReenterState = null;
-                } else {
-                    // If mTmpReenterState is null, then the activity is exiting.
-                    View navigationBar = findViewById(android.R.id.navigationBarBackground);
-                    View statusBar = findViewById(android.R.id.statusBarBackground);
-                    if (navigationBar != null) {
-                        names.add(navigationBar.getTransitionName());
-                        sharedElements.put(navigationBar.getTransitionName(), navigationBar);
-                    }
-                    if (statusBar != null) {
-                        names.add(statusBar.getTransitionName());
-                        sharedElements.put(statusBar.getTransitionName(), statusBar);
+                        if (list.isEmpty()) {
+                            defaultTransition(names, sharedElements);
+                            mTmpReenterState = null;
+                            return;
+                        }
+                        names.clear();
+                        sharedElements.clear();
+                        for (View sharedElement : list) {
+                            if (sharedElement == null) continue;
+                            names.add(sharedElement.getTransitionName());
+                            sharedElements.put(sharedElement.getTransitionName(), sharedElement);
+                        }
+                        mTmpReenterState = null;
+                    } else {
+                        defaultTransition(names, sharedElements);
                     }
                 }
             }
+
         };
 
     }
