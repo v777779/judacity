@@ -214,6 +214,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
+
+
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
@@ -222,9 +224,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         long currentItemid = mTmpReenterState.getLong(BUNDLE_CURRENT_ITEM_ID);
         if (startingItemId != currentItemid) {
 
-            int currentPosition = -1;
 
-            mRecyclerView.scrollToPosition(currentPosition);
+            int current = 5;
+            mRecyclerView.scrollToPosition(current);
         }
         postponeEnterTransition();
         mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {

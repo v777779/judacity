@@ -31,6 +31,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +46,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     private Cursor mCursor;
     private Context mContext;
     private Config.Span mSpan;
+    private Map<Long, Integer> hMap;
 
     // correction!!!
     public ArticleListAdapter(Context context, Config.Span sp) {
@@ -53,6 +56,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
         outputFormat = new SimpleDateFormat();
         startOfEpoch = new GregorianCalendar(2, 1, 1);
+        hMap = new HashMap<>();
 
     }
 
@@ -84,6 +88,8 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final long itemId = getItemId(position);
+        hMap.put(itemId, position);
+
         holder.fill(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,10 +177,15 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                         }
                     })
                     .into(mItemImage);
-            mItemImage.setTransitionName(mContext.getString(R.string.transition_image,getItemId()));
-            mItemTitle.setTransitionName(mContext.getString(R.string.transition_title,getItemId()));
-            mItemSubtitle.setTransitionName(mContext.getString(R.string.transition_sub_title,getItemId()));
+            mItemImage.setTransitionName(mContext.getString(R.string.transition_image, getItemId()));
+            mItemTitle.setTransitionName(mContext.getString(R.string.transition_title, getItemId()));
+            mItemSubtitle.setTransitionName(mContext.getString(R.string.transition_sub_title, getItemId()));
         }
+    }
 
+    public int getItemIdPosition(long itemId) {
+        Integer itemPosition = hMap.get(itemId);
+        if (itemPosition == null) return -1;
+        return itemPosition;
     }
 }
