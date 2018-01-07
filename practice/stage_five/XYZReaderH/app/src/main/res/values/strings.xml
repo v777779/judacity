@@ -8,12 +8,19 @@
 
 
     <!--dialog-->
-    <string name="error_title">Error connection</string>
-    <string name="message_error_line1">There is no connection to the Internet</string>
-    <string name="message_error_line2">Please retry or exit from the program</string>
-    <string name="error_retry">RETRY</string>
-    <string name="error_close">CLOSE</string>
-    <string name="error_exit">EXIT</string>
+    <string name="text_title_error">Error connection</string>
+    <string name="text_line1_error">There is no connection to the Internet</string>
+    <string name="text_line2_error">Please retry or exit from the program</string>
+    <string name="button_retry">RETRY</string>
+    <string name="button_close">CLOSE</string>
+    <string name="button_exit">EXIT</string>
+
+    <!--wait-->
+    <string name="text_title_wait">Wait connection</string>
+    <string name="text_line1_wait">Loading from the Internet in progress</string>
+    <string name="text_line2_wait">Please wait or exit from the program</string>
+    <string name="button_wait">WAIT</string>
+
 
 
     <!--title-->

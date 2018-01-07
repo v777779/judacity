@@ -62,7 +62,10 @@ import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
+import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_CLOSE;
+import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_EXIT;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
+import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_WAIT;
 
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -272,7 +275,10 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onCallback(Uri uri, View view) {
-        if(!mIsLoaderComplete) return;
+        if (!mIsLoaderComplete) {
+            showErrorDialog(FRAGMENT_ERROR_WAIT);
+            return;
+        }
 
         View mImage = view.findViewById(R.id.article_image);
         View mTitle = view.findViewById(R.id.article_title);
@@ -309,6 +315,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             case CALLBACK_FRAGMENT_EXIT:
                 finish();
                 break;
+
             default:
         }
     }
@@ -335,11 +342,11 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     }
 
-    private void showErrorDialog(boolean isCursorEmpty) {
-        FragmentError fragmentError = FragmentError.newInstance(isCursorEmpty);
+    private void showErrorDialog(int[] parameters) {
+        FragmentError fragment = FragmentError.newInstance(parameters);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.add(fragmentError, FRAGMENT_ERROR_TAG);
+        ft.add(fragment, FRAGMENT_ERROR_TAG);
         ft.commit();
     }
 
@@ -392,7 +399,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
                 if (UpdaterService.BROADCAST_ACTION_NO_NETWORK.equals(action)) {
                     boolean isCursorEmpty = intent.getBooleanExtra(UpdaterService.EXTRA_EMPTY_CURSOR, false);
-                    showErrorDialog(isCursorEmpty);
+                    showErrorDialog(isCursorEmpty ? FRAGMENT_ERROR_EXIT : FRAGMENT_ERROR_CLOSE);
                 }
             }
         };

@@ -7,12 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.xyzreader.R;
 
+import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_IS_CURSOR_EMPTY;
+import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_PARAMETERS;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
+import static com.example.xyzreader.remote.Config.FRAGMENT_INDEX_BUTTON1;
+import static com.example.xyzreader.remote.Config.FRAGMENT_INDEX_BUTTON2;
+import static com.example.xyzreader.remote.Config.FRAGMENT_INDEX_LAYOUT;
+import static com.example.xyzreader.remote.Config.FRAGMENT_INDEX_LINE1;
+import static com.example.xyzreader.remote.Config.FRAGMENT_INDEX_LINE2;
+import static com.example.xyzreader.remote.Config.FRAGMENT_INDEX_TITLE;
 
 
 /**
@@ -20,33 +29,27 @@ import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
  * to show dialog when there is no connection to network
  */
 public class FragmentError extends DialogFragment implements View.OnClickListener {
-    // constant
-    public static final String BUNDLE_FRAGMENT_IS_CURSOR_EMPTY = "bundle_fragment_is_cursor_empty";
+
+
     private ICallback mCallback;
-    private int mLayoutId;
-    private boolean mIsCursorEmpty;
+    private int[] mParams;
 
     /**
      * Constructor default
      * Sets default layout for MainActivity
      */
     public FragmentError() {
-        this.mLayoutId = R.layout.fragment_error;
+
     }
 
-    public static FragmentError newInstance() {
-        FragmentError fragmentError = new FragmentError();
-        fragmentError.setStyle(R.style.dialog_title_style, R.style.CustomDialog);
-        return fragmentError;
-    }
 
-    public static FragmentError newInstance(boolean isCursorEmpty) {
-        FragmentError fragmentError = new FragmentError();
-        fragmentError.setStyle(R.style.dialog_title_style, R.style.CustomDialog);
+    public static FragmentError newInstance(int[] params) {
+        FragmentError fragment = new FragmentError();
+        fragment.setStyle(R.style.dialog_title_style, R.style.CustomDialog);
         Bundle args = new Bundle();
-        args.putBoolean(BUNDLE_FRAGMENT_IS_CURSOR_EMPTY, isCursorEmpty);
-        fragmentError.setArguments(args);
-        return fragmentError;
+        args.putIntArray(BUNDLE_FRAGMENT_PARAMETERS, params);
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -64,47 +67,32 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(mLayoutId, null);
-        getDialog().setTitle(getString(R.string.error_title));
-        v.findViewById(R.id.error_exit).setOnClickListener(this);
-        v.findViewById(R.id.error_retry).setOnClickListener(this);
-        v.findViewById(R.id.error_close).setOnClickListener(this);
+        Bundle args = getArguments();
+        if (args == null) throw new IllegalArgumentException();
+
+        mParams = args.getIntArray(BUNDLE_FRAGMENT_PARAMETERS);
+
+        View v = inflater.inflate(mParams[FRAGMENT_INDEX_LAYOUT], null);
+        getDialog().setTitle(getString(mParams[FRAGMENT_INDEX_TITLE]));
+
+        TextView textLine1 = v.findViewById(R.id.text_line1);
+        TextView textLine2 = v.findViewById(R.id.text_line2);
+        Button button1 = v.findViewById(R.id.button1);
+        Button button2 = v.findViewById(R.id.button2);
+
+        textLine1.setText(getString(mParams[FRAGMENT_INDEX_LINE1]));
+        textLine2.setText(getString(mParams[FRAGMENT_INDEX_LINE2]));
+        button1.setText(getString(mParams[FRAGMENT_INDEX_BUTTON1]));
+        button2.setText(getString(mParams[FRAGMENT_INDEX_BUTTON2]));
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
 
         mCallback = (ICallback) getActivity();
-
-        Bundle args = getArguments();
-        if (args != null) {
-            mIsCursorEmpty = args.getBoolean(BUNDLE_FRAGMENT_IS_CURSOR_EMPTY, false);
-        }
-
-        if (!mIsCursorEmpty) {
-            v.findViewById(R.id.error_exit).setVisibility(View.INVISIBLE);
-            v.findViewById(R.id.error_close).setVisibility(View.VISIBLE);
-        }
 
         setCancelable(false);  // prevents click off the dialog when cursor is empty
         return v;
     }
 
-    /**
-     * Set  layout ID of dialog
-     * Called from MainActivity and DetailActivity to inflate different layouts
-     *
-     * @param mLayoutId
-     */
-    public void setLayoutId(int mLayoutId) {
-        this.mLayoutId = mLayoutId;
-    }
-
-    /**
-     *  Set callback ICallback object
-     *  Used to call showError() method in MainActivity onClick()
-     *
-     //  * @param mCallback ICallback callback object  // DOES NOT WORK HERE AFTER ROTATION
-     */
-//    public void setCallback() {
-//        this.mCallback = mCallback;
-//    }
 
     /**
      * OnClick method, recreate MainActivity on RETRY or finish() any activity on EXIT.
@@ -113,13 +101,13 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
      */
     public void onClick(View v) {
         String s = ((Button) v).getText().toString();
-        if (s.equals(getString(R.string.error_retry))) {
+        if (s.equals(getString(R.string.button_retry))) {
             mCallback.onCallback(CALLBACK_FRAGMENT_RETRY);
         }
-        if (s.equals(getString(R.string.error_close))) {
+        if (s.equals(getString(R.string.button_close))) {
             mCallback.onCallback(CALLBACK_FRAGMENT_CLOSE);
         }
-        if (s.equals(getString(R.string.error_exit))) {
+        if (s.equals(getString(R.string.button_exit))) {
             mCallback.onCallback(CALLBACK_FRAGMENT_EXIT);
 
         }

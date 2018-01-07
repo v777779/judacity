@@ -24,7 +24,7 @@ public class Config {
 
     public static final int CALLBACK_FRAGMENT_RETRY = 2;
     public static final int CALLBACK_FRAGMENT_CLOSE = 3;
-    public static final int CALLBACK_FRAGMENT_EXIT = 51;
+    public static final int CALLBACK_FRAGMENT_EXIT = 5;
 
     public static final String BUNDLE_ARTICLE_ITEM_URI = "bundle_article_item_uri";
     public static final String BUNDLE_STARTING_ITEM_ID = "bundle_starting_item_id";
@@ -57,7 +57,40 @@ public class Config {
     public static final int BOTTOM_BAR_FAST_HIDE = 10;
     public static final int BOTTOM_BAR_SCROLLY_THRESHOLD = 200;
 
+    // fragment error dialog
+    public static final String BUNDLE_FRAGMENT_IS_CURSOR_EMPTY = "bundle_fragment_is_cursor_empty";
+    public static final String BUNDLE_FRAGMENT_PARAMETERS = "bundle_fragment_parameters";
+    public static final int FRAGMENT_INDEX_LAYOUT = 0;
+    public static final int FRAGMENT_INDEX_TITLE = 1;
+    public static final int FRAGMENT_INDEX_LINE1 = 2;
+    public static final int FRAGMENT_INDEX_LINE2 = 3;
+    public static final int FRAGMENT_INDEX_BUTTON1 = 4;
+    public static final int FRAGMENT_INDEX_BUTTON2 = 5;
 
+    public static final int[] FRAGMENT_ERROR_EXIT = new int[]{
+            R.layout.fragment_error,     // layout
+            R.string.text_title_error,   // title
+            R.string.text_line1_error,   // line1
+            R.string.text_line2_error,   // line2
+            R.string.button_retry,       // button left
+            R.string.button_exit       // button right
+    };
+    public static final int[] FRAGMENT_ERROR_CLOSE = new int[]{
+            R.layout.fragment_error,     // layout
+            R.string.text_title_error,   // title
+            R.string.text_line1_error,   // line1
+            R.string.text_line2_error,   // line2
+            R.string.button_retry,       // button left
+            R.string.button_close       // button right
+    };
+    public static final int[] FRAGMENT_ERROR_WAIT = new int[]{
+            R.layout.fragment_error,     // layout
+            R.string.text_title_wait,   // title
+            R.string.text_line1_wait,   // line1
+            R.string.text_line2_wait,   // line2
+            R.string.button_wait,       // button left
+            R.string.button_exit        // button right
+    };
 
 
     /**

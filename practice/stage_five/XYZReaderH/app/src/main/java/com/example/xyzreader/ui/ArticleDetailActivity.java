@@ -26,6 +26,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -184,10 +185,13 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         if (mIsStartingActivity) {
             for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
                 if (mCursor.getLong(ArticleLoader.Query._ID) == mStartingItemId) {
-                    break;
+                    mPager.setCurrentItem(mCursor.getPosition(), true);
+                    return;
                 }
             }
-            mPager.setCurrentItem(mCursor.getPosition(), true);
+// bug fix
+            finish();           // old cursor exit from activity
+
         }
 
     }
@@ -218,6 +222,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                 if (mIsReturning) {
+// bug fix
                     View fab = mCurrentFragment.getView().findViewById(R.id.fab);  // off FAB
                     fab.setVisibility(View.GONE);
 

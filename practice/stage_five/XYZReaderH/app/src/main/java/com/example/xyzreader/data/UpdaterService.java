@@ -105,6 +105,7 @@ public class UpdaterService extends IntentService {
             isUpdate = true;
         }
 
+
 // correction!!!
 // check swipe, cursor, timeout
         boolean isCursorEmpty = isCursorEmpty(this);
