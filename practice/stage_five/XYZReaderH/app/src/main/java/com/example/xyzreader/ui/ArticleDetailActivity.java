@@ -79,7 +79,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         setEnterSharedElementCallback(mSharedCallback);
 
         setContentView(R.layout.activity_article_detail);
-
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
 // bundle
 // works but not used

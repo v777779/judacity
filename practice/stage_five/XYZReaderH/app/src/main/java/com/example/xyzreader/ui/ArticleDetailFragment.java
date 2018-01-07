@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
 
@@ -24,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
-import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -173,7 +171,7 @@ public class ArticleDetailFragment extends Fragment implements
         mFab = mRootView.findViewById(R.id.fab);
         mImageButtonLeft = mRootView.findViewById(R.id.image_button_left);
         mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
-        mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
+        mImageButtonHome = mRootView.findViewById(R.id.image_button_back);
 // progress
         mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
         mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
