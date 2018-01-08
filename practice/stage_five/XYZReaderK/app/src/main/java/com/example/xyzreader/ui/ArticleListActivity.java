@@ -7,23 +7,28 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.widget.GridLayout;
@@ -48,7 +53,6 @@ import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_NO_NETWORK;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_FINISHED;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_STARTED;
-import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
@@ -56,7 +60,6 @@ import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
 import static com.example.xyzreader.remote.Config.EXTRA_EMPTY_CURSOR;
-import static com.example.xyzreader.remote.Config.EXTRA_REFRESHING;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_CLOSE;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_EXIT;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
@@ -82,6 +85,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
+    private View mBorderView;
 
 
     private BroadcastReceiver mRefreshingReceiver;
@@ -91,6 +95,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     // transition
     private Bundle mTmpReenterState;
     private SharedElementCallback mSharedCallback;
+
+    // viewpager
+    private ViewPager mPager;
+    private ViewPagerAdapter mPagerAdapter;
+    private int mStartingItemPosition;
+    private int mCurrentItemPosition;
+
 
 
     @Override
@@ -108,6 +119,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
         mRecyclerView = findViewById(R.id.recycler_view);
         mProgressBar = findViewById(R.id.progress_bar);
+// wide
+        mBorderView = findViewById(R.id.border_view);
 
 // timber
         if (!mIsTimber) {
@@ -131,22 +144,35 @@ public class ArticleListActivity extends AppCompatActivity implements
                 view.onApplyWindowInsets(windowInsets);
                 Resources res = getResources();
                 int sysBarHeight = windowInsets.getSystemWindowInsetTop() + mToolbar.getLayoutParams().height;
-                int offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + sysBarHeight;
+                int offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin);
                 int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
                 int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
 
+                if ((getWindow().getDecorView().getWindowSystemUiVisibility() & (int) View.SYSTEM_UI_FLAG_FULLSCREEN) !=
+                        View.SYSTEM_UI_FLAG_FULLSCREEN) {
+                    offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + sysBarHeight;
+                }
+
                 mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
 
-                offsetTop = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
-                mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetTop);
+                int offsetSwipe = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
+                mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
 
+// wide
+
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)mBorderView.getLayoutParams();
+                lp.setMargins(lp.leftMargin,offsetTop,lp.rightMargin,lp.bottomMargin);
+
+                lp = (ViewGroup.MarginLayoutParams)mPager.getLayoutParams();
+                lp.setMargins(lp.leftMargin,offsetTop,lp.rightMargin,lp.bottomMargin);
+
+// wide
                 return windowInsets;
             }
         });
 
 
         setSupportActionBar(mToolbar);
-
         mToolbarLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,6 +182,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("");
+
         }
 
         setupRecycler();
@@ -166,8 +193,36 @@ public class ArticleListActivity extends AppCompatActivity implements
             refresh(ACTION_TIME_REFRESH);
         }
 
-        getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
+// wide
+// viewpager
+        mStartingItemPosition = -1;
+        Resources res = getResources();
+        mPager = findViewById(R.id.viewpager_container);
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setPageMargin((int) TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        res.getInteger(R.integer.pager_side_margin), res.getDisplayMetrics()));
+        mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
 
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mCurrentItemPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        mPager.setVisibility(View.VISIBLE);
+// wide
+
+        getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
 
     @Override
@@ -186,6 +241,13 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_fullscreen) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_FULLSCREEN
+            );
+            getSupportActionBar().hide();
             return true;
         }
 
@@ -245,7 +307,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        ((ArticleListAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
+
 
     }
 
@@ -255,7 +318,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onCallback( View view, int pos) {
+    public void onCallback(View view, int pos) {
         if (mIsRefreshing) {
             showErrorDialog(FRAGMENT_ERROR_WAIT);
             return;
@@ -339,7 +402,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private void setupRecycler() {
         Config.Span sp = Config.getDisplayMetrics(this);
 
-        ArticleListAdapter adapter = new ArticleListAdapter(this, sp);
+        RecyclerAdapter adapter = new RecyclerAdapter(this, sp);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(

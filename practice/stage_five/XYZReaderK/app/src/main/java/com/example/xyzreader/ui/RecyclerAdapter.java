@@ -4,7 +4,6 @@ package com.example.xyzreader.ui;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -24,21 +23,18 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.remote.Config;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat outputFormat;
     private GregorianCalendar startOfEpoch;
@@ -48,7 +44,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     private Config.Span mSpan;
 
     // correction!!!
-    public ArticleListAdapter(Context context, Config.Span sp) {
+    public RecyclerAdapter(Context context, Config.Span sp) {
         mContext = context;
         mSpan = sp;
 // TODO SimpleDateFormat.instance()

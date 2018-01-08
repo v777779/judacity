@@ -6,44 +6,25 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Slide;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.ItemsContract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import timber.log.Timber;
-
 import static com.example.xyzreader.remote.Config.ARTICLE_DETAIL_LOADER_ID;
-import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
-import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
@@ -52,7 +33,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private ViewPager mPager;
-    private ArticleDetailAdapter mPagerAdapter;
+    private ViewPagerAdapter mPagerAdapter;
     //    private ScreenSlidePagerAdapter mPagerAdapter;
     private Cursor mCursor;
 
@@ -101,7 +82,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 // viewpager
         Resources res = getResources();
         mPager = findViewById(R.id.viewpager_container);
-        mPagerAdapter = new ArticleDetailAdapter(getSupportFragmentManager(), this);
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageMargin((int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP,

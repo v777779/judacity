@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">XYZ Reader</string>
     <string name="action_settings">Settings</string>
+    <string name="action_fullscreen">Full Screen</string>
 
     <!--preferences-->
     <string name="pref_reload_time_key">pref_load_time_key</string>
