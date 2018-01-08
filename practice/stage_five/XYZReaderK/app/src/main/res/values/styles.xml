@@ -78,11 +78,13 @@
     <style name="TextSubTitle" parent="TextNormal">
         <item name="android:textColor">@color/colorTitleSubTitle</item>
         <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/subtitle_text_size</item>
     </style>
 
     <style name="TextBody" parent="TextNormal">
         <item name="android:textColor">@color/colorBody</item>
         <item name="android:lineSpacingMultiplier">1.25</item>
+        <item name="android:textSize">@dimen/body_text_size</item>
     </style>
 
     <!--progress bar-->
@@ -108,15 +110,15 @@
 
 
     <!--card-->
-    <style name="CardTextNormal" parent="TextNormal">
+    <style name="CardSubTitleText" parent="TextNormal">
         <item name="android:textColor">@color/colorCardText</item>
-        <item name="android:textSize">@dimen/card_text_size</item>
+        <item name="android:textSize">@dimen/card_subtitle_text_size</item>
     </style>
 
-    <style name="CardTextHead" parent="TextNormal">
+    <style name="CardTitleText" parent="TextNormal">
         <item name="android:textColor">@color/colorCardHead</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/card_head_size</item>
+        <item name="android:textSize">@dimen/card_title_text_size</item>
     </style>
 
 

@@ -16,14 +16,19 @@
     <dimen name="bold_text_size">20sp</dimen>
     <dimen name="large_text_size">24sp</dimen>
 
-    <!--title-->
+    <!--viewpager_item_text-->
     <dimen name="title_text_size">34sp</dimen>
+    <dimen name="subtitle_text_size">14sp</dimen>
+    <dimen name="body_text_size">14sp</dimen>
 
+    <!--recycler_item_title-->
+    <dimen name="card_title_text_size">16sp</dimen>
+    <dimen name="card_subtitle_text_size">12sp</dimen>
 
-
-    <!--card_text-->
-    <dimen name="card_text_size">12sp</dimen>
-    <dimen name="card_head_size">16sp</dimen>
+    <!--linear-->
+    <dimen name="liner_fixed_width">500dp</dimen>
+    <dimen name="liner_top_margin">48dp</dimen>
+    <dimen name="liner_bottom_margin">64dp</dimen>
 
     <!--margins-->
     <dimen name="micro_margin">2dp</dimen>
@@ -35,9 +40,6 @@
     <dimen name="title_text_padding_bottom">4dp</dimen>
 
 
-
-
-
     <!--image-->
     <!--<dimen name="image_back_width">100dp</dimen>-->
     <!--<dimen name="image_back_height">100dp</dimen>-->
@@ -47,10 +49,10 @@
     <dimen name="image_back_height">100dp</dimen>
     <dimen name="image_back_angle">@dimen/angle_90</dimen>
 
-    <item name="match_parent" type= "dimen">-1</item>
-    <item name="wrap_content" type= "dimen">-2</item>
-    <item name="angle_90" type= "dimen">-90</item>
-    <item name="angle_135" type= "dimen">135</item>
+    <item name="match_parent" type="dimen">-1</item>
+    <item name="wrap_content" type="dimen">-2</item>
+    <item name="angle_90" type="dimen">-90</item>
+    <item name="angle_135" type="dimen">135</item>
 
 
     <!--appbar-->
@@ -64,6 +66,6 @@
 
     <!--page-->
     <dimen name="page_margin">@dimen/page_margin_integer</dimen>
-    <item name="page_margin_integer" type= "dimen">1</item>
+    <item name="page_margin_integer" type="dimen">1</item>
 
 </resources>
