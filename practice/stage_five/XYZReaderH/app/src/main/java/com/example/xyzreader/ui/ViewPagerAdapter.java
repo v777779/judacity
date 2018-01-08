@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 
 import com.example.xyzreader.data.ArticleLoader;
 
-public class ArticleDetailAdapter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private Cursor mCursor;
     private ICallback mCallback;
     private long mStartingItemId;
     private long mCurrentItemId;
 
 
-    public ArticleDetailAdapter(FragmentManager fm, ICallback callback) {
+    public ViewPagerAdapter(FragmentManager fm, ICallback callback) {
         super(fm);
         mCallback = callback;
     }
@@ -38,10 +38,14 @@ public class ArticleDetailAdapter extends FragmentStatePagerAdapter {
         return (mCursor != null) ? mCursor.getCount() : 0;
     }
 
-    public void swap(Cursor cursor, long startingItemId) {
+    public void swap(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return;
         mCursor = cursor;
-        mStartingItemId = startingItemId;
         notifyDataSetChanged();
     }
+
+    public void setStartingItemId(long startingItemId) {
+        mStartingItemId = startingItemId;
+    }
+
 }

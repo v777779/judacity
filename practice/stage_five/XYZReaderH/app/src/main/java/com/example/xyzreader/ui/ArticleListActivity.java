@@ -48,7 +48,6 @@ import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_NO_NETWORK;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_FINISHED;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_STARTED;
-import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
@@ -56,7 +55,6 @@ import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
 import static com.example.xyzreader.remote.Config.EXTRA_EMPTY_CURSOR;
-import static com.example.xyzreader.remote.Config.EXTRA_REFRESHING;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_CLOSE;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_EXIT;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
@@ -245,7 +243,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        ((ArticleListAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
 
     }
 
@@ -339,7 +337,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private void setupRecycler() {
         Config.Span sp = Config.getDisplayMetrics(this);
 
-        ArticleListAdapter adapter = new ArticleListAdapter(this, sp);
+        RecyclerAdapter adapter = new RecyclerAdapter(this, sp);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(
