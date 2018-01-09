@@ -4,10 +4,14 @@ package com.example.xyzreader.ui;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -152,13 +156,12 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {  // get bundle
         super.onCreate(savedInstanceState);
+// test!!!
         mSharedCallback = setupSharedCallback();
         setEnterSharedElementCallback(mSharedCallback);
-        setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.move));
+//        setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.move));
+// end test!!!
         postponeEnterTransition();
-
-
-
 
         Bundle args = getArguments();
         if (args != null) {
@@ -355,6 +358,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     }
 
+
     // callbacks
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -444,7 +448,8 @@ public class ArticleDetailFragment extends Fragment implements
                                                    boolean isFirstResource) {
                         mProgressBarImage.setVisibility(View.INVISIBLE);
                         ActivityCompat.startPostponedEnterTransition(getActivity());
-
+// test!!!
+                        mBitmap = ((BitmapDrawable)resource).getBitmap();
                         return false;
                     }
                 })
@@ -454,13 +459,15 @@ public class ArticleDetailFragment extends Fragment implements
 
         mToolbarImage.setTransitionName(getString(R.string.transition_image, mCurrentItemId));
         mTitleView.setTransitionName(getString(R.string.transition_title, mCurrentItemId));
-// test!!!
-        mToolbarImage.setTransitionName("image1221");
-        mTitleView.setTransitionName("");
-
         mTextSource = mCursor.getString(ArticleLoader.Query.BODY);  // load all text
         mTextSize = 0;
         loadTextToLayout(LOAD_NEXT_PAGE);
+    }
+
+// test!!!
+    private Bitmap mBitmap;
+    public Bitmap getBitmap(){
+        return mBitmap;
     }
 
 

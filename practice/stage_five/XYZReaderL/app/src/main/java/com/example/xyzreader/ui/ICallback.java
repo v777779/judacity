@@ -9,6 +9,7 @@ package com.example.xyzreader.ui;
 
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 
@@ -23,5 +24,7 @@ public interface ICallback {
     void onCallback(View view, int pos);
     void onCallback(int mode);
     void onCallback(ArticleDetailFragment fragment);
+
+    void onCallback(Bitmap bitmap);
 
 }

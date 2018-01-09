@@ -61,7 +61,7 @@
 
 
     <View
-        android:id="@+id/fragment_background"
+        android:id="@+id/border_view"
         android:layout_width="@dimen/micro_margin"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/small_margin"
@@ -72,6 +72,21 @@
         app:layout_constraintStart_toStartOf="@+id/guide_v2"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:id="@+id/viewpager_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorBodyBack"
+        android:alpha="0.2"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guide_v2"
+        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
     <ImageView
         android:id="@+id/fragment_image"
@@ -82,41 +97,31 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:alpha="0.20"
-        android:background="@color/colorBodyBack"
+
         android:scaleType="centerCrop"
         android:src="@drawable/image_014"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guide_v2"
-        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
+        app:layout_constraintTop_toTopOf="@+id/guide_h1"
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+        />
+
+
+
+      <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:visibility="visible"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guide_v2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-
-    <!--<android.support.v4.view.ViewPager-->
-    <!--android:id="@+id/viewpager_container"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:background="@color/colorBodyBack"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toEndOf="@+id/border_view"-->
-    <!--app:layout_constraintTop_toTopOf="parent">-->
-
-    <!--</android.support.v4.view.ViewPager>-->
+    </android.support.v4.view.ViewPager>
 
 
     <!--<ScrollView-->

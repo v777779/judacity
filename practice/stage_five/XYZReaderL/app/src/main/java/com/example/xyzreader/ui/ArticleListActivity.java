@@ -1,6 +1,7 @@
 package com.example.xyzreader.ui;
 
 
+import android.annotation.SuppressLint;
 import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,18 +23,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
-import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.transition.TransitionInflater;
-import android.transition.TransitionManager;
+import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,9 +44,11 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowInsets;
+import android.view.animation.Interpolator;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Scroller;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -44,9 +56,11 @@ import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.remote.Config;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
 import timber.log.Timber;
 
@@ -102,8 +116,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     private SharedElementCallback mSharedCallback;
 
     // viewpager
-//    private ViewPager mPager;
-//    private ViewPagerAdapter mPagerAdapter;
+    private ViewPager mPager;
+    private ViewPagerAdapter mPagerAdapter;
     private Resources mRes;
     private boolean mIsWide;
     private boolean mIsLand;
@@ -134,6 +148,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRecyclerView = findViewById(R.id.recycler_view);
         mProgressBar = findViewById(R.id.progress_bar);
 // wide
+        mPager = findViewById(R.id.viewpager_container);
+//        mPager.setScrollDurationFactor(2);
+
         mRes = getResources();
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
@@ -180,13 +197,16 @@ public class ArticleListActivity extends AppCompatActivity implements
                     ViewGroup.MarginLayoutParams lp;
 
 
-                    lp = (ViewGroup.MarginLayoutParams) ((View)findViewById(R.id.fragment_background)).getLayoutParams();
+                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_container)).getLayoutParams();
                     lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
 
-                    lp = (ViewGroup.MarginLayoutParams) findViewById(R.id.fragment_image).getLayoutParams();
+                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.border_view)).getLayoutParams();
                     lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
 
-                    lp = (ViewGroup.MarginLayoutParams) findViewById(R.id.fragment_container).getLayoutParams();
+                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.fragment_image)).getLayoutParams();
+                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
+
+                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_background)).getLayoutParams();
                     lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
 
 // wide
@@ -217,36 +237,39 @@ public class ArticleListActivity extends AppCompatActivity implements
             refresh(ACTION_TIME_REFRESH);
         }
 
-//// wide
-//        if (mIsWide && mIsLand) {
-//// viewpager
-//            mStartingItemPosition = -1;
-//            Resources res = getResources();
-//            mPager = findViewById(R.id.viewpager_container);
-//            mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
-//            mPager.setAdapter(mPagerAdapter);
-//            mPager.setPageMargin((int) TypedValue
-//                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-//                            res.getInteger(R.integer.pager_side_margin), res.getDisplayMetrics()));
-//            mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
-//
-//            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//                @Override
-//                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                }
-//
-//                @Override
-//                public void onPageSelected(int position) {
-//                    mCurrentItemPosition = position;
-//                }
-//
-//                @Override
-//                public void onPageScrollStateChanged(int state) {
-//                }
-//            });
-//            mPager.setVisibility(View.INVISIBLE);
 // wide
-//        }
+        if (mIsWide && mIsLand) {
+// viewpager
+            mStartingItemPosition = -1;
+            Resources res = getResources();
+            mPager = findViewById(R.id.viewpager_container);
+            mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+            mPager.setAdapter(mPagerAdapter);
+            mPager.setPageMargin((int) TypedValue
+                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                            res.getInteger(R.integer.pager_side_margin), res.getDisplayMetrics()));
+            mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
+
+            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    mCurrentItemPosition = position;
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                }
+            });
+            mPager.setVisibility(View.INVISIBLE);
+            mPager.setPageTransformer(false, new PageTransformer());
+//            mPager.setScrollDurationFactor(1);
+
+// wide
+        }
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
 
@@ -336,14 +359,14 @@ public class ArticleListActivity extends AppCompatActivity implements
         mCursor = cursor;
         ((RecyclerAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
 
-        if(mFragment != null) {
+        if (mFragment != null) {
             mFragment.swap(mCursor);
         }
 // wide
-//        if (mIsWide && mIsLand) {
-//            mPagerAdapter.swap(cursor);
-//            mPagerAdapter.setStartingItemId(mStartingItemId);
-//        }
+        if (mIsWide && mIsLand) {
+            mPagerAdapter.swap(cursor);
+            mPagerAdapter.setStartingItemId(mStartingItemId);
+        }
 
     }
 
@@ -352,6 +375,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(null);
     }
 
+
     @Override
     public void onCallback(View view, int pos) {
         if (mIsRefreshing) {
@@ -359,26 +383,26 @@ public class ArticleListActivity extends AppCompatActivity implements
             return;
         }
 
-            long id = mRecyclerView.getAdapter().getItemId(pos);
-            Uri uri = ItemsContract.Items.buildItemUri(id);
+        long id = mRecyclerView.getAdapter().getItemId(pos);
+        Uri uri = ItemsContract.Items.buildItemUri(id);
 
-            View mImage = view.findViewById(R.id.article_image);
-            View mTitle = view.findViewById(R.id.article_title);
-            View mSubTitle = view.findViewById(R.id.article_subtitle);
+        View mImage = view.findViewById(R.id.article_image);
+        View mTitle = view.findViewById(R.id.article_title);
+        View mSubTitle = view.findViewById(R.id.article_subtitle);
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
-            intent.putExtra(BUNDLE_STARTING_ITEM_POS, pos);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
+        intent.putExtra(BUNDLE_STARTING_ITEM_POS, pos);
 
 // works but no used
 //        Intent intent = new Intent(this, ArticleDetailActivity.class);
 //        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));
 
-            Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
-            Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
+        Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
+        Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
 
-            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this, p1, p2);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, p1, p2);
         if (!(mIsWide && mIsLand)) {
 
             startActivity(intent, optionsCompat.toBundle());
@@ -389,9 +413,27 @@ public class ArticleListActivity extends AppCompatActivity implements
             mStartingItemId = id;
             mStartingItemPosition = pos;
 
-//            mPagerAdapter.setStartingItemId(mStartingItemId);
-//            mPager.setCurrentItem(mStartingItemPosition);
-//            mPager.setVisibility(View.VISIBLE);
+
+
+            if (mCachedBitmap != null) {
+                ImageView viewPagerImage = findViewById(R.id.fragment_image);
+                viewPagerImage.setImageBitmap(mCachedBitmap);
+
+                View viewPagerBackground = findViewById(R.id.viewpager_background);
+                viewPagerBackground.setBackgroundColor(mCachedColor);
+                viewPagerBackground.setAlpha(1f);
+            }
+
+            mPagerAdapter.setStartingItemId(mStartingItemId);
+            mPager.setCurrentItem(mStartingItemPosition, true);
+            mPager.setVisibility(View.VISIBLE);
+
+//            intent = new Intent(this, ArticleListActivity.class);  // does not work push in stack and fading flashes all screen
+//            intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
+//            intent.putExtra(BUNDLE_STARTING_ITEM_POS, pos);
+//
+//            startActivity(intent, optionsCompat.toBundle());
+
 
 //            Fragment fragment = FragmentDetailActivity.newInstance(mStartingItemId, mStartingItemPosition);
 //            FragmentManager fm = getSupportFragmentManager();
@@ -402,24 +444,23 @@ public class ArticleListActivity extends AppCompatActivity implements
 //                    .commit();
 
 
-            Fragment fragment = ArticleDetailFragment.newInstance(mStartingItemId, mStartingItemId);
-            FragmentManager fm = getSupportFragmentManager();
-            fm.popBackStack("transaction",FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-
-            fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.explode));
-            fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.transform));
-
-
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .addSharedElement(mImage, "image1221")
-//                    .addSharedElement(mTitle, mTitle.getTransitionName())
-                    .replace(R.id.fragment_container,fragment)
-                    .addToBackStack("transaction")
-                    .commit();
-
-              getSupportFragmentManager().executePendingTransactions();
+//            Fragment fragment = ArticleDetailFragment.newInstance(mStartingItemId, mStartingItemId);
+//            FragmentManager fm = getSupportFragmentManager();
+//            fm.popBackStack("transaction",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//
+//
+//            fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.explode));
+//            fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.transform));
+//
+//
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .addSharedElement(mImage, "image1221")
+////                    .addSharedElement(mTitle, mTitle.getTransitionName())
+//                    .replace(R.id.fragment_container,fragment)
+//                    .addToBackStack("transaction")
+//                    .commit();
+//
 
 
         }
@@ -461,6 +502,25 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onCallback(ArticleDetailFragment fragment) {  // DetailActivity transition support
+        if(fragment == null) {
+            mCachedBitmap = null;
+            return;
+        }
+        Bitmap bitmap = fragment.getBitmap();
+        if (bitmap != null) {
+            mCachedBitmap = bitmap;
+            Palette p = Palette.generate(bitmap, 12);
+            mCachedColor = p.getDarkMutedColor(ContextCompat.getColor(this, R.color.colorBackMask));
+        } else {
+            mCachedBitmap = null;
+        }
+    }
+
+    private int mCachedColor;
+    private Bitmap mCachedBitmap;
+
+    @Override
+    public void onCallback(Bitmap bitmap) {
 
     }
 
@@ -605,4 +665,46 @@ public class ArticleListActivity extends AppCompatActivity implements
         };
 
     }
+
+    private class PageTransformer implements ViewPager.PageTransformer {
+
+        @Override
+        public void transformPage(View page, float position) {
+// anim1
+//            page.setTranslationX(page.getWidth()*-position);
+//
+//            if(position <= -1.0F || position >= 1.0F) {
+//                page.setAlpha(0.0F);
+//            } else if( position == 0.0F ) {
+//                page.setAlpha(1.0F);
+//            } else {
+//                // position is between -1.0F & 0.0F OR 0.0F & 1.0F
+//                page.setAlpha(1.0F - Math.abs(position));
+//            }
+
+
+            View dummyImageView = page.findViewById(R.id.article_image);
+            int pageWidth = page.getWidth();
+
+
+            if (position < -1) { // [-Infinity,-1)
+                // This page is way off-screen to the left.
+                page.setAlpha(1);
+
+
+            } else if (position <= 1) { // [-1,1]
+
+                dummyImageView.setTranslationX(-position * (pageWidth / 2)); //Half the normal speed
+
+            } else { // (1,+Infinity]
+                // This page is way off-screen to the right.
+                page.setAlpha(1);
+            }
+// test!!!
+//            page.setAlpha(0.0f);
+
+        }
+    }
+
+
 }

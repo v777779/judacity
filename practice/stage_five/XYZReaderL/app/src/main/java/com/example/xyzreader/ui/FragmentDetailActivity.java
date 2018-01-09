@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -238,6 +239,11 @@ public class FragmentDetailActivity extends Fragment implements ICallback {
 
     @Override
     public void onCallback(ArticleDetailFragment fragment) {
+
+    }
+
+    @Override
+    public void onCallback(Bitmap bitmap) {
 
     }
 

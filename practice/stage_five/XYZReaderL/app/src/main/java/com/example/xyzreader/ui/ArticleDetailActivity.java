@@ -5,6 +5,7 @@ import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -220,6 +221,11 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     @Override
     public void onCallback(ArticleDetailFragment fragment) {
         mCurrentFragment = fragment;
+    }
+
+    @Override
+    public void onCallback(Bitmap bitmap) {
+
     }
 
     private SharedElementCallback setupSharedCallback() {

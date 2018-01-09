@@ -15,6 +15,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private long mCurrentItemId;
 
 
+
     public ViewPagerAdapter(FragmentManager fm, ICallback callback) {
         super(fm);
         mCallback = callback;

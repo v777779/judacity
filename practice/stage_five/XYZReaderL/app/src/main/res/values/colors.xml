@@ -59,5 +59,9 @@
     <!--buttons-->
     <color name="colorBackButton">#2909266c</color>
     <color name="colorBackBottom">#2909266c</color>
+
+    <!--test-->
+    <color name="colorBackMask">#FF333333</color>
+
 </resources>
 
