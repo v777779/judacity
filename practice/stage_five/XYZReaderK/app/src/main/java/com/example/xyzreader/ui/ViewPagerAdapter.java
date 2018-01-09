@@ -38,10 +38,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         return (mCursor != null) ? mCursor.getCount() : 0;
     }
 
-    public void swap(Cursor cursor, long startingItemId) {
+    public void swap(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return;
         mCursor = cursor;
-        mStartingItemId = startingItemId;
         notifyDataSetChanged();
+    }
+    public void setStartingItemId(long startingItemId) {
+        mStartingItemId = startingItemId;
     }
 }

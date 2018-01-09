@@ -4,11 +4,14 @@ package com.example.xyzreader.ui;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +28,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +58,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -108,6 +113,10 @@ public class ArticleDetailFragment extends Fragment implements
     // skip
     private boolean mIsSkipToEnd;
 
+    // wide
+    private boolean mIsWide;
+    private boolean mIsLand;
+
 
     public static Fragment newInstance(long startingItemId, long currentItemId) {
         Bundle arguments = new Bundle();
@@ -123,19 +132,40 @@ public class ArticleDetailFragment extends Fragment implements
         super.onAttach(context);
         mCaecilia = Typeface.createFromAsset(context.getAssets(), "caecilia-light-webfont.ttf");
 
-
         Timber.d("lifecycle fragment: onAttach()");
     }
 
+    public SharedElementCallback mSharedCallback;
+
+    private SharedElementCallback setupSharedCallback() {
+        return new SharedElementCallback() {
+
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                int k = 1;
+            }
+
+
+        };
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {  // get bundle
         super.onCreate(savedInstanceState);
+        mSharedCallback = setupSharedCallback();
+        setEnterSharedElementCallback(mSharedCallback);
+        setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.move));
+        postponeEnterTransition();
+
+
+
+
         Bundle args = getArguments();
         if (args != null) {
             mStartingItemId = getArguments().getLong(BUNDLE_FRAGMENT_STARTING_ID);
             mCurrentItemId = getArguments().getLong(BUNDLE_FRAGMENT_CURRENT_ID);
         }
+
 
         Timber.d("lifecycle fragment: onCreate():" + mCurrentItemId);
 // fab ***hiding***
@@ -152,7 +182,7 @@ public class ArticleDetailFragment extends Fragment implements
 //                mIsTransition = true;
 //            }
 //        });
-
+        getLoaderManager().initLoader(0, null, this);
 
     }
 
@@ -161,8 +191,15 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+        return mRootView;
+    }
 
-// bind
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        // bind
         mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
         mLinearLayout = mRootView.findViewById(R.id.linear_body);
 // text
@@ -177,6 +214,10 @@ public class ArticleDetailFragment extends Fragment implements
 // progress
         mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
         mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
+
+// wide
+        mIsWide = getResources().getBoolean(R.bool.is_wide);
+        mIsLand = getResources().getBoolean(R.bool.is_land);
 
         Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -290,7 +331,7 @@ public class ArticleDetailFragment extends Fragment implements
         mProgressBarText.setVisibility(View.VISIBLE);
         mProgressBarImage.setVisibility(View.VISIBLE);
 
-        return mRootView;
+//        return mRootView;
     }
 
 
@@ -304,7 +345,7 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {   // set adapter
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+
     }
 
 
@@ -403,6 +444,7 @@ public class ArticleDetailFragment extends Fragment implements
                                                    boolean isFirstResource) {
                         mProgressBarImage.setVisibility(View.INVISIBLE);
                         ActivityCompat.startPostponedEnterTransition(getActivity());
+
                         return false;
                     }
                 })
@@ -412,7 +454,9 @@ public class ArticleDetailFragment extends Fragment implements
 
         mToolbarImage.setTransitionName(getString(R.string.transition_image, mCurrentItemId));
         mTitleView.setTransitionName(getString(R.string.transition_title, mCurrentItemId));
-
+// test!!!
+        mToolbarImage.setTransitionName("image1221");
+        mTitleView.setTransitionName("");
 
         mTextSource = mCursor.getString(ArticleLoader.Query.BODY);  // load all text
         mTextSize = 0;

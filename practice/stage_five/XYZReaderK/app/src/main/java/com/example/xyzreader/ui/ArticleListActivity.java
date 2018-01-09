@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+
 import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,29 +8,31 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowInsets;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -77,6 +80,10 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO Layouts on WXGA
 // TODO BROADCAST ACTION in Exception of UpdateService and mIsRefreshing
 
+
+// TODO buttons in bottom view
+// TODO mPagerAdapter setCurrentItemId() add function
+
     private static boolean mIsTimber;
 
 
@@ -85,8 +92,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-    private View mBorderView;
-
 
     private BroadcastReceiver mRefreshingReceiver;
     private boolean mIsSwipeRefresh;
@@ -97,16 +102,25 @@ public class ArticleListActivity extends AppCompatActivity implements
     private SharedElementCallback mSharedCallback;
 
     // viewpager
-    private ViewPager mPager;
-    private ViewPagerAdapter mPagerAdapter;
+//    private ViewPager mPager;
+//    private ViewPagerAdapter mPagerAdapter;
+    private Resources mRes;
+    private boolean mIsWide;
+    private boolean mIsLand;
+    private long mStartingItemId;
     private int mStartingItemPosition;
     private int mCurrentItemPosition;
 
+    private Cursor mCursor;
+    private FragmentDetailActivity mFragment;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        postponeEnterTransition();
+
 // transition
         mSharedCallback = setupSharedCallback();
         setExitSharedElementCallback(mSharedCallback);
@@ -120,7 +134,10 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRecyclerView = findViewById(R.id.recycler_view);
         mProgressBar = findViewById(R.id.progress_bar);
 // wide
-        mBorderView = findViewById(R.id.border_view);
+        mRes = getResources();
+        mIsWide = mRes.getBoolean(R.bool.is_wide);
+        mIsLand = mRes.getBoolean(R.bool.is_land);
+
 
 // timber
         if (!mIsTimber) {
@@ -159,14 +176,19 @@ public class ArticleListActivity extends AppCompatActivity implements
                 mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
 
 // wide
+                if (mIsWide && mIsLand) {
+                    ViewGroup.MarginLayoutParams lp;
 
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)mBorderView.getLayoutParams();
-                lp.setMargins(lp.leftMargin,offsetTop,lp.rightMargin,lp.bottomMargin);
+                    lp = (ViewGroup.MarginLayoutParams) ((View)findViewById(R.id.fragment_background)).getLayoutParams();
+                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
 
-                lp = (ViewGroup.MarginLayoutParams)mPager.getLayoutParams();
-                lp.setMargins(lp.leftMargin,offsetTop,lp.rightMargin,lp.bottomMargin);
+                    lp = (ViewGroup.MarginLayoutParams) ((View)findViewById(R.id.fragment_image)).getLayoutParams();
+                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
 
+                    lp = (ViewGroup.MarginLayoutParams) ((View)findViewById(R.id.fragment_container)).getLayoutParams();
+                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
 // wide
+                }
                 return windowInsets;
             }
         });
@@ -193,35 +215,36 @@ public class ArticleListActivity extends AppCompatActivity implements
             refresh(ACTION_TIME_REFRESH);
         }
 
+//// wide
+//        if (mIsWide && mIsLand) {
+//// viewpager
+//            mStartingItemPosition = -1;
+//            Resources res = getResources();
+//            mPager = findViewById(R.id.viewpager_container);
+//            mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+//            mPager.setAdapter(mPagerAdapter);
+//            mPager.setPageMargin((int) TypedValue
+//                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+//                            res.getInteger(R.integer.pager_side_margin), res.getDisplayMetrics()));
+//            mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
+//
+//            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//                @Override
+//                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                }
+//
+//                @Override
+//                public void onPageSelected(int position) {
+//                    mCurrentItemPosition = position;
+//                }
+//
+//                @Override
+//                public void onPageScrollStateChanged(int state) {
+//                }
+//            });
+//            mPager.setVisibility(View.INVISIBLE);
 // wide
-// viewpager
-        mStartingItemPosition = -1;
-        Resources res = getResources();
-        mPager = findViewById(R.id.viewpager_container);
-        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setPageMargin((int) TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        res.getInteger(R.integer.pager_side_margin), res.getDisplayMetrics()));
-        mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
-
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mCurrentItemPosition = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-        mPager.setVisibility(View.VISIBLE);
-// wide
-
+//        }
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
 
@@ -307,8 +330,18 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (cursor != null && cursor.getCount() == 0) return;
+        mCursor = cursor;
         ((RecyclerAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
 
+        if(mFragment != null) {
+            mFragment.swap(mCursor);
+        }
+// wide
+//        if (mIsWide && mIsLand) {
+//            mPagerAdapter.swap(cursor);
+//            mPagerAdapter.setStartingItemId(mStartingItemId);
+//        }
 
     }
 
@@ -324,31 +357,88 @@ public class ArticleListActivity extends AppCompatActivity implements
             return;
         }
 
-        long id = mRecyclerView.getAdapter().getItemId(pos);
-        Uri uri = ItemsContract.Items.buildItemUri(id);
+            long id = mRecyclerView.getAdapter().getItemId(pos);
+            Uri uri = ItemsContract.Items.buildItemUri(id);
 
-        View mImage = view.findViewById(R.id.article_image);
-        View mTitle = view.findViewById(R.id.article_title);
-        View mSubTitle = view.findViewById(R.id.article_subtitle);
+            View mImage = view.findViewById(R.id.article_image);
+            View mTitle = view.findViewById(R.id.article_title);
+            View mSubTitle = view.findViewById(R.id.article_subtitle);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
-        intent.putExtra(BUNDLE_STARTING_ITEM_POS, pos);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
+            intent.putExtra(BUNDLE_STARTING_ITEM_POS, pos);
 
 // works but no used
 //        Intent intent = new Intent(this, ArticleDetailActivity.class);
 //        intent.putExtra(BUNDLE_STARTING_ITEM_ID, ItemsContract.Items.getItemId(uri));
 
-        Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
-        Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
+            Pair<View, String> p1 = Pair.create(mImage, mImage.getTransitionName());  // unique name
+            Pair<View, String> p2 = Pair.create(mTitle, mTitle.getTransitionName());
 
-        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this, p1, p2);
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this, p1, p2);
+        if (!(mIsWide && mIsLand)) {
 
-        startActivity(intent, optionsCompat.toBundle());
+            startActivity(intent, optionsCompat.toBundle());
+        }
 
+// wide
+        if (mIsWide && mIsLand) {
+            mStartingItemId = id;
+            mStartingItemPosition = pos;
+
+//            mPagerAdapter.setStartingItemId(mStartingItemId);
+//            mPager.setCurrentItem(mStartingItemPosition);
+//            mPager.setVisibility(View.VISIBLE);
+
+//            Fragment fragment = FragmentDetailActivity.newInstance(mStartingItemId, mStartingItemPosition);
+//            FragmentManager fm = getSupportFragmentManager();
+//            fm.beginTransaction()
+//                    .addSharedElement(mImage, mImage.getTransitionName())
+//                    .addSharedElement(mTitle, mTitle.getTransitionName())
+//                    .replace(R.id.fragment_container,fragment)
+//                    .commit();
+
+
+            Fragment fragment = ArticleDetailFragment.newInstance(mStartingItemId, mStartingItemId);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.popBackStack("transaction",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+
+            fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.explode));
+            fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.transform));
+
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .addSharedElement(mImage, "image1221")
+//                    .addSharedElement(mTitle, mTitle.getTransitionName())
+                    .replace(R.id.fragment_container,fragment)
+                    .addToBackStack("transaction")
+                    .commit();
+
+              getSupportFragmentManager().executePendingTransactions();
+
+
+        }
     }
 
+
+    private boolean isValidId(long id) {
+        if (mCursor == null) return false;
+        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+            if (mCursor.getLong(ArticleLoader.Query._ID) == id) {
+                return true;
+            }
+        }
+        int k = 21;
+        return false;
+    }
+
+
+    public Cursor getCursor() {
+        return mCursor;
+    }
 
     @Override
     public void onCallback(int mode) {  // FragmentError Support
