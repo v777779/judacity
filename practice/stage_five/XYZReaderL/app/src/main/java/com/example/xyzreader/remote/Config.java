@@ -60,7 +60,7 @@ public class Config {
     public static final String BUNDLE_FRAGMENT_CURRENT_POS = "bundle_fragment_current_pos";
 
     public static final int FRAGMENT_TEXT_SIZE = 2000;
-    public static final int FRAGMENT_TEXT_OFFSET = 700;
+    public static final int FRAGMENT_TEXT_OFFSET = 2000;
 
     public static final boolean LOAD_ALL_PAGES = false;
     public static final boolean LOAD_NEXT_PAGE = true;
