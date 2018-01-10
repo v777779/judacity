@@ -31,6 +31,7 @@ import static com.example.xyzreader.remote.Config.ARTICLE_DETAIL_LOADER_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
+import static com.example.xyzreader.remote.Config.instructiveMotion;
 
 public class ArticleDetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -204,7 +205,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     public void onCallback(int mode) {
     }
 
-
+// TODO remove method
     private List<View> getSharedViews(View view) {
         List<View> list = new ArrayList<>();
         list.add(view.findViewById(R.id.article_image));
@@ -230,7 +231,10 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     @Override
     public void onCallback(ArticleDetailFragment fragment) {
         mCurrentFragment = fragment;
-        instructiveMotion(fragment.getRootView());
+        if(fragment != null && mPager.getVisibility() == View.VISIBLE) {
+            instructiveMotion(this,fragment.getRootView(),mIsLand);
+        }
+
     }
 
     @Override
@@ -258,25 +262,5 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         };
     }
 
-    private void instructiveMotion(View view) {
-        // instructive motion
-        if(view == null || !mIsLand) return;
-        if (!sIsInstructed && mPager.getVisibility() == View.VISIBLE) {
-            int startScrollPos = getResources().getDimensionPixelOffset(R.dimen.instructive_scroll);
-            AnimatorSet as = new AnimatorSet();
-
-            as.playSequentially(
-                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(0),
-                    ObjectAnimator.ofInt(view, "scrollY", startScrollPos).setDuration(550),
-                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(750)
-
-            );
-            as.setStartDelay(500);
-//        as.setDuration(2350);
-            as.start();
-            sIsInstructed = true;
-        }
-
-    }
 
 }

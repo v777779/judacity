@@ -69,5 +69,5 @@
     <item name="page_margin_integer" type="dimen">1</item>
 
     <!--instructive scroll-->
-    <dimen name="instructive_scroll">100dp</dimen>
+    <dimen name="instructive_scroll_position">200dp</dimen>
 </resources>

@@ -83,11 +83,13 @@ import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_CLOSE;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_EXIT;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_WAIT;
+import static com.example.xyzreader.remote.Config.instructiveMotion;
+import static com.example.xyzreader.remote.Config.sIsInstructed;
 
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
-// TODO isInstructive move to Config
+// _TODO isInstructive move to Config
 // TODO Palette to Detail Load status bar
 // TODO Glide load support when transition
 // TODO Landscape bottom bar to mode to side and add side margins to text
@@ -102,7 +104,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO mPagerAdapter setCurrentItemId() add function
 
     private static boolean mIsTimber;
-    private static boolean sIsInstructed;
+
 
     private Toolbar mToolbar;
     private ImageView mToolbarLogo;
@@ -130,6 +132,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private Cursor mCursor;
     private FragmentDetailActivity mFragment;
+    private ArticleDetailFragment mFragmentPage;
 
 
     @Override
@@ -238,6 +241,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             refresh(ACTION_TIME_REFRESH);
+            sIsInstructed = false;
         }
 
 // wide
@@ -418,7 +422,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             mStartingItemId = id;
             mStartingItemPosition = pos;
 
-
             if (mCachedBitmap != null) {
                 ImageView viewPagerImage = findViewById(R.id.fragment_image);
                 viewPagerImage.setImageBitmap(mCachedBitmap);
@@ -426,6 +429,11 @@ public class ArticleListActivity extends AppCompatActivity implements
                 View viewPagerBackground = findViewById(R.id.viewpager_background);
                 viewPagerBackground.setBackgroundColor(mCachedColor);
                 viewPagerBackground.setAlpha(1f);
+            }
+
+// reload first invisible fragment to support instructive transition
+            if(mStartingItemPosition == 0) {
+                mPagerAdapter.notifyDataSetChanged();
             }
 
             mPagerAdapter.setStartingItemId(mStartingItemId);
@@ -521,15 +529,19 @@ public class ArticleListActivity extends AppCompatActivity implements
             mCachedBitmap = null;
         }
 
-        instructiveMotion(fragment.getRootView());
+        if(fragment != null && mPager.getVisibility() == View.VISIBLE) {
+            instructiveMotion(this,fragment.getRootView(),mIsLand);
+        }
     }
 
     private int mCachedColor;
     private Bitmap mCachedBitmap;
 
+// TODO remove callback
+// TODO move private variables to top
     @Override
     public void onCallback(View view) {
-        instructiveMotion(view);
+
     }
 
     // common methods
@@ -715,25 +727,5 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
 
-    private void instructiveMotion(View view) {
-        // instructive motion
-        if(view == null || !mIsLand) return;
-        if (!ArticleListActivity.sIsInstructed && mPager.getVisibility() == View.VISIBLE) {
-            int startScrollPos = getResources().getDimensionPixelOffset(R.dimen.instructive_scroll);
-            AnimatorSet as = new AnimatorSet();
-
-            as.playSequentially(
-                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(0),
-                    ObjectAnimator.ofInt(view, "scrollY", startScrollPos).setDuration(550),
-                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(750)
-
-            );
-            as.setStartDelay(500);
-//        as.setDuration(2350);
-            as.start();
-            ArticleListActivity.sIsInstructed = true;
-        }
-
-    }
 
 }

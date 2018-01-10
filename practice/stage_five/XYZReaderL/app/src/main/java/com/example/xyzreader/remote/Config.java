@@ -1,8 +1,13 @@
 package com.example.xyzreader.remote;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
 
 import com.example.xyzreader.R;
 
@@ -11,6 +16,8 @@ public class Config {
 
     // remoteEndpointUtil
 // correction!!! hardcoded url
+    public static boolean sIsInstructed;
+
     public static final String BASE_URL = "https://go.udacity.com/xyz-reader-json";
 
     // articleListActivity
@@ -219,5 +226,29 @@ public class Config {
 //        mSpanWidth = spanWidth;
 
         return new Span(spanInWidth, spanInHeight, spanWidth, spanHeight);
+    }
+
+    public static void instructiveMotion(Context context, View view, boolean isLand) {
+        // instructive motion
+        if(view == null || !isLand) return;
+        if (!sIsInstructed ) {
+            Resources res =  context.getResources();
+            int scrollPos = res.getDimensionPixelOffset(R.dimen.instructive_scroll_position);
+            int upDuration = (int)res.getInteger(R.integer.instructive_up_duration);
+            int downDuration = (int)res.getInteger(R.integer.instructive_down_duration);
+            int startDelay = (int)res.getInteger(R.integer.instructive_start_delay);
+
+            AnimatorSet as = new AnimatorSet();
+            as.playSequentially(
+                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(0),
+                    ObjectAnimator.ofInt(view, "scrollY", scrollPos).setDuration(upDuration),
+                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(downDuration)
+
+            );
+            as.setStartDelay(startDelay);
+            as.start();
+            sIsInstructed = true;
+        }
+
     }
 }
