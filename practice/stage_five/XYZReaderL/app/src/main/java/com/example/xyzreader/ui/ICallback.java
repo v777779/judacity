@@ -24,7 +24,6 @@ public interface ICallback {
     void onCallback(View view, int pos);
     void onCallback(int mode);
     void onCallback(ArticleDetailFragment fragment);
-
-    void onCallback(Bitmap bitmap);
+    void onCallback(View view);
 
 }

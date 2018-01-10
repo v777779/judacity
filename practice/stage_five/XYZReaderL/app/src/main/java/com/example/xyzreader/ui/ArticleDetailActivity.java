@@ -1,6 +1,8 @@
 package com.example.xyzreader.ui;
 
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -33,6 +35,8 @@ import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
 public class ArticleDetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
+    private static boolean sIsInstructed;
+
     private ViewPager mPager;
     private ViewPagerAdapter mPagerAdapter;
     //    private ScreenSlidePagerAdapter mPagerAdapter;
@@ -49,6 +53,9 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
 
     public SharedElementCallback mSharedCallback;
+
+    // land
+    private boolean mIsLand;
 
 
     @Override
@@ -80,6 +87,8 @@ public class ArticleDetailActivity extends AppCompatActivity implements
             mCurrentItemPosition = savedInstanceState.getInt(BUNDLE_CURRENT_ITEM_POS);
         }
         mIsStartingActivity = savedInstanceState == null;
+
+        mIsLand = getResources().getBoolean(R.bool.is_land);
 
 // viewpager
         Resources res = getResources();
@@ -221,10 +230,11 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     @Override
     public void onCallback(ArticleDetailFragment fragment) {
         mCurrentFragment = fragment;
+        instructiveMotion(fragment.getRootView());
     }
 
     @Override
-    public void onCallback(Bitmap bitmap) {
+    public void onCallback(View view) {
 
     }
 
@@ -246,6 +256,27 @@ public class ArticleDetailActivity extends AppCompatActivity implements
                 }
             }
         };
+    }
+
+    private void instructiveMotion(View view) {
+        // instructive motion
+        if(view == null || !mIsLand) return;
+        if (!sIsInstructed && mPager.getVisibility() == View.VISIBLE) {
+            int startScrollPos = getResources().getDimensionPixelOffset(R.dimen.instructive_scroll);
+            AnimatorSet as = new AnimatorSet();
+
+            as.playSequentially(
+                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(0),
+                    ObjectAnimator.ofInt(view, "scrollY", startScrollPos).setDuration(550),
+                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(750)
+
+            );
+            as.setStartDelay(500);
+//        as.setDuration(2350);
+            as.start();
+            sIsInstructed = true;
+        }
+
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.xyzreader.ui;
 
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -41,6 +43,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -68,6 +71,8 @@ import timber.log.Timber;
 
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_CURRENT_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_STARTING_ID;
+import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
+import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_MOTION;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_OFFSET;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_SIZE;
 import static com.example.xyzreader.remote.Config.LOAD_ALL_PAGES;
@@ -194,12 +199,6 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        return mRootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
 
         // bind
@@ -334,7 +333,8 @@ public class ArticleDetailFragment extends Fragment implements
         mProgressBarText.setVisibility(View.VISIBLE);
         mProgressBarImage.setVisibility(View.VISIBLE);
 
-//        return mRootView;
+
+        return mRootView;
     }
 
 
@@ -357,6 +357,14 @@ public class ArticleDetailFragment extends Fragment implements
         super.onDestroyView();
 
     }
+
+//    private boolean mIsVisible;
+//
+//    @Override
+//    public void setMenuVisibility(boolean menuVisible) {
+//        super.setMenuVisibility(menuVisible);
+//        mIsVisible = menuVisible;
+//    }
 
 
     // callbacks
@@ -449,7 +457,9 @@ public class ArticleDetailFragment extends Fragment implements
                         mProgressBarImage.setVisibility(View.INVISIBLE);
                         ActivityCompat.startPostponedEnterTransition(getActivity());
 // test!!!
-                        mBitmap = ((BitmapDrawable)resource).getBitmap();
+                        mBitmap = ((BitmapDrawable) resource).getBitmap();
+
+
                         return false;
                     }
                 })
@@ -464,9 +474,10 @@ public class ArticleDetailFragment extends Fragment implements
         loadTextToLayout(LOAD_NEXT_PAGE);
     }
 
-// test!!!
+    // test!!!
     private Bitmap mBitmap;
-    public Bitmap getBitmap(){
+
+    public Bitmap getBitmap() {
         return mBitmap;
     }
 
@@ -548,6 +559,10 @@ public class ArticleDetailFragment extends Fragment implements
 
 
         return list;
+    }
+
+    public View getRootView() {
+        return mRootView;
     }
 
 }

@@ -243,8 +243,7 @@ public class FragmentDetailActivity extends Fragment implements ICallback {
     }
 
     @Override
-    public void onCallback(Bitmap bitmap) {
-
+    public void onCallback(View view) {
     }
 
     private SharedElementCallback setupSharedCallback() {

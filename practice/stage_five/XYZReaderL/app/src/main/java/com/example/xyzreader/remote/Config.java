@@ -25,6 +25,7 @@ public class Config {
     public static final int CALLBACK_FRAGMENT_RETRY = 2;
     public static final int CALLBACK_FRAGMENT_CLOSE = 3;
     public static final int CALLBACK_FRAGMENT_EXIT = 5;
+    public static final int CALLBACK_FRAGMENT_MOTION = 7;
 
     public static final String BUNDLE_ARTICLE_ITEM_URI = "bundle_article_item_uri";
     public static final String BUNDLE_STARTING_ITEM_ID = "bundle_starting_item_id";

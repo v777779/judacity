@@ -1,6 +1,8 @@
 package com.example.xyzreader.ui;
 
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
@@ -99,7 +101,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO mPagerAdapter setCurrentItemId() add function
 
     private static boolean mIsTimber;
-
+    private static boolean sIsInstructed;
 
     private Toolbar mToolbar;
     private ImageView mToolbarLogo;
@@ -258,6 +260,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 @Override
                 public void onPageSelected(int position) {
                     mCurrentItemPosition = position;
+
                 }
 
                 @Override
@@ -267,6 +270,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             mPager.setVisibility(View.INVISIBLE);
             mPager.setPageTransformer(false, new PageTransformer());
 //            mPager.setScrollDurationFactor(1);
+
 
 // wide
         }
@@ -414,7 +418,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             mStartingItemPosition = pos;
 
 
-
             if (mCachedBitmap != null) {
                 ImageView viewPagerImage = findViewById(R.id.fragment_image);
                 viewPagerImage.setImageBitmap(mCachedBitmap);
@@ -427,6 +430,8 @@ public class ArticleListActivity extends AppCompatActivity implements
             mPagerAdapter.setStartingItemId(mStartingItemId);
             mPager.setCurrentItem(mStartingItemPosition, true);
             mPager.setVisibility(View.VISIBLE);
+
+
 
 //            intent = new Intent(this, ArticleListActivity.class);  // does not work push in stack and fading flashes all screen
 //            intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
@@ -502,7 +507,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onCallback(ArticleDetailFragment fragment) {  // DetailActivity transition support
-        if(fragment == null) {
+        if (fragment == null) {
             mCachedBitmap = null;
             return;
         }
@@ -514,14 +519,16 @@ public class ArticleListActivity extends AppCompatActivity implements
         } else {
             mCachedBitmap = null;
         }
+
+        instructiveMotion(fragment.getRootView());
     }
 
     private int mCachedColor;
     private Bitmap mCachedBitmap;
 
     @Override
-    public void onCallback(Bitmap bitmap) {
-
+    public void onCallback(View view) {
+        instructiveMotion(view);
     }
 
     // common methods
@@ -706,5 +713,26 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     }
 
+
+    private void instructiveMotion(View view) {
+        // instructive motion
+        if(view == null || !mIsLand) return;
+        if (!ArticleListActivity.sIsInstructed && mPager.getVisibility() == View.VISIBLE) {
+            int startScrollPos = getResources().getDimensionPixelOffset(R.dimen.instructive_scroll);
+            AnimatorSet as = new AnimatorSet();
+
+            as.playSequentially(
+                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(0),
+                    ObjectAnimator.ofInt(view, "scrollY", startScrollPos).setDuration(550),
+                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(750)
+
+            );
+            as.setStartDelay(500);
+//        as.setDuration(2350);
+            as.start();
+            ArticleListActivity.sIsInstructed = true;
+        }
+
+    }
 
 }
