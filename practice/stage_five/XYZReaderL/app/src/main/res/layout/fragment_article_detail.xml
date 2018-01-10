@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                android:scaleType="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/empty_loading"
                 app:layout_collapseMode="parallax" />
             <!--android:background="@android:color/white"-->
@@ -81,24 +81,25 @@
         android:background="@color/colorBackBottom"
         android:elevation="6dp"
         android:visibility="visible"
-        app:layout_behavior="com.example.xyzreader.ui.ArticleDetailScroll">
+        app:layout_behavior="com.example.xyzreader.ui.BottomBarScroll">
 
         <ImageButton
             android:id="@+id/image_button_left"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_prev"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/image_button_right"
+            app:layout_constraintStart_toStartOf="@+id/guidev1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
             android:id="@+id/image_button_right"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_marginEnd="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_next"
             android:stateListAnimator="@animator/fab_animator"
@@ -112,11 +113,32 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_home"
+            android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/image_button_right"
-            app:layout_constraintStart_toEndOf="@+id/image_button_left"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+        <ImageButton
+            android:id="@+id/image_button_fullscreen"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_fullscreen_exit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guidev1"
+            app:layout_constraintStart_toEndOf="@+id/image_button_home"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guidev1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
     </android.support.constraint.ConstraintLayout>
     <!--<android.support.design.widget.BottomNavigationView-->

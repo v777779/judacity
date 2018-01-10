@@ -14,7 +14,7 @@
 
     <!--instructive-->
     <integer name="instructive_start_delay">500</integer>
-    <integer name="instructive_up_duration">550</integer>
+    <integer name="instructive_up_duration">750</integer>
     <integer name="instructive_down_duration">750</integer>
 
 

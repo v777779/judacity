@@ -57,12 +57,12 @@
 
         <LinearLayout
             android:id="@+id/linear_body"
-            android:layout_width="@dimen/liner_fixed_width"
+            android:layout_width="@dimen/linear_fixed_width"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/liner_bottom_margin"
+            android:layout_marginBottom="@dimen/linear_bottom_margin"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="@dimen/liner_top_margin"
+            android:layout_marginTop="@dimen/linear_top_margin"
             android:orientation="vertical"
             android:text="@string/article_no_body"
             app:layout_constraintBottom_toBottomOf="parent"

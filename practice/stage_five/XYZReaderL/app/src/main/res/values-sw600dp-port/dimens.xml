@@ -21,7 +21,7 @@
     <dimen name="card_subtitle_text_size">14sp</dimen>
 
     <!--linear-->
-    <dimen name="liner_fixed_width">500dp</dimen>
+    <dimen name="linear_fixed_width">500dp</dimen>
 
 
 

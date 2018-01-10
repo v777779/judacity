@@ -39,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowInsets;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -126,6 +127,7 @@ public class ArticleDetailFragment extends Fragment implements
     private boolean mIsWide;
     private boolean mIsLand;
 
+    private Resources mRes;
 
     public static Fragment newInstance(long startingItemId, long currentItemId) {
         Bundle arguments = new Bundle();
@@ -194,12 +196,17 @@ public class ArticleDetailFragment extends Fragment implements
 
     }
 
+    private View mBottomToolbar;
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mInflater = inflater;
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-
+        mRes = getResources();
+// wide
+        mIsWide = mRes.getBoolean(R.bool.is_wide);
+        mIsLand = mRes.getBoolean(R.bool.is_land);
 
         // bind
         mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
@@ -213,13 +220,19 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonLeft = mRootView.findViewById(R.id.image_button_left);
         mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
         mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
+
+        View bottomBar = mRootView.findViewById(R.id.bottom_toolbar);
+        int hidePos = mRes.getDimensionPixelOffset(R.dimen.bottom_bar_hide_position);
+        if(!mIsLand) {
+            bottomBar.animate().translationY(hidePos).start();
+        }else {
+            bottomBar.animate().translationX(-hidePos).start();
+        }
+
 // progress
         mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
         mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
 
-// wide
-        mIsWide = getResources().getBoolean(R.bool.is_wide);
-        mIsLand = getResources().getBoolean(R.bool.is_land);
 
         Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -295,7 +308,7 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                ArticleDetailScroll.setContinue();
+//                BottomBarScroll.setContinue();
                 mNestedScrollView.scrollTo(0, 0);
             }
         });
@@ -303,7 +316,7 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                ArticleDetailScroll.setContinue();
+//                BottomBarScroll.setContinue();
                 if (mTextSize < mTextSource.length()) {
                     mIsSkipToEnd = true;
                     mProgressBarText.setVisibility(View.VISIBLE);

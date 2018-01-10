@@ -69,6 +69,7 @@ public class Config {
     public static final int BOTTOM_BAR_DELAY_HIDE = 2500;
     public static final int BOTTOM_BAR_FAST_HIDE = 10;
     public static final int BOTTOM_BAR_SCROLLY_THRESHOLD = 200;
+    public static final int BOTTOM_BAR_SCROLL_DY_THRESHOLD = 30;
 
     // fragment error dialog
     public static final String BUNDLE_FRAGMENT_IS_CURSOR_EMPTY = "bundle_fragment_is_cursor_empty";

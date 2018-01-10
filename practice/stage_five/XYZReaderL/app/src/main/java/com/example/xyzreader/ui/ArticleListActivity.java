@@ -90,18 +90,31 @@ public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
 // _TODO isInstructive move to Config
+// TODO Instructive motion after rotation while in middle text position
+
+
 // TODO Palette to Detail Load status bar
-// TODO Glide load support when transition
+
+
+// _TODO Glide load support when transition
+
 // TODO Landscape bottom bar to mode to side and add side margins to text
+
 // TODO landscape add instructive movement
 // TODO Cancel loader when click if not finished  , made simple block on click
 // TODO ProgressBar on ScrollY() ???
 // TODO Layouts on WXGA
 // TODO BROADCAST ACTION in Exception of UpdateService and mIsRefreshing
+// TODO status bar hide on second screen
+// TODO BottomBar buttons
 
 
-// TODO buttons in bottom view
+// _TODO buttons in bottom view and smart scrolling tracking
 // TODO mPagerAdapter setCurrentItemId() add function
+// TODO  mRes add to all activities
+// TODO Code Inspection
+
+
 
     private static boolean mIsTimber;
 

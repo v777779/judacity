@@ -15,22 +15,25 @@ import static android.support.v4.view.ViewCompat.SCROLL_AXIS_VERTICAL;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_DELAY_HIDE;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_FAST_HIDE;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLLY_THRESHOLD;
+import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLL_DY_THRESHOLD;
 
 /**
  * Created by V1 on 03-Jan-18.
  */
 
-public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
+public class BottomBarScroll extends CoordinatorLayout.Behavior {
 
     private CountDownTimer mCountDownTimer;
-    public static ArticleDetailScroll mInstance;
+    public static BottomBarScroll mInstance;
     private View mChild;
     private boolean mIsActive;
-    private boolean mIsLowScrollY;
+    private boolean mIsLowScrollTextY;
+    private boolean mIsLand;
 
     // to inflate from XML this constructor
-    public ArticleDetailScroll(Context context, AttributeSet attrs) {
+    public BottomBarScroll(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mIsLand = context.getResources().getBoolean(R.bool.is_land);
     }
 
     @Override
@@ -40,8 +43,11 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
             @NonNull View target,
             int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
-        mIsLowScrollY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < BOTTOM_BAR_SCROLLY_THRESHOLD;
+        mIsLowScrollTextY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < BOTTOM_BAR_SCROLLY_THRESHOLD ;
 
+        if(dyConsumed < Math.abs(BOTTOM_BAR_SCROLL_DY_THRESHOLD)){
+            return;
+        }
         setContinue(child);
         mInstance = this;
     }
@@ -61,16 +67,20 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
     private void setTimer(final View child) {
         if (child == null) return;
 
-        if(!isActive() && mIsLowScrollY) return;  // выйти если неактивно
+        if (!isActive() && mIsLowScrollTextY) return;  // выйти если неактивно
 
         if (!isActive()) {
             child.setAlpha(1.0f);
-            child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
+            if (!mIsLand) {
+                child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
+            } else {
+                child.animate().translationX(0).setInterpolator(new LinearInterpolator()).start();
+            }
         }
 
         if (mCountDownTimer != null) mCountDownTimer.cancel();
 
-        int timerValue = mIsLowScrollY ? BOTTOM_BAR_FAST_HIDE : BOTTOM_BAR_DELAY_HIDE;  // если активно сократить
+        int timerValue = mIsLowScrollTextY ? BOTTOM_BAR_FAST_HIDE : BOTTOM_BAR_DELAY_HIDE;  // если активно сократить
 
         mCountDownTimer = new CountDownTimer(timerValue, timerValue) {
             @Override
@@ -82,7 +92,12 @@ public class ArticleDetailScroll extends CoordinatorLayout.Behavior {
                 setActive(false);
                 if (child == null) return;
 //                child.animate().alpha(0).setDuration(500).start();
-                child.animate().translationY(mChild.getHeight()).setInterpolator(new LinearInterpolator()).start();
+                if (!mIsLand) {
+                    child.animate().translationY(mChild.getHeight()).setInterpolator(new LinearInterpolator()).start();
+                } else {
+                    child.animate().translationX(-mChild.getWidth()).setInterpolator(new LinearInterpolator()).start();
+                }
+
                 mCountDownTimer = null;
             }
         };
