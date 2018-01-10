@@ -223,7 +223,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         View bottomBar = mRootView.findViewById(R.id.bottom_toolbar);
         int hidePos = mRes.getDimensionPixelOffset(R.dimen.bottom_bar_hide_position);
-        if(!mIsLand) {
+        if(!mIsLand) {                                              // hide bottom bar at start
             bottomBar.animate().translationY(hidePos).start();
         }else {
             bottomBar.animate().translationX(-hidePos).start();
@@ -335,12 +335,16 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        mImageButtonHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        if(!(mIsWide && mIsLand)) {
+            mImageButtonHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }else {
+            mImageButtonHome.setVisibility(View.GONE);          // not active on wide and land
+        }
 
 // progress bar
         mProgressBarText.setVisibility(View.VISIBLE);

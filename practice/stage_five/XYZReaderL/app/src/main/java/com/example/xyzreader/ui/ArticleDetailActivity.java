@@ -86,6 +86,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         } else {
             mStartingItemPosition = savedInstanceState.getInt(BUNDLE_STARTING_ITEM_POS);
             mCurrentItemPosition = savedInstanceState.getInt(BUNDLE_CURRENT_ITEM_POS);
+
         }
         mIsStartingActivity = savedInstanceState == null;
 
