@@ -87,6 +87,7 @@ import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_WAIT;
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
+// TODO isInstructive move to Config
 // TODO Palette to Detail Load status bar
 // TODO Glide load support when transition
 // TODO Landscape bottom bar to mode to side and add side margins to text
