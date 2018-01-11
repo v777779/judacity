@@ -47,6 +47,10 @@ public class Config {
     public static final int ARTICLE_LIST_LOADER_ID = 1221;
     public static final int ARTICLE_DETAIL_LOADER_ID = 1222;
 
+    public static final boolean FULL_SCREEN_MODE_ON = true;
+    public static final boolean FULL_SCREEN_MODE_OFF = false;
+
+
     // recycler
     public static final int HIGH_SCALE_WIDTH = 200;     // dpi
     public static final int HIGH_SCALE_HEIGHT = 200;     // dpi
@@ -74,6 +78,7 @@ public class Config {
     public static final int BOTTOM_BAR_FAST_HIDE = 10;
     public static final int BOTTOM_BAR_SCROLLY_THRESHOLD = 200;
     public static final int BOTTOM_BAR_SCROLL_DY_THRESHOLD = 30;
+    public static final int BOTTOM_BAR_RECYCLER_DY_THRESHOLD = 500;
 
     // fragment error dialog
     public static final String BUNDLE_FRAGMENT_IS_CURSOR_EMPTY = "bundle_fragment_is_cursor_empty";

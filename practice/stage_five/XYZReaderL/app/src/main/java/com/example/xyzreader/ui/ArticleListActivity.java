@@ -1,9 +1,6 @@
 package com.example.xyzreader.ui;
 
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,16 +9,10 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
@@ -36,8 +27,6 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.TransitionInflater;
-import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
@@ -46,11 +35,11 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowInsets;
-import android.view.animation.Interpolator;
+import android.view.WindowManager;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Scroller;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -58,11 +47,9 @@ import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.remote.Config;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 
 import timber.log.Timber;
 
@@ -84,7 +71,12 @@ import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_CLOSE;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_EXIT;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_WAIT;
+import static com.example.xyzreader.remote.Config.FULL_SCREEN_MODE_OFF;
+import static com.example.xyzreader.remote.Config.FULL_SCREEN_MODE_ON;
 import static com.example.xyzreader.remote.Config.instructiveMotion;
+import static com.example.xyzreader.remote.RemoteEndpointUtil.loadPreferenceFullScreen;
+import static com.example.xyzreader.remote.RemoteEndpointUtil.loadPreferenceSwipe;
+import static com.example.xyzreader.remote.RemoteEndpointUtil.savePreferences;
 
 
 public class ArticleListActivity extends AppCompatActivity implements
@@ -110,6 +102,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO BottomBar buttons
 // TODO Text overlap in landscape 1st element recycler
 
+// TODO Settings   fullscreen always, swipe off
+
 // _TODO buttons in bottom view and smart scrolling tracking
 // TODO mPagerAdapter setCurrentItemId() add function
 // TODO  mRes add to all activities
@@ -118,12 +112,17 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private static boolean mIsTimber;
 
-
     private Toolbar mToolbar;
     private ImageView mToolbarLogo;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
+
+    // bottom bar
+    private View mBottomBar;
+    private ImageButton mImageButtonHome;
+    private ImageButton mImageButtonFullScreen;
+
 
     private BroadcastReceiver mRefreshingReceiver;
     private boolean mIsSwipeRefresh;
@@ -148,8 +147,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     private FragmentDetailActivity mFragment;
     private ArticleDetailFragment mFragmentPage;
 
-    // fullscreen
+    // preferences
     private boolean mIsFullScreen;
+    private boolean mIsFullScreenMode;
+    private boolean mIsSwipeMode;
 
 
     @Override
@@ -177,8 +178,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRes = getResources();
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
-        mIsFullScreen = mRes.getBoolean(R.bool.is_full_screen);
-
+// preferences
+        mIsFullScreenMode = loadPreferenceFullScreen(this);
+        mIsSwipeMode = loadPreferenceSwipe(this);
 
 // timber
         if (!mIsTimber) {
@@ -188,20 +190,14 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             refresh(ACTION_TIME_REFRESH);
+            mIsFullScreen = mIsFullScreenMode;
         } else {
-            mIsFullScreen = savedInstanceState.getBoolean(BUNDLE_FULL_SCREEN_MODE,
-                    mRes.getBoolean(R.bool.is_full_screen));
+            mIsFullScreen = savedInstanceState.getBoolean(BUNDLE_FULL_SCREEN_MODE, mIsFullScreenMode);
         }
 
 
 // toolbar
 
-        mToolbar.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-            @Override
-            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-                return null;
-            }
-        });
 
         mToolbar.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
             @Override
@@ -256,19 +252,13 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setTitle("");
         }
-// full screen
-        if (mIsFullScreen) {
-            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_FULLSCREEN );
-            if(actionBar != null)                 actionBar.hide();
-        }
-
 
         setupRecycler();
         setupSwipeRefresh();
 
 
 // wide
-        if (mIsWide && mIsLand) {
+        if (mIsWide) {
 // viewpager
             mStartingItemPosition = -1;
             Resources res = getResources();
@@ -298,8 +288,32 @@ public class ArticleListActivity extends AppCompatActivity implements
             mPager.setVisibility(View.INVISIBLE);
             mPager.setPageTransformer(false, new PageTransformer());
 //            mPager.setScrollDurationFactor(1);
-// wide
         }
+
+// bottom bar
+        mBottomBar = findViewById(R.id.bottom_toolbar);
+        mImageButtonHome = findViewById(R.id.image_button_home);
+        mImageButtonFullScreen = findViewById(R.id.image_button_fullscreen);
+
+        if (mImageButtonHome != null) {
+            mImageButtonHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
+        }
+        if (mImageButtonFullScreen != null) {
+            mImageButtonFullScreen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setFullScreen(FULL_SCREEN_MODE_OFF);
+                }
+            });
+        }
+
+// full screen
+        setFullScreen(mIsFullScreen);
 
 
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
@@ -308,34 +322,52 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(BUNDLE_FULL_SCREEN_MODE,mIsFullScreen);
+        outState.putBoolean(BUNDLE_FULL_SCREEN_MODE, mIsFullScreen);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_article_list, menu);
+        menu.findItem(R.id.item_swipe).setChecked(mIsSwipeMode);
+        menu.findItem(R.id.item_full_screen).setChecked(mIsFullScreenMode);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_fullscreen) {
-            mIsFullScreen = true;
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-            getSupportActionBar().hide();
 
+        if (id == R.id.item_swipe) {
+            if (item.isChecked()) {
+                item.setChecked(false);
+            } else {
+                item.setChecked(true);
+            }
+            mIsSwipeMode = item.isChecked();
+            mSwipeRefreshLayout.setEnabled(mIsSwipeMode);
+            savePreferences(this, mIsSwipeMode, mIsFullScreenMode);
             return true;
         }
+        if (id == R.id.item_full_screen) {
+            if (item.isChecked()) {
+                item.setChecked(false);
+            } else {
+                item.setChecked(true);
+            }
+            mIsFullScreenMode = item.isChecked();
+            savePreferences(this, mIsSwipeMode, mIsFullScreenMode);
+            return true;
+        }
+        if (id == R.id.action_fullscreen) {
+            setFullScreen(FULL_SCREEN_MODE_ON);
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -349,6 +381,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         intentFilter.addAction(BROADCAST_ACTION_UPDATE_FINISHED);
         registerReceiver(mRefreshingReceiver, intentFilter);
 
+
     }
 
     @Override
@@ -358,11 +391,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
@@ -384,6 +412,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
     }
+
 
     // callbacks
     @Override
@@ -613,9 +642,19 @@ public class ArticleListActivity extends AppCompatActivity implements
                 GridLayout.VERTICAL,
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
+
+// swipe check
+//        mRecyclerView.setOnFlingListener(new RecyclerView.OnFlingListener() {
+//            @Override
+//            public boolean onFling(int velocityX, int velocityY) {
+//                return false;
+//            }
+//        });
+
     }
 
     private void setupSwipeRefresh() {
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -623,6 +662,8 @@ public class ArticleListActivity extends AppCompatActivity implements
                 refresh(ACTION_SWIPE_REFRESH);
             }
         });
+
+        mSwipeRefreshLayout.setEnabled(mIsSwipeMode);  // enabled or disabled
 
         mRefreshingReceiver = new BroadcastReceiver() {
             @Override
@@ -752,6 +793,38 @@ public class ArticleListActivity extends AppCompatActivity implements
 //            page.setAlpha(0.0f);
 
         }
+    }
+
+    private void setFullScreen(boolean isFullScreen) {
+        Window w = getWindow(); // in Activity's onCreate() for instance
+        ActionBar actionBar = getSupportActionBar();
+        if (isFullScreen) {
+            mIsFullScreen = true;
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_FULLSCREEN
+            );
+
+            if (actionBar != null) {
+                actionBar.hide();
+            }
+            if (mBottomBar != null) {
+                mBottomBar.setVisibility(View.VISIBLE);
+                BottomBarRecycler.setContinue();
+            }
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        } else {
+            mIsFullScreen = false;
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            if (actionBar != null) {
+                actionBar.show();
+            }
+            if (mBottomBar != null) {
+                mBottomBar.setVisibility(View.INVISIBLE);
+            }
+            w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+
     }
 
 

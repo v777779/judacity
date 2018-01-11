@@ -3,6 +3,10 @@
     <bool name="is_wide">false</bool>
     <bool name="is_land">false</bool>
     <bool name="is_wide_land">false</bool>
-    <bool name="is_full_screen">false</bool>
+
+    <!--preferences-->
+    <bool name="pref_swipe_mode_default">true</bool>
+    <bool name="pref_full_screen_default">false</bool>
+
 
 </resources>

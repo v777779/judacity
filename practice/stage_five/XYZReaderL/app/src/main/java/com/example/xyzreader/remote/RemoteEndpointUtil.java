@@ -75,9 +75,14 @@ public class RemoteEndpointUtil {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+
+
+// preferences
+
+
+
     public static boolean isReloadTimeout(Context context) {
         Resources res = context.getResources();
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         int lastTimeSec = sharedPreferences.getInt(res.getString(R.string.pref_reload_time_key),
                 res.getInteger(R.integer.pref_reload_time_default));
@@ -101,6 +106,43 @@ public class RemoteEndpointUtil {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         int currentTimeSec = (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());  // to seconds
         editor.putInt(res.getString(R.string.pref_reload_time_key), currentTimeSec);
+        editor.apply();
+    }
+
+
+    /**
+     * Load Preferences
+     */
+    public static boolean  loadPreferenceSwipe(Context context) {
+        Resources res = context.getResources();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean isSwipeEnabled = sharedPreferences.getBoolean(
+                res.getString(R.string.pref_swipe_mode_key),
+                res.getBoolean(R.bool.pref_swipe_mode_default));
+
+        return isSwipeEnabled;
+    }
+    public static boolean  loadPreferenceFullScreen(Context context) {
+        Resources res = context.getResources();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean isFullScreenEnabled = sharedPreferences.getBoolean(
+                res.getString(R.string.pref_full_screen_key),
+                res.getBoolean(R.bool.pref_full_screen_default));
+
+        return isFullScreenEnabled;
+    }
+
+
+    /**
+     *  Saves all preferences to Preferences
+     */
+    public static void savePreferences(Context context, boolean isSwipeEnabled, boolean isFullScreenEnabled) {
+        Resources res = context.getResources();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean(res.getString(R.string.pref_swipe_mode_key), isSwipeEnabled);
+        editor.putBoolean(res.getString(R.string.pref_full_screen_key), isFullScreenEnabled);
         editor.apply();
     }
 

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -72,6 +73,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         //setContentView(R.layout.activity_article_detail);
         setContentView(R.layout.activity_article_detail);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+
 
 
 // bundle
@@ -267,5 +269,10 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         };
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+
+    }
 }

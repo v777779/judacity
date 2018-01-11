@@ -74,7 +74,7 @@
     <item name="page_margin_integer" type="dimen">1</item>
 
     <!--instructive scroll-->
-    <dimen name="instructive_scroll_pos_port">100dp</dimen>
+    <dimen name="instructive_scroll_pos_port">50dp</dimen>
     <dimen name="instructive_scroll_pos_land">100dp</dimen>
 
     <!--bottom bar-->
