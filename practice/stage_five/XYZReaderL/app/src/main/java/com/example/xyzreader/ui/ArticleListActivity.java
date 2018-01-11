@@ -596,8 +596,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                 GridLayout.VERTICAL,
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
-        Resources res = getResources();
-
     }
 
     private void setupSwipeRefresh() {
