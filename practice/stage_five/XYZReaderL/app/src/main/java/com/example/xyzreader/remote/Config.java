@@ -5,18 +5,21 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.example.xyzreader.R;
+import com.example.xyzreader.ui.ArticleDetailFragment;
 
 public class Config {
     private static String TAG = Config.class.toString();
 
     // remoteEndpointUtil
 // correction!!! hardcoded url
-    public static boolean sIsInstructed;
+    public static boolean sIsInstructedPort;
+    public static boolean sIsInstructedLand;
 
     public static final String BASE_URL = "https://go.udacity.com/xyz-reader-json";
 
@@ -229,27 +232,64 @@ public class Config {
         return new Span(spanInWidth, spanInHeight, spanWidth, spanHeight);
     }
 
-    public static void instructiveMotion(Context context, View view, boolean isLand) {
-        // instructive motion
-        if(view == null || !isLand) return;
-        if (!sIsInstructed ) {
-            Resources res =  context.getResources();
-            int scrollPos = res.getDimensionPixelOffset(R.dimen.instructive_scroll_position);
-            int upDuration = (int)res.getInteger(R.integer.instructive_up_duration);
-            int downDuration = (int)res.getInteger(R.integer.instructive_down_duration);
-            int startDelay = (int)res.getInteger(R.integer.instructive_start_delay);
 
-            AnimatorSet as = new AnimatorSet();
-            as.playSequentially(
-                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(0),
-                    ObjectAnimator.ofInt(view, "scrollY", scrollPos).setDuration(upDuration),
-                    ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(downDuration)
+    public static void motion(Resources res, View view, int id) {
+        int scrollPos = res.getDimensionPixelOffset(id);
+        int upDuration = res.getInteger(R.integer.instructive_up_duration);
+        int downDuration = res.getInteger(R.integer.instructive_down_duration);
+        int startDelay = res.getInteger(R.integer.instructive_start_delay);
 
-            );
-            as.setStartDelay(startDelay);
-            as.start();
-            sIsInstructed = true;
-        }
+        AnimatorSet as = new AnimatorSet();
+        as.playSequentially(
+                ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(0),
+                ObjectAnimator.ofInt(view, "scrollY", scrollPos).setDuration(upDuration),
+                ObjectAnimator.ofInt(view, "scrollY", 0).setDuration(downDuration)
+
+        );
+        as.setStartDelay(startDelay);
+        as.start();
+    }
+    public static void collapse(Resources res, View view, int startDelayId) {
+        final AppBarLayout appBarLayout = ((AppBarLayout) view.findViewById(R.id.app_bar_detail));
+        int startDelay = res.getInteger(startDelayId);
+        view.animate().setStartDelay(startDelay).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                appBarLayout.setExpanded(false,true);
+            }
+        }).start();
 
     }
+
+
+    public static void instructiveMotion(ArticleDetailFragment fragment) {
+        if(fragment.getActivity() == null) return;
+
+        Resources res = fragment.getActivity().getResources();
+        View view = fragment.getRootView();
+        boolean isLand = res.getBoolean(R.bool.is_land);
+        boolean isWide = res.getBoolean(R.bool.is_wide);
+
+        if(view == null || fragment.getBitmap() == null) return;
+
+
+        if (!isLand && !sIsInstructedPort) {
+            motion(res, view, R.dimen.instructive_scroll_pos_port);
+            sIsInstructedPort = true;
+        }
+        if (isLand && !sIsInstructedLand) {
+            if (!isWide) {
+                collapse(res,view,R.integer.instructive_start_delay);
+            } else {
+                motion(res, view, R.dimen.instructive_scroll_pos_land);
+            }
+            sIsInstructedLand = true;
+
+        }
+
+
+
+    }
+
+
 }

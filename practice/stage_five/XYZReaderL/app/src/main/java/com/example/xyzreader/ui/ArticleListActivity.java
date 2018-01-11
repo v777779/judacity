@@ -84,7 +84,7 @@ import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_EXIT;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_WAIT;
 import static com.example.xyzreader.remote.Config.instructiveMotion;
-import static com.example.xyzreader.remote.Config.sIsInstructed;
+
 
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -113,7 +113,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO mPagerAdapter setCurrentItemId() add function
 // TODO  mRes add to all activities
 // TODO Code Inspection
-
 
 
     private static boolean mIsTimber;
@@ -254,7 +253,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             refresh(ACTION_TIME_REFRESH);
-            sIsInstructed = false;
+
         }
 
 // wide
@@ -445,14 +444,13 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
 
 // reload first invisible fragment to support instructive transition
-            if(mStartingItemPosition == 0) {
+            if (mStartingItemPosition == 0) {
                 mPagerAdapter.notifyDataSetChanged();
             }
 
             mPagerAdapter.setStartingItemId(mStartingItemId);
             mPager.setCurrentItem(mStartingItemPosition, true);
             mPager.setVisibility(View.VISIBLE);
-
 
 
 //            intent = new Intent(this, ArticleListActivity.class);  // does not work push in stack and fading flashes all screen
@@ -543,16 +541,16 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
 
 
-// instructive motion
-        if(fragment != null && mPager.getVisibility() == View.VISIBLE) {
-            instructiveMotion(this,fragment.getRootView(),mIsLand);
+// instructive motion  viewpager here only
+        if (fragment != null && mPager.getVisibility() == View.VISIBLE ) {
+            instructiveMotion(fragment);
         }
     }
 
     private int mCachedColor;
     private Bitmap mCachedBitmap;
 
-// TODO remove callback
+    // TODO remove callback
 // TODO move private variables to top
     @Override
     public void onCallback(View view) {
@@ -738,7 +736,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         }
     }
-
 
 
 }

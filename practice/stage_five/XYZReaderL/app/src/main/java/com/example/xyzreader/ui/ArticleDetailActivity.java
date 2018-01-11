@@ -57,6 +57,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
     // land
     private boolean mIsLand;
+    private boolean mIsWide;
 
 
     @Override
@@ -91,6 +92,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         mIsStartingActivity = savedInstanceState == null;
 
         mIsLand = getResources().getBoolean(R.bool.is_land);
+        mIsWide = getResources().getBoolean(R.bool.is_wide);
 
 // viewpager
         Resources res = getResources();
@@ -232,8 +234,9 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     @Override
     public void onCallback(ArticleDetailFragment fragment) {
         mCurrentFragment = fragment;
-        if(fragment != null && mPager.getVisibility() == View.VISIBLE) {
-            instructiveMotion(this,fragment.getRootView(),mIsLand);
+
+        if(fragment != null) {
+            instructiveMotion(fragment);
         }
 
     }
