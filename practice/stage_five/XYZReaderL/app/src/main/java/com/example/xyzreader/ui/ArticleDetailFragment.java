@@ -146,6 +146,7 @@ public class ArticleDetailFragment extends Fragment implements
         Timber.d("lifecycle fragment: onAttach()");
     }
 
+// TODO remove later
     public SharedElementCallback mSharedCallback;
 
     private SharedElementCallback setupSharedCallback() {

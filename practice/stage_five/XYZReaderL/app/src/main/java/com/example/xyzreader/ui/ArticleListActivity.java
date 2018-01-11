@@ -107,7 +107,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO BROADCAST ACTION in Exception of UpdateService and mIsRefreshing
 // TODO status bar hide on second screen
 // TODO BottomBar buttons
-
+// TODO Text overlap in landscape 1st element recycler
 
 // _TODO buttons in bottom view and smart scrolling tracking
 // TODO mPagerAdapter setCurrentItemId() add function
@@ -542,6 +542,8 @@ public class ArticleListActivity extends AppCompatActivity implements
             mCachedBitmap = null;
         }
 
+
+// instructive motion
         if(fragment != null && mPager.getVisibility() == View.VISIBLE) {
             instructiveMotion(this,fragment.getRootView(),mIsLand);
         }
