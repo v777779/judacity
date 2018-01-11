@@ -71,6 +71,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
         //setContentView(R.layout.activity_article_detail);
         setContentView(R.layout.activity_article_detail);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
 
 // bundle

@@ -73,6 +73,7 @@ import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_NO_NETWORK;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_FINISHED;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_STARTED;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
+import static com.example.xyzreader.remote.Config.BUNDLE_FULL_SCREEN_MODE;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
@@ -142,9 +143,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     private int mStartingItemPosition;
     private int mCurrentItemPosition;
 
+
     private Cursor mCursor;
     private FragmentDetailActivity mFragment;
     private ArticleDetailFragment mFragmentPage;
+
+    // fullscreen
+    private boolean mIsFullScreen;
 
 
     @Override
@@ -172,12 +177,20 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRes = getResources();
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
+        mIsFullScreen = mRes.getBoolean(R.bool.is_full_screen);
 
 
 // timber
         if (!mIsTimber) {
             Timber.plant(new Timber.DebugTree());
             mIsTimber = true;
+        }
+
+        if (savedInstanceState == null) {
+            refresh(ACTION_TIME_REFRESH);
+        } else {
+            mIsFullScreen = savedInstanceState.getBoolean(BUNDLE_FULL_SCREEN_MODE,
+                    mRes.getBoolean(R.bool.is_full_screen));
         }
 
 
@@ -200,16 +213,14 @@ public class ArticleListActivity extends AppCompatActivity implements
                 int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
                 int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
 
-                if ((getWindow().getDecorView().getWindowSystemUiVisibility() & (int) View.SYSTEM_UI_FLAG_FULLSCREEN) !=
-                        View.SYSTEM_UI_FLAG_FULLSCREEN) {
+                if (!mIsFullScreen) {
                     offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + sysBarHeight;
                 }
-
                 mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
+
 
                 int offsetSwipe = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
                 mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
-
 // wide
                 if (mIsWide && mIsLand) {
                     ViewGroup.MarginLayoutParams lp;
@@ -233,7 +244,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
 
-
+// action bar
         setSupportActionBar(mToolbar);
         mToolbarLogo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,17 +255,17 @@ public class ArticleListActivity extends AppCompatActivity implements
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("");
-
         }
+// full screen
+        if (mIsFullScreen) {
+            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_FULLSCREEN );
+            if(actionBar != null)                 actionBar.hide();
+        }
+
 
         setupRecycler();
         setupSwipeRefresh();
 
-
-        if (savedInstanceState == null) {
-            refresh(ACTION_TIME_REFRESH);
-
-        }
 
 // wide
         if (mIsWide && mIsLand) {
@@ -287,11 +298,17 @@ public class ArticleListActivity extends AppCompatActivity implements
             mPager.setVisibility(View.INVISIBLE);
             mPager.setPageTransformer(false, new PageTransformer());
 //            mPager.setScrollDurationFactor(1);
-
-
 // wide
         }
+
+
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BUNDLE_FULL_SCREEN_MODE,mIsFullScreen);
     }
 
     @Override
@@ -313,10 +330,10 @@ public class ArticleListActivity extends AppCompatActivity implements
             return true;
         }
         if (id == R.id.action_fullscreen) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_FULLSCREEN
-            );
+            mIsFullScreen = true;
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
             getSupportActionBar().hide();
+
             return true;
         }
 
@@ -542,7 +559,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 // instructive motion  viewpager here only
-        if (fragment != null && mPager.getVisibility() == View.VISIBLE ) {
+        if (fragment != null && mPager.getVisibility() == View.VISIBLE) {
             instructiveMotion(fragment);
         }
     }
