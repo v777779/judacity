@@ -72,8 +72,9 @@ import timber.log.Timber;
 
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_CURRENT_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_STARTING_ID;
-import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
-import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_MOTION;
+
+
+import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_FULLSCREEN;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_OFFSET;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_SIZE;
 import static com.example.xyzreader.remote.Config.LOAD_ALL_PAGES;
@@ -98,6 +99,7 @@ public class ArticleDetailFragment extends Fragment implements
     private ImageButton mImageButtonLeft;
     private ImageButton mImageButtonRight;
     private ImageButton mImageButtonHome;
+    private ImageButton mImageButtonFullScreen;
     // progress
     private ProgressBar mProgressBarText;
     private ProgressBar mProgressBarImage;
@@ -221,16 +223,8 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonLeft = mRootView.findViewById(R.id.image_button_left);
         mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
         mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
+        mImageButtonFullScreen = mRootView.findViewById(R.id.image_button_fullscreen);
 
-        View bottomBar = mRootView.findViewById(R.id.bottom_toolbar);
-
-//
-//        int hidePos = mRes.getDimensionPixelOffset(R.dimen.bottom_bar_hide_position);
-//        if (!mIsLand) {                                              // hide bottom bar at start
-//            bottomBar.animate().translationY(hidePos).start();
-//        } else {
-//            bottomBar.animate().translationX(-hidePos).start();
-//        }
 
 // progress
         mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
@@ -339,16 +333,22 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        if (!mIsWide) {
-            mImageButtonHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
-        } else {
-            mImageButtonHome.setVisibility(View.GONE);          // not active on wide and land
-        }
+
+        mImageButtonHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        mImageButtonFullScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomBarScroll.setContinue();
+                ((ICallback) getActivity()).onCallback(CALLBACK_FRAGMENT_FULLSCREEN);
+            }
+        });
+
 
 // progress bar
         mProgressBarText.setVisibility(View.VISIBLE);
@@ -457,7 +457,7 @@ public class ArticleDetailFragment extends Fragment implements
         Glide.with(this)
                 .load(imageURL)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.empty_loading)
+                        .placeholder(R.drawable.article_no_image_land)
                         .error(R.drawable.error_loading))
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -484,7 +484,7 @@ public class ArticleDetailFragment extends Fragment implements
                         return false;
                     }
                 })
-                .transition(withCrossFade())
+//                .transition(withCrossFade())
                 .into(mToolbarImage);
 
 

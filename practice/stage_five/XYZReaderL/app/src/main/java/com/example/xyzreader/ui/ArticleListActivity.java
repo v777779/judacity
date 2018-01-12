@@ -65,6 +65,7 @@ import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_CLOSE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_EXIT;
+import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_FULLSCREEN;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_RETRY;
 import static com.example.xyzreader.remote.Config.EXTRA_EMPTY_CURSOR;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_CLOSE;
@@ -507,7 +508,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
 
             mPagerAdapter.setStartingItemId(mStartingItemId);
-            mPager.setCurrentItem(mStartingItemPosition, true);
+            mPager.setCurrentItem(mStartingItemPosition, false);
             mPager.setVisibility(View.VISIBLE);
 
 
@@ -544,6 +545,11 @@ public class ArticleListActivity extends AppCompatActivity implements
                 finish();
                 break;
 
+            case CALLBACK_FRAGMENT_FULLSCREEN:
+                if(mIsFullScreen) {
+                    setFullScreen(FULL_SCREEN_MODE_OFF);
+                }
+                break;
             default:
         }
     }
@@ -805,6 +811,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             if (mIsWide) {                    // updates top border of recycler and viewpager
                 mPager.getAdapter().notifyDataSetChanged();
+
                 mRecyclerView.scrollToPosition(mCurrentItemPosition);
             }
         }

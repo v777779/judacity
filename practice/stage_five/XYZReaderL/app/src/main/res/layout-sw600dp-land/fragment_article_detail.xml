@@ -25,14 +25,6 @@
             app:layout_scrollFlags="scroll"
             app:toolbarId="@+id/toolbar_main">
 
-            <ImageView
-                android:id="@+id/article_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                android:scaleType="center"
-                android:src="@drawable/empty_loading"
-                app:layout_collapseMode="parallax" />
             <!--android:background="@android:color/white"-->
             <!--android:src="@drawable/article_no_image_land"-->
 
@@ -56,6 +48,15 @@
                 android:layout_gravity="center"
                 android:visibility="invisible" />
 
+            <ImageView
+                android:id="@+id/article_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/empty_loading"
+                app:layout_collapseMode="parallax" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -71,66 +72,6 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_share" />
 
-
-    <!--<android.support.constraint.ConstraintLayout-->
-        <!--android:id="@+id/bottom_toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|center_horizontal"-->
-        <!--android:alpha="0.0"-->
-        <!--android:background="@color/colorBackBottom"-->
-        <!--android:elevation="6dp"-->
-        <!--android:visibility="visible"-->
-        <!--app:layout_behavior="com.example.xyzreader.ui.BottomBarScroll">-->
-
-        <!--<ImageButton-->
-            <!--android:id="@+id/image_button_left"-->
-            <!--android:layout_width="56dp"-->
-            <!--android:layout_height="56dp"-->
-            <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--android:src="@drawable/ic_skip_prev"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--<ImageButton-->
-            <!--android:id="@+id/image_button_right"-->
-            <!--android:layout_width="56dp"-->
-            <!--android:layout_height="56dp"-->
-            <!--android:layout_marginEnd="16dp"-->
-            <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--android:src="@drawable/ic_skip_next"-->
-            <!--android:stateListAnimator="@animator/fab_animator"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent"-->
-            <!--app:layout_constraintVertical_bias="0.0" />-->
-
-        <!--<ImageButton-->
-            <!--android:id="@+id/image_button_home"-->
-            <!--android:layout_width="56dp"-->
-            <!--android:layout_height="56dp"-->
-            <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--android:src="@drawable/ic_home"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent"-->
-            <!--app:layout_constraintVertical_bias="0.0"-->
-            <!--tools:layout_editor_absoluteX="171dp" />-->
-
-        <!--<ImageButton-->
-            <!--android:id="@+id/image_button_fullscreen"-->
-            <!--android:layout_width="56dp"-->
-            <!--android:layout_height="56dp"-->
-            <!--android:layout_marginEnd="392dp"-->
-            <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--android:src="@drawable/ic_fullscreen_exit"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintEnd_toStartOf="@+id/image_button_right"-->
-            <!--app:layout_constraintTop_toTopOf="parent"-->
-            <!--app:layout_constraintVertical_bias="1.0" />-->
-
-    <!--</android.support.constraint.ConstraintLayout>-->
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bottom_toolbar"
         android:layout_width="wrap_content"
@@ -145,28 +86,14 @@
         app:layout_behavior="com.example.xyzreader.ui.BottomBarScroll">
 
         <ImageButton
-            android:id="@+id/image_button_home"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_home"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guide_h1" />
-
-        <ImageButton
             android:id="@+id/image_button_fullscreen"
             android:layout_width="56dp"
             android:layout_height="56dp"
-
+            android:layout_marginTop="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_fullscreen_exit"
             app:layout_constraintBottom_toTopOf="@+id/image_button_left"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_button_home" />
@@ -175,16 +102,28 @@
             android:id="@+id/image_button_left"
             android:layout_width="56dp"
             android:layout_height="56dp"
-
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_prev"
             app:layout_constraintBottom_toTopOf="@+id/image_button_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_button_fullscreen" />
+
+        <ImageButton
+            android:id="@+id/image_button_home"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_home"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_button_fullscreen" />
+            app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
         <ImageButton
             android:id="@+id/image_button_right"
@@ -212,7 +151,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.9" />
+            app:layout_constraintGuide_percent="0.95" />
 
     </android.support.constraint.ConstraintLayout>
 
