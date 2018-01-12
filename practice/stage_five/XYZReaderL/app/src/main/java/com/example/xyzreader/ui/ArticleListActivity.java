@@ -803,9 +803,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                 mBottomBar.setVisibility(View.INVISIBLE);
             }
             w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            if(mIsWide) {
+            if (mIsWide) {                    // updates top border of recycler and viewpager
                 mPager.getAdapter().notifyDataSetChanged();
-
+                mRecyclerView.scrollToPosition(mCurrentItemPosition);
             }
         }
 
