@@ -312,14 +312,19 @@ public class ArticleListActivity extends AppCompatActivity implements
                 }
             });
         }
-// instructive motion
-        if(mIsFullScreen ) {
-           instructiveMotion(this, mBottomBar);
-        }
+//// instructive motion
+//        if(mIsFullScreen ) {
+//           instructiveMotion(this, mBottomBar);
+//        }
 
 // full screen
         setFullScreen(mIsFullScreen);
 
+// test!!!!
+//        Config.sIsInstructedLand = false;
+//        Config.sIsInstructedPort = false;
+//        Config.sIsInstructedBottomLand = false;
+//        Config.sIsInstructedBottomPort = false;
 
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
@@ -386,6 +391,10 @@ public class ArticleListActivity extends AppCompatActivity implements
         intentFilter.addAction(BROADCAST_ACTION_UPDATE_FINISHED);
         registerReceiver(mRefreshingReceiver, intentFilter);
 
+// instructive motion
+        if(mIsFullScreen ) {
+            instructiveMotion(this, mBottomBar);
+        }
 
     }
 
@@ -814,7 +823,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
             if (mBottomBar != null) {
                 mBottomBar.setVisibility(View.VISIBLE);
-                BottomBarRecycler.setContinue();
             }
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
