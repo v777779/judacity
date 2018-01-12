@@ -51,12 +51,12 @@
     <string name="pref_swipe_mode_key">pref_swipe_mode_key</string>
     <string name="pref_swipe_mode_off">refresh disabled</string>
     <string name="pref_swipe_mode_on">refresh enabled</string>
-    <string name="pref_swipe_mode_label">Swipe refresh on/off</string>
+    <string name="pref_swipe_mode_label">Swipe refresh</string>
 
     <string name="pref_full_screen_key">pref_full_screen_key</string>
     <string name="pref_full_screen_off">full screen</string>
     <string name="pref_full_screen_on">normal screen</string>
-    <string name="pref_full_screen_label">Full screen on/off</string>
+    <string name="pref_full_screen_label">Full screen</string>
 
 
 

@@ -92,7 +92,7 @@
             android:src="@drawable/ic_skip_prev"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_button_right"
-            app:layout_constraintStart_toStartOf="@+id/guidev1"
+            app:layout_constraintStart_toStartOf="@+id/guide_v1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
@@ -128,14 +128,14 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_fullscreen_exit"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guidev1"
+            app:layout_constraintEnd_toStartOf="@+id/guide_v1"
             app:layout_constraintStart_toEndOf="@+id/image_button_home"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
             android:visibility="gone"/>
 
         <android.support.constraint.Guideline
-            android:id="@+id/guidev1"
+            android:id="@+id/guide_v1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
