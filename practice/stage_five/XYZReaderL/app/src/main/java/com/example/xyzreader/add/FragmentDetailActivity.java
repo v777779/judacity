@@ -1,47 +1,35 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.add;
 
 
 import android.app.SharedElementCallback;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.transition.TransitionInflater;
-import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.xyzreader.R;
-import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.ui.ArticleDetailFragment;
+import com.example.xyzreader.ui.ArticleListActivity;
+import com.example.xyzreader.ui.ICallback;
+import com.example.xyzreader.ui.ViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.app.Activity.RESULT_OK;
-import static com.example.xyzreader.remote.Config.ARTICLE_DETAIL_LOADER_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_CURRENT_ITEM_POS;
-import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_CURRENT_ID;
-import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_STARTING_ID;
-import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_STARTING_POS;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
-import static java.lang.reflect.Array.getInt;
 
 public class FragmentDetailActivity extends Fragment implements ICallback {
 

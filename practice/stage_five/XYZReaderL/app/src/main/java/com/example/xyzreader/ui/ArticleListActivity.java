@@ -144,7 +144,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
     private Cursor mCursor;
-    private FragmentDetailActivity mFragment;
     private ArticleDetailFragment mFragmentPage;
 
     // preferences
@@ -321,10 +320,10 @@ public class ArticleListActivity extends AppCompatActivity implements
         setFullScreen(mIsFullScreen);
 
 // test!!!!
-//        Config.sIsInstructedLand = false;
-//        Config.sIsInstructedPort = false;
-//        Config.sIsInstructedBottomLand = false;
-//        Config.sIsInstructedBottomPort = false;
+        Config.sIsInstructedLand = false;
+        Config.sIsInstructedPort = false;
+        Config.sIsInstructedBottomLand = false;
+        Config.sIsInstructedBottomPort = false;
 
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
@@ -440,9 +439,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         mCursor = cursor;
         ((RecyclerAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
 
-        if (mFragment != null) {
-            mFragment.swap(mCursor);
-        }
 // wide
         if (mIsWide && mIsLand) {
             mPagerAdapter.swap(cursor);
@@ -513,39 +509,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             mPager.setVisibility(View.VISIBLE);
 
 
-//            intent = new Intent(this, ArticleListActivity.class);  // does not work push in stack and fading flashes all screen
-//            intent.putExtra(BUNDLE_STARTING_ITEM_ID, id);
-//            intent.putExtra(BUNDLE_STARTING_ITEM_POS, pos);
-//
-//            startActivity(intent, optionsCompat.toBundle());
-
-
-//            Fragment fragment = FragmentDetailActivity.newInstance(mStartingItemId, mStartingItemPosition);
-//            FragmentManager fm = getSupportFragmentManager();
-//            fm.beginTransaction()
-//                    .addSharedElement(mImage, mImage.getTransitionName())
-//                    .addSharedElement(mTitle, mTitle.getTransitionName())
-//                    .replace(R.id.fragment_container,fragment)
-//                    .commit();
-
-
-//            Fragment fragment = ArticleDetailFragment.newInstance(mStartingItemId, mStartingItemId);
-//            FragmentManager fm = getSupportFragmentManager();
-//            fm.popBackStack("transaction",FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//
-//
-//            fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.explode));
-//            fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.transform));
-//
-//
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .addSharedElement(mImage, "image1221")
-////                    .addSharedElement(mTitle, mTitle.getTransitionName())
-//                    .replace(R.id.fragment_container,fragment)
-//                    .addToBackStack("transaction")
-//                    .commit();
-//
 
 
         }
