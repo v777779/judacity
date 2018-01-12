@@ -50,6 +50,7 @@ public class Config {
     public static final String BUNDLE_STARTING_ITEM_POS = "bundle_starting_item_pos";
     public static final String BUNDLE_CURRENT_ITEM_POS = "bundle_current_item_pos";
     public static final String BUNDLE_FULL_SCREEN_MODE = "bundle_full_screen_mode";
+    public static final String BUNDLE_IS_ITEM_SELECTED = "bundle_is_item_selected";
 
     public static final int ARTICLE_LIST_LOADER_ID = 1221;
     public static final int ARTICLE_DETAIL_LOADER_ID = 1222;

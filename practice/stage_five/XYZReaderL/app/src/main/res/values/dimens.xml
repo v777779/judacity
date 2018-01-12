@@ -6,6 +6,11 @@
     <dimen name="recycler_top_offset">2dp</dimen>
     <dimen name="recycler_side_offset">2dp</dimen>
     <dimen name="recycler_bottom_offset">28dp</dimen>
+
+    <dimen name="recycler_bottom_padding">28dp</dimen>
+    <dimen name="recycler_top_margin">2dp</dimen>
+    <dimen name="recycler_side_margin">16dp</dimen>
+
     <dimen name="viewpager_top_offset">4dp</dimen>
 
 

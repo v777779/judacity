@@ -37,7 +37,6 @@
     <color name="colorBodyBack">#FFFBEBD1</color>
 
 
-
     <!--card-->
     <color name="colorCardText">#3A3A3A</color>
     <color name="colorCardHead">#d63a3a3a</color>
@@ -59,6 +58,9 @@
     <!--buttons-->
     <color name="colorBackButton">#2909266c</color>
     <color name="colorBackBottom">#2909266c</color>
+    <!--coordinator layout-->
+    <color name="colorBackLayout">#296f747f</color>
+    <color name="colorBackRecycler">#f1f1f1</color>
 
     <!--test-->
     <color name="colorBackMask">#FF333333</color>
