@@ -11,6 +11,8 @@
 
     <!--linear-->
     <dimen name="linear_fixed_width">640dp</dimen>
+    <dimen name="linear_left_margin">32dp</dimen>
+    <dimen name="linear_right_margin">0dp</dimen>
 
 
     <!--appbar-->

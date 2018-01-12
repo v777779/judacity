@@ -29,11 +29,13 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
     private boolean mIsActive;
     private boolean mIsLowScrollTextY;
     private boolean mIsLand;
+    private boolean mIsWide;
 
     // to inflate from XML this constructor
     public BottomBarScroll(Context context, AttributeSet attrs) {
         super(context, attrs);
         mIsLand = context.getResources().getBoolean(R.bool.is_land);
+        mIsWide = context.getResources().getBoolean(R.bool.is_wide);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
 
         if (!isActive()) {
             child.setAlpha(1.0f);
-            if (!mIsLand) {
+            if (!mIsLand && !mIsWide) {
                 child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
             } else {
                 child.animate().translationX(0).setInterpolator(new LinearInterpolator()).start();
@@ -92,7 +94,7 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
                 setActive(false);
                 if (child == null) return;
 //                child.animate().alpha(0).setDuration(500).start();
-                if (!mIsLand) {
+                if (!mIsLand && !mIsWide) {
                     child.animate().translationY(mChild.getHeight()).setInterpolator(new LinearInterpolator()).start();
                 } else {
                     child.animate().translationX(-mChild.getWidth()).setInterpolator(new LinearInterpolator()).start();

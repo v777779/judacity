@@ -206,62 +206,100 @@ public class ArticleListActivity extends AppCompatActivity implements
             public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
                 view.onApplyWindowInsets(windowInsets);
                 Resources res = getResources();
+
+
                 int sysBarHeight = windowInsets.getSystemWindowInsetTop() + mToolbar.getLayoutParams().height;
-                int offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin);
-                int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
-                int offsetSide = res.getDimensionPixelOffset(R.dimen.micro_margin);
-
-                if (!mIsFullScreen) {
-                    offsetTop = res.getDimensionPixelSize(R.dimen.micro_margin) + sysBarHeight;
-                }
-                mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
-
-
+// swipe
                 int offsetSwipe = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
                 mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
-// wide
-                if (mIsWide) {
-                    ViewGroup.MarginLayoutParams lp;
 
+// recycler
+                int offsetTop = res.getDimensionPixelSize(R.dimen.recycler_top_offset);
+                int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
+                int offsetSide = res.getDimensionPixelOffset(R.dimen.recycler_side_offset);
+                int offsetTopPager = res.getDimensionPixelSize(R.dimen.viewpager_top_offset);
 
-                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_container)).getLayoutParams();
-                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
+// land and port
+                if (!mIsWide) {
+                    if (!mIsFullScreen) {
+                        offsetTop += sysBarHeight;
+                    }
+                    mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
+                } else {
+// wide  land
 
-                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.border_view)).getLayoutParams();
-                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
+                    if (mIsLand) {
+                        if (!mIsFullScreen) {
+                            offsetTop += sysBarHeight;
+                            offsetTopPager += sysBarHeight;
+                        }
+                        mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
 
-                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.fragment_image)).getLayoutParams();
-                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
+                        ViewGroup.MarginLayoutParams lp;
+                        lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_container)).getLayoutParams();
+                        lp.setMargins(lp.leftMargin, offsetTopPager, lp.rightMargin, lp.bottomMargin);
 
-                    lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_background)).getLayoutParams();
-                    lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
+                        lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.border_view)).getLayoutParams();
+                        lp.setMargins(lp.leftMargin, offsetTopPager, lp.rightMargin, lp.bottomMargin);
 
+                        lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.fragment_image)).getLayoutParams();
+                        lp.setMargins(lp.leftMargin, offsetTopPager, lp.rightMargin, lp.bottomMargin);
 
-// wide
+                        lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_background)).getLayoutParams();
+                        lp.setMargins(lp.leftMargin, offsetTopPager, lp.rightMargin, lp.bottomMargin);
+                    } else {
+// wide  portrait
+                        if (!mIsFullScreen) {
+                            offsetTop += sysBarHeight;
+                            mRecyclerView.setPadding(offsetSide, offsetTop, offsetSide, offsetBottom);
+                            (findViewById(R.id.swipe_refresh)).setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                        }else {
+                            mRecyclerView.setVisibility(View.INVISIBLE);
+                        }
+
+                        ViewGroup.MarginLayoutParams lp;
+                        lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_container)).getLayoutParams();
+                        lp.setMargins(lp.leftMargin, offsetTopPager, lp.rightMargin, lp.bottomMargin);
+
+                        lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.fragment_image)).getLayoutParams();
+                        lp.setMargins(lp.leftMargin, offsetTopPager, lp.rightMargin, lp.bottomMargin);
+
+                        lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_background)).getLayoutParams();
+                        lp.setMargins(lp.leftMargin, offsetTopPager, lp.rightMargin, lp.bottomMargin);
+
+                    }
                 }
                 return windowInsets;
             }
         });
 
-// action bar
+        // action bar
         setSupportActionBar(mToolbar);
-        mToolbarLogo.setOnClickListener(new View.OnClickListener() {
+        mToolbarLogo.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        if (actionBar != null)
+
+        {
             actionBar.setTitle("");
         }
 
         setupRecycler();
+
         setupSwipeRefresh();
 
 
 // wide
-        if (mIsWide) {
+        if (mIsWide)
+
+        {
 // viewpager
             mStartingItemPosition = -1;
             Resources res = getResources();
@@ -289,7 +327,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 }
             });
 
-            if(mIsStarting) {
+            if (mIsStarting) {
                 mPager.setVisibility(View.GONE);
             }
 
@@ -298,11 +336,21 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
 
 // bottom bar
-        mBottomBar = findViewById(R.id.bottom_toolbar);
-        mImageButtonHome = findViewById(R.id.image_button_home);
-        mImageButtonFullScreen = findViewById(R.id.image_button_fullscreen);
+        mBottomBar =
 
-        if (mImageButtonHome != null) {
+                findViewById(R.id.bottom_toolbar);
+
+        mImageButtonHome =
+
+                findViewById(R.id.image_button_home);
+
+        mImageButtonFullScreen =
+
+                findViewById(R.id.image_button_fullscreen);
+
+        if (mImageButtonHome != null)
+
+        {
             mImageButtonHome.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -310,7 +358,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                 }
             });
         }
-        if (mImageButtonFullScreen != null) {
+        if (mImageButtonFullScreen != null)
+
+        {
             mImageButtonFullScreen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -323,7 +373,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 //           instructiveMotion(this, mBottomBar);
 //        }
 
-// full screen
+        // full screen
         setFullScreen(mIsFullScreen);
 
 // test!!!!
@@ -332,7 +382,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         Config.sIsInstructedBottomLand = false;
         Config.sIsInstructedBottomPort = false;
 
-        getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
+        getSupportLoaderManager().
+
+                initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
 
     @Override
@@ -548,7 +600,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 break;
 
             case CALLBACK_FRAGMENT_FULLSCREEN:
-                if(mIsFullScreen) {
+                if (mIsFullScreen) {
                     setFullScreen(FULL_SCREEN_MODE_OFF);
                 }
                 break;
@@ -623,12 +675,23 @@ public class ArticleListActivity extends AppCompatActivity implements
         RecyclerAdapter adapter = new RecyclerAdapter(this, sp);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
-        GridLayoutManager layoutManager = new GridLayoutManager(
-                this,
-                sp.getSpanX(),
-                GridLayout.VERTICAL,
-                false);
-        mRecyclerView.setLayoutManager(layoutManager);
+// wide portrait horizontal
+        if (mIsWide && !mIsLand) {
+            GridLayoutManager layoutManager = new GridLayoutManager(
+                    this,
+                    sp.getSpanY(),
+                    GridLayout.HORIZONTAL,
+                    false);
+            mRecyclerView.setLayoutManager(layoutManager);
+
+        } else {
+            GridLayoutManager layoutManager = new GridLayoutManager(
+                    this,
+                    sp.getSpanX(),
+                    GridLayout.VERTICAL,
+                    false);
+            mRecyclerView.setLayoutManager(layoutManager);
+        }
 
 // swipe check
 //        mRecyclerView.setOnFlingListener(new RecyclerView.OnFlingListener() {

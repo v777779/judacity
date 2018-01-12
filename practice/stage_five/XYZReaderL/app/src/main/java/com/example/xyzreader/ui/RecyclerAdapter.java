@@ -42,6 +42,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Cursor mCursor;
     private Context mContext;
     private Config.Span mSpan;
+    private boolean mIsLand;
+    private boolean mIsWide;
 
     // correction!!!
     public RecyclerAdapter(Context context, Config.Span sp) {
@@ -51,6 +53,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
         outputFormat = new SimpleDateFormat();
         startOfEpoch = new GregorianCalendar(2, 1, 1);
+
+        mIsWide = context.getResources().getBoolean(R.bool.is_wide);
+        mIsLand = context.getResources().getBoolean(R.bool.is_land);
+
     }
 
     @Override
@@ -64,7 +70,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
                 .inflate(R.layout.content_article_item, parent, false);
 
-        view.getLayoutParams().height = mSpan.getHeight();
+
+        if (mIsWide && !mIsLand) {
+            view.getLayoutParams().width = mSpan.getWidth();
+        }else {
+            view.getLayoutParams().height = mSpan.getHeight();
+        }
         return new ViewHolder(view);
     }
 
@@ -150,10 +161,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
             Glide.with(mContext)
                     .load(imageURL)
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.empty_loading)
-                            .error(R.drawable.error_loading))
-                    .listener(new RequestListener<Drawable>() {
+                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             return false;

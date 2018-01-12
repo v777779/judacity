@@ -59,10 +59,10 @@ public class Config {
 
 
     // recycler
-    public static final int HIGH_SCALE_WIDTH = 200;     // dpi
-    public static final int HIGH_SCALE_HEIGHT = 200;     // dpi
-    public static final double SCALE_RATIO_VERT = 0.60;   // dw/dh
-    public static final double SCALE_RATIO_HORZ = 0.60;   // dw/dh
+    public static final int HIGH_SCALE_WIDTH = 180;     // dpi
+    public static final int HIGH_SCALE_HEIGHT = 300;     // dpi 200
+    public static final double SCALE_RATIO_VERT = 0.6;   // dw/dh
+    public static final double SCALE_RATIO_HORZ = 0.45;   // dw/dh
 
     public static final int MIN_SPAN = 1;
     public static final int MIN_HEIGHT = 100;

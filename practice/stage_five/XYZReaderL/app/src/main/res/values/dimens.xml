@@ -3,8 +3,11 @@
 
     <!--toolbar fix-->
     <dimen name="status_bar_height">24dp</dimen>
-    <dimen name="recycler_top_offset">16dp</dimen>
+    <dimen name="recycler_top_offset">2dp</dimen>
+    <dimen name="recycler_side_offset">2dp</dimen>
     <dimen name="recycler_bottom_offset">28dp</dimen>
+    <dimen name="viewpager_top_offset">4dp</dimen>
+
 
     <!--progress bar-->
     <dimen name="progress_bar_size">48dp</dimen>
