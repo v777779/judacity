@@ -59,7 +59,7 @@
             android:id="@+id/linear_body"
             android:layout_width="@dimen/linear_fixed_width"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/linear_bottom_margin"
+            android:paddingBottom="@dimen/linear_bottom_margin"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="@dimen/linear_top_margin"
