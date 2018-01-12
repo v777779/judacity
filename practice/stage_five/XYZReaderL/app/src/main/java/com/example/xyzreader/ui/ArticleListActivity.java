@@ -259,7 +259,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 // wide
-        if (mIsWide) {
+        if (mIsWide && mIsLand) {
 // viewpager
             mStartingItemPosition = -1;
             Resources res = getResources();
