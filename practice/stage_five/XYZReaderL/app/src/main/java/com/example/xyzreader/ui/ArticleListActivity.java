@@ -235,6 +235,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                     lp = (ViewGroup.MarginLayoutParams) (findViewById(R.id.viewpager_background)).getLayoutParams();
                     lp.setMargins(lp.leftMargin, offsetTop, lp.rightMargin, lp.bottomMargin);
 
+
 // wide
                 }
                 return windowInsets;
@@ -392,7 +393,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         registerReceiver(mRefreshingReceiver, intentFilter);
 
 // instructive motion
-        if(mIsFullScreen ) {
+        if (mIsFullScreen) {
             instructiveMotion(this, mBottomBar);
         }
 
@@ -510,8 +511,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             mPager.setVisibility(View.VISIBLE);
 
 
-
-
         }
     }
 
@@ -569,6 +568,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (fragment != null && mPager.getVisibility() == View.VISIBLE) {
             instructiveMotion(fragment);
         }
+
+        mFragmentPage = fragment;
     }
 
     private int mCachedColor;
@@ -788,7 +789,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             if (mBottomBar != null) {
                 mBottomBar.setVisibility(View.VISIBLE);
             }
-            if(!mIsWide) {  // flags for non tablet
+            if (!mIsWide) {  // flags for non tablet
                 w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             }
 
@@ -802,6 +803,10 @@ public class ArticleListActivity extends AppCompatActivity implements
                 mBottomBar.setVisibility(View.INVISIBLE);
             }
             w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            if(mIsWide) {
+                mPager.getAdapter().notifyDataSetChanged();
+
+            }
         }
 
     }
