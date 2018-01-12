@@ -457,7 +457,7 @@ public class ArticleDetailFragment extends Fragment implements
         Glide.with(this)
                 .load(imageURL)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.article_no_image_land)
+                        .placeholder(R.drawable.empty_loading)
                         .error(R.drawable.error_loading))
                 .listener(new RequestListener<Drawable>() {
                     @Override
