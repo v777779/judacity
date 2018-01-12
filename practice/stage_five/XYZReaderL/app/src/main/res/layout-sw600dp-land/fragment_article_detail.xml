@@ -136,10 +136,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:alpha="1.0"
+        android:alpha="0.0"
         android:background="@color/colorBackBottom"
         android:elevation="6dp"
         android:visibility="visible"
+        app:layout_anchor="@+id/app_bar_detail"
+        app:layout_anchorGravity="left|center"
         app:layout_behavior="com.example.xyzreader.ui.BottomBarScroll">
 
         <ImageButton
@@ -147,26 +149,27 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_back"
+            android:src="@drawable/ic_home"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
         <ImageButton
             android:id="@+id/image_button_fullscreen"
             android:layout_width="56dp"
             android:layout_height="56dp"
+
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_fullscreen_exit"
-
+            app:layout_constraintBottom_toTopOf="@+id/image_button_left"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/image_button_home" />
 
         <ImageButton
             android:id="@+id/image_button_left"
@@ -181,7 +184,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guide_h1" />
+            app:layout_constraintTop_toBottomOf="@+id/image_button_fullscreen" />
 
         <ImageButton
             android:id="@+id/image_button_right"
@@ -190,7 +193,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_next"
             android:stateListAnimator="@animator/fab_animator"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/guide_h2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -202,7 +205,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_percent="0.2" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_h2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -787,7 +787,9 @@ public class ArticleListActivity extends AppCompatActivity implements
             if (mBottomBar != null) {
                 mBottomBar.setVisibility(View.VISIBLE);
             }
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            if(!mIsWide) {  // flags for non tablet
+                w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            }
 
         } else {
             mIsFullScreen = false;

@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:alpha="1.0"
+        android:alpha="0.0"
         android:background="@color/colorBackBottom"
         android:elevation="6dp"
         android:visibility="visible"
@@ -106,11 +106,12 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_fullscreen_exit"
             app:layout_constraintBottom_toTopOf="@+id/guide_h1"
-
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_button_home" />
+            app:layout_constraintTop_toBottomOf="@+id/image_button_home"
+            android:visibility="gone"
+            />
 
         <ImageButton
             android:id="@+id/image_button_left"

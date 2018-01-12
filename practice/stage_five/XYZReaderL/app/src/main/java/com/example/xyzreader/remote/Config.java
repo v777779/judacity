@@ -368,7 +368,7 @@ public class Config {
             if (!isWide) {
                 collapse(context, view, R.integer.instructive_start_delay);
             } else {
-                motion(context, view, R.dimen.instructive_scroll_pos_land);
+                motion(context, view, R.dimen.instructive_scroll_pos_port);
 //                motionBottom(context, bottomBar);
             }
 

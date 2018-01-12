@@ -146,7 +146,7 @@ public class ArticleDetailFragment extends Fragment implements
         Timber.d("lifecycle fragment: onAttach()");
     }
 
-// TODO remove later
+    // TODO remove later
     public SharedElementCallback mSharedCallback;
 
     private SharedElementCallback setupSharedCallback() {
@@ -223,34 +223,37 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
 
         View bottomBar = mRootView.findViewById(R.id.bottom_toolbar);
-        int hidePos = mRes.getDimensionPixelOffset(R.dimen.bottom_bar_hide_position);
-        if(!mIsLand) {                                              // hide bottom bar at start
-            bottomBar.animate().translationY(hidePos).start();
-        }else {
-            bottomBar.animate().translationX(-hidePos).start();
-        }
+
+//
+//        int hidePos = mRes.getDimensionPixelOffset(R.dimen.bottom_bar_hide_position);
+//        if (!mIsLand) {                                              // hide bottom bar at start
+//            bottomBar.animate().translationY(hidePos).start();
+//        } else {
+//            bottomBar.animate().translationX(-hidePos).start();
+//        }
 
 // progress
         mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
         mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
 
+        if (!mIsWide) {
+            Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
-        Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.setTitle("");
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
+            if (actionBar != null) {
+                actionBar.setTitle("");
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+                actionBar.setDisplayHomeAsUpEnabled(true);
             }
-        });
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
 
 
         Resources res = getResources();
@@ -309,7 +312,7 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                BottomBarScroll.setContinue();
+                BottomBarScroll.setContinue();
                 mNestedScrollView.scrollTo(0, 0);
             }
         });
@@ -317,7 +320,7 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                BottomBarScroll.setContinue();
+                BottomBarScroll.setContinue();
                 if (mTextSize < mTextSource.length()) {
                     mIsSkipToEnd = true;
                     mProgressBarText.setVisibility(View.VISIBLE);
@@ -336,14 +339,14 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        if(!(mIsWide && mIsLand)) {
+        if (!mIsWide) {
             mImageButtonHome.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     getActivity().onBackPressed();
                 }
             });
-        }else {
+        } else {
             mImageButtonHome.setVisibility(View.GONE);          // not active on wide and land
         }
 
