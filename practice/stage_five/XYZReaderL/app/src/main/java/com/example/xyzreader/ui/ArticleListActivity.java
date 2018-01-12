@@ -220,7 +220,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 int offsetSwipe = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
                 mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
 // wide
-                if (mIsWide && mIsLand) {
+                if (mIsWide) {
                     ViewGroup.MarginLayoutParams lp;
 
 
@@ -261,7 +261,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 // wide
-        if (mIsWide && mIsLand) {
+        if (mIsWide) {
 // viewpager
             mStartingItemPosition = -1;
             Resources res = getResources();
@@ -288,7 +288,11 @@ public class ArticleListActivity extends AppCompatActivity implements
                 public void onPageScrollStateChanged(int state) {
                 }
             });
-            mPager.setVisibility(View.INVISIBLE);
+
+            if(mIsStarting) {
+                mPager.setVisibility(View.GONE);
+            }
+
             mPager.setPageTransformer(false, new PageTransformer());
 //            mPager.setScrollDurationFactor(1);
         }
@@ -443,7 +447,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         ((RecyclerAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
 
 // wide
-        if (mIsWide && mIsLand) {
+        if (mIsWide) {
             mPagerAdapter.swap(cursor);
             mPagerAdapter.setStartingItemId(mStartingItemId);
         }
@@ -483,13 +487,13 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this, p1, p2);
-        if (!(mIsWide && mIsLand)) {
-
+        if (!(mIsWide)) {
             startActivity(intent, optionsCompat.toBundle());
+            return;
         }
 
 // wide
-        if (mIsWide && mIsLand) {
+        if (mIsWide) {
             mStartingItemId = id;
             mStartingItemPosition = pos;
 
@@ -510,8 +514,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             mPagerAdapter.setStartingItemId(mStartingItemId);
             mPager.setCurrentItem(mStartingItemPosition, false);
             mPager.setVisibility(View.VISIBLE);
-
-
         }
     }
 
