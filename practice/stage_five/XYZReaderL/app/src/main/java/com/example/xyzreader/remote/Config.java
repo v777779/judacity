@@ -12,14 +12,18 @@ import android.view.View;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.ui.ArticleDetailFragment;
+import com.example.xyzreader.ui.BottomBarRecycler;
 
 public class Config {
     private static String TAG = Config.class.toString();
 
-    // remoteEndpointUtil
-// correction!!! hardcoded url
+
+// instructive motions
     public static boolean sIsInstructedPort;
     public static boolean sIsInstructedLand;
+
+    public static boolean sIsInstructedBottomPort;
+    public static boolean sIsInstructedBottomLand;
 
     public static final String BASE_URL = "https://go.udacity.com/xyz-reader-json";
 
@@ -255,13 +259,14 @@ public class Config {
         as.setStartDelay(startDelay);
         as.start();
     }
+
     public static void collapse(Resources res, View view, int startDelayId) {
         final AppBarLayout appBarLayout = ((AppBarLayout) view.findViewById(R.id.app_bar_detail));
         int startDelay = res.getInteger(startDelayId);
         view.animate().setStartDelay(startDelay).withEndAction(new Runnable() {
             @Override
             public void run() {
-                appBarLayout.setExpanded(false,true);
+                appBarLayout.setExpanded(false, true);
             }
         }).start();
 
@@ -269,14 +274,14 @@ public class Config {
 
 
     public static void instructiveMotion(ArticleDetailFragment fragment) {
-        if(fragment.getActivity() == null) return;
+        if (fragment.getActivity() == null) return;
 
         Resources res = fragment.getActivity().getResources();
         View view = fragment.getRootView();
         boolean isLand = res.getBoolean(R.bool.is_land);
         boolean isWide = res.getBoolean(R.bool.is_wide);
 
-        if(view == null || fragment.getBitmap() == null) return;
+        if (view == null || fragment.getBitmap() == null) return;
 
 
         if (!isLand && !sIsInstructedPort) {
@@ -285,17 +290,29 @@ public class Config {
         }
         if (isLand && !sIsInstructedLand) {
             if (!isWide) {
-                collapse(res,view,R.integer.instructive_start_delay);
+                collapse(res, view, R.integer.instructive_start_delay);
             } else {
                 motion(res, view, R.dimen.instructive_scroll_pos_land);
             }
             sIsInstructedLand = true;
 
         }
-
-
-
     }
 
+    // bottom bar
+    public static void instructiveMotion(Context context, View view) {
+        if (!sIsInstructedBottomPort) {
+            BottomBarRecycler br = new BottomBarRecycler(context, null);
+            br.setContinue(view);
+            sIsInstructedBottomPort = true;
+
+        }
+        if (!sIsInstructedBottomLand) {
+            BottomBarRecycler br = new BottomBarRecycler(context, null);
+            br.setContinue(view);
+            sIsInstructedBottomLand = true;
+        }
+
+    }
 
 }

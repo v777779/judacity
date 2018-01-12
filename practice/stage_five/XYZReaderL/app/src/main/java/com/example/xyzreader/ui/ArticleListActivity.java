@@ -152,6 +152,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private boolean mIsFullScreenMode;
     private boolean mIsSwipeMode;
 
+    private boolean mIsStarting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,6 +311,10 @@ public class ArticleListActivity extends AppCompatActivity implements
                     setFullScreen(FULL_SCREEN_MODE_OFF);
                 }
             });
+        }
+// instructive motion
+        if(mIsFullScreen ) {
+           instructiveMotion(this, mBottomBar);
         }
 
 // full screen
