@@ -288,17 +288,8 @@ public class ArticleDetailFragment extends Fragment implements
                 mLineY = mNestedScrollView.getScrollY();
                 if (mLineY > 0 &&
                         mRecyclerBody.getHeight() - mLineY < FRAGMENT_TEXT_OFFSET &&
-                        mList.size() < mListSource.size()) {                             // not all loaded
-                    int count = 0;
-                    mRecyclerBody.setLayoutFrozen(false);
-                    while (count < FRAGMENT_TEXT_SIZE && mList.size() < mListSource.size()) {
-                        String s = htmlConvert(mListSource.get(mList.size()));
-                        mList.add(s);
-                        count += s.length();
-
-                    }
-                    mRecyclerBodyAdapter.notifyDataSetChanged();
-                    mRecyclerBody.setLayoutFrozen(true);
+                        mList.size() < mListSource.size()) {                // not all loaded
+                    loadPages(LOAD_NEXT_PAGE);                              // freeze recycler
                     mLastY = mLineY;        // last position
                 }
             }
@@ -329,31 +320,11 @@ public class ArticleDetailFragment extends Fragment implements
 
                 if (mList.size() < mListSource.size()) {
                     mProgressBarText.setVisibility(View.VISIBLE);
-                    mRecyclerBody.setLayoutFrozen(false);
-                    mList.addAll(mListSource.subList(mList.size(),mListSource.size())); // up to end
-                    mRecyclerBodyAdapter.notifyDataSetChanged();
-                    mRecyclerBody.setLayoutFrozen(true);
-
+                    loadPages(LOAD_ALL_PAGES);
                     mIsSkipToEnd = true;
-                }else {
+                } else {
                     mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
                 }
-
-//                if (mTextSize < mTextSource.length()) {
-//                    mIsSkipToEnd = true;
-//                    mProgressBarText.setVisibility(View.VISIBLE);
-//
-//                    new Handler().post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            loadTextToLayout(LOAD_ALL_PAGES);
-//                            mProgressBarText.setVisibility(View.INVISIBLE);
-//                        }
-//                    });
-//
-//                } else {
-//                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
-//                }
             }
         });
 
@@ -451,25 +422,30 @@ public class ArticleDetailFragment extends Fragment implements
         if (mIsStarting) {
             mListSource = getList();
             mList = new ArrayList<>();
-            int count = 0;
-            mRecyclerBody.setLayoutFrozen(false);
-            while (count < FRAGMENT_TEXT_SIZE && mList.size() < mListSource.size()) {
-                String s = htmlConvert(mListSource.get(mList.size()));
-                mList.add(s);
-                count += s.length();
-
-            }
-            mRecyclerBodyAdapter.swap(mList);
-            mRecyclerBody.setLayoutFrozen(true);
+            loadPages(LOAD_NEXT_PAGE);
         } else {
             mRecyclerBody.setLayoutFrozen(false);
             mRecyclerBodyAdapter.swap(mList);
             mRecyclerBody.setLayoutFrozen(true);
-
         }
 
         bindViews();
     }
+
+
+    private void loadPages(boolean isLoadAll) {
+        mRecyclerBody.setLayoutFrozen(false);
+        int count = 0;
+        while ((count < FRAGMENT_TEXT_SIZE || isLoadAll) && mList.size() < mListSource.size()) {
+            String s = htmlConvert(mListSource.get(mList.size()));
+            mList.add(s);
+            count += s.length();
+        }
+        mRecyclerBodyAdapter.swap(mList);
+        mRecyclerBody.setLayoutFrozen(true);
+
+    }
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -596,7 +572,6 @@ public class ArticleDetailFragment extends Fragment implements
         return list;
 
     }
-
 
 
     //     * Returns true if {@param view} is contained within {@param container}'s bounds.

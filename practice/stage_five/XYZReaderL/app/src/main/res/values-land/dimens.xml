@@ -3,7 +3,7 @@
     <dimen name="linear_top_margin">32dp</dimen>
     <dimen name="linear_bottom_margin">64dp</dimen>
     <dimen name="linear_left_margin">48dp</dimen>
-    <dimen name="linear_right_margin">16dp</dimen>
+    <dimen name="linear_right_margin">32dp</dimen>
 
     <!--appbar-->
     <dimen name="app_bar_height">400dp</dimen>
