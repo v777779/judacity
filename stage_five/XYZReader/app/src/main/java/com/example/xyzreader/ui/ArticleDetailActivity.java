@@ -216,7 +216,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
                     return;
                 }
             }
-// bug fix  if cursor obsoleted exit from activity
+
             Toast.makeText(this, getString(R.string.cursor_message), Toast.LENGTH_SHORT).show();
             finish();
         }
