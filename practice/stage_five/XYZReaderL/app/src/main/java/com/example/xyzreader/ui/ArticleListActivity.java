@@ -577,12 +577,16 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onCallback(int mode) {  // FragmentError Support
+
         switch (mode) {
             case CALLBACK_FRAGMENT_RETRY:
                 refresh(mIsSwipeRefresh ? ACTION_SWIPE_REFRESH : ACTION_TIME_REFRESH);
                 break;
             case CALLBACK_FRAGMENT_CLOSE:
                 hideRefreshingUI();
+                if(mIsFullScreen) {
+                    setFullScreen(FULL_SCREEN_MODE_ON);
+                }
                 break;
             case CALLBACK_FRAGMENT_EXIT:
                 finish();
