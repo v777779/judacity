@@ -64,6 +64,6 @@
 
     <!--test-->
     <color name="colorBackMask">#FF333333</color>
-
+    <color name="colorBackMaskLayout">#80dddbdb</color>
 </resources>
 

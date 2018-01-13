@@ -39,6 +39,8 @@
     <dimen name="linear_left_margin">16dp</dimen>
     <dimen name="linear_right_margin">16dp</dimen>
 
+    <!--fragment layout-->
+    <dimen name="layout_fixed_width">750dp</dimen>
 
     <!--margins-->
     <dimen name="micro_margin">2dp</dimen>
