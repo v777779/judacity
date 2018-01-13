@@ -76,7 +76,10 @@ import static com.example.xyzreader.remote.Config.LOAD_ALL_PAGES;
 import static com.example.xyzreader.remote.Config.LOAD_NEXT_PAGE;
 
 /**
- * Created by V1 on 30-Dec-17.
+ * Exercise for course : Android Developer Nanodegree
+ * Created: Vadim Voronov
+ * Date: 03-Jan-18
+ * Email: vadim.v.voronov@gmail.com
  */
 
 public class ArticleDetailFragment extends Fragment implements

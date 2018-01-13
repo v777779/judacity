@@ -19,8 +19,12 @@ import static com.example.xyzreader.remote.Config.BOTTOM_BAR_FAST_HIDE;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLL_DY_THRESHOLD;
 
 /**
- * Created by V1 on 03-Jan-18.
+ * Exercise for course : Android Developer Nanodegree
+ * Created: Vadim Voronov
+ * Date: 03-Jan-18
+ * Email: vadim.v.voronov@gmail.com
  */
+
 
 public class BottomBarRecycler extends CoordinatorLayout.Behavior {
 
