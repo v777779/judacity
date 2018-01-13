@@ -125,45 +125,121 @@ public class ArticleListActivity extends AppCompatActivity implements
     private ProgressBar mProgressBar;
 
     /**
-     * View bottom pop up toolbar with buttons
+     * View bottom pop up bar with buttons
      */
     private View mBottomBar;
+
+    /**
+     * ImageButton button of  bottom pop up bar
+     * Starts onBackOPressed() method
+     */
     private ImageButton mImageButtonHome;
+    /**
+     * ImageButton button of  bottom pop up bar
+     * Sets fullscreen mode
+     */
     private ImageButton mImageButtonFullScreen;
 
-
+    /**
+     * BroadcastReceiver  receives messages from UpdateService
+     */
     private BroadcastReceiver mRefreshingReceiver;
+    /**
+     * Boolean true if refresh initiated by swipe gesture
+     */
     private boolean mIsSwipeRefresh;
+
+    /**
+     * Boolean true if refreshing by swipe in progress
+     */
     private boolean mIsRefreshing;   // progress and check enter to second activity
 
-    // transition
+    /**
+     * Bundle storage for back transition of shared elements support
+     */
     private Bundle mTmpReenterState;
+    /**
+     * SharedElementCallback for back transition of shared elements support
+     */
     private SharedElementCallback mSharedCallback;
 
-    // viewpager
+    /**
+     * ViewPager for ArticleDetailFragments objects
+     */
     private ViewPager mPager;
+    /**
+     * ViewPagerAdapter for ViewPager object
+     */
     private ViewPagerAdapter mPagerAdapter;
+    /**
+     * Resources of activity
+     */
     private Resources mRes;
+    /**
+     * Boolean is true for tablet with sw800dp
+     */
     private boolean mIsWide;
+    /**
+     * Boolean is true for landscape layout
+     */
     private boolean mIsLand;
+
+    /**
+     * Integer  id of starting item in Cursor
+     */
     private long mStartingItemId;
+    /**
+     * Integer  position of starting item in  Cursor/ViewPager
+     */
     private int mStartingItemPosition;
+    /**
+     * Integer  position of current item in  Cursor/ViewPager
+     */
     private int mCurrentItemPosition;
 
-
+    /**
+     * Cursor object with data from database for ArticleDetailFragments
+     */
     private Cursor mCursor;
-    private ArticleDetailFragment mFragmentPage;
 
-    // preferences
+
+    /**
+     *  Boolean is true for full screen mode
+     */
     private boolean mIsFullScreen;
+    /**
+     *  Boolean is true for full screen mode preference
+     *  Actual for next start of application
+     */
     private boolean mIsFullScreenMode;
+    /**
+     *  Boolean is true is SwipeRefreshLayout is enabled
+     */
     private boolean mIsSwipeMode;
 
+    /**
+     * Boolean is true if item was selected
+     *  Used to show back image for wide screen devices
+     */
     private boolean mIsSelected;
-
+    /**
+     *  ConstraintLayout parent of ViewPager
+     *  Used for fullscreen mode
+     */
     private ConstraintLayout mParentConstraint;
+    /**
+     *  AppBarLayout used for full screen mode
+     */
     private AppBarLayout mAppBarLayout;
 
+    /**
+     *  Creates activity
+     *  Setup views, listeners and RecyclerView, ViewPager objects
+     *  Setup shared elements transition callback
+     *  Runs Loader for Cursor object
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -453,13 +529,10 @@ public class ArticleListActivity extends AppCompatActivity implements
             mCachedBitmap = null;
         }
 
-
 // instructive motion  viewpager here only
         if (fragment != null && mPager.getVisibility() == View.VISIBLE) {
             instructiveMotion(fragment);
         }
-
-        mFragmentPage = fragment;
     }
 
     private int mCachedColor;
@@ -675,7 +748,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
 
-
     private void setupFullScreenListener() {
         // toolbar
         getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
@@ -741,7 +813,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         });
     }
 
-    private void setupViews(){
+    private void setupViews() {
         mToolbar = findViewById(R.id.toolbar_main);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
@@ -759,7 +831,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
-    private void setupActionBar(){
+    private void setupActionBar() {
         setSupportActionBar(mToolbar);
 
         mToolbarLogo.setOnClickListener(new View.OnClickListener() {

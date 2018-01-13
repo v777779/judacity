@@ -240,7 +240,7 @@ public class ArticleDetailFragment extends Fragment implements
 
 
     /**
-     * Creates fragment
+     * Creates fragment activity
      * Postpone transition of shared elements
      * Extract arguments to mStartingItemId and mCurrentItemId
      * Restores mList and mListSource Lst<String>  object with text data of fragment

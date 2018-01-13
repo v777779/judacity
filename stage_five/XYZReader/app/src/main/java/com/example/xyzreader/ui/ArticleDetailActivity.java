@@ -50,7 +50,6 @@ public class ArticleDetailActivity extends AppCompatActivity implements
      * Cursor object with data from database for ArticleDetailFragments
      */
     private Cursor mCursor;
-
     /**
      * Integer  id of starting item in Cursor
      */
