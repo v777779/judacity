@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
@@ -300,7 +302,20 @@ public class ArticleDetailFragment extends Fragment implements
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                String shareText="";
+                if(mTitleView != null && mSubTitleView != null) {
+                    shareText = "Interesting book: " + mTitleView.getText() + " " + mSubTitleView.getText();
+                }
+                if(mCursor != null && mCursor.getCount() > 0) {
+                    mCursor.moveToFirst();
+                    shareText = shareText + ", cover image link: "+ mCursor.getString(ArticleLoader.Query.PHOTO_URL);
+                }
+
+                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setText(shareText)
+                        .getIntent(), getString(R.string.action_share)));
+
 
             }
         });
