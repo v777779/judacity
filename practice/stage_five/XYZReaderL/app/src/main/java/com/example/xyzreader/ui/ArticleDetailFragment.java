@@ -432,6 +432,21 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
+    // correction position
+//            if (!mIsWide) {
+//                mNestedScrollView.animate().withEndAction(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        int scrollY = mNestedScrollView.getScrollY();
+//                        int dY = (int) (scrollY * 0.295);
+//                        if (mIsLand) {
+//                            dY = -1500 + (int) (scrollY * 0.0003);
+//                        }
+//                        mNestedScrollView.scrollTo(0, scrollY + dY);
+//                    }
+//                }).start();
+//            }
+
 
     private void loadPages(boolean isLoadAll) {
         mRecyclerBody.setLayoutFrozen(false);
