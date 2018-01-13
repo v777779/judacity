@@ -97,22 +97,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 // TODO Palette to Detail Load status bar
 
 
-// _TODO Glide load support when transition
-
-// TODO Landscape bottom bar to mode to side and add side margins to text
-
-// TODO landscape add instructive movement
-// TODO Cancel loader when click if not finished  , made simple block on click
-// TODO Layouts on WXGA
 // TODO BROADCAST ACTION in Exception of UpdateService and mIsRefreshing
-// _TODO status bar hide on second screen
-// TODO BottomBar buttons
-// _TODO Text overlap in landscape 1st element recycler
-
-// _TODO Settings   fullscreen always, swipe off
-
-// _TODO buttons in bottom view and smart scrolling tracking
-
+// TODO logo
 // TODO move 600 to 800 and make new layout 600
 // TODO mPagerAdapter setCurrentItemId() add function
 // TODO  mRes add to all activities
