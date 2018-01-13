@@ -323,7 +323,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             });
         }
 
-        setFullScreen(mIsFullScreen);
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
 
@@ -396,6 +395,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (mIsFullScreen) {
             instructiveMotion(this, mBottomBar);
         }
+        setFullScreen(mIsFullScreen);
 
     }
 

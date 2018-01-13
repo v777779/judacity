@@ -266,7 +266,6 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-// TODO set Listener on Action.SHARE
 // fab
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
