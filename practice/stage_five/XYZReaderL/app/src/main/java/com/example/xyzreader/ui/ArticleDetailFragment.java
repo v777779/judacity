@@ -1,23 +1,16 @@
 package com.example.xyzreader.ui;
 
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -30,21 +23,19 @@ import android.support.v4.widget.NestedScrollView;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowInsets;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -74,6 +65,8 @@ import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_CURRENT_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_STARTING_ID;
 
 
+import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_TEXT_RECYCLER;
+import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_TEXT_SOURCE;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_FULLSCREEN;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_OFFSET;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_SIZE;
@@ -89,7 +82,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     // layout
     private NestedScrollView mNestedScrollView;
-    private LinearLayout mLinearLayout;
+    private FrameLayout mFrameLayout;
     // text
     private TextView mTitleView;
     private TextView mSubTitleView;
@@ -112,10 +105,6 @@ public class ArticleDetailFragment extends Fragment implements
     private SimpleDateFormat mDateFormat;
     private SimpleDateFormat mOutputFormat;
     private GregorianCalendar mStartOfEpoch;
-    // text
-    private LayoutInflater mInflater;
-    private String mTextSource;
-    private int mTextSize;
 
     // transition
     private long mStartingItemId;
@@ -130,6 +119,14 @@ public class ArticleDetailFragment extends Fragment implements
     private boolean mIsLand;
 
     private Resources mRes;
+
+    // recycler
+    private boolean mIsStarting;
+    private ArrayList<String> mList;
+    private ArrayList<String> mListSource;
+    private RecyclerView mRecyclerBody;
+    private RecyclerBodyAdapter mRecyclerBodyAdapter;
+
 
     public static Fragment newInstance(long startingItemId, long currentItemId) {
         Bundle arguments = new Bundle();
@@ -179,6 +176,13 @@ public class ArticleDetailFragment extends Fragment implements
             mCurrentItemId = getArguments().getLong(BUNDLE_FRAGMENT_CURRENT_ID);
         }
 
+        mIsStarting = savedInstanceState == null;
+
+        if (savedInstanceState != null) {
+            mList = savedInstanceState.getStringArrayList(BUNDLE_FRAGMENT_TEXT_RECYCLER);
+            mListSource = savedInstanceState.getStringArrayList(BUNDLE_FRAGMENT_TEXT_SOURCE);
+        }
+
 
         Timber.d("lifecycle fragment: onCreate():" + mCurrentItemId);
 // fab ***hiding***
@@ -199,12 +203,13 @@ public class ArticleDetailFragment extends Fragment implements
 
     }
 
+    // TODO remove later
     private View mBottomToolbar;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mInflater = inflater;
+
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         mRes = getResources();
 // wide
@@ -213,7 +218,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         // bind
         mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
-        mLinearLayout = mRootView.findViewById(R.id.linear_body);
+        mFrameLayout = mRootView.findViewById(R.id.linear_body);
 // text
         mTitleView = mRootView.findViewById(R.id.article_title);
         mSubTitleView = mRootView.findViewById(R.id.article_subtitle);
@@ -260,16 +265,15 @@ public class ArticleDetailFragment extends Fragment implements
         );
 
 // linear
-
-        mLinearLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        mFrameLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if (mIsSkipToEnd && mTextSize >= mTextSource.length()) {                // scroll to end
-                    mNestedScrollView.scrollTo(0, mLinearLayout.getHeight());
-                    mIsSkipToEnd = false;
-
+                if (mIsSkipToEnd && mList.size() >= mListSource.size()) {                // scroll to end
+                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
+                    mProgressBarText.setVisibility(View.INVISIBLE);
                 }
-                mProgressBarText.setVisibility(View.INVISIBLE);
+                mIsSkipToEnd = false;
+
             }
         });
 
@@ -282,18 +286,25 @@ public class ArticleDetailFragment extends Fragment implements
             public void onScrollChanged() {
                 if (mNestedScrollView == null) return;
                 mLineY = mNestedScrollView.getScrollY();
-                if (mLineY > 0 &&                                                       // scroll down
-                        mLineY > mLastY &&                                              // after last
-                        mLineY > mLinearLayout.getHeight() - FRAGMENT_TEXT_OFFSET &&    // before the end
-                        mTextSize < mTextSource.length()) {                             // not all loaded
+                if (mLineY > 0 &&
+                        mRecyclerBody.getHeight() - mLineY < FRAGMENT_TEXT_OFFSET &&
+                        mList.size() < mListSource.size()) {                             // not all loaded
+                    int count = 0;
+                    mRecyclerBody.setLayoutFrozen(false);
+                    while (count < FRAGMENT_TEXT_SIZE && mList.size() < mListSource.size()) {
+                        String s = htmlConvert(mListSource.get(mList.size()));
+                        mList.add(s);
+                        count += s.length();
 
-                    loadTextToLayout(LOAD_NEXT_PAGE);
+                    }
+                    mRecyclerBodyAdapter.notifyDataSetChanged();
+                    mRecyclerBody.setLayoutFrozen(true);
                     mLastY = mLineY;        // last position
                 }
             }
         });
 
-
+// TODO set Listener on Action.SHARE
 // fab
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,21 +326,34 @@ public class ArticleDetailFragment extends Fragment implements
             @Override
             public void onClick(View view) {
                 BottomBarScroll.setContinue();
-                if (mTextSize < mTextSource.length()) {
-                    mIsSkipToEnd = true;
+
+                if (mList.size() < mListSource.size()) {
                     mProgressBarText.setVisibility(View.VISIBLE);
+                    mRecyclerBody.setLayoutFrozen(false);
+                    mList.addAll(mListSource.subList(mList.size(),mListSource.size())); // up to end
+                    mRecyclerBodyAdapter.notifyDataSetChanged();
+                    mRecyclerBody.setLayoutFrozen(true);
 
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            loadTextToLayout(LOAD_ALL_PAGES);
-                            mProgressBarText.setVisibility(View.INVISIBLE);
-                        }
-                    });
-
-                } else {
-                    mNestedScrollView.scrollTo(0, mLinearLayout.getHeight());
+                    mIsSkipToEnd = true;
+                }else {
+                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
                 }
+
+//                if (mTextSize < mTextSource.length()) {
+//                    mIsSkipToEnd = true;
+//                    mProgressBarText.setVisibility(View.VISIBLE);
+//
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            loadTextToLayout(LOAD_ALL_PAGES);
+//                            mProgressBarText.setVisibility(View.INVISIBLE);
+//                        }
+//                    });
+//
+//                } else {
+//                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
+//                }
             }
         });
 
@@ -354,6 +378,14 @@ public class ArticleDetailFragment extends Fragment implements
         mProgressBarText.setVisibility(View.VISIBLE);
         mProgressBarImage.setVisibility(View.VISIBLE);
 
+// recycler
+        mRecyclerBody = mRootView.findViewById(R.id.article_body_recycler);
+        mRecyclerBodyAdapter = new RecyclerBodyAdapter(getActivity());
+        mRecyclerBody.setAdapter(mRecyclerBodyAdapter);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.VERTICAL,
+                false);
+        mRecyclerBody.setLayoutManager(layoutManager);
 
         return mRootView;
     }
@@ -364,6 +396,14 @@ public class ArticleDetailFragment extends Fragment implements
             mFab.setVisibility(View.INVISIBLE);
 
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(BUNDLE_FRAGMENT_TEXT_RECYCLER, mList);
+        outState.putStringArrayList(BUNDLE_FRAGMENT_TEXT_SOURCE, mListSource);
+
     }
 
     @Override
@@ -407,7 +447,27 @@ public class ArticleDetailFragment extends Fragment implements
 
         mCursor = cursor;
         mCursor.moveToFirst();
-// test!!!
+
+        if (mIsStarting) {
+            mListSource = getList();
+            mList = new ArrayList<>();
+            int count = 0;
+            mRecyclerBody.setLayoutFrozen(false);
+            while (count < FRAGMENT_TEXT_SIZE && mList.size() < mListSource.size()) {
+                String s = htmlConvert(mListSource.get(mList.size()));
+                mList.add(s);
+                count += s.length();
+
+            }
+            mRecyclerBodyAdapter.swap(mList);
+            mRecyclerBody.setLayoutFrozen(true);
+        } else {
+            mRecyclerBody.setLayoutFrozen(false);
+            mRecyclerBodyAdapter.swap(mList);
+            mRecyclerBody.setLayoutFrozen(true);
+
+        }
+
         bindViews();
     }
 
@@ -476,6 +536,7 @@ public class ArticleDetailFragment extends Fragment implements
                                                    DataSource dataSource,
                                                    boolean isFirstResource) {
                         mProgressBarImage.setVisibility(View.INVISIBLE);
+                        mProgressBarText.setVisibility(View.INVISIBLE);
                         ActivityCompat.startPostponedEnterTransition(getActivity());
 // test!!!
                         mBitmap = ((BitmapDrawable) resource).getBitmap();
@@ -484,15 +545,13 @@ public class ArticleDetailFragment extends Fragment implements
                         return false;
                     }
                 })
-//                .transition(withCrossFade())
+                .transition(withCrossFade())
                 .into(mToolbarImage);
 
 
         mToolbarImage.setTransitionName(getString(R.string.transition_image, mCurrentItemId));
         mTitleView.setTransitionName(getString(R.string.transition_title, mCurrentItemId));
-        mTextSource = mCursor.getString(ArticleLoader.Query.BODY);  // load all text
-        mTextSize = 0;
-        loadTextToLayout(LOAD_NEXT_PAGE);
+
     }
 
     // test!!!
@@ -511,50 +570,33 @@ public class ArticleDetailFragment extends Fragment implements
         return Html.fromHtml(text).toString();
     }
 
-    private void loadTextToLayout(boolean isLoadPage) {
-        String subText = "";
-        int pos = mTextSource.indexOf("\n", mTextSize + FRAGMENT_TEXT_SIZE);
-        if (pos > 0 && isLoadPage) {
-            if (mTextSource.substring(pos - 1, pos).equals("\r")) pos = pos - 1;
-            subText = mTextSource.substring(mTextSize, pos);
-            mTextSize = pos; // last not used position
-        } else {
-            subText = mTextSource.substring(mTextSize);     // up to the end
-            mTextSize = mTextSource.length();     // block next addition
+    private ArrayList<String> getList() {
+        ArrayList<String> list = new ArrayList<>();
+        int startPos;
+        int endPos;
+
+        String s = mCursor.getString(ArticleLoader.Query.BODY);
+        startPos = 0;
+        while (startPos < s.length()) {
+            endPos = s.indexOf("\n", startPos + FRAGMENT_TEXT_SIZE);
+            if (endPos > 0) {
+                if (s.substring(endPos - 1, endPos).equals("\r")) {
+                    endPos = endPos - 1;
+                }
+                list.add(s.substring(startPos, endPos));
+                startPos = endPos; // last not used position
+            } else {
+                if (startPos < s.length()) {  // remains
+                    list.add(s.substring(startPos));
+                    startPos = s.length();
+                }
+            }
+
         }
-
-        subText = htmlConvert(subText);
-
-        View item = mInflater.inflate(R.layout.fragment_text_item, null);
-        TextView textView = item.findViewById(R.id.article_body_ext);
-        textView.setTypeface(mCaecilia);
-        textView.setText(subText);
-        mLinearLayout.addView(textView);
+        return list;
 
     }
 
-// fab ***hiding***
-//    private class TransitionAdapter implements Transition.TransitionListener {
-//        @Override
-//        public void onTransitionStart(Transition transition) {
-//        }
-//
-//        @Override
-//        public void onTransitionEnd(Transition transition) {
-//        }
-//
-//        @Override
-//        public void onTransitionCancel(Transition transition) {
-//        }
-//
-//        @Override
-//        public void onTransitionPause(Transition transition) {
-//        }
-//
-//        @Override
-//        public void onTransitionResume(Transition transition) {
-//        }
-//    }
 
 
     //     * Returns true if {@param view} is contained within {@param container}'s bounds.

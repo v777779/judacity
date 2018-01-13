@@ -10,11 +10,11 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.example.xyzreader.R;
+import com.example.xyzreader.remote.Config;
 
 import static android.support.v4.view.ViewCompat.SCROLL_AXIS_VERTICAL;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_DELAY_HIDE;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_FAST_HIDE;
-import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLLY_THRESHOLD;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLL_DY_THRESHOLD;
 
 /**
@@ -29,11 +29,13 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
     private boolean mIsActive;
     private boolean mIsLowScrollTextY;
     private boolean mIsLand;
+    private boolean mIsInstructive;
 
     // to inflate from XML this constructor
     public BottomBarRecycler(Context context, AttributeSet attrs) {
         super(context, attrs);
         mIsLand = context.getResources().getBoolean(R.bool.is_land);
+        mIsInstructive = false;
     }
 
     public BottomBarRecycler(Context context) {
@@ -41,6 +43,8 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
         boolean isLand = context.getResources().getBoolean(R.bool.is_land);
         if(isWide && !isLand) mIsLand = !isLand;
         mIsLand = (isWide && !isLand)?!isLand:isLand;
+        mIsInstructive = true;
+        Config.setInstructiveLock(true); // lock mutex
     }
 
 
@@ -52,6 +56,11 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
             int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
         mIsLowScrollTextY = false;
+
+        if(!mIsInstructive && Config.isInstrictiveLocked()) {
+            int k = 1;
+            return;   // стандартные блокируются
+        }
 
         if(dyConsumed < Math.abs(BOTTOM_BAR_SCROLL_DY_THRESHOLD)){
             return;
@@ -75,9 +84,9 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
     private void setTimer(final View child) {
         if (child == null) return;
 
-        if (!isActive() && mIsLowScrollTextY) return;  // выйти если неактивно
+        if (!mIsActive && mIsLowScrollTextY) return;  // выйти если неактивно
 
-        if (!isActive()) {
+        if (!mIsActive) {
             child.setAlpha(1.0f);
             if (!mIsLand) {
                 child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
@@ -97,7 +106,7 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
 
             @Override
             public void onFinish() {
-                setActive(false);
+                mIsActive = false;
                 if (child == null) return;
 //                child.animate().alpha(0).setDuration(500).start();
                 if (!mIsLand) {
@@ -107,20 +116,15 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
                 }
 
                 mCountDownTimer = null;
+                Config.setInstructiveLock(false); // unLock mutex
             }
         };
         mCountDownTimer.start();
-        setActive(true);
+        mIsActive = true;
         mChild = child;
     }
 
-    private synchronized boolean isActive() {
-        return mIsActive;
-    }
 
-    private synchronized void setActive(boolean isActive) {
-        mIsActive = isActive;
-    }
 
     public void setContinue(View child) {
 

@@ -96,7 +96,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 // TODO Palette to Detail Load status bar
 
-
+// TODO remove test!!!
 // TODO BROADCAST ACTION in Exception of UpdateService and mIsRefreshing
 // TODO logo
 // TODO move 600 to 800 and make new layout 600

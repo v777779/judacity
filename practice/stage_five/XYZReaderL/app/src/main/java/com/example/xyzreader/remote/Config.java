@@ -27,6 +27,9 @@ public class Config {
     public static boolean sIsInstructedBottomPort;
     public static boolean sIsInstructedBottomLand;
 
+    private static boolean sInstructiveMutex;
+
+
     public static final String BASE_URL = "https://go.udacity.com/xyz-reader-json";
 
     // articleListActivity
@@ -74,9 +77,12 @@ public class Config {
     public static final String BUNDLE_FRAGMENT_CURRENT_ID = "bundle_fragment_current_id";
     public static final String BUNDLE_FRAGMENT_STARTING_POS = "bundle_fragment_starting_pos";
     public static final String BUNDLE_FRAGMENT_CURRENT_POS = "bundle_fragment_current_pos";
+    public static final String BUNDLE_FRAGMENT_TEXT_RECYCLER = "bundle_fragment_text_recycler";
+    public static final String BUNDLE_FRAGMENT_TEXT_SOURCE = "bundle_fragment_text_source";
+
 
     public static final int FRAGMENT_TEXT_SIZE = 2000;
-    public static final int FRAGMENT_TEXT_OFFSET = 2000;
+    public static final int FRAGMENT_TEXT_OFFSET = 700;
 
     public static final boolean LOAD_ALL_PAGES = false;
     public static final boolean LOAD_NEXT_PAGE = true;
@@ -321,7 +327,7 @@ public class Config {
     public static void collapse(final Context context, View view, int startDelayId) {
         final AppBarLayout appBarLayout = ((AppBarLayout) view.findViewById(R.id.app_bar_detail));
         final int startDelay = context.getResources().getInteger(startDelayId);
-        final View bottomBar =  view.findViewById(R.id.bottom_toolbar);
+        final View bottomBar = view.findViewById(R.id.bottom_toolbar);
 
         ViewPropertyAnimator animator = view.animate().setStartDelay(startDelay);
 
@@ -348,6 +354,7 @@ public class Config {
         animator.start();
 
     }
+
     public static void instructiveMotion(ArticleDetailFragment fragment) {
         if (fragment.getActivity() == null) return;
 
@@ -367,13 +374,7 @@ public class Config {
             sIsInstructedPort = true;
         }
         if (isLand && !sIsInstructedLand) {
-            if (!isWide) {
-                collapse(context, view, R.integer.instructive_start_delay);
-            } else {
-                motion(context, view, R.dimen.instructive_scroll_pos_port);
-//                motionBottom(context, bottomBar);
-            }
-
+            collapse(context, view, R.integer.instructive_start_delay);
             sIsInstructedLand = true;
         }
 
@@ -400,4 +401,14 @@ public class Config {
         BottomBarRecycler br = new BottomBarRecycler(context);
         br.setContinue(view);
     }
+
+    public static synchronized boolean isInstrictiveLocked(){
+        return sInstructiveMutex;
+    }
+
+    public static synchronized void setInstructiveLock(boolean isLocked){
+        sInstructiveMutex = isLocked;
+    }
+
+
 }

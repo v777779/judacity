@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.example.xyzreader.R;
+import com.example.xyzreader.remote.Config;
 
 import static android.support.v4.view.ViewCompat.SCROLL_AXIS_VERTICAL;
 import static com.example.xyzreader.remote.Config.BOTTOM_BAR_DELAY_HIDE;
@@ -47,6 +48,9 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
         mIsLowScrollTextY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < BOTTOM_BAR_SCROLLY_THRESHOLD ;
 
+        if(Config.isInstrictiveLocked()) {
+            return;
+        }
         if(dyConsumed < Math.abs(BOTTOM_BAR_SCROLL_DY_THRESHOLD)){
             return;
         }
@@ -69,9 +73,9 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
     private void setTimer(final View child) {
         if (child == null) return;
 
-        if (!isActive() && mIsLowScrollTextY) return;  // выйти если неактивно
+        if (!mIsActive && mIsLowScrollTextY) return;  // выйти если неактивно
 
-        if (!isActive()) {
+        if (!mIsActive) {
             child.setAlpha(1.0f);
             if (!mIsLand && !mIsWide) {
                 child.animate().translationY(0).setInterpolator(new LinearInterpolator()).start();
@@ -91,7 +95,7 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
 
             @Override
             public void onFinish() {
-                setActive(false);
+                mIsActive = false;
                 if (child == null) return;
 //                child.animate().alpha(0).setDuration(500).start();
                 if (!mIsLand && !mIsWide) {
@@ -104,17 +108,11 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
             }
         };
         mCountDownTimer.start();
-        setActive(true);
+        mIsActive = true;
         mChild = child;
     }
 
-    private synchronized boolean isActive() {
-        return mIsActive;
-    }
 
-    private synchronized void setActive(boolean isActive) {
-        mIsActive = isActive;
-    }
 
     public void setContinue(View child) {
 
