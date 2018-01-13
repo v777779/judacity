@@ -42,6 +42,9 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/swipe_side_margin"
+        android:layout_marginEnd="@dimen/swipe_side_margin"
+        android:layout_marginTop="@dimen/swipe_top_margin"
         android:layout_marginBottom="@dimen/micro_margin"
         app:layout_constraintBottom_toTopOf="@+id/guide_h2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,14 +74,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guide_h2"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/viewpager_constraint"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/micro_margin"
+        android:layout_marginTop="@dimen/viewpager_top_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +120,6 @@
             android:id="@+id/viewpager_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

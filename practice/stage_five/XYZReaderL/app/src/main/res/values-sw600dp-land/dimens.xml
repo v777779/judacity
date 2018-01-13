@@ -1,4 +1,8 @@
 <resources>
+    <!--toolbar fix-->
+
+    <dimen name="swipe_top_margin">4dp</dimen>
+    <dimen name="swipe_side_margin">4dp</dimen>
 
     <!--viewpager_item_text-->
     <dimen name="title_text_size">40sp</dimen>

@@ -220,58 +220,50 @@ public class ArticleListActivity extends AppCompatActivity implements
                 view.onApplyWindowInsets(windowInsets);
                 Resources res = getResources();
 
-
                 int sysBarHeight = windowInsets.getSystemWindowInsetTop() + mToolbar.getLayoutParams().height;
+                int recyclerTop = res.getDimensionPixelSize(R.dimen.recycler_top_padding);
+                int swipeTop = res.getDimensionPixelSize(R.dimen.swipe_top_margin);
+                int viewPagerTop = res.getDimensionPixelSize(R.dimen.viewpager_top_margin);
 // swipe
                 int offsetSwipe = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
                 mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
+
                 ConstraintSet set = new ConstraintSet();
                 set.clone(mParentConstraint);
-
-
-// recycler
-                int offsetTop = res.getDimensionPixelSize(R.dimen.recycler_top_offset);
-                int offsetBottom = res.getDimensionPixelOffset(R.dimen.recycler_bottom_offset);
-                int offsetSide = res.getDimensionPixelOffset(R.dimen.recycler_side_offset);
-                int offsetTopPager = res.getDimensionPixelSize(R.dimen.viewpager_top_offset);
-
 // land and port
                 if (!mIsWide) {
+
                     if (!mIsFullScreen) {
-                        offsetTop += sysBarHeight;
+                        recyclerTop += sysBarHeight;
                     }
-                    set.connect(R.id.swipe_refresh,TOP,R.id.main_constraint,TOP,offsetTop);
+                    set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
                     set.applyTo(mParentConstraint);
+                    mRecyclerView.setPadding(mRecyclerView.getPaddingLeft(), recyclerTop,
+                            mRecyclerView.getPaddingRight(), mRecyclerView.getPaddingBottom());
 
                 } else {
 // wide  land
-
                     if (mIsLand) {
                         if (!mIsFullScreen) {
-                            offsetTop += sysBarHeight;
+                            swipeTop += sysBarHeight;
+                            viewPagerTop +=sysBarHeight;
                         }
-                        set.connect(R.id.swipe_refresh,TOP,R.id.main_constraint,TOP,offsetTop);
-                        set.connect(R.id.border_view,TOP,R.id.main_constraint,TOP,offsetTop);
-                        set.connect(R.id.viewpager_constraint,TOP,R.id.main_constraint,TOP,offsetTop);
+                        set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
+                        set.connect(R.id.border_view, TOP, R.id.main_constraint, TOP, viewPagerTop);
+                        set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, viewPagerTop);
                         set.applyTo(mParentConstraint);
 
                     } else {
 // wide  portrait
                         if (!mIsFullScreen) {
-                            offsetTop += sysBarHeight;
-                            set.connect(R.id.swipe_refresh,TOP,R.id.main_constraint,TOP,offsetTop);
-                            set.connect(R.id.viewpager_constraint, TOP, R.id.border_view, BOTTOM,
-                                    res.getDimensionPixelSize(R.dimen.micro_margin));
+                            swipeTop += sysBarHeight;
+                            set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
+                            set.connect(R.id.viewpager_constraint, TOP, R.id.border_view, BOTTOM, viewPagerTop);
                             set.applyTo(mParentConstraint);
                         } else {
-                            set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, 0);
+                            set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, viewPagerTop);
                             set.applyTo(mParentConstraint);
-
-
-
-
                         }
-
                     }
                 }
                 return windowInsets;
@@ -376,7 +368,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
                 if (mIsFullScreen) {
-                    if(mIsWide && !mIsLand)   mRecyclerView.setVisibility(View.INVISIBLE);
+                    if (mIsWide && !mIsLand) mRecyclerView.setVisibility(View.INVISIBLE);
 //                    mToolbar.setVisibility(View.GONE);
                     mAppBarLayout.setVisibility(View.GONE);
 
@@ -388,7 +380,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                 }
             }
         });
-
 
 
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);

@@ -1,10 +1,11 @@
 <resources>
 
     <!--toolbar fix-->
-    <dimen name="status_bar_height">24dp</dimen>
-    <dimen name="recycler_top_offset">2dp</dimen>
-    <dimen name="recycler_bottom_offset">2dp</dimen>
 
+    <dimen name="swipe_top_margin">4dp</dimen>
+    <dimen name="swipe_side_margin">4dp</dimen>
+
+    <dimen name="viewpager_top_margin">4dp</dimen>
 
 
     <!--progress bar-->
