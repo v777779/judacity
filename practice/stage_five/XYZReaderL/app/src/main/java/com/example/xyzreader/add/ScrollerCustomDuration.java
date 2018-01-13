@@ -1,4 +1,4 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.add;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

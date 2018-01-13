@@ -1,11 +1,9 @@
-package com.example.xyzreader.ui;
+package com.example.xyzreader.add;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.animation.Interpolator;
-import android.widget.Scroller;
 
 import java.lang.reflect.Field;
 
