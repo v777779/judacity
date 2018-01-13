@@ -232,7 +232,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                     if (mIsLand) {
                         if (!mIsFullScreen) {
                             swipeTop += sysBarHeight;
-                            viewPagerTop +=sysBarHeight;
+                            viewPagerTop += sysBarHeight;
                         }
                         set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
                         set.connect(R.id.border_view, TOP, R.id.main_constraint, TOP, viewPagerTop);
@@ -274,9 +274,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 // wide
-        if (mIsWide)
-
-        {
+        if (mIsWide) {
 // viewpager
             mStartingItemPosition = -1;
             Resources res = getResources();
@@ -296,7 +294,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                 @Override
                 public void onPageSelected(int position) {
                     mCurrentItemPosition = position;
-
                 }
 
                 @Override
@@ -306,8 +303,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
             mPager.setVisibility(mIsSelected ? View.VISIBLE : View.GONE);
-
-
             mPager.setPageTransformer(false, new PageTransformer());
 //            mPager.setScrollDurationFactor(1);
         }
@@ -340,12 +335,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         // full screen
         setFullScreen(mIsFullScreen);
-
-// test!!!!
-        Config.sIsInstructedLand = false;
-        Config.sIsInstructedPort = false;
-        Config.sIsInstructedBottomLand = false;
-        Config.sIsInstructedBottomPort = false;
 
 
 // constraint
@@ -584,7 +573,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 break;
             case CALLBACK_FRAGMENT_CLOSE:
                 hideRefreshingUI();
-                if(mIsFullScreen) {
+                if (mIsFullScreen) {
                     setFullScreen(FULL_SCREEN_MODE_ON);
                 }
                 break;

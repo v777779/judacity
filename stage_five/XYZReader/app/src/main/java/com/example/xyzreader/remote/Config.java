@@ -88,8 +88,6 @@ public class Config {
     public static final boolean LOAD_NEXT_PAGE = false;
 
 
-
-
     // article detail scroll
     public static final int BOTTOM_BAR_DELAY_HIDE = 2500;
     public static final int BOTTOM_BAR_FAST_HIDE = 10;
@@ -401,15 +399,16 @@ public class Config {
     }
 
     public static void motionBottom(Context context, View view) {
+        if (view == null) return;
         BottomBarRecycler br = new BottomBarRecycler(context);
         br.setContinue(view);
     }
 
-    public static synchronized boolean isInstrictiveLocked(){
+    public static synchronized boolean isInstrictiveLocked() {
         return sInstructiveMutex;
     }
 
-    public static synchronized void setInstructiveLock(boolean isLocked){
+    public static synchronized void setInstructiveLock(boolean isLocked) {
         sInstructiveMutex = isLocked;
     }
 
