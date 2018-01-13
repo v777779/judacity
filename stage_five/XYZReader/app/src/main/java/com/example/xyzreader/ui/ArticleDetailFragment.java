@@ -138,37 +138,85 @@ public class ArticleDetailFragment extends Fragment implements
     private ProgressBar mProgressBarImage;
 
     /**
-     *  View root view of fragment
+     * View root view of fragment
      */
     private View mRootView;
     /**
-     *  Cursor object with data of item
+     * Cursor object with data of item
      */
     private Cursor mCursor;
-
+    /**
+     * Typeface for text
+     */
     private Typeface mCaecilia;
-    // date
+    /**
+     * SimpleDateFormat date format for item date and time
+     */
     private SimpleDateFormat mDateFormat;
+    /**
+     * SimpleDateFormat date format for item date and time
+     */
     private SimpleDateFormat mOutputFormat;
+    /**
+     * GregorianCalendar for item date and time
+     */
     private GregorianCalendar mStartOfEpoch;
 
-    // transition
+    /**
+     * Integer  starting item ID
+     */
     private long mStartingItemId;
+    /**
+     * Integer  current item ID
+     */
     private long mCurrentItemId;
-
+    /**
+     * Boolean true when request for scrolling to the end of text is exists
+     */
     private boolean mIsSkipToEnd;
+    /**
+     * Boolean true for devices with sw800dp
+     */
     private boolean mIsWide;
+    /**
+     * Resources of activity
+     */
     private Resources mRes;
+    /**
+     * Bitmap image  of item
+     */
     private Bitmap mBitmap;
 
-    // recycler
+    /**
+     * Boolean true when fragment started
+     */
     private boolean mIsStarting;
+    /**
+     * List<String> dynamic list of strings for RecyclerView of text
+     * Grows when scrolling dwon
+     */
     private ArrayList<String> mList;
+    /**
+     * List<String> static list of strings with all text of item
+     */
     private ArrayList<String> mListSource;
+    /**
+     * RecyclerView  with strings of text of item
+     * Every item is a part of text between "/r/n/r/n" characters
+     */
     private RecyclerView mRecyclerBody;
+    /**
+     * RecyclerBodyAdapter adapter for RecyclerView mRecyclerBody
+     */
     private RecyclerBodyAdapter mRecyclerBodyAdapter;
 
-
+    /**
+     * Returns new Fragment with Bundle of arguments
+     *
+     * @param startingItemId int starting item ID
+     * @param currentItemId  int current item ID
+     * @return Fragment  with arguments
+     */
     public static Fragment newInstance(long startingItemId, long currentItemId) {
         Bundle arguments = new Bundle();
         arguments.putLong(BUNDLE_FRAGMENT_STARTING_ID, startingItemId);
@@ -178,12 +226,28 @@ public class ArticleDetailFragment extends Fragment implements
         return fragment;
     }
 
+    /**
+     * Attaches context to fragment
+     * Load typeface from assets
+     *
+     * @param context Context of calling activity
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mCaecilia = Typeface.createFromAsset(context.getAssets(), "caecilia-light-webfont.ttf");
     }
 
+
+    /**
+     * Creates fragment
+     * Postpone transition of shared elements
+     * Extract arguments to mStartingItemId and mCurrentItemId
+     * Restores mList and mListSource Lst<String>  object with text data of fragment
+     * Runs loader for Cursor object
+     *
+     * @param savedInstanceState Bundle with instance state data
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {  // get bundle
         super.onCreate(savedInstanceState);
@@ -205,52 +269,23 @@ public class ArticleDetailFragment extends Fragment implements
         getLoaderManager().initLoader(0, null, this);
     }
 
+    /**
+     * Creates main view of Fragment
+     * Binds all views tha used in fragment
+     * Setup listeners
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         mRes = getResources();
-// wide
         mIsWide = mRes.getBoolean(R.bool.is_wide);
-
-// bind
-        mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
-        mFrameLayout = mRootView.findViewById(R.id.linear_body);
-// text
-        mTitleView = mRootView.findViewById(R.id.article_title);
-        mSubTitleView = mRootView.findViewById(R.id.article_subtitle);
-        mToolbarImage = mRootView.findViewById(R.id.article_image);
-// button
-        mFab = mRootView.findViewById(R.id.fab);
-        mImageButtonLeft = mRootView.findViewById(R.id.image_button_left);
-        mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
-        mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
-        mImageButtonFullScreen = mRootView.findViewById(R.id.image_button_fullscreen);
-// progress
-        mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
-        mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
-
-        if (!mIsWide) {
-            Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail);
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-
-            if (actionBar != null) {
-                actionBar.setTitle("");
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
-
-
         mDateFormat = new SimpleDateFormat(getString(R.string.calendar_format), Locale.ENGLISH);
         mOutputFormat = new SimpleDateFormat();
         mStartOfEpoch = new GregorianCalendar(
@@ -259,51 +294,13 @@ public class ArticleDetailFragment extends Fragment implements
                 mRes.getInteger(R.integer.calendar_day)
         );
 
-        mFrameLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if (mIsSkipToEnd && mList.size() >= mListSource.size()) {                // scroll to end
-                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
-                    mProgressBarText.setVisibility(View.INVISIBLE);
-                }
-                mIsSkipToEnd = false;
-
-            }
-        });
-
-
-        mNestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-            int mLineY = 0;
-            int mLastY = 0;
-
-            @Override
-            public void onScrollChanged() {
-                if (mNestedScrollView == null) return;
-                mLineY = mNestedScrollView.getScrollY();
-                if (mLineY > 0 &&
-                        mRecyclerBody.getHeight() - mLineY < FRAGMENT_TEXT_OFFSET &&
-                        mList.size() < mListSource.size()) {                // not all loaded
-                    loadPages(LOAD_NEXT_PAGE);                              // freeze recycler
-                    mLastY = mLineY;        // last position
-                }
-            }
-        });
-
-// fab
-        setupButtons();
+        setupViews();
+        setupActionBar();
+        setupListeners();
+        setupRecycler();
 
         mProgressBarText.setVisibility(View.VISIBLE);
         mProgressBarImage.setVisibility(View.VISIBLE);
-
-// recycler
-        mRecyclerBody = mRootView.findViewById(R.id.article_body_recycler);
-        mRecyclerBodyAdapter = new RecyclerBodyAdapter(getActivity(),mCaecilia);
-        mRecyclerBody.setAdapter(mRecyclerBodyAdapter);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),
-                LinearLayoutManager.VERTICAL,
-                false);
-        mRecyclerBody.setLayoutManager(layoutManager);
-
         return mRootView;
     }
 
@@ -336,13 +333,6 @@ public class ArticleDetailFragment extends Fragment implements
 
     }
 
-//    private boolean mIsVisible;
-//
-//    @Override
-//    public void setMenuVisibility(boolean menuVisible) {
-//        super.setMenuVisibility(menuVisible);
-//        mIsVisible = menuVisible;
-//    }
 
 
     // callbacks
@@ -370,21 +360,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         bindViews();
     }
-
-    // correction position
-//            if (!mIsWide) {
-//                mNestedScrollView.animate().withEndAction(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        int scrollY = mNestedScrollView.getScrollY();
-//                        int dY = (int) (scrollY * 0.295);
-//                        if (mIsLand) {
-//                            dY = -1500 + (int) (scrollY * 0.0003);
-//                        }
-//                        mNestedScrollView.scrollTo(0, scrollY + dY);
-//                    }
-//                }).start();
-//            }
 
 
     private void loadPages(boolean isLoadAll) {
@@ -549,11 +524,90 @@ public class ArticleDetailFragment extends Fragment implements
         return mRootView;
     }
 
+    private void setupViews() {
+        // bind
+        mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
+        mFrameLayout = mRootView.findViewById(R.id.linear_body);
+// text
+        mTitleView = mRootView.findViewById(R.id.article_title);
+        mSubTitleView = mRootView.findViewById(R.id.article_subtitle);
+        mToolbarImage = mRootView.findViewById(R.id.article_image);
+// button
+        mFab = mRootView.findViewById(R.id.fab);
+        mImageButtonLeft = mRootView.findViewById(R.id.image_button_left);
+        mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
+        mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
+        mImageButtonFullScreen = mRootView.findViewById(R.id.image_button_fullscreen);
+// progress
+        mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
+        mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
+
+    }
+    private void  setupActionBar() {
+        if (!mIsWide) {
+            Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+            if (actionBar != null) {
+                actionBar.setTitle("");
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+    }
 
     /**
-     * Setups listeners to Fab and image buttons of bottom Toolbar
+     * Setups listeners to Fab, image buttons, FrameLayout of text and NestedScrollView
+     * Listeners: <br/>
+     * <p>
+     * mFrameLayout        calls every time when text added to RecyclerView
+     * mNestedScrollView   tracks scrolling and adds text to RecyclerView
+     * mFab                used for Intent Action.SHARE.
+     * mImageButtonLeft    scrolls text to top of RecyclerView
+     * mImageButtonRight   add all remained text to RecyclerView and scrolls to bottom of RecyclerView
+     * mImageButtonHome    calls onBackPressed()
+     * mImageButtonFullScreen  calls onCallback() method to exit from full screen mode
      */
-    private void setupButtons() {
+    private void setupListeners() {
+        mFrameLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if (mIsSkipToEnd && mList.size() >= mListSource.size()) {                // scroll to end
+                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
+                    mProgressBarText.setVisibility(View.INVISIBLE);
+                }
+                mIsSkipToEnd = false;
+
+            }
+        });
+
+
+        mNestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            int mLineY = 0;
+            int mLastY = 0;
+
+            @Override
+            public void onScrollChanged() {
+                if (mNestedScrollView == null) return;
+                mLineY = mNestedScrollView.getScrollY();
+                if (mLineY > 0 &&
+                        mRecyclerBody.getHeight() - mLineY < FRAGMENT_TEXT_OFFSET &&
+                        mList.size() < mListSource.size()) {                // not all loaded
+                    loadPages(LOAD_NEXT_PAGE);                              // freeze recycler
+                    mLastY = mLineY;        // last position
+                }
+            }
+        });
+
+
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -613,7 +667,16 @@ public class ArticleDetailFragment extends Fragment implements
                 ((ICallback) getActivity()).onCallback(CALLBACK_FRAGMENT_FULLSCREEN);
             }
         });
+    }
 
+    private void setupRecycler() {
+        mRecyclerBody = mRootView.findViewById(R.id.article_body_recycler);
+        mRecyclerBodyAdapter = new RecyclerBodyAdapter(getActivity(), mCaecilia);
+        mRecyclerBody.setAdapter(mRecyclerBodyAdapter);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.VERTICAL,
+                false);
+        mRecyclerBody.setLayoutManager(layoutManager);
 
     }
 }
