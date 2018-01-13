@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -44,19 +45,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Config.Span mSpan;
     private boolean mIsLand;
     private boolean mIsWide;
+    private Resources mRes;
 
-    // correction!!!
+
     public RecyclerAdapter(Context context, Config.Span sp) {
         mContext = context;
         mSpan = sp;
-// TODO SimpleDateFormat.instance()
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
+        mRes =  context.getResources();
+        dateFormat = new SimpleDateFormat(mRes.getString(R.string.datetime_pattern));
         outputFormat = new SimpleDateFormat();
         startOfEpoch = new GregorianCalendar(2, 1, 1);
 
-        mIsWide = context.getResources().getBoolean(R.bool.is_wide);
-        mIsLand = context.getResources().getBoolean(R.bool.is_land);
-
+        mIsWide = mRes.getBoolean(R.bool.is_wide);
+        mIsLand = mRes.getBoolean(R.bool.is_land);
     }
 
     @Override
@@ -69,7 +70,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
                 .inflate(R.layout.content_article_item, parent, false);
-
 
         if (mIsWide && !mIsLand) {
             view.getLayoutParams().width = mSpan.getWidth();
@@ -96,7 +96,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 ((ICallback) mContext).onCallback(view, position);
-
             }
         });
 
@@ -174,8 +173,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         }
                     })
                     .into(mItemImage);
-            mItemImage.setTransitionName(mContext.getString(R.string.transition_image, getItemId()));
-            mItemTitle.setTransitionName(mContext.getString(R.string.transition_title, getItemId()));
+            mItemImage.setTransitionName(mRes.getString(R.string.transition_image, getItemId()));
+            mItemTitle.setTransitionName(mRes.getString(R.string.transition_title, getItemId()));
 
         }
     }

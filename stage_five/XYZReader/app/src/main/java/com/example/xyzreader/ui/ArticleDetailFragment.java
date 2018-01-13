@@ -112,15 +112,10 @@ public class ArticleDetailFragment extends Fragment implements
     private long mStartingItemId;
     private long mCurrentItemId;
 
-
-    // skip
     private boolean mIsSkipToEnd;
-
-    // wide
     private boolean mIsWide;
-    private boolean mIsLand;
-
     private Resources mRes;
+    private Bitmap mBitmap;
 
     // recycler
     private boolean mIsStarting;
@@ -147,29 +142,9 @@ public class ArticleDetailFragment extends Fragment implements
         Timber.d("lifecycle fragment: onAttach()");
     }
 
-    // TODO remove later
-    public SharedElementCallback mSharedCallback;
-
-    private SharedElementCallback setupSharedCallback() {
-        return new SharedElementCallback() {
-
-            @Override
-            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                int k = 1;
-            }
-
-
-        };
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {  // get bundle
         super.onCreate(savedInstanceState);
-// test!!!
-        mSharedCallback = setupSharedCallback();
-        setEnterSharedElementCallback(mSharedCallback);
-//        setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.move));
-// end test!!!
         postponeEnterTransition();
 
         Bundle args = getArguments();
@@ -205,9 +180,6 @@ public class ArticleDetailFragment extends Fragment implements
 
     }
 
-    // TODO remove later
-    private View mBottomToolbar;
-
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -216,9 +188,8 @@ public class ArticleDetailFragment extends Fragment implements
         mRes = getResources();
 // wide
         mIsWide = mRes.getBoolean(R.bool.is_wide);
-        mIsLand = mRes.getBoolean(R.bool.is_land);
 
-        // bind
+// bind
         mNestedScrollView = mRootView.findViewById(R.id.nested_scrollview);
         mFrameLayout = mRootView.findViewById(R.id.linear_body);
 // text
@@ -231,8 +202,6 @@ public class ArticleDetailFragment extends Fragment implements
         mImageButtonRight = mRootView.findViewById(R.id.image_button_right);
         mImageButtonHome = mRootView.findViewById(R.id.image_button_home);
         mImageButtonFullScreen = mRootView.findViewById(R.id.image_button_fullscreen);
-
-
 // progress
         mProgressBarText = mRootView.findViewById(R.id.progress_bar_text);
         mProgressBarImage = mRootView.findViewById(R.id.progress_bar_image);
@@ -257,13 +226,13 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
 
-        Resources res = getResources();
+
         mDateFormat = new SimpleDateFormat(getString(R.string.calendar_format), Locale.ENGLISH);
         mOutputFormat = new SimpleDateFormat();
         mStartOfEpoch = new GregorianCalendar(
-                res.getInteger(R.integer.calendar_year),
-                res.getInteger(R.integer.calendar_moanth),
-                res.getInteger(R.integer.calendar_day)
+                mRes.getInteger(R.integer.calendar_year),
+                mRes.getInteger(R.integer.calendar_moanth),
+                mRes.getInteger(R.integer.calendar_day)
         );
 
 // linear
@@ -302,13 +271,13 @@ public class ArticleDetailFragment extends Fragment implements
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String shareText="";
-                if(mTitleView != null && mSubTitleView != null) {
+                String shareText = "";
+                if (mTitleView != null && mSubTitleView != null) {
                     shareText = "Interesting book: " + mTitleView.getText() + " " + mSubTitleView.getText();
                 }
-                if(mCursor != null && mCursor.getCount() > 0) {
+                if (mCursor != null && mCursor.getCount() > 0) {
                     mCursor.moveToFirst();
-                    shareText = shareText + ", cover image link: "+ mCursor.getString(ArticleLoader.Query.PHOTO_URL);
+                    shareText = shareText + ", cover image link: " + mCursor.getString(ArticleLoader.Query.PHOTO_URL);
                 }
 
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
@@ -422,13 +391,6 @@ public class ArticleDetailFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-// test!!! check this
-//        if (!isAdded()) {
-//            if (cursor != null) {
-//                cursor.close();
-//            }
-//            return;
-//        }
         if (cursor == null || cursor.getCount() == 0) return;
 
         mCursor = cursor;
@@ -480,8 +442,6 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursor = null;
-// test!!!
-        bindViews();
     }
 
     private Date parsePublishedDate() {
@@ -544,10 +504,7 @@ public class ArticleDetailFragment extends Fragment implements
                         mProgressBarImage.setVisibility(View.INVISIBLE);
                         mProgressBarText.setVisibility(View.INVISIBLE);
                         ActivityCompat.startPostponedEnterTransition(getActivity());
-// test!!!
                         mBitmap = ((BitmapDrawable) resource).getBitmap();
-
-
                         return false;
                     }
                 })
@@ -559,9 +516,6 @@ public class ArticleDetailFragment extends Fragment implements
         mTitleView.setTransitionName(getString(R.string.transition_title, mCurrentItemId));
 
     }
-
-    // test!!!
-    private Bitmap mBitmap;
 
     public Bitmap getBitmap() {
         return mBitmap;

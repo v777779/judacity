@@ -34,7 +34,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowInsets;
@@ -61,7 +60,6 @@ import static android.support.constraint.ConstraintSet.TOP;
 import static com.example.xyzreader.remote.Config.ACTION_SWIPE_REFRESH;
 import static com.example.xyzreader.remote.Config.ACTION_TIME_REFRESH;
 import static com.example.xyzreader.remote.Config.ARTICLE_LIST_LOADER_ID;
-import static com.example.xyzreader.remote.Config.BOTTOM_BAR_DELAY_HIDE;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_NO_NETWORK;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_FINISHED;
 import static com.example.xyzreader.remote.Config.BROADCAST_ACTION_UPDATE_STARTED;
@@ -90,18 +88,8 @@ import static com.example.xyzreader.remote.RemoteEndpointUtil.savePreferences;
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
-// _TODO isInstructive move to Config
-// TODO Instructive motion after rotation while in middle text position
-
-
-// TODO Palette to Detail Load status bar
-
-// TODO remove test!!!
-// TODO BROADCAST ACTION in Exception of UpdateService and mIsRefreshing
-// TODO logo
-// TODO move 600 to 800 and make new layout 600
-// TODO mPagerAdapter setCurrentItemId() add function
 // TODO  mRes add to all activities
+// TODO remove string demo
 // TODO Code Inspection
 
 
@@ -204,14 +192,14 @@ public class ArticleListActivity extends AppCompatActivity implements
             @Override
             public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
                 view.onApplyWindowInsets(windowInsets);
-                Resources res = getResources();
+
 
                 int sysBarHeight = windowInsets.getSystemWindowInsetTop() + mToolbar.getLayoutParams().height;
-                int recyclerTop = res.getDimensionPixelSize(R.dimen.recycler_top_padding);
-                int swipeTop = res.getDimensionPixelSize(R.dimen.swipe_top_margin);
-                int viewPagerTop = res.getDimensionPixelSize(R.dimen.viewpager_top_margin);
+                int recyclerTop = mRes.getDimensionPixelSize(R.dimen.recycler_top_padding);
+                int swipeTop = mRes.getDimensionPixelSize(R.dimen.swipe_top_margin);
+                int viewPagerTop = mRes.getDimensionPixelSize(R.dimen.viewpager_top_margin);
 // swipe
-                int offsetSwipe = res.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
+                int offsetSwipe = mRes.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
                 mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
 
                 ConstraintSet set = new ConstraintSet();
@@ -285,13 +273,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (mIsWide) {
 // viewpager
             mStartingItemPosition = -1;
-            Resources res = getResources();
             mPager = findViewById(R.id.viewpager_container);
             mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
             mPager.setAdapter(mPagerAdapter);
             mPager.setPageMargin((int) TypedValue
                     .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                            res.getInteger(R.integer.pager_side_margin), res.getDisplayMetrics()));
+                            mRes.getInteger(R.integer.pager_side_margin), mRes.getDisplayMetrics()));
             mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
 
             mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -312,7 +299,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             mPager.setVisibility(mIsSelected ? View.VISIBLE : View.GONE);
             mPager.setPageTransformer(false, new PageTransformer());
-//            mPager.setScrollDurationFactor(1);
         }
 
 // bottom bar
@@ -336,14 +322,8 @@ public class ArticleListActivity extends AppCompatActivity implements
                 }
             });
         }
-//// instructive motion
-//        if(mIsFullScreen ) {
-//           instructiveMotion(this, mBottomBar);
-//        }
 
-        // full screen
         setFullScreen(mIsFullScreen);
-
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
 
@@ -777,44 +757,22 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         @Override
         public void transformPage(View page, float position) {
-// anim1
-//            page.setTranslationX(page.getWidth()*-position);
-//
-//            if(position <= -1.0F || position >= 1.0F) {
-//                page.setAlpha(0.0F);
-//            } else if( position == 0.0F ) {
-//                page.setAlpha(1.0F);
-//            } else {
-//                // position is between -1.0F & 0.0F OR 0.0F & 1.0F
-//                page.setAlpha(1.0F - Math.abs(position));
-//            }
-
-
             View dummyImageView = page.findViewById(R.id.article_image);
             int pageWidth = page.getWidth();
-
-
             if (position < -1) { // [-Infinity,-1)
-                // This page is way off-screen to the left.
                 page.setAlpha(1);
-
-
             } else if (position <= 1) { // [-1,1]
 
                 dummyImageView.setTranslationX(-position * (pageWidth / 2)); //Half the normal speed
 
             } else { // (1,+Infinity]
-                // This page is way off-screen to the right.
                 page.setAlpha(1);
             }
-// test!!!
-//            page.setAlpha(0.0f);
-
         }
     }
 
     private void setFullScreen(boolean isFullScreen) {
-        Window w = getWindow(); // in Activity's onCreate() for instance
+        Window w = getWindow();
         ActionBar actionBar = getSupportActionBar();
         if (isFullScreen) {
             mIsFullScreen = true;

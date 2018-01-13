@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -35,8 +36,9 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
     // to inflate from XML this constructor
     public BottomBarScroll(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mIsLand = context.getResources().getBoolean(R.bool.is_land);
-        mIsWide = context.getResources().getBoolean(R.bool.is_wide);
+        Resources res = context.getResources();
+        mIsLand = res.getBoolean(R.bool.is_land);
+        mIsWide = res.getBoolean(R.bool.is_wide);
     }
 
     @Override

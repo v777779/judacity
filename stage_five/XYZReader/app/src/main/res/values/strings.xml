@@ -58,6 +58,7 @@
     <string name="pref_full_screen_on">normal screen</string>
     <string name="pref_full_screen_label">Full screen</string>
 
+    <string name="datetime_pattern">yyyy-MM-dd'T'HH:mm:ss.sss</string>
 
     <!--test-->
     <string name="demo_text">

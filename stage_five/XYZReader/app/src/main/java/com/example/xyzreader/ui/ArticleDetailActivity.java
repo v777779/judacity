@@ -94,11 +94,11 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         }
         mIsStartingActivity = savedInstanceState == null;
 
-        mIsLand = getResources().getBoolean(R.bool.is_land);
-        mIsWide = getResources().getBoolean(R.bool.is_wide);
+        Resources res = getResources();
+        mIsLand = res.getBoolean(R.bool.is_land);
+        mIsWide = res.getBoolean(R.bool.is_wide);
 
 // viewpager
-        Resources res = getResources();
         mPager = findViewById(R.id.viewpager_container);
         mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
         mPager.setAdapter(mPagerAdapter);

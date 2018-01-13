@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -39,8 +40,9 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
     }
 
     public BottomBarRecycler(Context context) {
-        boolean isWide = context.getResources().getBoolean(R.bool.is_wide);
-        boolean isLand = context.getResources().getBoolean(R.bool.is_land);
+        Resources res = context.getResources();
+        boolean isWide = res.getBoolean(R.bool.is_wide);
+        boolean isLand = res.getBoolean(R.bool.is_land);
         if(isWide && !isLand) mIsLand = !isLand;
         mIsLand = (isWide && !isLand)?!isLand:isLand;
         mIsInstructive = true;
