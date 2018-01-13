@@ -1,6 +1,6 @@
 <resources>
-    <!--toolbar fix-->
 
+    <!--toolbar fix-->
     <dimen name="swipe_top_margin">4dp</dimen>
     <dimen name="swipe_side_margin">4dp</dimen>
 
@@ -18,9 +18,6 @@
     <dimen name="linear_left_margin">32dp</dimen>
     <dimen name="linear_right_margin">0dp</dimen>
 
-
     <!--appbar-->
     <dimen name="app_bar_height">480dp</dimen>
-
-
 </resources>
