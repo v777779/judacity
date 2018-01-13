@@ -84,21 +84,49 @@ import static com.example.xyzreader.remote.RemoteEndpointUtil.loadPreferenceFull
 import static com.example.xyzreader.remote.RemoteEndpointUtil.loadPreferenceSwipe;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.savePreferences;
 
-
+/**
+ * ArticleListActivity  main activity of application
+ * Creates RecyclerView for items and ViewPager for tablet with sw800dp
+ * Starts Detail activity for non tablet when item selected
+ * Set item in Viewpager  for tablets
+ * For non tablets transition of shared elements takes place
+ * For non tablet Activity and Fragment showed on one screen
+ * When started first time  Instructive motion shows text motion and pop up bars
+ * Full screen mode available and can be set directly or via preferences.
+ * SwipeRefresh layout optional and turned on by default, can be set via preferences.
+ */
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
-// TODO Code Inspection
-
+    /**
+     * Boolean value used for making TimberTree one time only
+     */
     private static boolean mIsTimber;
-
+    /**
+     * Toolbar custom toolbar
+     */
     private Toolbar mToolbar;
+    /**
+     * ImageView logo of application on toolbar
+     */
     private ImageView mToolbarLogo;
+
+    /**
+     * SwipeRefreshLayout allows refresh data via swipe gesture
+     */
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    /**
+     * RecyclerView with items of data
+     */
     private RecyclerView mRecyclerView;
+    /**
+     * ProgressBar   shows progress of loading
+     */
     private ProgressBar mProgressBar;
 
-    // bottom bar
+    /**
+     * View bottom pop up toolbar with buttons
+     */
     private View mBottomBar;
     private ImageButton mImageButtonHome;
     private ImageButton mImageButtonFullScreen;
@@ -185,71 +213,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
 // toolbar
-        getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-            @Override
-            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-                view.onApplyWindowInsets(windowInsets);
+        setupFullScreenListener();
 
-
-                int sysBarHeight = windowInsets.getSystemWindowInsetTop() + mToolbar.getLayoutParams().height;
-                int recyclerTop = mRes.getDimensionPixelSize(R.dimen.recycler_top_padding);
-                int swipeTop = mRes.getDimensionPixelSize(R.dimen.swipe_top_margin);
-                int viewPagerTop = mRes.getDimensionPixelSize(R.dimen.viewpager_top_margin);
-// swipe
-                int offsetSwipe = mRes.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
-                mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
-
-                ConstraintSet set = new ConstraintSet();
-                set.clone(mParentConstraint);
-// land and port
-                if (!mIsWide) {
-
-                    if (!mIsFullScreen) {
-                        recyclerTop += sysBarHeight;
-
-                    }
-                    set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
-                    set.applyTo(mParentConstraint);
-                    mRecyclerView.setPadding(mRecyclerView.getPaddingLeft(), recyclerTop,
-                            mRecyclerView.getPaddingRight(), mRecyclerView.getPaddingBottom());
-
-
-
-
-                } else {
-// wide  land
-                    if (mIsLand) {
-                        if (!mIsFullScreen) {
-                            swipeTop += sysBarHeight;
-                            viewPagerTop += sysBarHeight;
-                        }
-                        set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
-                        set.connect(R.id.border_view, TOP, R.id.main_constraint, TOP, viewPagerTop);
-                        set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, viewPagerTop);
-                        set.applyTo(mParentConstraint);
-
-                    } else {
-// wide  portrait
-                        if (!mIsFullScreen) {
-                            swipeTop += sysBarHeight;
-                            set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
-                            set.connect(R.id.viewpager_constraint, TOP, R.id.border_view, BOTTOM, viewPagerTop);
-                            set.applyTo(mParentConstraint);
-                        } else {
-                            set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, 0);
-                            set.applyTo(mParentConstraint);
-                        }
-                    }
-                }
-
-                mAppBarLayout.setVisibility(mIsFullScreen ? View.INVISIBLE : View.VISIBLE);
-                mRecyclerView.setVisibility((mIsWide && !mIsLand)&&mIsFullScreen?View.INVISIBLE:View.VISIBLE);
-
-                return windowInsets;
-            }
-        });
-
-        // action bar
         setSupportActionBar(mToolbar);
         mToolbarLogo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,61 +229,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         setupRecycler();
         setupSwipeRefresh();
-
-
-// wide
-        if (mIsWide) {
-// viewpager
-            mStartingItemPosition = -1;
-            mPager = findViewById(R.id.viewpager_container);
-            mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
-            mPager.setAdapter(mPagerAdapter);
-            mPager.setPageMargin((int) TypedValue
-                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                            mRes.getInteger(R.integer.pager_side_margin), mRes.getDisplayMetrics()));
-            mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
-
-            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    mCurrentItemPosition = position;
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                }
-            });
-
-
-            mPager.setVisibility(mIsSelected ? View.VISIBLE : View.GONE);
-            mPager.setPageTransformer(false, new PageTransformer());
-        }
-
-// bottom bar
-        mBottomBar = findViewById(R.id.bottom_toolbar);
-        mImageButtonHome = findViewById(R.id.image_button_home);
-        mImageButtonFullScreen = findViewById(R.id.image_button_fullscreen);
-
-        if (mImageButtonHome != null) {
-            mImageButtonHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBackPressed();
-                }
-            });
-        }
-        if (mImageButtonFullScreen != null) {
-            mImageButtonFullScreen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setFullScreen(FULL_SCREEN_MODE_OFF);
-                }
-            });
-        }
+        setupViewPager();
+        setupBottomBar();
 
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
@@ -750,23 +662,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
-    private class PageTransformer implements ViewPager.PageTransformer {
-
-        @Override
-        public void transformPage(View page, float position) {
-            View dummyImageView = page.findViewById(R.id.article_image);
-            int pageWidth = page.getWidth();
-            if (position < -1) { // [-Infinity,-1)
-                page.setAlpha(1);
-            } else if (position <= 1) { // [-1,1]
-
-                dummyImageView.setTranslationX(-position * (pageWidth / 2)); //Half the normal speed
-
-            } else { // (1,+Infinity]
-                page.setAlpha(1);
-            }
-        }
-    }
 
     private void setFullScreen(boolean isFullScreen) {
         Window w = getWindow();
@@ -804,6 +699,145 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         }
 
+    }
+
+    private void setupFullScreenListener() {
+        // toolbar
+        getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
+                view.onApplyWindowInsets(windowInsets);
+
+
+                int sysBarHeight = windowInsets.getSystemWindowInsetTop() + mToolbar.getLayoutParams().height;
+                int recyclerTop = mRes.getDimensionPixelSize(R.dimen.recycler_top_padding);
+                int swipeTop = mRes.getDimensionPixelSize(R.dimen.swipe_top_margin);
+                int viewPagerTop = mRes.getDimensionPixelSize(R.dimen.viewpager_top_margin);
+// swipe
+                int offsetSwipe = mRes.getDimensionPixelSize(R.dimen.progress_swipe_offset) + sysBarHeight;
+                mSwipeRefreshLayout.setProgressViewEndTarget(true, offsetSwipe);
+
+                ConstraintSet set = new ConstraintSet();
+                set.clone(mParentConstraint);
+// land and port
+                if (!mIsWide) {
+
+                    if (!mIsFullScreen) {
+                        recyclerTop += sysBarHeight;
+
+                    }
+                    set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
+                    set.applyTo(mParentConstraint);
+                    mRecyclerView.setPadding(mRecyclerView.getPaddingLeft(), recyclerTop,
+                            mRecyclerView.getPaddingRight(), mRecyclerView.getPaddingBottom());
+
+
+                } else {
+// wide  land
+                    if (mIsLand) {
+                        if (!mIsFullScreen) {
+                            swipeTop += sysBarHeight;
+                            viewPagerTop += sysBarHeight;
+                        }
+                        set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
+                        set.connect(R.id.border_view, TOP, R.id.main_constraint, TOP, viewPagerTop);
+                        set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, viewPagerTop);
+                        set.applyTo(mParentConstraint);
+
+                    } else {
+// wide  portrait
+                        if (!mIsFullScreen) {
+                            swipeTop += sysBarHeight;
+                            set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
+                            set.connect(R.id.viewpager_constraint, TOP, R.id.border_view, BOTTOM, viewPagerTop);
+                            set.applyTo(mParentConstraint);
+                        } else {
+                            set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, 0);
+                            set.applyTo(mParentConstraint);
+                        }
+                    }
+                }
+
+                mAppBarLayout.setVisibility(mIsFullScreen ? View.INVISIBLE : View.VISIBLE);
+                mRecyclerView.setVisibility((mIsWide && !mIsLand) && mIsFullScreen ? View.INVISIBLE : View.VISIBLE);
+
+                return windowInsets;
+            }
+        });
+    }
+
+    private void setupViewPager() {
+        if (!mIsWide) return;
+// viewpager
+        mStartingItemPosition = -1;
+        mPager = findViewById(R.id.viewpager_container);
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setPageMargin((int) TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        mRes.getInteger(R.integer.pager_side_margin), mRes.getDisplayMetrics()));
+        mPager.setPageMarginDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPagerMargin)));
+
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mCurrentItemPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+
+        mPager.setVisibility(mIsSelected ? View.VISIBLE : View.GONE);
+        mPager.setPageTransformer(false, new PageTransformer());
+    }
+
+    private void setupBottomBar() {
+        mBottomBar = findViewById(R.id.bottom_toolbar);
+        mImageButtonHome = findViewById(R.id.image_button_home);
+        mImageButtonFullScreen = findViewById(R.id.image_button_fullscreen);
+
+        if (mImageButtonHome != null) {
+            mImageButtonHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
+        }
+        if (mImageButtonFullScreen != null) {
+            mImageButtonFullScreen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setFullScreen(FULL_SCREEN_MODE_OFF);
+                }
+            });
+        }
+
+    }
+
+    /**
+     * PageTransformer  class provides smooth image scrolling for ViewPager
+     */
+    private class PageTransformer implements ViewPager.PageTransformer {
+        @Override
+        public void transformPage(View page, float position) {
+            View dummyImageView = page.findViewById(R.id.article_image);
+            int pageWidth = page.getWidth();
+            if (position < -1) {
+                page.setAlpha(1);
+            } else if (position <= 1) {
+                dummyImageView.setTranslationX(-position * (pageWidth / 2));
+            } else {
+                page.setAlpha(1);
+            }
+        }
     }
 
 
