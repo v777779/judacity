@@ -247,7 +247,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                             set.connect(R.id.viewpager_constraint, TOP, R.id.border_view, BOTTOM, viewPagerTop);
                             set.applyTo(mParentConstraint);
                         } else {
-                            set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, viewPagerTop);
+                            set.connect(R.id.viewpager_constraint, TOP, R.id.main_constraint, TOP, 0);
                             set.applyTo(mParentConstraint);
                         }
                     }
