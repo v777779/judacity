@@ -103,9 +103,7 @@
             android:id="@+id/viewpager_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-
             android:alpha="0.20"
-
             android:scaleType="centerCrop"
             android:src="@drawable/image_014"
             android:visibility="visible"
