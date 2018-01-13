@@ -27,11 +27,11 @@
                 android:id="@+id/toolbar_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="left|center_vertical"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="0dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginTop="@dimen/toolbar_top_margin"
+                android:layout_marginBottom="@dimen/toolbar_bottom_margin"
                 android:clickable="true"
+                android:focusable="true"
                 android:scaleType="fitStart"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/xyz_logo_rounded"
@@ -48,7 +48,7 @@
         android:id="@+id/bottom_toolbar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:alpha="0.0"
         android:background="@color/colorBackBottom"
         android:elevation="6dp"
@@ -57,49 +57,56 @@
 
         <ImageButton
             android:id="@+id/image_button_left"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_prev"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/image_button_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guide_h1" />
+            app:layout_constraintTop_toTopOf="@+id/guide_h1"
+            android:contentDescription="@string/image_button_left_description"
+            />
 
         <ImageButton
             android:id="@+id/image_button_right"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_next"
             android:stateListAnimator="@animator/fab_animator"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/image_button_right_description"/>
 
         <ImageButton
             android:id="@+id/image_button_home"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_home"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/image_button_home_description"
+            />
 
 
         <ImageButton
             android:id="@+id/image_button_fullscreen"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_fullscreen_exit"
             app:layout_constraintBottom_toTopOf="@+id/guide_h1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_button_home" />
+            app:layout_constraintTop_toBottomOf="@+id/image_button_home"
+            android:contentDescription="@string/image_button_fullscreen_description"
+            />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_h1"

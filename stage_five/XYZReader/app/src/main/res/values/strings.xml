@@ -62,6 +62,16 @@
 
     <string name="datetime_pattern">yyyy-MM-dd\'T\'HH:mm:ss.sss</string>
 
+    <!--images-->
+    <string name="image_button_left_description">image_button_left_description</string>
+    <string name="image_button_right_description">image_button_right_description</string>
+    <string name="image_button_home_description">image_button_home_description</string>
+    <string name="image_button_fullscreen_description">image_button_fullscreen_description</string>
+    <string name="fab_share_button_description">fab_share_button_description</string>
+
+    <string name="image_article_description">appbar_image_description</string>
+    <string name="viewpager_image_description">viewpager_image_background_description</string>
+
 
 
 </resources>

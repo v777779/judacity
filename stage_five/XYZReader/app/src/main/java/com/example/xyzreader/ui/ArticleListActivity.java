@@ -88,10 +88,7 @@ import static com.example.xyzreader.remote.RemoteEndpointUtil.savePreferences;
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
-// TODO  mRes add to all activities
-// TODO remove string demo
 // TODO Code Inspection
-
 
     private static boolean mIsTimber;
 

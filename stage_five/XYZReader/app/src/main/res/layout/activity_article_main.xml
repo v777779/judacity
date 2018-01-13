@@ -27,11 +27,11 @@
                 android:id="@+id/toolbar_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="left|center_vertical"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="0dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginTop="@dimen/toolbar_top_margin"
+                android:layout_marginBottom="@dimen/toolbar_bottom_margin"
                 android:clickable="true"
+                android:focusable="true"
                 android:scaleType="fitStart"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/xyz_logo_rounded"
@@ -57,9 +57,9 @@
 
         <ImageButton
             android:id="@+id/image_button_left"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:layout_marginEnd="@dimen/image_button_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_prev"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -67,12 +67,14 @@
             app:layout_constraintStart_toStartOf="@+id/guide_v1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:contentDescription="@string/image_button_left_description"
+            />
 
         <ImageButton
             android:id="@+id/image_button_right"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_skip_next"
             android:stateListAnimator="@animator/fab_animator"
@@ -80,32 +82,38 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:contentDescription="@string/image_button_right_description"
+            />
 
         <ImageButton
             android:id="@+id/image_button_home"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_home"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:contentDescription="@string/image_button_home_description"
+            />
 
 
         <ImageButton
             android:id="@+id/image_button_fullscreen"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:layout_marginStart="@dimen/image_button_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_fullscreen_exit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guide_v1"
             app:layout_constraintStart_toEndOf="@+id/image_button_home"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0"
+            android:contentDescription="@string/image_button_fullscreen_description"
+            />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v1"
