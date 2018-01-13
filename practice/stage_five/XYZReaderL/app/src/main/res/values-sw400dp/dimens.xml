@@ -1,0 +1,4 @@
+<resources>
+  <!--viewpager_item_text-->
+    <dimen name="body_text_size">16sp</dimen>
+</resources>

@@ -1,7 +1,6 @@
 <resources>
 
     <!--toolbar fix-->
-
     <dimen name="swipe_top_margin">4dp</dimen>
     <dimen name="swipe_side_margin">4dp</dimen>
 
