@@ -221,11 +221,15 @@ public class ArticleListActivity extends AppCompatActivity implements
 
                     if (!mIsFullScreen) {
                         recyclerTop += sysBarHeight;
+
                     }
                     set.connect(R.id.swipe_refresh, TOP, R.id.main_constraint, TOP, swipeTop);
                     set.applyTo(mParentConstraint);
                     mRecyclerView.setPadding(mRecyclerView.getPaddingLeft(), recyclerTop,
                             mRecyclerView.getPaddingRight(), mRecyclerView.getPaddingBottom());
+
+
+
 
                 } else {
 // wide  land
@@ -252,6 +256,10 @@ public class ArticleListActivity extends AppCompatActivity implements
                         }
                     }
                 }
+
+                mAppBarLayout.setVisibility(mIsFullScreen ? View.INVISIBLE : View.VISIBLE);
+                mRecyclerView.setVisibility((mIsWide && !mIsLand)&&mIsFullScreen?View.INVISIBLE:View.VISIBLE);
+
                 return windowInsets;
             }
         });
@@ -335,28 +343,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         // full screen
         setFullScreen(mIsFullScreen);
-
-
-// constraint
-
-        mParentConstraint.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if (mIsFullScreen) {
-                    if (mIsWide && !mIsLand) mRecyclerView.setVisibility(View.INVISIBLE);
-//                    mToolbar.setVisibility(View.GONE);
-                    mAppBarLayout.setVisibility(View.GONE);
-
-//                    getSupportActionBar().hide();
-                } else {
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    mAppBarLayout.setVisibility(View.VISIBLE);
-
-//                    getSupportActionBar().show();
-                }
-            }
-        });
-
 
         getSupportLoaderManager().initLoader(ARTICLE_LIST_LOADER_ID, null, this);
     }
