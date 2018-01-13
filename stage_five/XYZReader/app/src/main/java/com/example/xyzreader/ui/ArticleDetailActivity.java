@@ -30,6 +30,11 @@ import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_ID;
 import static com.example.xyzreader.remote.Config.BUNDLE_STARTING_ITEM_POS;
 import static com.example.xyzreader.remote.Config.instructiveMotion;
 
+/**
+ *   ArticleDetailActivity  activity for non tablet devices
+ *   Creates ViewPager with ArticelDetailFragment objects
+ *   Performs shared element forward and back shared element processing
+ */
 public class ArticleDetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 

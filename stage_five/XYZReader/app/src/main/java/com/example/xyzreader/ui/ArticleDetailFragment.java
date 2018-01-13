@@ -82,18 +82,39 @@ import static com.example.xyzreader.remote.Config.LOAD_NEXT_PAGE;
  * Email: vadim.v.voronov@gmail.com
  */
 
+/**
+ * ArticleDetailFragment fragment visualizes Cursor item data
+ */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    // layout
+    /**
+     * NestedScrollView  view with item data
+     */
     private NestedScrollView mNestedScrollView;
+    /**
+     * FrameLayout holds RecyclerView with text data
+     */
     private FrameLayout mFrameLayout;
-    // text
+    /**
+     * TextView with title of item
+     */
     private TextView mTitleView;
+    /**
+     * TextView with sub title of item
+     */
     private TextView mSubTitleView;
+    /**
+     * ImageView with image of item
+     */
     private ImageView mToolbarImage;
-    // fab
+    /**
+     * Floating Action Button for Share Action
+     */
     private FloatingActionButton mFab;
+    /**
+     *
+     */
     private ImageButton mImageButtonLeft;
     private ImageButton mImageButtonRight;
     private ImageButton mImageButtonHome;
@@ -141,8 +162,6 @@ public class ArticleDetailFragment extends Fragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
         mCaecilia = Typeface.createFromAsset(context.getAssets(), "caecilia-light-webfont.ttf");
-
-        Timber.d("lifecycle fragment: onAttach()");
     }
 
     @Override
@@ -163,24 +182,7 @@ public class ArticleDetailFragment extends Fragment implements
             mListSource = savedInstanceState.getStringArrayList(BUNDLE_FRAGMENT_TEXT_SOURCE);
         }
 
-
-        Timber.d("lifecycle fragment: onCreate():" + mCurrentItemId);
-// fab ***hiding***
-//        getActivity().getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
-//            private boolean mIsTransition = false;
-//            @Override
-//            public void onTransitionStart(Transition transition) {
-//                if (mIsTransition && mFab != null) {
-//                    mFab.setVisibility(View.GONE);
-//                }
-//            }
-//            @Override
-//            public void onTransitionEnd(Transition transition) {
-//                mIsTransition = true;
-//            }
-//        });
         getLoaderManager().initLoader(0, null, this);
-
     }
 
     @Nullable
@@ -229,7 +231,6 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
 
-
         mDateFormat = new SimpleDateFormat(getString(R.string.calendar_format), Locale.ENGLISH);
         mOutputFormat = new SimpleDateFormat();
         mStartOfEpoch = new GregorianCalendar(
@@ -238,7 +239,6 @@ public class ArticleDetailFragment extends Fragment implements
                 mRes.getInteger(R.integer.calendar_day)
         );
 
-// linear
         mFrameLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
@@ -270,68 +270,8 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
 // fab
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String shareText = "";
-                if (mTitleView != null && mSubTitleView != null) {
-                    shareText = "Interesting book: " + mTitleView.getText() + " " + mSubTitleView.getText();
-                }
-                if (mCursor != null && mCursor.getCount() > 0) {
-                    mCursor.moveToFirst();
-                    shareText = shareText + ", cover image link: " + mCursor.getString(ArticleLoader.Query.PHOTO_URL);
-                }
+        setupButtons();
 
-                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
-                        .setType("text/plain")
-                        .setText(shareText)
-                        .getIntent(), getString(R.string.action_share)));
-
-
-            }
-        });
-// image buttons
-        mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BottomBarScroll.setContinue();
-                mNestedScrollView.scrollTo(0, 0);
-            }
-        });
-
-        mImageButtonRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BottomBarScroll.setContinue();
-
-                if (mList.size() < mListSource.size()) {
-                    mProgressBarText.setVisibility(View.VISIBLE);
-                    loadPages(LOAD_ALL_PAGES);
-                    mIsSkipToEnd = true;
-                } else {
-                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
-                }
-            }
-        });
-
-
-        mImageButtonHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        mImageButtonFullScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BottomBarScroll.setContinue();
-                ((ICallback) getActivity()).onCallback(CALLBACK_FRAGMENT_FULLSCREEN);
-            }
-        });
-
-
-// progress bar
         mProgressBarText.setVisibility(View.VISIBLE);
         mProgressBarImage.setVisibility(View.VISIBLE);
 
@@ -589,4 +529,72 @@ public class ArticleDetailFragment extends Fragment implements
         return mRootView;
     }
 
+
+    /**
+     *  Setups listeners to Fab and image buttons of bottom Toolbar
+     *
+     */
+    private void setupButtons() {
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String shareText = "";
+                if (mTitleView != null && mSubTitleView != null) {
+                    shareText = "Interesting book: " + mTitleView.getText() + " " + mSubTitleView.getText();
+                }
+                if (mCursor != null && mCursor.getCount() > 0) {
+                    mCursor.moveToFirst();
+                    shareText = shareText + ", cover image link: " + mCursor.getString(ArticleLoader.Query.PHOTO_URL);
+                }
+
+                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setText(shareText)
+                        .getIntent(), getString(R.string.action_share)));
+
+
+            }
+        });
+// image buttons
+        mImageButtonLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomBarScroll.setContinue();
+                mNestedScrollView.scrollTo(0, 0);
+            }
+        });
+
+        mImageButtonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomBarScroll.setContinue();
+
+                if (mList.size() < mListSource.size()) {
+                    mProgressBarText.setVisibility(View.VISIBLE);
+                    loadPages(LOAD_ALL_PAGES);
+                    mIsSkipToEnd = true;
+                } else {
+                    mNestedScrollView.scrollTo(0, mFrameLayout.getHeight());
+                }
+            }
+        });
+
+
+        mImageButtonHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        mImageButtonFullScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomBarScroll.setContinue();
+                ((ICallback) getActivity()).onCallback(CALLBACK_FRAGMENT_FULLSCREEN);
+            }
+        });
+
+
+    }
 }
