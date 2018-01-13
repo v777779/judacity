@@ -378,7 +378,6 @@ public class Config {
             collapse(context, view, R.integer.instructive_start_delay);
             sIsInstructedLand = true;
         }
-
     }
 
     // bottom bar
