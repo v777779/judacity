@@ -33,30 +33,61 @@ import static com.example.xyzreader.remote.Config.instructiveMotion;
 public class ArticleDetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
-    private static boolean sIsInstructed;
-
+    /**
+     * ViewPager for ArticleDetailFragments objects
+     */
     private ViewPager mPager;
+    /**
+     * ViewPagerAdapter for ViewPager object
+     */
     private ViewPagerAdapter mPagerAdapter;
-    //    private ScreenSlidePagerAdapter mPagerAdapter;
+    /**
+     * Cursor object with data from database for ArticleDetailFragments
+     */
     private Cursor mCursor;
 
+    /**
+     * Integer  id of starting item in Cursor
+     */
     private long mStartingItemId;
+    /**
+     * Integer  position of starting item in  Cursor/ViewPager
+     */
     private int mStartingItemPosition;
+    /**
+     * Integer  position of current item in  Cursor/ViewPager
+     */
     private int mCurrentItemPosition;
+
+    /**
+     * Boolean flag is true when first time entered into activity
+     */
     private boolean mIsStartingActivity;
 
     // transition
+    /**
+     * ArticleDetailFragment  current selected fragment
+     */
     private ArticleDetailFragment mCurrentFragment;
+
+    /**
+     * Boolean true when transition returns from  ArticleDetailFragment fragment
+     */
     private boolean mIsReturning;
 
-
+    /**
+     * SharedElementCallback serves to processing transition of shared elements
+     */
     public SharedElementCallback mSharedCallback;
 
-    // land
-    private boolean mIsLand;
-    private boolean mIsWide;
 
-
+    /**
+     * Creates View of Activity
+     * Initializes  ViewPager with ArticleDetailFragment items
+     * Runs loader for Cursor object
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,17 +97,9 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         postponeEnterTransition();
         setEnterSharedElementCallback(mSharedCallback);
 
-        //setContentView(R.layout.activity_article_detail);
         setContentView(R.layout.activity_article_detail);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-
-
-// bundle
-// works but not used
-//            if (getIntent() != null && getIntent().getData() != null) {
-//                mStartingItemId = ItemsContract.Items.getItemId(getIntent().getData());  // from Uri
-//            }
         if (savedInstanceState == null) {
             if (getIntent() != null) {
                 mStartingItemId = getIntent().getLongExtra(BUNDLE_STARTING_ITEM_ID, 0);
@@ -89,10 +112,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
         }
         mIsStartingActivity = savedInstanceState == null;
-
         Resources res = getResources();
-        mIsLand = res.getBoolean(R.bool.is_land);
-        mIsWide = res.getBoolean(R.bool.is_wide);
 
 // viewpager
         mPager = findViewById(R.id.viewpager_container);
@@ -118,33 +138,21 @@ public class ArticleDetailActivity extends AppCompatActivity implements
             }
         });
 
-//        mPager = (ViewPager) findViewById(R.id.viewpager_container);
-//        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-//        mPager.setAdapter(mPagerAdapter);
-//        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                // When changing pages, reset the action bar actions since they are dependent
-//                // on which page is currently active. An alternative approach is to have each
-//                // fragment expose actions itself (rather than the activity exposing actions),
-//                // but for simplicity, the activity provides the actions in this sample.
-//                invalidateOptionsMenu();
-//            }
-//        });
-
         mPager.setVisibility(View.GONE);
-//        mPager.setCurrentItem(4);
 
 
         getSupportLoaderManager().initLoader(ARTICLE_DETAIL_LOADER_ID, null, this);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        return super.onOptionsItemSelected(item);
-//    }
 
-
+    /**
+     * Saves parameters to Bundle storage object
+     *
+     * @param outState Bundle storage object for parameters.
+     *                 Bundle Parameters: <br>
+     *                 Integer         mStartingItemPosition   starting position of selected item
+     *                 Integer         mCurrentItemPosition    current position of selected item
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -153,7 +161,9 @@ public class ArticleDetailActivity extends AppCompatActivity implements
 
     }
 
-
+    /**
+     * Puts data into Intent about shared elements to perfrom back transition
+     */
     @Override
     public void finishAfterTransition() {
         mIsReturning = true;                            // before super()
@@ -164,11 +174,28 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         super.finishAfterTransition();
     }
 
+    /**
+     * Callback of Cursor Loader
+     * Creates Loader for Cursor object
+     *
+     * @param i      int the ID whose loader is to be created.
+     * @param bundle Bundle  any arguments supplied by the caller.
+     * @return Loader for Cursor object
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newAllArticlesInstance(this);
     }
 
+    /**
+     * Called when loader is finished load, provides Cursor object with data
+     * Cursor object copied to mPagerAdapter
+     * When activity is started first time   starting item Id is verified with Cursor data
+     * If starting item Id is obsoleted  activity is finished
+     *
+     * @param loader Loader<Crusor> the Loader that has finished.
+     * @param cursor Cursor the data generated by the Loader.
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return;
@@ -184,37 +211,51 @@ public class ArticleDetailActivity extends AppCompatActivity implements
                     return;
                 }
             }
-// TODO stop loading service optimization
 // bug fix  if cursor obsoleted exit from activity
-
-            Toast.makeText(this,getString(R.string.cursor_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.cursor_message), Toast.LENGTH_SHORT).show();
             finish();
         }
-
     }
 
+    /**
+     * Resets loader and makes deletes Cursor object.
+     * Notified ViewPager Adapter that cursor is erased.
+     *
+     * @param loader Loader<Cursor> loader which is reset.
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Placeholder for common user interface, not used in this activity.
+     *
+     * @param view     View object unused.
+     * @param position int  unused.
+     */
     @Override
     public void onCallback(View view, int position) {
     }
 
+    /**
+     * Placeholder for common user interface, not used in this activity
+     *
+     * @param mode int unused.
+     */
     @Override
     public void onCallback(int mode) {
     }
 
-// TODO remove method
-    private List<View> getSharedViews(View view) {
-        List<View> list = new ArrayList<>();
-        list.add(view.findViewById(R.id.article_image));
-        list.add(view.findViewById(R.id.article_title));
-        return list;
-    }
-
+    /**
+     *  Extracts system shared elements from current set of shared elements to
+     *  List<String></String> names and Map<String,View> sharedElements storages
+     *  All other shared elements is deleted.
+     *
+     * @param names          List<String></String>  list of transition names of shared elements
+     * @param sharedElements Map<String,View> map with transition names and views of shared elements
+     */
     private void copySystemSharedElements(List<String> names, Map<String, View> sharedElements) {
         List<String> cloneList = new ArrayList<>(names);
         Map<String, View> cloneMap = new HashMap<>(sharedElements);
@@ -227,24 +268,43 @@ public class ArticleDetailActivity extends AppCompatActivity implements
                 sharedElements.put(name, cloneMap.get(name));
             }
         }
-
     }
 
+    /**
+     *  Callback of common user interface.
+     *  Called from ViewPagerAdapter setPrimaryItem() method
+     *  Stores current  ArticleDetailFragment object into mCurrentFragment field
+     *  mCurrentFragment used for extraction of bitmap
+     *  Bitmap is needed for palette generation and when bitmap is available
+     *  Fragment is completely visible and instructive motion is started
+     *
+     * @param fragment  ArticleDetailFragment fragment
+     */
     @Override
     public void onCallback(ArticleDetailFragment fragment) {
         mCurrentFragment = fragment;
-
-        if(fragment != null) {
+        if (fragment != null) {
             instructiveMotion(fragment);
         }
-
     }
 
+    /**
+     * Placeholder for common user interface, not used in this activity
+     *
+     * @param view View unused.
+     */
     @Override
     public void onCallback(View view) {
-
     }
 
+    /**
+     *  Setup shared element calback listener.
+     *  Listener used for back transition processing
+     *  All shared names from fragment removed and replaced by actual destination names and view
+     *  Thus back transition moved towards to new current selected element rather than starting one.
+     *
+     * @return  SharedElementCallback  callback for shared elements
+     */
     private SharedElementCallback setupSharedCallback() {
         return new SharedElementCallback() {
             @Override
@@ -265,10 +325,4 @@ public class ArticleDetailActivity extends AppCompatActivity implements
         };
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-
-    }
 }
