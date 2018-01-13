@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,10 +17,12 @@ public class RecyclerBodyAdapter extends RecyclerView.Adapter<RecyclerBodyAdapte
 
     private List<String> mList;
     private Context mContext;
+    private Typeface mCaecilia;
 
 
-    public RecyclerBodyAdapter(Context context) {
+    public RecyclerBodyAdapter(Context context, Typeface caecilia) {
         mContext = context;
+        mCaecilia = caecilia;
     }
 
     // TODO remove later
@@ -62,6 +65,7 @@ public class RecyclerBodyAdapter extends RecyclerView.Adapter<RecyclerBodyAdapte
         public ViewHolder(View view) {
             super(view);
             mItemText = view.findViewById(R.id.article_body_ext);
+            mItemText.setTypeface(mCaecilia);
         }
 
         private void fill(int position) {

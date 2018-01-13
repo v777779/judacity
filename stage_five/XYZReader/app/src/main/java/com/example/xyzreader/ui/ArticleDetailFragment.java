@@ -113,19 +113,39 @@ public class ArticleDetailFragment extends Fragment implements
      */
     private FloatingActionButton mFab;
     /**
-     *
+     * ImageButton for scrolling to top of text
      */
     private ImageButton mImageButtonLeft;
+    /**
+     * ImageButton for scrolling to bottom of text
+     */
     private ImageButton mImageButtonRight;
+    /**
+     * ImageButton for onBackPressed() method
+     */
     private ImageButton mImageButtonHome;
+    /**
+     * ImageButton for exit from full screen mode
+     */
     private ImageButton mImageButtonFullScreen;
-    // progress
+    /**
+     * ProgressBar for text loading and processing
+     */
     private ProgressBar mProgressBarText;
+    /**
+     * ProgressBar for image loading
+     */
     private ProgressBar mProgressBarImage;
 
-
+    /**
+     *  View root view of fragment
+     */
     private View mRootView;
+    /**
+     *  Cursor object with data of item
+     */
     private Cursor mCursor;
+
     private Typeface mCaecilia;
     // date
     private SimpleDateFormat mDateFormat;
@@ -277,7 +297,7 @@ public class ArticleDetailFragment extends Fragment implements
 
 // recycler
         mRecyclerBody = mRootView.findViewById(R.id.article_body_recycler);
-        mRecyclerBodyAdapter = new RecyclerBodyAdapter(getActivity());
+        mRecyclerBodyAdapter = new RecyclerBodyAdapter(getActivity(),mCaecilia);
         mRecyclerBody.setAdapter(mRecyclerBodyAdapter);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL,
@@ -531,8 +551,7 @@ public class ArticleDetailFragment extends Fragment implements
 
 
     /**
-     *  Setups listeners to Fab and image buttons of bottom Toolbar
-     *
+     * Setups listeners to Fab and image buttons of bottom Toolbar
      */
     private void setupButtons() {
         mFab.setOnClickListener(new View.OnClickListener() {
