@@ -58,7 +58,6 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
         mIsLowScrollTextY = false;
 
         if(!mIsInstructive && Config.isInstrictiveLocked()) {
-            int k = 1;
             return;   // стандартные блокируются
         }
 
