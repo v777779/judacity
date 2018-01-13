@@ -374,6 +374,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 //                    getSupportActionBar().hide();
                 } else {
+                    mRecyclerView.setVisibility(View.VISIBLE);
                     mAppBarLayout.setVisibility(View.VISIBLE);
 
 //                    getSupportActionBar().show();

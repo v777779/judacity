@@ -36,6 +36,14 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
         mIsLand = context.getResources().getBoolean(R.bool.is_land);
     }
 
+    public BottomBarRecycler(Context context) {
+        boolean isWide = context.getResources().getBoolean(R.bool.is_wide);
+        boolean isLand = context.getResources().getBoolean(R.bool.is_land);
+        if(isWide && !isLand) mIsLand = !isLand;
+        mIsLand = (isWide && !isLand)?!isLand:isLand;
+    }
+
+
     @Override
     public void onNestedScroll(
             @NonNull CoordinatorLayout coordinatorLayout,

@@ -397,7 +397,7 @@ public class Config {
     }
 
     public static void motionBottom(Context context, View view) {
-        BottomBarRecycler br = new BottomBarRecycler(context, null);
+        BottomBarRecycler br = new BottomBarRecycler(context);
         br.setContinue(view);
     }
 }
