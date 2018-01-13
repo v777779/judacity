@@ -176,23 +176,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_article_main);  // transition set in styles
 
-// bind
-        mToolbar = findViewById(R.id.toolbar_main);
-        mToolbarLogo = findViewById(R.id.toolbar_logo);
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mProgressBar = findViewById(R.id.progress_bar);
-// wide
-        mPager = findViewById(R.id.viewpager_container);
-//        mPager.setScrollDurationFactor(2);
-
-        mParentConstraint = findViewById(R.id.main_constraint);
-        mAppBarLayout = findViewById(R.id.app_bar_main);
-
         mRes = getResources();
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
-// preferences
         mIsFullScreenMode = loadPreferenceFullScreen(this);
         mIsSwipeMode = loadPreferenceSwipe(this);
 
@@ -211,22 +197,9 @@ public class ArticleListActivity extends AppCompatActivity implements
             mIsSelected = savedInstanceState.getBoolean(BUNDLE_IS_ITEM_SELECTED, false);
         }
 
-
-// toolbar
+        setupViews();
         setupFullScreenListener();
-
-        setSupportActionBar(mToolbar);
-        mToolbarLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("");
-        }
-
+        setupActionBar();
         setupRecycler();
         setupSwipeRefresh();
         setupViewPager();
@@ -701,6 +674,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     }
 
+
+
     private void setupFullScreenListener() {
         // toolbar
         getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
@@ -766,11 +741,44 @@ public class ArticleListActivity extends AppCompatActivity implements
         });
     }
 
+    private void setupViews(){
+        mToolbar = findViewById(R.id.toolbar_main);
+        mToolbarLogo = findViewById(R.id.toolbar_logo);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mProgressBar = findViewById(R.id.progress_bar);
+        mPager = findViewById(R.id.viewpager_container);
+        mParentConstraint = findViewById(R.id.main_constraint);
+        mAppBarLayout = findViewById(R.id.app_bar_main);
+// wide
+        mPager = findViewById(R.id.viewpager_container);
+// bottom
+        mBottomBar = findViewById(R.id.bottom_toolbar);
+        mImageButtonHome = findViewById(R.id.image_button_home);
+        mImageButtonFullScreen = findViewById(R.id.image_button_fullscreen);
+
+    }
+
+    private void setupActionBar(){
+        setSupportActionBar(mToolbar);
+
+        mToolbarLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("");
+        }
+    }
+
     private void setupViewPager() {
         if (!mIsWide) return;
 // viewpager
         mStartingItemPosition = -1;
-        mPager = findViewById(R.id.viewpager_container);
+
         mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageMargin((int) TypedValue
@@ -799,9 +807,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     private void setupBottomBar() {
-        mBottomBar = findViewById(R.id.bottom_toolbar);
-        mImageButtonHome = findViewById(R.id.image_button_home);
-        mImageButtonFullScreen = findViewById(R.id.image_button_fullscreen);
 
         if (mImageButtonHome != null) {
             mImageButtonHome.setOnClickListener(new View.OnClickListener() {
