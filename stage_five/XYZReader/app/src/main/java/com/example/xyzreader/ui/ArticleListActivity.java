@@ -275,7 +275,13 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             refresh(ACTION_TIME_REFRESH);
-            mIsFullScreen = mIsFullScreenMode;
+            if(mIsWide && !mIsLand) {
+                mIsFullScreen = false;              // block for tablet portrait
+            }else {
+                mIsFullScreen = mIsFullScreenMode;
+            }
+
+
             mIsSelected = false;
         } else {
             mIsFullScreen = savedInstanceState.getBoolean(BUNDLE_FULL_SCREEN_MODE, mIsFullScreenMode);
@@ -532,14 +538,13 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
 
 // wide
-        if (mIsWide) {
-            mStartingItemId = id;
-            mStartingItemPosition = pos;
+        mStartingItemId = id;
+        mStartingItemPosition = pos;
 
-            mPagerAdapter.setStartingItemId(mStartingItemId);
-            mPager.setCurrentItem(mStartingItemPosition, false);
-            mPager.setVisibility(View.VISIBLE);
-        }
+        mPagerAdapter.setStartingItemId(mStartingItemId);
+        mPager.setCurrentItem(mStartingItemPosition, false);
+        mPager.setVisibility(View.VISIBLE);
+
     }
 
     /**

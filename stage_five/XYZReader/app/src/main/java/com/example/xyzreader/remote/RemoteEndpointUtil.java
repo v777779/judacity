@@ -83,7 +83,9 @@ public class RemoteEndpointUtil {
                 null,
                 ItemsContract.Items.DEFAULT_SORT);
 
-        return cursor == null || cursor.getCount() == 0;
+        boolean isEmpty = cursor == null || cursor.getCount() == 0;
+        if(cursor != null) cursor.close();
+        return isEmpty;
     }
 
     /**

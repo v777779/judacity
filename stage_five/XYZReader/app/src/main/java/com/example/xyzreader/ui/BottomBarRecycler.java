@@ -74,7 +74,7 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
         Resources res = context.getResources();
         boolean isWide = res.getBoolean(R.bool.is_wide);
         boolean isLand = res.getBoolean(R.bool.is_land);
-        if (isWide && !isLand) mIsLand = !isLand;
+
         mIsLand = (isWide && !isLand) ? !isLand : isLand;
 
         Config.setInstructiveLock(true); // lock mutex
