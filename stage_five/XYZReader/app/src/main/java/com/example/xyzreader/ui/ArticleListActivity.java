@@ -531,18 +531,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             mStartingItemId = id;
             mStartingItemPosition = pos;
 
-            if (mCachedBitmap != null) {
-                ImageView viewPagerImage = findViewById(R.id.viewpager_image);
-                viewPagerImage.setImageBitmap(mCachedBitmap);
-                View viewPagerBackground = findViewById(R.id.viewpager_background);
-                viewPagerBackground.setBackgroundColor(mCachedColor);
-                viewPagerBackground.setAlpha(1f);
-            }
-
-// reload first invisible fragment to support instructive transition
-            if (mStartingItemPosition == 0) {
-                mPagerAdapter.notifyDataSetChanged();
-            }
             mPagerAdapter.setStartingItemId(mStartingItemId);
             mPager.setCurrentItem(mStartingItemPosition, false);
             mPager.setVisibility(View.VISIBLE);
@@ -599,12 +587,18 @@ public class ArticleListActivity extends AppCompatActivity implements
             return;
         }
         Bitmap bitmap = fragment.getBitmap();
-        if (bitmap != null) {
+        if (bitmap != null &&  bitmap != mCachedBitmap) {
             mCachedBitmap = bitmap;
             Palette p = Palette.generate(bitmap, 12);
             mCachedColor = p.getDarkMutedColor(ContextCompat.getColor(this, R.color.colorBackMask));
-        } else {
-            mCachedBitmap = null;
+            if(mIsWide) {
+                ImageView viewPagerImage = findViewById(R.id.viewpager_image);
+                viewPagerImage.setImageBitmap(mCachedBitmap);
+                View viewPagerBackground = findViewById(R.id.viewpager_background);
+                viewPagerBackground.setBackgroundColor(mCachedColor);
+                viewPagerBackground.setAlpha(1f);
+            }
+
         }
 
 // instructive motion  viewpager here only
