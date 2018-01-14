@@ -41,6 +41,17 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     /**
+     *  Returns  position index of item
+     *
+     * @param object  Object item of Viewpager
+     * @return int position index of item
+     */
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    /**
      *   Informs the adapter of which item is currently considered to be the "primary"
      *
      * @param container ViewGroup containing View from which the page will be removed.
