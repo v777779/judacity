@@ -69,7 +69,10 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar_detail"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_share" />
+        app:srcCompat="@drawable/ic_share"
+        app:elevation="@dimen/fab_elevation"
+        android:contentDescription="@string/fab_share_button_description"
+        />
 
 
     <android.support.constraint.ConstraintLayout

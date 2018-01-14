@@ -18,6 +18,9 @@
     <dimen name="progress_bar_size">48dp</dimen>
     <dimen name="progress_swipe_offset">100dp</dimen>
 
+    <!--fab-->
+    <dimen name="fab_elevation">6dp</dimen>
+    
     <!--text sizes-->
     <dimen name="text_size">14sp</dimen>
     <dimen name="head_text_size">16sp</dimen>

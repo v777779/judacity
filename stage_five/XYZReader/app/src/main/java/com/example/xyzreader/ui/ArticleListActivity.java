@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -350,8 +351,11 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (id == R.id.item_swipe) {
             if (item.isChecked()) {
                 item.setChecked(false);
+                showSnackBar(R.string.snackbar_swipe_refresh_mode_off);
+
             } else {
                 item.setChecked(true);
+                showSnackBar(R.string.snackbar_swipe_refesh_mode_on);
             }
             mIsSwipeMode = item.isChecked();
             mSwipeRefreshLayout.setEnabled(mIsSwipeMode);
@@ -361,8 +365,10 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (id == R.id.item_full_screen) {
             if (item.isChecked()) {
                 item.setChecked(false);
+                showSnackBar(R.string.snackbar_full_screen_mode_off);
             } else {
                 item.setChecked(true);
+                showSnackBar(R.string.snackbar_full_screen_mode_on);
             }
             mIsFullScreenMode = item.isChecked();
             savePreferences(this, mIsSwipeMode, mIsFullScreenMode);
@@ -371,6 +377,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (id == R.id.action_fullscreen) {
             if (mIsSelected || !mIsWide) {
                 setFullScreen(FULL_SCREEN_MODE_ON);
+                showSnackBar(R.string.snackbar_full_screen_mode);
             }
             return true;
         }
@@ -1073,4 +1080,9 @@ public class ArticleListActivity extends AppCompatActivity implements
         return sp.isShowBar(mCursor.getCount(), !(mIsWide && !mIsLand));
     }
 
+    private void showSnackBar(int stringId) {
+        Snackbar.make(mRecyclerView, getString(stringId), Snackbar.LENGTH_LONG).show();
+
+
+    }
 }

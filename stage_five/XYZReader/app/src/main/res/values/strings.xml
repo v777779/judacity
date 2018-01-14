@@ -28,9 +28,9 @@
     <string name="article_title">Ebooks, Neither E, Nor Books</string>
     <string name="article_sub_title">Feb 1, 2004 by Cory Doctorow</string>
 
-    <string name="article_no_title"></string>
-    <string name="article_no_sub_title"></string>
-    <string name="article_no_body"> "Loading text…"</string>
+    <string name="article_no_title"> </string>
+    <string name="article_no_sub_title"> </string>
+    <string name="article_no_body">"Loading text…"</string>
 
     <!--date-->
     <string name="calendar_format">yyyy-MM-dd\u0027T\u0027HH:mm:ss.sss</string>
@@ -72,6 +72,14 @@
     <string name="image_article_description">appbar_image_description</string>
     <string name="viewpager_image_description">viewpager_image_background_description</string>
 
+<!--snackbar-->
+    <string name="snackbar_full_screen_mode_on">Full screen mode enabled at next start</string>
+    <string name="snackbar_full_screen_mode_off">Full screen mode disabled at next start</string>
+
+    <string name="snackbar_swipe_refesh_mode_on">Swipe refresh mode enabled</string>
+    <string name="snackbar_swipe_refresh_mode_off">Swipe refresh mode disabled</string>
+
+    <string name="snackbar_full_screen_mode">Full screen mode, to switch off, scroll up or down and click on pop up bar icon</string>
 
 
 </resources>
