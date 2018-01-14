@@ -60,7 +60,12 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
     public FragmentError() {
     }
 
-
+    /**
+     *  Creates  FragmentError object with Bundle of parameters
+     *
+     * @param params int[] resource IDs to compose layout of fragment
+     * @return FragmentError object
+     */
     public static FragmentError newInstance(int[] params) {
         FragmentError fragment = new FragmentError();
         fragment.setStyle(R.style.dialog_title_style, R.style.CustomDialog);
@@ -70,6 +75,12 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
         return fragment;
     }
 
+    /**
+     *  Creates FragmentError Activity
+     *  Extract parameters from Bundle arguments
+     *
+     * @aram savedInstanceState  Bundle  fo instance state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +124,9 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
         return rootView;
     }
 
+    /**
+     *  Destroys fragment and unbind ButterKnife object.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -120,7 +134,10 @@ public class FragmentError extends DialogFragment implements View.OnClickListene
     }
 
     /**
-     * OnClick method, recreate MainActivity on RETRY or finish() any activity on EXIT.
+     * OnClick method, calls callbacks of  ArticleListActivity
+     *  "RETRY"     repeats downloading
+     *  "CLOSE"     close fragment dialog
+     *  "EXIT"      exit from application
      *
      * @param v View object of button
      */
