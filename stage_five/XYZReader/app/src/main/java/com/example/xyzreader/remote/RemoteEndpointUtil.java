@@ -24,21 +24,34 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class RemoteEndpointUtil {
-    private static final String TAG = "RemoteEndpointUtil";
-
-// okhttp3
+    /**
+     *  Returns JSONArray object
+     *  Calls fetchPlainText(BASE_URL) method which returns String with JSON data.
+     *  Creates JSONArray object from that string and returns it.
+     *
+     * @return JSONArray object
+     */
     public static JSONArray fetchJsonArray() {
         try {
             JSONArray jsonArray = new JSONArray(fetchPlainText(Config.BASE_URL));
             return jsonArray;
         } catch (IOException |JSONException e) {
-            Log.e(TAG, "Error parsing items JSON", e);
+            Timber.d("Error parsing items JSON: "+ e);
         }
         return null;
     }
 
+    /**
+     *  Returns String with JSONArray data
+     *  Downloads  string from address provided to method as parameter
+     *  Returns String object
+     * @param address String URL from string downloaded
+     * @return String downloaded result
+     * @throws IOException
+     */
     static String fetchPlainText(String address) throws IOException {
         URL url = new URL(address );
         OkHttpClient client = new OkHttpClient();
@@ -56,7 +69,12 @@ public class RemoteEndpointUtil {
         return result;
     }
 
-
+    /**
+     *  Returns true if cursor object from given activity is empty
+     *
+     * @param context Context context of calling activity
+     * @return boolean true is cursor object is empty or false in other case
+     */
     public static boolean isCursorEmpty(Context context) {
         Cursor cursor = context.getContentResolver().query(
                 ItemsContract.Items.buildDirUri(),
@@ -68,6 +86,12 @@ public class RemoteEndpointUtil {
         return cursor == null || cursor.getCount() == 0;
     }
 
+    /**
+     *  Returns true if network access is present
+     *
+     * @param context Context context of calling activity
+     * @return boolean true if network is present.
+     */
     public static boolean isOnline(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -80,7 +104,14 @@ public class RemoteEndpointUtil {
 // preferences
 
 
-
+    /**
+     *  Return true if current time data in content provider  is obsoleted
+     *  The delay set in shared preferences and equals to 60 min by default
+     *  In current version it's possible to change this value via sources only.
+     *
+     * @param context Context context of calling activity
+     * @return boolean true if data is obsoleted
+     */
     public static boolean isReloadTimeout(Context context) {
         Resources res = context.getResources();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -97,8 +128,8 @@ public class RemoteEndpointUtil {
     }
 
     /**
-     * Saves mIsLoadImages flag to Preferences
-     * Used by Retrofit downloader to store time when data was loaded
+     * Saves current time to preferences
+     * Used by UpdaterService to update last downloading time
      */
     public static void saveReLoadTimePreference(Context context) {
         Resources res = context.getResources();
@@ -111,7 +142,13 @@ public class RemoteEndpointUtil {
 
 
     /**
-     * Load Preferences
+     *  Return boolean state of default swipe refresh mode.
+     *  Loads value from shared preferences and returns.
+     *  Swipe refresh is enabled by default.
+     *  Can be changed via setting menu.
+     *
+     * @param context Context context of calling activity
+     * @return boolean true if data is obsoleted
      */
     public static boolean  loadPreferenceSwipe(Context context) {
         Resources res = context.getResources();
@@ -122,6 +159,17 @@ public class RemoteEndpointUtil {
 
         return isSwipeEnabled;
     }
+
+
+    /**
+     *  Return boolean state of default full screen mode.
+     *  Loads value from shared preferences and returns.
+     *  Full screen is disabled  by default.
+     *  Can be changed via setting menu.
+     *
+     * @param context Context context of calling activity
+     * @return boolean true if data is obsoleted
+     */
     public static boolean  loadPreferenceFullScreen(Context context) {
         Resources res = context.getResources();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -145,7 +193,6 @@ public class RemoteEndpointUtil {
         editor.putBoolean(res.getString(R.string.pref_full_screen_key), isFullScreenEnabled);
         editor.apply();
     }
-
 
 }
 
