@@ -1054,7 +1054,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (isShowBar()) {
             mBottomBar.setVisibility(View.VISIBLE);
             mBottomBar.setAlpha(1.0f);
-//            mBottomBar.scrollTo(0, 0);
             mBottomBar.animate().translationY(0).translationY(0).start();
         }
     }
