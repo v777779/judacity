@@ -79,6 +79,7 @@ import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_TAG;
 import static com.example.xyzreader.remote.Config.FRAGMENT_ERROR_WAIT;
 import static com.example.xyzreader.remote.Config.FULL_SCREEN_MODE_OFF;
 import static com.example.xyzreader.remote.Config.FULL_SCREEN_MODE_ON;
+import static com.example.xyzreader.remote.Config.getDisplayMetrics;
 import static com.example.xyzreader.remote.Config.instructiveMotion;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.loadPreferenceFullScreen;
 import static com.example.xyzreader.remote.RemoteEndpointUtil.loadPreferenceSwipe;
@@ -196,55 +197,55 @@ public class ArticleListActivity extends AppCompatActivity implements
      * Integer  position of current item in  Cursor/ViewPager
      */
     private int mCurrentItemPosition;
-
     /**
      * Cursor object with data from database for ArticleDetailFragments
      */
     private Cursor mCursor;
-
-
     /**
-     *  Boolean is true for full screen mode
+     * Boolean is true for full screen mode
      */
     private boolean mIsFullScreen;
     /**
-     *  Boolean is true for full screen mode preference
-     *  Actual for next start of application
+     * Boolean is true for full screen mode preference
+     * Actual for next start of application
      */
     private boolean mIsFullScreenMode;
     /**
-     *  Boolean is true is SwipeRefreshLayout is enabled
+     * Boolean is true is SwipeRefreshLayout is enabled
      */
     private boolean mIsSwipeMode;
-
     /**
      * Boolean is true if item was selected
-     *  Used to show back image for wide screen devices
+     * Used to show back image for wide screen devices
      */
     private boolean mIsSelected;
     /**
-     *  ConstraintLayout parent of ViewPager
-     *  Used for fullscreen mode
+     * ConstraintLayout parent of ViewPager
+     * Used for fullscreen mode
      */
     private ConstraintLayout mParentConstraint;
     /**
-     *  AppBarLayout used for full screen mode
+     * AppBarLayout used for full screen mode
      */
     private AppBarLayout mAppBarLayout;
     /**
-     *  Integer  generated from bitmap color for ViewPager  background.
+     * Integer  generated from bitmap color for ViewPager  background.
      */
     private int mCachedColor;
     /**
-     *  Bitmap image for ViewPager backgorund
+     * Bitmap image for ViewPager backgorund
      */
     private Bitmap mCachedBitmap;
+    /**
+     * Boolean is true if RecyclerView is too small for scrolling
+     */
+    private boolean mIsShowBar;
 
     /**
-     *  Creates activity
-     *  Setup views, listeners and RecyclerView, ViewPager objects
-     *  Setup shared elements transition callback
-     *  Runs Loader for Cursor object
+     * Creates activity
+     * Setup views, listeners and RecyclerView, ViewPager objects
+     * Setup shared elements transition callback
+     * Runs Loader for Cursor object
      *
      * @param savedInstanceState
      */
@@ -308,7 +309,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Setup Options menu with preference values
+     * Setup Options menu with preference values
      *
      * @param menu Menu object
      * @return boolean true.
@@ -324,10 +325,10 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     /**
      * Processes fullscreen and settings menu items clicks.
-     *  Settings menu <br/>
-     *  item_fullscreen   set value of full screen preference.
-     *  item_swipe        set value and changes swipe refresh mode.
-     *  action_fullscreen changes full screen mode
+     * Settings menu <br/>
+     * item_fullscreen   set value of full screen preference.
+     * item_swipe        set value and changes swipe refresh mode.
+     * action_fullscreen changes full screen mode
      *
      * @param item MenuItem object that was selected.
      * @return true if item was processed.
@@ -372,9 +373,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Register broadcast receiver for messages from UpdaterService.
-     *  Shows instructive motion for full screen mode
-     *  Sets full screen mode according to mIsFullScreen flag.
+     * Register broadcast receiver for messages from UpdaterService.
+     * Shows instructive motion for full screen mode
+     * Sets full screen mode according to mIsFullScreen flag.
      */
     @Override
     protected void onStart() {
@@ -389,10 +390,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         instructiveMotion(this, mBottomBar);
         setFullScreen(mIsFullScreen);
 
+        showBottomBar();
+
     }
 
     /**
-     *  Unregister broadcast receiver.
+     * Unregister broadcast receiver.
      */
     @Override
     protected void onStop() {
@@ -402,13 +405,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Performs back transition of shared elements processing
-     *  Scrolls RecyclerView to new current item position
-     *  Extracts Bundle storage with shared elements to  mTmpReenterState.
-     *  Support enter transition after RecyclerView finished scrolling.
+     * Performs back transition of shared elements processing
+     * Scrolls RecyclerView to new current item position
+     * Extracts Bundle storage with shared elements to  mTmpReenterState.
+     * Support enter transition after RecyclerView finished scrolling.
      *
      * @param resultCode int code of result.
-     * @param data Intent  object with shared elements.
+     * @param data       Intent  object with shared elements.
      */
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
@@ -463,6 +466,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (mIsWide) {
             mPagerAdapter.swap(cursor);
             mPagerAdapter.setStartingItemId(mStartingItemId);
+        }else{
+            showBottomBar();
         }
 
     }
@@ -479,22 +484,23 @@ public class ArticleListActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursor = null;
         mRecyclerView.getAdapter().notifyDataSetChanged();
-        if(mIsWide) {
+        if (mIsWide) {
             mPagerAdapter.notifyDataSetChanged();
         }
     }
 
     /**
-     *  Callback method of common user interface.
-     *  Processes click on item RecyclerView or Viewpager.
-     *  For non tablet devices:<br/>
-     *  Creates shared element transition and starts ArticleDetailActivity.
-     *  For tablet devices:<br/></br>
-     *  Sets background image for ViewPager shadowed bitmap of previous selected item
-     *  Selects item in ViewPager.
-     *
-     *
+     * Callback method of common user interface.
+     * Processes click on item RecyclerView or Viewpager.
+     * For non tablet devices:<br/>
+     * Creates shared element transition and starts ArticleDetailActivity.
+     * For tablet devices:<br/></br>
+     * Sets background image for ViewPager shadowed bitmap of previous selected item
+     * Selects item in ViewPager.
+     * <p>
+     * <p>
      * ansd starts
+     *
      * @param view
      * @param pos
      */
@@ -538,10 +544,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Callback method of common user interface.
-     *  Called from FragmentError and ArticleDetailFragment activities.
+     * Callback method of common user interface.
+     * Called from FragmentError and ArticleDetailFragment activities.
      *
-     * @param mode  int  request number.
+     * @param mode int  request number.
      */
     @Override
     public void onCallback(int mode) {  // FragmentError Support
@@ -570,13 +576,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Callback method of common user interface.
-     *  Called from ViewPager setPrimaryItem method.
-     *  Uses current selected ArticleFragment fragment to
-     *  store bitmap from fragment and generate palette from that bitmap.
-     *  Bitmap and palette are used as Viewpager background image and visible
-     *  when Glide loads new page.
-     *  Uses fragment for instructive motion.
+     * Callback method of common user interface.
+     * Called from ViewPager setPrimaryItem method.
+     * Uses current selected ArticleFragment fragment to
+     * store bitmap from fragment and generate palette from that bitmap.
+     * Bitmap and palette are used as Viewpager background image and visible
+     * when Glide loads new page.
+     * Uses fragment for instructive motion.
      *
      * @param fragment ArticleDetailFragment object.
      */
@@ -587,11 +593,11 @@ public class ArticleListActivity extends AppCompatActivity implements
             return;
         }
         Bitmap bitmap = fragment.getBitmap();
-        if (bitmap != null &&  bitmap != mCachedBitmap) {
+        if (bitmap != null && bitmap != mCachedBitmap) {
             mCachedBitmap = bitmap;
             Palette p = Palette.generate(bitmap, 12);
             mCachedColor = p.getDarkMutedColor(ContextCompat.getColor(this, R.color.colorBackMask));
-            if(mIsWide) {
+            if (mIsWide) {
                 ImageView viewPagerImage = findViewById(R.id.viewpager_image);
                 viewPagerImage.setImageBitmap(mCachedBitmap);
                 View viewPagerBackground = findViewById(R.id.viewpager_background);
@@ -609,7 +615,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
     /**
-     *  Hides progress bar and swipe refresh  progress bar
+     * Hides progress bar and swipe refresh  progress bar
      */
     private void hideRefreshingUI() {
         mIsSwipeRefresh = false;
@@ -619,7 +625,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Shows and hides progress bar and swipe refresh  progress bar
+     * Shows and hides progress bar and swipe refresh  progress bar
      */
     private void updateRefreshingUI() {
         if (mIsSwipeRefresh) {
@@ -632,8 +638,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Show FrameError dialog.
-     *  Uses int[] of resource IDs of strings, buttons to compose layout of fragment.
+     * Show FrameError dialog.
+     * Uses int[] of resource IDs of strings, buttons to compose layout of fragment.
      *
      * @param parameters int[] array of resource IDs
      */
@@ -646,12 +652,11 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Setup RecyclerView object.
-     *  RecyclerView exploit GridLayout VERTICAL for all screens except tablet wide portrait.
-     *  For wide tablet portrait layouts RecyclerView GridLayout is HORIZONTAL.
-     *  Sizes of elements calculates by Config.getDisplayMetrics() method based on
-     *  Constraint Layout guidelines percent values and screen dimensions.
-     *
+     * Setup RecyclerView object.
+     * RecyclerView exploit GridLayout VERTICAL for all screens except tablet wide portrait.
+     * For wide tablet portrait layouts RecyclerView GridLayout is HORIZONTAL.
+     * Sizes of elements calculates by Config.getDisplayMetrics() method based on
+     * Constraint Layout guidelines percent values and screen dimensions.
      */
     private void setupRecycler() {
         Config.Span sp = Config.getDisplayMetrics(this);
@@ -679,11 +684,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Setup SwipeRefreshLayout.
-     *  The main action is refreshing implemented on refresh() method
-     *  which in turn make Intent.Action request to UpdaterService object.
-     *  Setups broadcast receiver for messages from UpdaterService object.
-     *
+     * Setup SwipeRefreshLayout.
+     * The main action is refreshing implemented on refresh() method
+     * which in turn make Intent.Action request to UpdaterService object.
+     * Setups broadcast receiver for messages from UpdaterService object.
      */
     private void setupSwipeRefresh() {
 
@@ -723,7 +727,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Starts service UpdaterService to download o refersh data of content porvider.
+     * Starts service UpdaterService to download o refersh data of content porvider.
      *
      * @param action String  the name of action for UpdaterService.
      */
@@ -732,10 +736,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Put system status and navigation transition name for shared element transition
+     * Put system status and navigation transition name for shared element transition
      *
-     * @param names             List<String> list of shared element transition names
-     * @param sharedElements   Map<String, View> map of shared element vies and names
+     * @param names          List<String> list of shared element transition names
+     * @param sharedElements Map<String, View> map of shared element vies and names
      */
     private void defaultTransition(List<String> names, Map<String, View> sharedElements) {
         // If mTmpReenterState is null, then the activity is exiting.
@@ -752,13 +756,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Returns List<String>  list of shared elements  transition names
-     *  Extracts shared elements from RecyclerView ViewHolder object
-     *  Makes List<String> list and fill it with shared element names and returns list.
-     *  Used in shared elements back transition processing.
+     * Returns List<String>  list of shared elements  transition names
+     * Extracts shared elements from RecyclerView ViewHolder object
+     * Makes List<String> list and fill it with shared element names and returns list.
+     * Used in shared elements back transition processing.
      *
-     * @param position  int position of ViewHolder
-     * @return  List<String>   list of shared element transition names
+     * @param position int position of ViewHolder
+     * @return List<String>   list of shared element transition names
      */
     private List<View> getSharedViews(int position) {
         RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
@@ -774,10 +778,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Setup SharedElementCallback callback for shared elements back transition  processing
-     *  Callback extracts starting and current itam positions
-     *  When they are different replaces old names and view by new ones from current item
-     *
+     * Setup SharedElementCallback callback for shared elements back transition  processing
+     * Callback extracts starting and current itam positions
+     * When they are different replaces old names and view by new ones from current item
      *
      * @return SharedElementCallback callback object.
      */
@@ -815,9 +818,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Sets full screen mode on and off according to isFullScreen value.
-     *
-     *
+     * Sets full screen mode on and off according to isFullScreen value.
      *
      * @param isFullScreen
      */
@@ -825,6 +826,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (isFullScreen) {
             mIsFullScreen = true;
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
             if (mBottomBar != null) {
@@ -834,21 +836,22 @@ public class ArticleListActivity extends AppCompatActivity implements
         } else {
             mIsFullScreen = false;
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().getDecorView().setSystemUiVisibility(View.VISIBLE);
             if (mBottomBar != null) {
                 mBottomBar.setVisibility(View.INVISIBLE);
             }
             if (mIsWide) {
                 mPager.getAdapter().notifyDataSetChanged();
                 mRecyclerView.scrollToPosition(mCurrentItemPosition);
+
             }
         }
     }
 
     /**
-     *  Setups window insets listener to set on and off fullscreen mode requests.
-     *  To set full screen mode on and off  RecyclerView padding, SwipeRefreshLayout margins and
-     *  ViewPager constraint and AppBarLayout visibility  changed.
-     *
+     * Setups window insets listener to set on and off fullscreen mode requests.
+     * To set full screen mode on and off  RecyclerView padding, SwipeRefreshLayout margins and
+     * ViewPager constraint and AppBarLayout visibility  changed.
      */
     private void setupFullScreenListener() {
         // toolbar
@@ -916,8 +919,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Binds views to layout.
-     *
+     * Binds views to layout.
      */
     private void setupViews() {
         mToolbar = findViewById(R.id.toolbar_main);
@@ -938,10 +940,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Setups ActionBar,
-     *  Set listener for toolbar logo icon, when clicked onBackPressed() called.
-     *  Set title to empty string.
-     *
+     * Setups ActionBar,
+     * Set listener for toolbar logo icon, when clicked onBackPressed() called.
+     * Set title to empty string.
      */
     private void setupActionBar() {
         setSupportActionBar(mToolbar);
@@ -959,10 +960,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Setups ViewPager for wide screen tablets with sw800dp.
-     *  Sets listener on pPage selected which fills mCurrentPosition field.
-     *  Sets pager transformer for smooth scrolling of pages.
-     *
+     * Setups ViewPager for wide screen tablets with sw800dp.
+     * Sets listener on pPage selected which fills mCurrentPosition field.
+     * Sets pager transformer for smooth scrolling of pages.
      */
     private void setupViewPager() {
         if (!mIsWide) return;
@@ -996,12 +996,11 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Setups bottom bar for ArticleListActivity layout.
-     *  This bar placed on bottom or left sides of layout.
-     *  Includes up to four buttons. <br/>
-     *  home/back       calls onBackPressed() method.
-     *  fullScreen      exits from fullscreen mode.
-     *
+     * Setups bottom bar for ArticleListActivity layout.
+     * This bar placed on bottom or left sides of layout.
+     * Includes up to four buttons. <br/>
+     * home/back       calls onBackPressed() method.
+     * fullScreen      exits from fullscreen mode.
      */
     private void setupBottomBar() {
 
@@ -1042,5 +1041,22 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     }
 
+    private void showBottomBar() {
+
+        if (!mIsFullScreen || mBottomBar == null) return;
+       if(isShowBar()) {
+           mBottomBar.setVisibility(View.VISIBLE);
+           mBottomBar.setAlpha(1);
+           mBottomBar.scrollTo(0, 0);
+       }
+
+    }
+
+    private boolean isShowBar() {
+        if(mCursor == null || mCursor.getCount() == 0) return false;
+
+        Config.Span sp = getDisplayMetrics(this);
+        return sp.isShowBar(mCursor.getCount(), !(mIsWide && !mIsLand));
+    }
 
 }

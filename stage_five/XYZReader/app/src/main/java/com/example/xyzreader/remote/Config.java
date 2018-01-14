@@ -185,6 +185,16 @@ public class Config {
         private int height;
 
         /**
+         * int width of screen
+         */
+        private int screenWidth;
+        /**
+         * int height of screen
+         */
+        private int screenHeight;
+
+
+        /**
          * Constructor
          *
          * @param spanX  int number items of RecyclerView in width
@@ -192,11 +202,14 @@ public class Config {
          * @param width  int width of RecyclerView item
          * @param height int height of RecyclerView item
          */
-        public Span(int spanX, int spanY, int width, int height) {
+        public Span(int spanX, int spanY, int width, int height, int screenWidth, int screenHeight) {
             this.spanX = spanX;
             this.spanY = spanY;
             this.width = width;
             this.height = height;
+            this.screenHeight = screenWidth;
+            this.screenWidth = screenWidth;
+
         }
 
         public int getSpanX() {
@@ -213,6 +226,14 @@ public class Config {
 
         public int getHeight() {
             return height;
+        }
+
+        public  boolean isShowBar(int nItems, boolean isVert) {
+            if(isVert) {
+                return  (nItems/spanX)*height < screenHeight;
+            }else {
+                return  (nItems/spanY)*width < screenWidth;
+            }
         }
     }
 
@@ -265,7 +286,7 @@ public class Config {
 //        mSpan = spanInHeight;
 //        mSpanWidth = spanWidth;
 
-        return new Span(spanInWidth, spanInHeight, spanWidth, spanHeight);
+        return new Span(spanInWidth, spanInHeight, spanWidth, spanHeight, dp.widthPixels, dp.heightPixels);
     }
 
 
