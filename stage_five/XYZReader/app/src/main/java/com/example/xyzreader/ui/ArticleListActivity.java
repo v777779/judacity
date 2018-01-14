@@ -277,9 +277,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             refresh(ACTION_TIME_REFRESH);
-            if(mIsWide && !mIsLand) {
+            if (mIsWide && !mIsLand) {
                 mIsFullScreen = false;              // block for tablet portrait
-            }else {
+            } else {
                 mIsFullScreen = mIsFullScreenMode;
             }
 
@@ -1082,9 +1082,9 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     private void showSnackBar(int stringId) {
-       Snackbar snackBar =  Snackbar.make(mRecyclerView, getString(stringId), Snackbar.LENGTH_LONG);
+        Snackbar snackBar = Snackbar.make(mRecyclerView, getString(stringId), Snackbar.LENGTH_LONG);
         TextView tv = (snackBar.getView()).findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextSize(mRes.getDimensionPixelSize(R.dimen.body_text_size));
+        tv.setTextSize(mRes.getDimensionPixelSize(R.dimen.snackbar_text_size));
         snackBar.show();
 
     }

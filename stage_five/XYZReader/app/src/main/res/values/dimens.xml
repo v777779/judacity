@@ -20,7 +20,10 @@
 
     <!--fab-->
     <dimen name="fab_elevation">6dp</dimen>
-    
+
+    <!--snackbar-->
+    <dimen name="snackbar_text_size">11sp</dimen>
+
     <!--text sizes-->
     <dimen name="text_size">14sp</dimen>
     <dimen name="head_text_size">16sp</dimen>

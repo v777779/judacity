@@ -4,6 +4,9 @@
     <dimen name="subtitle_text_size">16sp</dimen>
     <dimen name="body_text_size">16sp</dimen>
 
+    <!--snackbar-->
+    <dimen name="snackbar_text_size">8sp</dimen>
+
     <!--recycler_item_title-->
     <dimen name="card_title_text_size">18sp</dimen>
     <dimen name="card_subtitle_text_size">14sp</dimen>
