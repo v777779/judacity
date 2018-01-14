@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -19,10 +18,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
-
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,7 +56,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import timber.log.Timber;
 
@@ -446,7 +442,7 @@ public class ArticleDetailFragment extends Fragment implements
         Glide.with(this)
                 .load(imageURL)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.empty_loading_009)
+                        .placeholder(R.drawable.empty_loading_glide)
                         .error(R.drawable.error_loading))
                 .listener(new RequestListener<Drawable>() {
                     @Override
