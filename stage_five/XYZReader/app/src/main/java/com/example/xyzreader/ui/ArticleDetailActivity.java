@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.xyzreader.R;
@@ -244,13 +245,15 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     }
 
     /**
-     * Placeholder for common user interface, not used in this activity
+     * Updates full screen mode onResume() ArticleDetailFragment()
      *
      * @param mode int unused.
      */
     @Override
     public void onCallback(int mode) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
+
 
     /**
      *  Extracts system shared elements from current set of shared elements to

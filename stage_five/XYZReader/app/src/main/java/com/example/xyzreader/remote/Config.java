@@ -60,6 +60,7 @@ public class Config {
     public static final int CALLBACK_FRAGMENT_EXIT = 5;
     public static final int CALLBACK_FRAGMENT_MOTION = 7;
     public static final int CALLBACK_FRAGMENT_FULLSCREEN = 7;
+    public static final int CALLBACK_DETAIL_FULLSCREEN = 8;
 
     public static final String BUNDLE_ARTICLE_ITEM_URI = "bundle_article_item_uri";
     public static final String BUNDLE_STARTING_ITEM_ID = "bundle_starting_item_id";

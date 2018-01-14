@@ -822,29 +822,22 @@ public class ArticleListActivity extends AppCompatActivity implements
      * @param isFullScreen
      */
     private void setFullScreen(boolean isFullScreen) {
-        Window w = getWindow();
-        ActionBar actionBar = getSupportActionBar();
+
         if (isFullScreen) {
             mIsFullScreen = true;
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_FULLSCREEN
-            );
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
             if (mBottomBar != null) {
                 mBottomBar.setVisibility(View.VISIBLE);
             }
-            if (!mIsWide) {  // flags for non tablet
-                w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            }
 
         } else {
             mIsFullScreen = false;
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             if (mBottomBar != null) {
                 mBottomBar.setVisibility(View.INVISIBLE);
             }
-            w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            if (mIsWide) {                    // updates top border of recycler and viewpager
+            if (mIsWide) {
                 mPager.getAdapter().notifyDataSetChanged();
                 mRecyclerView.scrollToPosition(mCurrentItemPosition);
             }

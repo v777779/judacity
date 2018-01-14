@@ -65,6 +65,7 @@ import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_STARTING_ID;
 
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_TEXT_RECYCLER;
 import static com.example.xyzreader.remote.Config.BUNDLE_FRAGMENT_TEXT_SOURCE;
+import static com.example.xyzreader.remote.Config.CALLBACK_DETAIL_FULLSCREEN;
 import static com.example.xyzreader.remote.Config.CALLBACK_FRAGMENT_FULLSCREEN;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_OFFSET;
 import static com.example.xyzreader.remote.Config.FRAGMENT_TEXT_SIZE;
@@ -315,6 +316,14 @@ public class ArticleDetailFragment extends Fragment implements
         outState.putStringArrayList(BUNDLE_FRAGMENT_TEXT_SOURCE, mListSource);
     }
 
+    /**
+     *  Updates fullscreen mode after Intent.Share action
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((ICallback) getActivity()).onCallback(CALLBACK_DETAIL_FULLSCREEN);
+    }
 
     /**
      * Callback of Cursor Loader
