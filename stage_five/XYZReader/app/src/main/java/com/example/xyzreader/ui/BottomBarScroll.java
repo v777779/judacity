@@ -26,17 +26,51 @@ import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLL_DY_THRESHOLD
  * Email: vadim.v.voronov@gmail.com
  */
 
+/**
+ * BottomBarScroll class defines pop up behaviour of bottom bar.
+ * Active while scrolling over RecyclerView of Text of ArticleFragmentActivity.
+ * In the instructive mode  flag Config.setInstructiveLock(true)
+ * prevents BottomBarScroll access to given bottom bar view object
+ * if user starts scrolling before motion finished.
+ */
 public class BottomBarScroll extends CoordinatorLayout.Behavior {
 
+    /**
+     * CountDownTimer  delay timer for pop up action
+     */
     private CountDownTimer mCountDownTimer;
+    /**
+     * BottomBarScroll  instance used for external access to this object
+     */
     public static BottomBarScroll mInstance;
+    /**
+     * View  bottom bar object for pop up action
+     */
     private View mChild;
+    /**
+     * Boolean is true if bottom ba is up and visible
+     */
     private boolean mIsActive;
+    /**
+     * Boolean true if scrolling position too close to beginning of text
+     * Used to block pop up bar at the top of text
+     */
     private boolean mIsLowScrollTextY;
+    /**
+     * Boolean is true for landscape layout
+     */
     private boolean mIsLand;
+    /**
+     * Boolean is true for tablet with sw800dp
+     */
     private boolean mIsWide;
 
-    // to inflate from XML this constructor
+    /**
+     * Standard constructor for XML definition of behaviour.
+     *
+     * @param context Context of calling activity
+     * @param attrs   AttributeSet attributes
+     */
     public BottomBarScroll(Context context, AttributeSet attrs) {
         super(context, attrs);
         Resources res = context.getResources();
@@ -44,6 +78,24 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
         mIsWide = res.getBoolean(R.bool.is_wide);
     }
 
+    /**
+     * Scroll listener of bottom bar view object
+     * Called when scrolling takes place.
+     * If lock flag Config.isInstructiveLocked() is true or
+     * if scroll distance less than BOTTOM_BAR_SCROLL_DY_THRESHOLD or
+     * if scroll position less than  BOTTOM_BAR_SCROLLY_THRESHOLD exits
+     * Calls setContinue(child) method to start pop up motion
+     * Sets mInstance with this object
+     *
+     * @param coordinatorLayout CoordinatorLayout parent of the view this Behavior is associated with
+     * @param child             View child view of the CoordinatorLayout this Behavior is associated with
+     * @param target            View descendant view of the CoordinatorLayout performing the nested scroll
+     * @param dxConsumed        int horizontal pixels consumed by the target's own scrolling operation
+     * @param dyConsumed        int vertical pixels consumed by the target's own scrolling operation
+     * @param dxUnconsumed      int : horizontal pixels not consumed by the target's own scrolling operation, but requested by the user
+     * @param dyUnconsumed      int vertical pixels not consumed by the target's own scrolling operation, but requested by the user
+     * @param type              int type of input which cause this scroll event
+     */
     @Override
     public void onNestedScroll(
             @NonNull CoordinatorLayout coordinatorLayout,
@@ -51,19 +103,29 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
             @NonNull View target,
             int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
-        mIsLowScrollTextY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < BOTTOM_BAR_SCROLLY_THRESHOLD ;
+        mIsLowScrollTextY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < BOTTOM_BAR_SCROLLY_THRESHOLD;
 
-        if(Config.isInstructiveLocked()) {
+        if (Config.isInstructiveLocked()) {
             return;
         }
-        if(dyConsumed < Math.abs(BOTTOM_BAR_SCROLL_DY_THRESHOLD)){
+        if (dyConsumed < Math.abs(BOTTOM_BAR_SCROLL_DY_THRESHOLD)) {
             return;
         }
         setContinue(child);
         mInstance = this;
     }
 
-
+    /**
+     * Called when a descendant of the CoordinatorLayout attempts to initiate a nested scroll
+     *
+     * @param coordinatorLayout     CoordinatorLayout parent of the view this Behavior is associated with
+     * @param child                 View child view of the CoordinatorLayout this Behavior is associated with
+     * @param directTargetChild     View child view of the CoordinatorLayout that either is or contains the target of the nested scroll operation
+     * @param target                View descendant view of the CoordinatorLayout initiating the nested scroll
+     * @param axes                  int axes that this nested scroll applies to
+     * @param type                  int type of input which cause this scroll event
+     * @return
+     */
     @Override
     public boolean onStartNestedScroll(
             @NonNull CoordinatorLayout coordinatorLayout,
@@ -75,6 +137,13 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
         return axes == SCROLL_AXIS_VERTICAL;
     }
 
+    /**
+     *  Performs pop up motion of botom bar view
+     *  Uses animate() translationX() and translationY() methods to perform motion
+     *  CountDownTimer onFinsh method perform back  motion to start position after  BOTTOM_BAR_DELAY_HIDE
+     *
+     * @param child  View bottom bar object.
+     */
     private void setTimer(final View child) {
         if (child == null) return;
 
@@ -102,7 +171,7 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
             public void onFinish() {
                 mIsActive = false;
                 if (child == null) return;
-//                child.animate().alpha(0).setDuration(500).start();
+
                 if (!mIsLand && !mIsWide) {
                     child.animate().translationY(mChild.getHeight()).setInterpolator(new LinearInterpolator()).start();
                 } else {
@@ -117,15 +186,20 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
         mChild = child;
     }
 
-
-
+    /**
+     *  Start pop up motion, used for public access to privet setTimer method()
+     *
+     * @param child View bottom bar object.
+     */
     public void setContinue(View child) {
-
         setTimer(child);
 
     }
 
-
+    /**
+     *  Start pop up motion, used for public access to privet setTimer method()
+     *  Static method used to get access to object which is created by activity.
+     */
     public static void setContinue() {
         if (mInstance == null) return;
         mInstance.setContinue(mInstance.mChild);

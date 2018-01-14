@@ -48,7 +48,7 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
      */
     private boolean mIsActive;
     /**
-     * Boolean true for landscape layout
+     * Boolean is true for landscape layout
      */
     private boolean mIsLand;
 
@@ -142,7 +142,7 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
      *  Uses animate() translationX() and translationY() methods to perform motion
      *  CountDownTimer onFinsh method perform back  motion to start position after  BOTTOM_BAR_DELAY_HIDE
      *
-     * @param child
+     * @param child  View bottom bar object.
      */
     private void setTimer(final View child) {
         if (child == null) return;
