@@ -79,7 +79,7 @@
     <string name="snackbar_swipe_refesh_mode_on">Swipe refresh mode enabled</string>
     <string name="snackbar_swipe_refresh_mode_off">Swipe refresh mode disabled</string>
 
-    <string name="snackbar_full_screen_mode">Full screen activated, scroll and click popup bar to cancel</string>
+    <string name="snackbar_full_screen_mode">Full screen activated, to cancel, scroll and click on icon in popup bar</string>
     <string name="snackbar_full_screen_mode_enter">To enable full screen mode, please, open any book</string>
 
 
