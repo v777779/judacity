@@ -43,6 +43,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -1081,8 +1082,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     private void showSnackBar(int stringId) {
-        Snackbar.make(mRecyclerView, getString(stringId), Snackbar.LENGTH_LONG).show();
-
+       Snackbar snackBar =  Snackbar.make(mRecyclerView, getString(stringId), Snackbar.LENGTH_LONG);
+        TextView tv = (snackBar.getView()).findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextSize(mRes.getDimensionPixelSize(R.dimen.body_text_size));
+        snackBar.show();
 
     }
 }

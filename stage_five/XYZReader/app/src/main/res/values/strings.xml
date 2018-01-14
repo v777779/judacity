@@ -74,7 +74,7 @@
 
 <!--snackbar-->
     <string name="snackbar_full_screen_mode_on">Full screen mode enabled at next start</string>
-    <string name="snackbar_full_screen_mode_off">Full screen mode disabled at next start</string>
+    <string name="snackbar_full_screen_mode_off">Full scLreen mode disabled at next start</string>
 
     <string name="snackbar_swipe_refesh_mode_on">Swipe refresh mode enabled</string>
     <string name="snackbar_swipe_refresh_mode_off">Swipe refresh mode disabled</string>
