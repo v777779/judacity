@@ -14,7 +14,7 @@
     <dimen name="card_subtitle_text_size">16sp</dimen>
 
     <!--snackbar-->
-    <dimen name="snackbar_text_size">24sp</dimen>
+    <dimen name="snackbar_text_size">22sp</dimen>
 
     <!--linear-->
     <dimen name="linear_fixed_width">640dp</dimen>
