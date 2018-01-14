@@ -390,7 +390,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         instructiveMotion(this, mBottomBar);
         setFullScreen(mIsFullScreen);
 
-        showBottomBar();
 
     }
 
@@ -466,8 +465,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (mIsWide) {
             mPagerAdapter.swap(cursor);
             mPagerAdapter.setStartingItemId(mStartingItemId);
-        }else{
-            showBottomBar();
+        } else {
+            showBottomBar(mIsFullScreen);
         }
 
     }
@@ -826,7 +825,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (isFullScreen) {
             mIsFullScreen = true;
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
             if (mBottomBar != null) {
@@ -836,7 +835,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         } else {
             mIsFullScreen = false;
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().getDecorView().setSystemUiVisibility(View.VISIBLE);
+//            getWindow().getDecorView().setSystemUiVisibility(View.VISIBLE);
             if (mBottomBar != null) {
                 mBottomBar.setVisibility(View.INVISIBLE);
             }
@@ -846,6 +845,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             }
         }
+
+        showBottomBar(mIsFullScreen); // for new mode
     }
 
     /**
@@ -1041,20 +1042,29 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     }
 
-    private void showBottomBar() {
-
-        if (!mIsFullScreen || mBottomBar == null) return;
-       if(isShowBar()) {
-           mBottomBar.setVisibility(View.VISIBLE);
-           mBottomBar.setAlpha(1);
-           mBottomBar.scrollTo(0, 0);
-       }
-
+    /**
+     * Shows bottom bar if RecyclerView smaller than screen in full screen mode
+     *
+     * @param isFullScreen boolean true for full screen mode
+     */
+    private void showBottomBar(boolean isFullScreen) {
+        if (!isFullScreen || mBottomBar == null || mCursor == null || mCursor.getCount() == 0) {
+            return;
+        }
+        if (isShowBar()) {
+            mBottomBar.setVisibility(View.VISIBLE);
+            mBottomBar.setAlpha(1.0f);
+//            mBottomBar.scrollTo(0, 0);
+            mBottomBar.animate().translationY(0).translationY(0).start();
+        }
     }
 
+    /**
+     * Returns true if RecyclerView is smaller than screen
+     *
+     * @return boolean true if RecyclerView is smaller than screen
+     */
     private boolean isShowBar() {
-        if(mCursor == null || mCursor.getCount() == 0) return false;
-
         Config.Span sp = getDisplayMetrics(this);
         return sp.isShowBar(mCursor.getCount(), !(mIsWide && !mIsLand));
     }

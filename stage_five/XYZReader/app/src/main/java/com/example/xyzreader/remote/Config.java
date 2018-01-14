@@ -207,32 +207,60 @@ public class Config {
             this.spanY = spanY;
             this.width = width;
             this.height = height;
-            this.screenHeight = screenWidth;
+            this.screenHeight = screenHeight;
             this.screenWidth = screenWidth;
 
         }
 
+        /**
+         *  Returns  span in width
+         * @return  int span in width
+         */
         public int getSpanX() {
             return spanX;
         }
 
+        /**
+         *  Returns  span in height
+         *
+         * @return  int span in height
+         */
         public int getSpanY() {
             return spanY;
         }
 
+        /**
+         *  Returns  width of RecyclerView item
+         *
+         * @return  int width of RecyclerView item
+         */
         public int getWidth() {
             return width;
         }
 
+        /**
+         *  Returns  height of RecyclerView item
+         *
+         * @return  int height of RecyclerView item
+         */
         public int getHeight() {
             return height;
         }
 
+        /**
+         *  Returns true if RecyclerView is smaller than screen
+         *
+         * @param nItems  int number of items ofRecyclerView
+         *
+         * @param isVert boolean true for VERTICAL scrolling mode
+         *
+         * @return boolean true if RecyclerView is smaller than screen
+         */
         public  boolean isShowBar(int nItems, boolean isVert) {
             if(isVert) {
-                return  (nItems/spanX)*height < screenHeight;
+                return  (Math.ceil((double)nItems/spanX))*height < screenHeight;
             }else {
-                return  (nItems/spanY)*width < screenWidth;
+                return  (Math.ceil((double)nItems/spanY))*width < screenWidth;
             }
         }
     }
