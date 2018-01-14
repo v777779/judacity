@@ -154,12 +154,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      * @param position      int position of item in Cursor data source
      */
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         holder.fill(position);
+        final int pos = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ICallback) mContext).onCallback(view, position);
+                ((ICallback) mContext).onCallback(view, pos);
             }
         });
 

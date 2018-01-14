@@ -87,9 +87,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     /**
-     *  Set starting item ID for ArticleDetailFragment.newInstance() method.
+     *  Set starting item ID for ArticleDetailFragment.newInstance()ance() method.
      *
-     * @param startingItemId int starting item ID.
+     * @param startingItemId
      */
     public void setStartingItemId(long startingItemId) {
         mStartingItemId = startingItemId;

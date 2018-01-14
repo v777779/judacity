@@ -82,7 +82,7 @@
         android:id="@+id/bottom_toolbar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:alpha="0.0"
         android:background="@color/colorBackBottom"
         android:elevation="6dp"
@@ -101,7 +101,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="image_button_home_description"
+            android:contentDescription="@string/image_button_home_description"
             />
 
         <ImageButton
@@ -116,7 +116,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_button_home"
-            android:contentDescription="image_button_fullscreen_description"
+            android:contentDescription="@string/image_button_fullscreen_description"
             />
 
         <ImageButton
@@ -132,7 +132,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guide_h1"
-            android:contentDescription="image_button_left_description"
+            android:contentDescription="@string/image_button_left_description"
             />
 
         <ImageButton
@@ -148,7 +148,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:contentDescription="image_button_right_description"
+            android:contentDescription="@string/image_button_right_description"
             />
 
         <android.support.constraint.Guideline
@@ -159,17 +159,7 @@
             app:layout_constraintGuide_percent="0.5" />
 
     </android.support.constraint.ConstraintLayout>
-    <!--<android.support.design.widget.BottomNavigationView-->
-    <!--android:id="@+id/navigation"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginEnd="0dp"-->
-    <!--android:layout_marginStart="0dp"-->
-    <!--android:background="@color/colorPrimary"-->
-    <!--android:alpha="0.75"-->
-    <!--android:layout_gravity="bottom|center_horizontal"-->
-    <!--app:menu="@menu/navigation"-->
-    <!--app:itemIconTint="@android:color/white"/>-->
+
     <ProgressBar
         android:id="@+id/progress_bar_text"
         style="@style/ProgressBarStyle"

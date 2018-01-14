@@ -30,7 +30,7 @@
 
     <string name="article_no_title"></string>
     <string name="article_no_sub_title"></string>
-    <string name="article_no_body"> "Loading text..."</string>
+    <string name="article_no_body"> "Loading text…"</string>
 
     <!--date-->
     <string name="calendar_format">yyyy-MM-dd\u0027T\u0027HH:mm:ss.sss</string>
