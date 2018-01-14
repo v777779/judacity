@@ -17,31 +17,29 @@ import com.example.xyzreader.ui.ArticleDetailFragment;
 import com.example.xyzreader.ui.BottomBarRecycler;
 
 /**
- *  Constants and Utils class
- *
- *
+ * Constants and Utils class
  */
 public class Config {
     private static String TAG = Config.class.toString();
 
     /**
-     *  Boolean  flag, used to run instructiveMotion() only once for main activity portrait layout
+     * Boolean  flag, used to run instructiveMotion() only once for main activity portrait layout
      */
     public static boolean sIsInstructedPort;
     /**
-     *  Boolean  flag, used to run instructiveMotion() only once for main activity landscape layout
+     * Boolean  flag, used to run instructiveMotion() only once for main activity landscape layout
      */
     public static boolean sIsInstructedLand;
     /**
-     *  Boolean  flag, used to run instructiveMotion() only once for fragment portrait layout
+     * Boolean  flag, used to run instructiveMotion() only once for fragment portrait layout
      */
     public static boolean sIsInstructedBottomPort;
     /**
-     *  Boolean  flag, used to run instructiveMotion() only once for fragment landscape layout
+     * Boolean  flag, used to run instructiveMotion() only once for fragment landscape layout
      */
     public static boolean sIsInstructedBottomLand;
     /**
-     *  Boolean  flag, used for blocking concurrent access to bottom bar motion
+     * Boolean  flag, used for blocking concurrent access to bottom bar motion
      */
     private static boolean sInstructiveMutex;
 
@@ -271,12 +269,12 @@ public class Config {
 
 
     /**
-     *  Implements motion of coordinator layout for instructive purposes.
-     *  When it finished,  pop up bottom bar motin is started.
+     * Implements motion of coordinator layout for instructive purposes.
+     * When it finished,  pop up bottom bar motin is started.
      *
-     * @param context  Context of calling activity.
-     * @param view     View which include bottom bar.
-     * @param id       int  resource id of distance of motion.
+     * @param context Context of calling activity.
+     * @param view    View which include bottom bar.
+     * @param id      int  resource id of distance of motion.
      */
     public static void motion(final Context context, View view, int id) {
         Resources res = context.getResources();
@@ -320,12 +318,12 @@ public class Config {
 
 
     /**
-     *  Implements collapse of AppBarLayout for instructive purposes.
-     *  When it finished,  pop up bottom bar motin is started.
+     * Implements collapse of AppBarLayout for instructive purposes.
+     * When it finished,  pop up bottom bar motin is started.
      *
-     * @param context       Context of calling activity.
-     * @param view          View which include bottom bar.
-     * @param startDelayId  int  resource id of start delay time.
+     * @param context      Context of calling activity.
+     * @param view         View which include bottom bar.
+     * @param startDelayId int  resource id of start delay time.
      */
     public static void collapse(final Context context, View view, int startDelayId) {
         final AppBarLayout appBarLayout = ((AppBarLayout) view.findViewById(R.id.app_bar_detail));
@@ -343,12 +341,6 @@ public class Config {
             public void onAnimationEnd(Animator animator) {
                 appBarLayout.setExpanded(false, true);
                 motionBottom(context, bottomBar);
-                appBarLayout.animate().setStartDelay(startDelay).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        appBarLayout.setExpanded(true);
-                    }
-                }).start();
             }
 
             @Override
@@ -364,11 +356,11 @@ public class Config {
     }
 
     /**
-     *  Implements instructive motion of Coordinator Layout of ArticleDetailFragment.
-     *  Runs motion() method and manages with flags sIsInstructedPort and sIsInstructedLand.
-     *  Used ArticleDetailFragment as source of Coordinator layout and resources.
+     * Implements instructive motion of Coordinator Layout of ArticleDetailFragment.
+     * Runs motion() method and manages with flags sIsInstructedPort and sIsInstructedLand.
+     * Used ArticleDetailFragment as source of Coordinator layout and resources.
      *
-     * @param fragment      Article Context of calling activity
+     * @param fragment Article Context of calling activity
      */
     public static void instructiveMotion(ArticleDetailFragment fragment) {
         if (fragment.getActivity() == null) return;
@@ -378,10 +370,13 @@ public class Config {
         View view = fragment.getRootView();
         boolean isLand = res.getBoolean(R.bool.is_land);
 
-        if (view == null || fragment.getBitmap() == null) return;
+        boolean isWide = res.getBoolean(R.bool.is_wide);
+
+        if (view == null) return;//|| fragment.getBitmap() == null) return;
 
         if (!isLand && !sIsInstructedPort) {
-            motion(context, view, R.dimen.instructive_scroll_pos_port);
+            collapse(context, view, R.integer.instructive_start_delay);
+//            motion(context, view, R.dimen.instructive_scroll_pos_port);
             sIsInstructedPort = true;
         }
         if (isLand && !sIsInstructedLand) {
@@ -391,11 +386,11 @@ public class Config {
     }
 
     /**
-     *  Implements instructive motion of pop up bottom bar of ArticleListActivity.
-     *  Runs motionBottom() method and manages with flags sIsInstructedBottomPort and sIsInstructedBottomLand.
+     * Implements instructive motion of pop up bottom bar of ArticleListActivity.
+     * Runs motionBottom() method and manages with flags sIsInstructedBottomPort and sIsInstructedBottomLand.
      *
-     * @param context      Context of calling activity.
-     *  @param context     View of bottom bar.
+     * @param context Context of calling activity.
+     * @param context View of bottom bar.
      */
     public static void instructiveMotion(Context context, View view) {
         boolean isLand = context.getResources().getBoolean(R.bool.is_land);
@@ -413,11 +408,11 @@ public class Config {
     }
 
     /**
-     *  Implements motion of bottom bar  of ArticleListActivity and ArticleDetailFragment
-     *  Uses class BottomBarRecycler for animation
+     * Implements motion of bottom bar  of ArticleListActivity and ArticleDetailFragment
+     * Uses class BottomBarRecycler for animation
      *
-     * @param context  Context of calling activity
-     * @param view  View of bottom bar
+     * @param context Context of calling activity
+     * @param view    View of bottom bar
      */
     public static void motionBottom(Context context, View view) {
         if (view == null) return;
@@ -426,9 +421,9 @@ public class Config {
     }
 
     /**
-     *  Returns value of locking flag to BottomBarRecycler and BottomBarScroll object
-     *  Used for blocking of concurrent access to the same view while
-     *  instructive motion and user scrolling activity at the same time
+     * Returns value of locking flag to BottomBarRecycler and BottomBarScroll object
+     * Used for blocking of concurrent access to the same view while
+     * instructive motion and user scrolling activity at the same time
      *
      * @return boolean value of locking flag
      */
@@ -437,12 +432,12 @@ public class Config {
     }
 
     /**
-     *  Sets value of locking flag. This is done on BottomBarRecycler object
-     *  while instructive motion procedure
+     * Sets value of locking flag. This is done on BottomBarRecycler object
+     * while instructive motion procedure
      *
      * @param isLocked boolean  value to set.
      */
-        public static synchronized void setInstructiveLock(boolean isLocked) {
+    public static synchronized void setInstructiveLock(boolean isLocked) {
         sInstructiveMutex = isLocked;
     }
 

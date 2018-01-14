@@ -68,7 +68,6 @@ public class ArticleDetailActivity extends AppCompatActivity implements
      */
     private boolean mIsStartingActivity;
 
-    // transition
     /**
      * ArticleDetailFragment  current selected fragment
      */

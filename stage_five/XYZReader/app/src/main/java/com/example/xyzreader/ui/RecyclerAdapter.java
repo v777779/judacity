@@ -35,19 +35,55 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+/**
+ *  RecyclerView Adapter class
+ *  Used to create and show Item objects of RecyclerView
+ */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+    /**
+     * SimpleDateFormat formatter of date and time string
+     */
     private SimpleDateFormat dateFormat;
+    /**
+     * SimpleDateFormat formatter of date and time string
+     */
     private SimpleDateFormat outputFormat;
+    /**
+     * GregorianCalendar provides the standard calendar system used by most of the world
+     */
     private GregorianCalendar startOfEpoch;
-
+    /**
+     * Cursor object source of data
+     */
     private Cursor mCursor;
+    /**
+     *  Context  context of calling activity
+     */
     private Context mContext;
+    /**
+     * Span object used for RecyclerView as storage of display item parameters
+     */
     private Config.Span mSpan;
+    /**
+     * Boolean is true for landscape layout
+     */
     private boolean mIsLand;
+    /**
+     * Boolean is true for tablet with sw800dp
+     */
     private boolean mIsWide;
+    /**
+     * Resources of activity
+     */
     private Resources mRes;
 
-
+    /**
+     * Constructor of RecyclerAdapter
+     *
+     *
+     * @param context  Context of calling activity
+     * @param sp Span  object used for RecyclerView as storage of display item parameters
+     */
     public RecyclerAdapter(Context context, Config.Span sp) {
         mContext = context;
         mSpan = sp;
@@ -60,12 +96,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         mIsLand = mRes.getBoolean(R.bool.is_land);
     }
 
+    /**
+     *  Returns itemID by position
+     *
+     * @param position in position of item
+     * @return int itemID
+     */
     @Override
     public long getItemId(int position) {
         mCursor.moveToPosition(position);
         return mCursor.getLong(ArticleLoader.Query._ID);
     }
 
+    /**
+     *  Creates ViewHolder of Item of RecyclerView
+     *  Sets width or height of item according to span and size of RecyclerView Container
+     * @param parent    ViewGroup parent of item
+     * @param viewType  int type of View of Item, unused in this application
+     * @return  ViewHolder of Item of RecyclerView
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
@@ -79,6 +128,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+    /**
+     *  Returns Date object.
+     *  Extract string with date from cursor and converts it to the Date object.
+     *
+     * @return Date object.
+     */
     private Date parsePublishedDate() {
         try {
             String date = mCursor.getString(ArticleLoader.Query.PUBLISHED_DATE);
@@ -89,6 +144,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
+    /**
+     *  Fills ViewHolder Item with image and text from data source.
+     *  Sets onClickListener which calls  ICallback.onComlete(view, int) method in calling activity.
+     *  This method in turn selects new item in corresponding ViewPager
+     *  and ultimately replaces ArticelDetailFragment with the new one.
+     *
+     * @param holder       ViewHolder object which is filled
+     * @param position      int position of imageId in mList List<Integer> data source
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.fill(position);
@@ -101,18 +165,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     }
 
+    /**
+     *  Returns number of Items of Coursor mCursor data source
+     * @return  int number of Items of Cursor mCursor data source
+     */
     @Override
     public int getItemCount() {
         if (mCursor == null) return 0;
         return mCursor.getCount();
     }
 
+    /**
+     *  Replaces mCursor with new Cursor object and
+     *  calls notifyDataSetChanged() method.
+     *
+     * @param cursor
+     */
     public void setCursor(Cursor cursor) {
         if (cursor == null) return;
         mCursor = cursor;
         notifyDataSetChanged();
     }
 
+    /**
+     *  ViewHolder class of RecyclerView Item
+     *  Used to hold text and image resources of Item of RecyclerView
+     *
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
         @Nullable
         @BindView(R.id.article_title)
@@ -128,12 +207,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         @BindView(R.id.progress_bar_image)
         ProgressBar mProgressBarImage;
 
-
+        /**
+         * Constructor
+         *  Binds all views with the ButterKnife object.
+         *
+         * @param view View of parent
+         */
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
+        /**
+         * Fills mItemTitle, mItemSubtitle with the data from mCursor object
+         * Loads image with the Glide loader to mToolbarImage.
+         * Sets transition names to mItemTitle and  mToolbarImage objects.
+         *
+         * @param position
+         */
         private void fill(int position) {
             mCursor.moveToPosition(position);
 

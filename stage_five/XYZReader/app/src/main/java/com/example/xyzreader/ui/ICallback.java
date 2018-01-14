@@ -7,10 +7,6 @@ package com.example.xyzreader.ui;
  * Email: vadim.v.voronov@gmail.com
  */
 
-
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.view.View;
 
 /**
