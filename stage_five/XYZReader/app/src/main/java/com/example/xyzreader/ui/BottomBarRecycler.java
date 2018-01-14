@@ -25,7 +25,18 @@ import static com.example.xyzreader.remote.Config.BOTTOM_BAR_SCROLL_DY_THRESHOLD
  * Email: vadim.v.voronov@gmail.com
  */
 
-
+/**
+ *  BottomBarRecycler class defines pop up behaviour of bottom bar.
+ *  Active while scrolling over RecyclerView of ArticleListActivity.
+ *  Two modes used  instructive and normal.
+ *  In the instructive mode  used constructor without layout attributes.
+ *  BottomBarRecycler  sets lock flag  Config.setInstructiveLock(true)
+ *  performs motion and unlock flag at the end.
+ *  This prevents BottomBarScroll access to given bottom bar view object
+ *  if user starts scrolling before motion finished.
+ *
+ *
+ */
 public class BottomBarRecycler extends CoordinatorLayout.Behavior {
 
     private CountDownTimer mCountDownTimer;
@@ -36,7 +47,12 @@ public class BottomBarRecycler extends CoordinatorLayout.Behavior {
     private boolean mIsLand;
     private boolean mIsInstructive;
 
-    // to inflate from XML this constructor
+    /**
+     * Standard constructor for XML definition of behaviour.
+     *
+     * @param context Context of calling activity
+     * @param attrs
+     */
     public BottomBarRecycler(Context context, AttributeSet attrs) {
         super(context, attrs);
         mIsLand = context.getResources().getBoolean(R.bool.is_land);
