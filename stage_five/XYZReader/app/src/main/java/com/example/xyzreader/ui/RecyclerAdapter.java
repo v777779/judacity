@@ -148,10 +148,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      *  Fills ViewHolder Item with image and text from data source.
      *  Sets onClickListener which calls  ICallback.onComlete(view, int) method in calling activity.
      *  This method in turn selects new item in corresponding ViewPager
-     *  and ultimately replaces ArticelDetailFragment with the new one.
+     *  and ultimately replaces ArticleDetailFragment with the new one.
      *
      * @param holder       ViewHolder object which is filled
-     * @param position      int position of imageId in mList List<Integer> data source
+     * @param position      int position of item in Cursor data source
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
@@ -166,7 +166,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     /**
-     *  Returns number of Items of Coursor mCursor data source
+     *  Returns number of Items of Cursor mCursor data source
      * @return  int number of Items of Cursor mCursor data source
      */
     @Override
@@ -179,9 +179,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      *  Replaces mCursor with new Cursor object and
      *  calls notifyDataSetChanged() method.
      *
-     * @param cursor
+     * @param cursor Cursor parameter.
      */
-    public void setCursor(Cursor cursor) {
+    public void swap(Cursor cursor) {
         if (cursor == null) return;
         mCursor = cursor;
         notifyDataSetChanged();
@@ -223,7 +223,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
          * Loads image with the Glide loader to mToolbarImage.
          * Sets transition names to mItemTitle and  mToolbarImage objects.
          *
-         * @param position
+         * @param position  int position of item in RecyclerView
          */
         private void fill(int position) {
             mCursor.moveToPosition(position);

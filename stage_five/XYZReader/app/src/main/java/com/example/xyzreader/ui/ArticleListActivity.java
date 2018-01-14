@@ -457,7 +457,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor != null && cursor.getCount() == 0) return;
         mCursor = cursor;
-        ((RecyclerAdapter) mRecyclerView.getAdapter()).setCursor(cursor);
+        ((RecyclerAdapter) mRecyclerView.getAdapter()).swap(cursor);
 
 // wide
         if (mIsWide) {
