@@ -379,6 +379,8 @@ public class ArticleListActivity extends AppCompatActivity implements
             if (mIsSelected || !mIsWide) {
                 setFullScreen(FULL_SCREEN_MODE_ON);
                 showSnackBar(R.string.snackbar_full_screen_mode);
+            }else{
+                showSnackBar(R.string.snackbar_full_screen_mode_enter);
             }
             return true;
         }
