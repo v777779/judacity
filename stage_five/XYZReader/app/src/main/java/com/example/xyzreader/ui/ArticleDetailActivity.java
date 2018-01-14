@@ -141,8 +141,9 @@ public class ArticleDetailActivity extends AppCompatActivity implements
             public void onPageScrollStateChanged(int state) {
             }
         });
-
+        mPager.setPageTransformer(false, new PageTransformer());
         mPager.setVisibility(View.GONE);
+
 
 
         getSupportLoaderManager().initLoader(ARTICLE_DETAIL_LOADER_ID, null, this);
@@ -293,15 +294,6 @@ public class ArticleDetailActivity extends AppCompatActivity implements
     }
 
     /**
-     * Placeholder for common user interface, not used in this activity
-     *
-     * @param view View unused.
-     */
-    @Override
-    public void onCallback(View view) {
-    }
-
-    /**
      *  Setup shared element calback listener.
      *  Listener used for back transition processing
      *  All shared names from fragment removed and replaced by actual destination names and view
@@ -327,6 +319,24 @@ public class ArticleDetailActivity extends AppCompatActivity implements
                 }
             }
         };
+    }
+
+    /**
+     * PageTransformer  class provides smooth image scrolling for ViewPager
+     */
+    private class PageTransformer implements ViewPager.PageTransformer {
+        @Override
+        public void transformPage(View page, float position) {
+            View dummyImageView = page.findViewById(R.id.article_image);
+            int pageWidth = page.getWidth();
+            if (position < -1) {
+                page.setAlpha(1);
+            } else if (position <= 1) {
+                dummyImageView.setTranslationX(-position * (pageWidth / 2));
+            } else {
+                page.setAlpha(1);
+            }
+        }
     }
 
 }

@@ -446,7 +446,7 @@ public class ArticleDetailFragment extends Fragment implements
         Glide.with(this)
                 .load(imageURL)
                 .apply(new RequestOptions()
-                        .placeholder(R.drawable.empty_loading_007)
+                        .placeholder(R.drawable.empty_loading_009)
                         .error(R.drawable.error_loading))
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -636,8 +636,8 @@ public class ArticleDetailFragment extends Fragment implements
      * mFrameLayout        calls every time when text added to RecyclerView
      * mNestedScrollView   tracks scrolling and adds text to RecyclerView
      * mFab                used for Intent Action.SHARE.
-     * mImageButtonLeft    scrolls text to top of RecyclerView
-     * mImageButtonRight   add all remained text to RecyclerView and scrolls to bottom of RecyclerView
+     * mImageButtonLeft    scrolls text to the top of RecyclerView
+     * mImageButtonRight   add all remained text to RecyclerView and scrolls to the bottom of RecyclerView
      * mImageButtonHome    calls onBackPressed()
      * mImageButtonFullScreen  calls onCallback() method to exit from full screen mode
      */

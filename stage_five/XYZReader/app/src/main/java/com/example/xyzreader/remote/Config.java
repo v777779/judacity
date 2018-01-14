@@ -343,6 +343,12 @@ public class Config {
             public void onAnimationEnd(Animator animator) {
                 appBarLayout.setExpanded(false, true);
                 motionBottom(context, bottomBar);
+                appBarLayout.animate().setStartDelay(startDelay).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        appBarLayout.setExpanded(true);
+                    }
+                }).start();
             }
 
             @Override

@@ -14,16 +14,25 @@ import android.net.Uri;
 import android.view.View;
 
 /**
- *  ICallback callback interface for RecyclerView items
+ *  ICallback callback common user interface.
  */
 public interface ICallback {
     /**
-     *  Performs callback processing when onClick() for CLOSE
-     *  button of FrameError fragment called. Not used.
+     *  Performs callback processing for RecyclerView
+     *  in ArticleListActivity
      */
     void onCallback(View view, int pos);
+    /**
+     *  Performs callback processing for FragmentError and ArticleDetailFragment
+     *  in ArticleListActivity
+     */
     void onCallback(int mode);
+
+    /**
+     *  Performs callback processing for ArticleListActivity
+     *
+     * @param fragment ArticleDetailFragment object.
+     */
     void onCallback(ArticleDetailFragment fragment);
-    void onCallback(View view);
 
 }
