@@ -432,7 +432,7 @@ public class Config {
      *
      * @return boolean value of locking flag
      */
-    public static synchronized boolean isInstrictiveLocked() {
+    public static synchronized boolean isInstructiveLocked() {
         return sInstructiveMutex;
     }
 

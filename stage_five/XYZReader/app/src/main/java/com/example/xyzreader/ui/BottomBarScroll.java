@@ -53,7 +53,7 @@ public class BottomBarScroll extends CoordinatorLayout.Behavior {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
         mIsLowScrollTextY = coordinatorLayout.findViewById(R.id.nested_scrollview).getScrollY() < BOTTOM_BAR_SCROLLY_THRESHOLD ;
 
-        if(Config.isInstrictiveLocked()) {
+        if(Config.isInstructiveLocked()) {
             return;
         }
         if(dyConsumed < Math.abs(BOTTOM_BAR_SCROLL_DY_THRESHOLD)){
