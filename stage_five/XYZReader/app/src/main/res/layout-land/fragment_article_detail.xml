@@ -72,9 +72,8 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar_detail"
         app:layout_anchorGravity="bottom|end"
-        app:elevation="@dimen/fab_elevation"
         app:srcCompat="@drawable/ic_share"
-        android:elevation="@dimen/fab_elevation"
+        app:elevation="@dimen/fab_elevation"
         android:contentDescription="@string/fab_share_button_description"
         />
 
