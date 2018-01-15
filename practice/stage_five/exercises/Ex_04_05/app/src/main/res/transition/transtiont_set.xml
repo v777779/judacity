@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <changeBounds android:duration ="250">
+
+        <targets>
+            <target android:targetId="@id/image_view"/>
+            <target android:targetId="@id/text_1"/>
+            <target android:targetId="@id/text_2"/>
+            <target android:targetId="@id/text_3"/>
+            <target android:targetId="@id/text_4"/>
+
+            <target android:targetId="@id/image_button"/>
+
+
+        </targets>
+    </changeBounds>
+
+    <fade android:startDelay="250"
+        android:duration="250">
+        <targets>
+            <target android:targetId="@id/image_button11"/>
+            <target android:targetId="@id/image_button12"/>
+        </targets>
+    </fade>
+
+    <fade android:startDelay="250"
+        android:fadingMode="fade_in"
+        android:duration="250">
+    <targets>
+        <target android:targetId="@id/text_3"/>
+        <target android:targetId="@id/text_4"/>
+    </targets>
+    </fade>
+
+    <fade android:startDelay="0"
+        android:fadingMode="fade_out"
+        android:duration="250">
+        <targets>
+            <target android:targetId="@id/text_3"/>
+            <target android:targetId="@id/text_4"/>
+        </targets>
+    </fade>
+
+</transitionSet>

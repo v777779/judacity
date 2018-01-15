@@ -1,0 +1,54 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <!--exit-->
+    <style name="AppTheme.Home.Stay" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+
+    </style>
+
+
+    <style name="AppTheme.Home.Explode" parent="AppTheme">
+        <item name="android:windowExitTransition">@transition/grid_exit</item>
+        <item name="android:windowReenterTransition">@transition/slide_top</item>
+    </style>
+
+    <!--<style name="AppTheme.Home.Top" parent="AppTheme">-->
+        <!--<item name="android:windowReenterTransition">@transition/slide_top</item>-->
+        <!--<item name="android:windowTransitionBackgroundFadeDuration">900</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.Home.Right" parent="AppTheme">-->
+        <!--<item name="android:windowExitTransition">@transition/slide_right</item>-->
+        <!--<item name="android:windowTransitionBackgroundFadeDuration">900</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.Home" parent="AppTheme">-->
+        <!--<item name="android:windowExitTransition">@transition/slide_left</item>-->
+        <!--<item name="android:windowTransitionBackgroundFadeDuration">900</item>-->
+
+    <!--</style>-->
+
+    <!--&lt;!&ndash;enter&ndash;&gt;-->
+    <!--<style name="AppTheme.Details" parent="AppTheme">-->
+        <!--<item name="android:windowEnterTransition">@transition/slide_right</item>-->
+        <!--<item name="android:windowTransitionBackgroundFadeDuration">900</item>-->
+        <!--&lt;!&ndash;<item name="android:windowSharedElementEnterTransition">@transition/hero</item>&ndash;&gt;-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.Details.Bottom" parent="AppTheme">-->
+        <!--<item name="android:windowEnterTransition">@transition/slide_bottom</item>-->
+        <!--<item name="android:windowTransitionBackgroundFadeDuration">900</item>-->
+        <!--&lt;!&ndash;<item name="android:windowSharedElementEnterTransition">@transition/hero</item>&ndash;&gt;-->
+    <!--</style>-->
+
+
+</resources>

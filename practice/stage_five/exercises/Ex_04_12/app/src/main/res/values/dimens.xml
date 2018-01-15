@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="unit_scroll_up_distance">200dp</dimen>
+    <dimen name="image_scroll_height">350dp</dimen>
+
+</resources>
