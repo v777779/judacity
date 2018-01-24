@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
                     showResult();
                     return;
                 }
-                FDFixtures fdFixtures = response.body();
+                FDFixtures fixtures = response.body();
                 showResult();
             }
 
@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                     showResult();
                     return;
                 }
-                FDFixtures fdFixtures = response.body();
+                FDFixtures fixtures = response.body();
                 showResult();
             }
 
