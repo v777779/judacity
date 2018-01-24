@@ -28,5 +28,7 @@ public interface IRetrofitAPI {
      * @return List<RecipeItem>  list of recipes downloaded from the server
      */
     @GET(RECIPES_QUERY)
-    Call<List<RecipeItem>> getData(@Query("") String s);
+    Call<List<RecipeItem>> getData(@Query("start") String s);
+    @GET(RECIPES_QUERY)
+    Call<List<RecipeItem>> getData();
 }

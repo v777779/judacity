@@ -455,7 +455,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentHelper,
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getData(null).enqueue(new Callback<List<RecipeItem>>() {
+        mRetrofitAPI.getData().enqueue(new Callback<List<RecipeItem>>() {
             @Override
             public void onResponse(Call<List<RecipeItem>> call, Response<List<RecipeItem>> response) {
                 if (response.body() == null) {

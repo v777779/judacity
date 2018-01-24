@@ -31,8 +31,9 @@ public class Constants {
 
 // network data
     public static final int LOADER_RECIPES_DB_ID = 1220;
-    public static final String RECIPES_BASE = "https://go.udacity.com/";
-    public static final String RECIPES_QUERY = "android-baking-app-json";
+    public static final String RECIPES_BASE = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
+    public static final String RECIPES_QUERY = "baking.json";
+
 
 // screen width
     public static final int LOW_WIDTH_PORTRAIT = 320;          // dpi
