@@ -107,4 +107,13 @@ public class FDFixture {
         private double awayWin;
 
     }
+
+    @Override
+    public String toString() {
+        return "FDFixture{" +
+                "date=" + date +
+                ", homeTeamName='" + homeTeamName + '\'' +
+                ", awayTeamName='" + awayTeamName + '\'' +
+                '}';
+    }
 }

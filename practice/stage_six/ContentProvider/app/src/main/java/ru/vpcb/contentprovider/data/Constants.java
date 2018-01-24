@@ -15,7 +15,16 @@ public class Constants {
     public static final String FD_COMPETITIONS_QUERY = "seasons";  //
     public static final String FD_COMPETITIONS_TEAMS_GET = "competitions/{id}/teams";
     public static final String FD_COMPETITIONS_FIXTURES_GET = "competitions/{id}/fixtures";
+    public static final String FD_COMPETITIONS_TABLE_GET = "competitions/{id}/leagueTable";
+
+    public static final String FD_TEAM_GET = "teams/{id}";
+    public static final String FD_TEAM_FIXTURES_GET = "teams/{id}/fixtures";
+    public static final String FD_TEAM_PLAYERS_GET = "teams/{id}/players";
+
+
     public static final String FD_TIME_PAST = "p";
     public static final String FD_TIME_FUTUTRE = "n";
+
+
 
 }

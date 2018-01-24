@@ -3,6 +3,7 @@ package ru.vpcb.contentprovider.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 import ru.vpcb.contentprovider.FDLink;
@@ -26,6 +27,14 @@ public class FDFixtures {
     @Expose
     private int count;
 
+    @SerializedName("timeFrameStart")
+    @Expose
+    private Date timeFrameStart;
+
+    @SerializedName("timeFrameEnd")
+    @Expose
+    private Date timeFrameEnd;
+
 
     private class FDLinks {
         @SerializedName("self")
@@ -37,5 +46,13 @@ public class FDFixtures {
         private FDLink competition;
     }
 
-
+    @Override
+    public String toString() {
+        return "FDFixtures{" +
+                ", fixtures=" + fixtures.get(0).toString() +
+                ", count=" + count +
+                ", timeFrameStart=" + timeFrameStart +
+                ", timeFrameEnd=" + timeFrameEnd +
+                '}';
+    }
 }

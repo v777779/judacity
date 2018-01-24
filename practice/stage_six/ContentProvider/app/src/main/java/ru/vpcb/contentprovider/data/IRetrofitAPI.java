@@ -11,7 +11,11 @@ import retrofit2.http.Query;
 import static ru.vpcb.contentprovider.data.Constants.FD_COMPETITIONS_FIXTURES_GET;
 import static ru.vpcb.contentprovider.data.Constants.FD_COMPETITIONS_GET;
 import static ru.vpcb.contentprovider.data.Constants.FD_COMPETITIONS_QUERY;
+import static ru.vpcb.contentprovider.data.Constants.FD_COMPETITIONS_TABLE_GET;
 import static ru.vpcb.contentprovider.data.Constants.FD_COMPETITIONS_TEAMS_GET;
+import static ru.vpcb.contentprovider.data.Constants.FD_TEAM_FIXTURES_GET;
+import static ru.vpcb.contentprovider.data.Constants.FD_TEAM_GET;
+import static ru.vpcb.contentprovider.data.Constants.FD_TEAM_PLAYERS_GET;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -56,11 +60,25 @@ public interface IRetrofitAPI {
     Call<FDFixtures> getFixturesTime(@Path(value = "id", encoded = true) String s,
                                      @Query("timeFrame") String time);
 
-//    @GET(FD_TABLE_GET)
-//    Call<List<FDCompetitions>> getTeams(@Query(FD_TABLE_QUERY) String s);
-//
-//    @GET(FD_PLAYERS_GET)
-//    Call<List<FDCompetitions>> getTeams(@Query(FD_PLAYERS_QUERY) String s);
+    @GET(FD_COMPETITIONS_TABLE_GET)
+    Call<FDTable> getTable(@Path(value = "id", encoded = true) String s);
+
+    @GET(FD_TEAM_GET)
+    Call<FDTeam> getTeam(@Path(value = "id", encoded = true) String id);
+
+    @GET(FD_TEAM_FIXTURES_GET)
+    Call<FDFixtures> getTeamFixtures(@Path(value = "id", encoded = true) String s);
+
+
+    @GET(FD_TEAM_FIXTURES_GET)
+    Call<FDFixtures> getTeamFixtures(@Path(value = "id", encoded = true) String s,
+                                           @Query("timeFrame") String time,
+                                           @Query("season") String season
+    );
+
+
+    @GET(FD_TEAM_PLAYERS_GET)
+    Call<FDPlayers> getTeamPlayers(@Path(value = "id", encoded = true) String s);
 
 }
 

@@ -24,6 +24,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,12 +35,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.contentprovider.data.FDCompetitions;
 import ru.vpcb.contentprovider.data.FDDateType;
 import ru.vpcb.contentprovider.data.FDFixtures;
+import ru.vpcb.contentprovider.data.FDPlayers;
+import ru.vpcb.contentprovider.data.FDTable;
+import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
 import timber.log.Timber;
 
 
 import static ru.vpcb.contentprovider.data.Constants.FD_BASE_URI;
+import static ru.vpcb.contentprovider.data.Constants.FD_TIME_FUTUTRE;
 import static ru.vpcb.contentprovider.data.Constants.FD_TIME_PAST;
 import static ru.vpcb.contentprovider.data.FootballUtils.isOnline;
 
@@ -54,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     private IRetrofitAPI mRetrofitAPI;
     private Retrofit mRetrofit;
-
-    private String mString;
-
+    private OkHttpClient mOkHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +100,15 @@ public class MainActivity extends AppCompatActivity {
 
 //                startRetrofitLoader();
 //                startRetrofitLoaderC();  //ok
-//                startRetrofitLoaderT();  // ok
-//                startRetrofitLoaderCF();
-//                startRetrofitLoaderCFM();
-                startRetrofitLoaderCFT();
+//                startRetrofitLoaderCT();  // ok
+//                startRetrofitLoaderCF(); // ok
+//                startRetrofitLoaderCFM(); // ok
+//                startRetrofitLoaderCFT(); // ok
+//                startRetrofitLoaderLT(); // ok
+//                startRetrofitLoaderT(); // ok
+//                startRetrofitLoaderF(); // ok
+//                startRetrofitLoaderFT(); // ok
+                startRetrofitLoaderP();
 
 
             }
@@ -145,56 +155,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void startRetrofitLoader() {
-        if (!isOnline(this)) {
-            return;
-        }
-        showProgress();
-
-        Calendar calendar = Calendar.getInstance();
-        String currentYear = String.format("%4d", calendar.get(Calendar.YEAR));
-
-// setup Retrofit
-        Gson gson = new GsonBuilder()
-                .setDateFormat(DateFormat.FULL, DateFormat.FULL)
-                .create();
-
-        Gson gson2 = new GsonBuilder()
-                .registerTypeAdapter(Date.class, new FDDateType())
-                .create();
-
-
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(FD_BASE_URI)                                           //Базовая часть адреса
-                .addConverterFactory(GsonConverterFactory.create(gson2))
-                .build();
-
-        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getData(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
-            @Override
-            public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
-                if (response.body() == null) {
-                    showResult();
-                    return;
-                }
-                List<FDCompetitions> competitions = response.body();
-
-
-// test!!! записать в ContentProvider
-//                RecipeUtils.bulkInsertBackground(mContext.getContentResolver(), getSupportLoaderManager(), list, mLoaderDb);
-// test!!!  сохранить  timestamp
-//                saveReLoadTimePreference();
-                showResult();
-            }
-
-            @Override
-            public void onFailure(Call<List<FDCompetitions>> call, Throwable t) {
-                Timber.d(t.getMessage());
-                showResult();
-            }
-        });
-    }
-
     private String getCurrentYear() {
         Calendar calendar = Calendar.getInstance();
         return String.format("%4d", calendar.get(Calendar.YEAR));
@@ -207,18 +167,27 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 
 // setup data
-        Gson gson = new GsonBuilder()
-                .setDateFormat(DateFormat.FULL, DateFormat.FULL)
-                .create();
-        String year = getCurrentYear();
+        String season = getCurrentYear();
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
 
+                }).build();
 // setup Retrofit
         mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
                 .baseUrl(FD_BASE_URI)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getData(year).enqueue(new Callback<List<FDCompetitions>>() {
+        mRetrofitAPI.getData(season).enqueue(new Callback<List<FDCompetitions>>() {
             @Override
             public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
                 if (response.body() == null) {
@@ -242,17 +211,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startRetrofitLoaderT() {
+    private void startRetrofitLoaderCT() {
         if (!isOnline(this)) {
             return;
         }
         showProgress();
+
 // setup data
-        Gson gson = null;
         int id = 450;
         String competition = String.format("%d", id);
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+
+                }).build();
 // setup Retrofit
         mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
                 .baseUrl(FD_BASE_URI)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -284,11 +266,23 @@ public class MainActivity extends AppCompatActivity {
         }
         showProgress();
 // setup data
-        Gson gson = null;
         int id = 446;
         String competition = String.format("%d", id);
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+
+                }).build();
 // setup Retrofit
         mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
                 .baseUrl(FD_BASE_URI)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -301,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                     showResult();
                     return;
                 }
-                FDFixtures fdFixtures = response.body();
+                FDFixtures fixtures = response.body();
                 showResult();
             }
 
@@ -320,12 +314,24 @@ public class MainActivity extends AppCompatActivity {
         }
         showProgress();
 // setup data
-        Gson gson = null;
         int id = 446;
         String competition = String.format("%d", id);
         int matchDay = 25;
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+
+                }).build();
 // setup Retrofit
         mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
                 .baseUrl(FD_BASE_URI)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -356,16 +362,27 @@ public class MainActivity extends AppCompatActivity {
         }
         showProgress();
 // setup data
-        Gson gson = null;
         int id = 446;
-        String competition = String.format("%d",id);
+        String competition = String.format("%d", id);
         int nDays = 50;
         String nTime = FD_TIME_PAST;
 
         String timeFrame = String.format("%s%d", nTime, nDays);
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
 
+                }).build();
 // setup Retrofit
         mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
                 .baseUrl(FD_BASE_URI)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -384,6 +401,305 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<FDFixtures> call, Throwable t) {
+                Timber.d(t.getMessage());
+                showResult();
+            }
+        });
+    }
+
+    private void startRetrofitLoaderLT() {
+        if (!isOnline(this)) {
+            return;
+        }
+        showProgress();
+// setup data
+        int id = 446;
+        String competition = String.format("%d", id);
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+
+                }).build();
+// setup Retrofit
+        mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
+                .baseUrl(FD_BASE_URI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
+        mRetrofitAPI.getTable(competition).enqueue(new Callback<FDTable>() {
+            @Override
+            public void onResponse(Call<FDTable> call, Response<FDTable> response) {
+                if (response.body() == null) {
+                    showResult();
+                    return;
+                }
+                FDTable table = response.body();
+                showResult();
+            }
+
+            @Override
+            public void onFailure(Call<FDTable> call, Throwable t) {
+                Timber.d(t.getMessage());
+                showResult();
+            }
+        });
+    }
+
+
+    private void startRetrofitLoaderT() {
+        if (!isOnline(this)) {
+            return;
+        }
+        showProgress();
+// setup data
+        int id = 524;
+        String team = String.format("%d", id);
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+
+                }).build();
+// setup Retrofit
+        mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
+                .baseUrl(FD_BASE_URI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
+        mRetrofitAPI.getTeam(team).enqueue(new Callback<FDTeam>() {
+            @Override
+            public void onResponse(Call<FDTeam> call, Response<FDTeam> response) {
+                if (response.body() == null) {
+                    showResult();
+                    return;
+                }
+                FDTeam team = response.body();
+                showResult();
+            }
+
+            @Override
+            public void onFailure(Call<FDTeam> call, Throwable t) {
+                Timber.d(t.getMessage());
+                showResult();
+            }
+        });
+    }
+
+
+    private void startRetrofitLoaderF() {
+        if (!isOnline(this)) {
+            return;
+        }
+        showProgress();
+// setup data
+        int id = 524;
+        String team = String.format("%d", id);
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+
+                }).build();
+// setup Retrofit
+        mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
+                .baseUrl(FD_BASE_URI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
+        mRetrofitAPI.getTeamFixtures(team).enqueue(new Callback<FDFixtures>() {
+            @Override
+            public void onResponse(Call<FDFixtures> call, Response<FDFixtures> response) {
+                if (response.body() == null) {
+                    showResult();
+                    return;
+                }
+                FDFixtures fixtures = response.body();
+                showResult();
+            }
+
+            @Override
+            public void onFailure(Call<FDFixtures> call, Throwable t) {
+                Timber.d(t.getMessage());
+                showResult();
+            }
+        });
+    }
+
+    private int counter = 0;
+
+    private void startRetrofitLoaderFT() {
+        if (!isOnline(this)) {
+            return;
+        }
+        showProgress();
+// setup data
+        int id = 524;
+        String team = String.format("%d", id);
+        int nDays = 5;
+        String nTime = FD_TIME_FUTUTRE;
+        String season = getCurrentYear();
+        String timeFrame = String.format("%s%d", nTime, nDays);
+
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+                }).build();
+// setup Retrofit
+        mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
+                .baseUrl(FD_BASE_URI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
+        mRetrofitAPI.getTeamFixtures(team, timeFrame, season).enqueue(new Callback<FDFixtures>() {
+            @Override
+            public void onResponse(Call<FDFixtures> call, Response<FDFixtures> response) {
+                if (response.body() == null) {
+                    showResult();
+                    Timber.d(counter++ + ": " + response.toString());
+                    return;
+                }
+                FDFixtures fixtures = response.body();
+
+                Timber.d(counter++ + ": " + fixtures.toString());
+                showResult();
+
+            }
+
+            @Override
+            public void onFailure(Call<FDFixtures> call, Throwable t) {
+                Timber.d(t.getMessage());
+                showResult();
+            }
+        });
+    }
+
+    private void startRetrofitLoaderP() {
+        if (!isOnline(this)) {
+            return;
+        }
+        showProgress();
+// setup data
+        int id = 338;
+        final String team = String.format("%d", id);
+
+// setup okHttpClient
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .build();
+                        return chain.proceed(request);
+                    }
+
+                }).build();
+// setup Retrofit
+        mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
+                .baseUrl(FD_BASE_URI)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
+        mRetrofitAPI.getTeamPlayers(team).enqueue(new Callback<FDPlayers>() {
+            @Override
+            public void onResponse(Call<FDPlayers> call, Response<FDPlayers> response) {
+                if (response.body() == null) {
+                    showResult();
+                    return;
+                }
+                FDPlayers players = response.body();
+                showResult();
+            }
+
+            @Override
+            public void onFailure(Call<FDPlayers> call, Throwable t) {
+                Timber.d(t.getMessage());
+                showResult();
+            }
+        });
+    }
+
+
+    private void startRetrofitLoader() {
+        if (!isOnline(this)) {
+            return;
+        }
+        showProgress();
+
+        Calendar calendar = Calendar.getInstance();
+        String currentYear = String.format("%4d", calendar.get(Calendar.YEAR));
+
+// setup Retrofit
+        Gson gson = new GsonBuilder()
+                .setDateFormat(DateFormat.FULL, DateFormat.FULL)
+                .create();
+
+        Gson gson2 = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new FDDateType())
+                .create();
+
+
+        mRetrofit = new Retrofit.Builder()
+                .baseUrl(FD_BASE_URI)                                           //Базовая часть адреса
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
+        mRetrofitAPI.getData(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
+            @Override
+            public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
+                if (response.body() == null) {
+                    showResult();
+                    return;
+                }
+                List<FDCompetitions> competitions = response.body();
+
+
+// test!!! записать в ContentProvider
+//                RecipeUtils.bulkInsertBackground(mContext.getContentResolver(), getSupportLoaderManager(), list, mLoaderDb);
+// test!!!  сохранить  timestamp
+//                saveReLoadTimePreference();
+                showResult();
+            }
+
+            @Override
+            public void onFailure(Call<List<FDCompetitions>> call, Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }

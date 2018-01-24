@@ -13,18 +13,22 @@ import ru.vpcb.contentprovider.FDLink;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDPlayers {
+public class FDTable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
 
-    @SerializedName("count")
+    @SerializedName("matchday")
     @Expose
-    private int count;
+    private int matchDay;
 
-    @SerializedName("players")
+    @SerializedName("leagueCaption")
     @Expose
-    private List<FDPlayer> players;
+    private String leagueCaption;
+
+    @SerializedName("standing")
+    @Expose
+    private List<FDStanding> standing;
 
 
     public class FDLinks {
@@ -32,10 +36,9 @@ public class FDPlayers {
         @Expose
         private FDLink self;
 
-        @SerializedName("team")
+        @SerializedName("competition")
         @Expose
-        private FDLink team;
+        private FDLink competition;
 
     }
-
 }
