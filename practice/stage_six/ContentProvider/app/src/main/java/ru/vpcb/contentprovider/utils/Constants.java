@@ -27,16 +27,25 @@ public class Constants {
     public static final String FD_TEAM_FIXTURES_GET = "teams/{" + FD_QUERY_ID + "}/fixtures";
     public static final String FD_TEAM_PLAYERS_GET = "teams/{" + FD_QUERY_ID + "}/players";
 
-
     public static final String FD_TIME_PAST = "p";
     public static final String FD_TIME_FUTUTRE = "n";
+
+    public static final String FD_REGEX_TEAMS = ".*teams/";
+    public static final String FD_REGEX_FIXTURES = ".*fixtures/";
 
     // update service
     public static final String UPDATE_SERVICE_TAG = "UpdaterService";
 
 
-
     // retrofit
+
+
+    // content provider
+    public static final int MATCHER_COMPETITIONS = 1;
+    public static final int MATCHER_TEAMS = 2;
+    public static final int MATCHER_FIXTURES = 3;
+    public static final int MATCHER_TABLES = 4;
+    public static final int MATCHER_PLAYERS = 5;
 
 
 }

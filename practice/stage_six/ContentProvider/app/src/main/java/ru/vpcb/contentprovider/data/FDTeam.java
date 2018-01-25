@@ -3,6 +3,9 @@ package ru.vpcb.contentprovider.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static ru.vpcb.contentprovider.utils.Constants.FD_BASE_URI;
+import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_TEAMS;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -34,6 +37,12 @@ public class FDTeam {
     @Expose
     private String crestURL;
 
+    private int id;
+
+    public FDTeam() {
+        id = -1;
+    }
+
     public class FDLinks {
         @SerializedName("self")
         @Expose
@@ -47,5 +56,22 @@ public class FDTeam {
         @Expose
         private FDLink players;
 
+
+    }
+
+    public String getLinkSelf() {
+        return links.self.getHref();
+    }
+
+
+    public void setId() throws NullPointerException, NumberFormatException {
+        String href = getLinkSelf();
+        id = Integer.valueOf(href.replaceAll(FD_REGEX_TEAMS, ""));
+        if (id == -1) throw new NumberFormatException();
+    }
+
+
+    public int getId() {
+        return id;
     }
 }

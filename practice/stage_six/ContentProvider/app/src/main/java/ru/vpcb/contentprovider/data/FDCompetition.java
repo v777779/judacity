@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -11,7 +12,7 @@ import java.util.Date;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDCompetitions {
+public class FDCompetition {
 
     @SerializedName("_links")
     @Expose
@@ -57,7 +58,6 @@ public class FDCompetitions {
     private Date lastUpdated;
 
 
-
     public class FDLinks {
         @SerializedName("self")
         @Expose
@@ -76,4 +76,13 @@ public class FDCompetitions {
         private FDLink table;
 
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getStringId() {
+        return String.format(Locale.ENGLISH, "%4d", id);
+    }
+
 }

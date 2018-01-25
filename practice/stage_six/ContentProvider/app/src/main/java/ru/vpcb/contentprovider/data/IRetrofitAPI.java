@@ -40,10 +40,10 @@ public interface IRetrofitAPI {
 
     @GET(FD_COMPETITIONS_GET)
     // request with query      "baseURL/competitions/?seasons=2015"
-    Call<List<FDCompetitions>> getCompetitions(@Query(FD_QUERY_SEASON) String s);
+    Call<List<FDCompetition>> getCompetitions(@Query(FD_QUERY_SEASON) String s);
 
     @GET(FD_COMPETITIONS_GET)
-    Call<FDCompetitions> getCompetitions();  // request with query   "baseURL/competitions"
+    Call<FDCompetition> getCompetitions();  // request with query   "baseURL/competitions"
 
 
     @GET(FD_COMPETITIONS_TEAMS_GET)
@@ -61,6 +61,7 @@ public interface IRetrofitAPI {
     @GET(FD_COMPETITIONS_FIXTURES_GET)
     Call<FDFixtures> getFixturesTime(@Path(value = FD_QUERY_ID, encoded = true) String s,
                                      @Query(FD_QUERY_TIMEFRAME) String time);
+
 
     @GET(FD_COMPETITIONS_TABLE_GET)
     Call<FDTable> getTable(@Path(value = FD_QUERY_ID, encoded = true) String s);

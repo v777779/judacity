@@ -35,4 +35,12 @@ public class FDTeams {
         private FDLink competition;
     }
 
+    public FDLinks getLinks() {
+        return links;
+    }
+
+    public List<FDTeam> getTeams() {
+        return teams;
+    }
+
 }

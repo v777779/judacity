@@ -4,6 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
+
+import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_FIXTURES;
+import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_TEAMS;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -44,6 +48,7 @@ public class FDFixture {
     @Expose
     private FDOdds odds;
 
+    private int id;
 
     private class FDLinks {
         @SerializedName("self")
@@ -105,6 +110,22 @@ public class FDFixture {
         private double awayWin;
 
     }
+
+    public String getLinkSelf() {
+        return links.self.getHref();
+    }
+
+
+    public void setId() throws NullPointerException, NumberFormatException {
+        String href = getLinkSelf();
+        id = Integer.valueOf(href.replaceAll(FD_REGEX_FIXTURES, ""));
+        if (id == -1) throw new NumberFormatException();
+    }
+
+    public int getId() {
+        return id;
+    }
+
 
     @Override
     public String toString() {

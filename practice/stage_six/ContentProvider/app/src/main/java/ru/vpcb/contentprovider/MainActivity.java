@@ -30,14 +30,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.vpcb.contentprovider.data.FDCompetitions;
+import ru.vpcb.contentprovider.data.FDCompetition;
 import ru.vpcb.contentprovider.data.FDFixtures;
 import ru.vpcb.contentprovider.data.FDPlayers;
 import ru.vpcb.contentprovider.data.FDTable;
 import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
-import ru.vpcb.contentprovider.data.UpdateService;
+import ru.vpcb.contentprovider.services.UpdateService;
 import timber.log.Timber;
 
 
@@ -199,14 +199,14 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getCompetitions(season).enqueue(new Callback<List<FDCompetitions>>() {
+        mRetrofitAPI.getCompetitions(season).enqueue(new Callback<List<FDCompetition>>() {
             @Override
-            public void onResponse(@Nullable Call<List<FDCompetitions>> call, @NonNull Response<List<FDCompetitions>> response) {
+            public void onResponse(@Nullable Call<List<FDCompetition>> call, @NonNull Response<List<FDCompetition>> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
                 }
-                List<FDCompetitions> competitions = response.body();
+                List<FDCompetition> competitions = response.body();
 
 // test!!! записать в ContentProvider
 //                RecipeUtils.bulkInsertBackground(mContext.getContentResolver(), getSupportLoaderManager(), list, mLoaderDb);
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@Nullable Call<List<FDCompetitions>> call, @NonNull Throwable t) {
+            public void onFailure(@Nullable Call<List<FDCompetition>> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }

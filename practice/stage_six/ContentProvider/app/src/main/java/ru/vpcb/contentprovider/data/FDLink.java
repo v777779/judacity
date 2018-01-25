@@ -13,4 +13,8 @@ public class FDLink {
     @SerializedName("href")
     @Expose
     private String href;
+
+    public String getHref() {
+        return href;
+    }
 }

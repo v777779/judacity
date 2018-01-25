@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_TEAMS;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -33,7 +35,6 @@ public class FDFixtures {
     @Expose
     private Date timeFrameEnd;
 
-
     private class FDLinks {
         @SerializedName("self")
         @Expose
@@ -43,6 +44,12 @@ public class FDFixtures {
         @Expose
         private FDLink competition;
     }
+
+
+    public List<FDFixture> getFixtures() {
+        return fixtures;
+    }
+
 
     @Override
     public String toString() {

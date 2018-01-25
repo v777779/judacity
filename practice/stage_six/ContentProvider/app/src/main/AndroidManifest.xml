@@ -31,7 +31,7 @@
                 android:value="ru.vpcb.contentprovider.MainActivity" />
         </activity>
 
-        <service android:name=".data.UpdateService" />
+        <service android:name=".services.UpdateService" />
 
         <receiver
             android:name=".add.MessageReceiver2"

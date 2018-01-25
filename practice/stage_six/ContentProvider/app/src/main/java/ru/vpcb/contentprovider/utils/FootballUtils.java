@@ -58,4 +58,15 @@ public class FootballUtils {
         return value;
     }
 
+    public static String formatString(int value) {
+        return String.format("%d", value);
+    }
+
+    public static String formatStringWide(int value) {
+        return String.format("%4d", value);
+    }
+
+    public static String formatStringInt(String s) {
+        return  s.substring(s.lastIndexOf("/")+1);
+    }
 }
