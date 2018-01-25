@@ -1,6 +1,9 @@
 package ru.vpcb.contentprovider;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,18 +13,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.Interceptor;
@@ -33,20 +33,21 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.contentprovider.data.FDCompetitions;
-import ru.vpcb.contentprovider.data.FDDateType;
+import ru.vpcb.contentprovider.add.FDDateType;
 import ru.vpcb.contentprovider.data.FDFixtures;
 import ru.vpcb.contentprovider.data.FDPlayers;
 import ru.vpcb.contentprovider.data.FDTable;
 import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
+import ru.vpcb.contentprovider.data.UpdateService;
 import timber.log.Timber;
 
 
-import static ru.vpcb.contentprovider.data.Constants.FD_BASE_URI;
-import static ru.vpcb.contentprovider.data.Constants.FD_TIME_FUTUTRE;
-import static ru.vpcb.contentprovider.data.Constants.FD_TIME_PAST;
-import static ru.vpcb.contentprovider.data.FootballUtils.isOnline;
+import static ru.vpcb.contentprovider.utils.Constants.FD_BASE_URI;
+import static ru.vpcb.contentprovider.utils.Constants.FD_TIME_FUTUTRE;
+import static ru.vpcb.contentprovider.utils.Constants.FD_TIME_PAST;
+import static ru.vpcb.contentprovider.utils.FootballUtils.isOnline;
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private IRetrofitAPI mRetrofitAPI;
     private Retrofit mRetrofit;
     private OkHttpClient mOkHttpClient;
+    private MessageReceiver mMessageReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,11 +110,13 @@ public class MainActivity extends AppCompatActivity {
 //                startRetrofitLoaderT(); // ok
 //                startRetrofitLoaderF(); // ok
 //                startRetrofitLoaderFT(); // ok
-                startRetrofitLoaderP();
-
+//                startRetrofitLoaderP();
+                refresh(getString(R.string.action_update));
 
             }
         });
+
+        setupReceiver();
 
     }
 
@@ -128,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a parent activity in AndroidManifest.prefs.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -139,6 +143,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver();
+    }
 
     /**
      * Shows ProgressBar View object
@@ -187,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getData(season).enqueue(new Callback<List<FDCompetitions>>() {
+        mRetrofitAPI.getCompetitions(season).enqueue(new Callback<List<FDCompetitions>>() {
             @Override
             public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
                 if (response.body() == null) {
@@ -681,7 +696,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getData(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
+        mRetrofitAPI.getCompetitions(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
             @Override
             public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
                 if (response.body() == null) {
@@ -729,7 +744,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getData(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
+        mRetrofitAPI.getCompetitions(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
             @Override
             public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
                 if (response.body() == null) {
@@ -753,5 +768,50 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void refresh(String action) {
+        Intent intent = new Intent(action, null, this, UpdateService.class);
+        startService(intent);
+    }
+
+    private void setupReceiver() {
+        mMessageReceiver = new MessageReceiver();
+    }
+
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(getString(R.string.broadcast_update_started));
+        intentFilter.addAction(getString(R.string.broadcast_update_finished));
+        intentFilter.addAction(getString(R.string.broadcast_no_network));
+        registerReceiver(mMessageReceiver, intentFilter);
+    }
+
+    private void unregisterReceiver() {
+        unregisterReceiver(mMessageReceiver);
+    }
+
+    private class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // an Intent broadcast.
+            if (intent != null) {
+                String action = intent.getAction();
+                if (action.equals(context.getString(R.string.broadcast_update_started))) {
+                    Toast.makeText(context, "Broadcast message: update started", Toast.LENGTH_SHORT).show();
+
+                } else if (action.equals(context.getString(R.string.broadcast_update_finished))) {
+                    Toast.makeText(context, "Broadcast message: update finished", Toast.LENGTH_SHORT).show();
+                } else if (action.equals(context.getString(R.string.broadcast_no_network))) {
+                    Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
+                } else {
+                    throw new UnsupportedOperationException("Not yet implemented");
+                }
+
+            }
+
+        }
+    }
+
 
 }

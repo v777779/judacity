@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:defaultValue="@bool/pref_smart_update_default"
+        android:key="@string/pref_smart_update_key"
+        android:summaryOff="@string/pref_smart_update_off"
+        android:summaryOn="@string/pref_smart_update_on"
+        android:title="@string/pref_smart_update_label" />
+
+</PreferenceScreen>

@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-import ru.vpcb.contentprovider.FDLink;
-
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov

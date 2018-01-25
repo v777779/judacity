@@ -1,4 +1,4 @@
-package ru.vpcb.contentprovider.data;
+package ru.vpcb.contentprovider.add;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

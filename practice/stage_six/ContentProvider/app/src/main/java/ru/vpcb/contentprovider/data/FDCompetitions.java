@@ -3,11 +3,7 @@ package ru.vpcb.contentprovider.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
-
-import ru.vpcb.contentprovider.FDLink;
 
 /**
  * Exercise for course : Android Developer Nanodegree

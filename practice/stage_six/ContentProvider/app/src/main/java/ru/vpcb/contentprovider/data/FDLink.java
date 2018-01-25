@@ -1,4 +1,4 @@
-package ru.vpcb.contentprovider;
+package ru.vpcb.contentprovider.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
