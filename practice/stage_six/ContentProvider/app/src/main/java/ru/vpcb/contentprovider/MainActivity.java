@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String getCurrentYear() {
         Calendar calendar = Calendar.getInstance();
-        return String.format("%4d", calendar.get(Calendar.YEAR));
+        return String.format(Locale.ENGLISH,"%4d", calendar.get(Calendar.YEAR));
     }
 
     private void startRetrofitLoaderC() {
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getCompetitions(season).enqueue(new Callback<List<FDCompetitions>>() {
             @Override
-            public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
+            public void onResponse(@Nullable Call<List<FDCompetitions>> call, @NonNull Response<List<FDCompetitions>> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<FDCompetitions>> call, Throwable t) {
+            public void onFailure(@Nullable Call<List<FDCompetitions>> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -231,12 +231,12 @@ public class MainActivity extends AppCompatActivity {
 
 // setup data
         int id = 450;
-        String competition = String.format("%d", id);
+        String competition = String.format(Locale.ENGLISH,"%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getTeams(competition).enqueue(new Callback<FDTeams>() {
             @Override
-            public void onResponse(Call<FDTeams> call, Response<FDTeams> response) {
+            public void onResponse(@Nullable Call<FDTeams> call, @NonNull Response<FDTeams> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDTeams> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDTeams> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -279,12 +279,12 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format("%d", id);
+        String competition = String.format(Locale.ENGLISH,"%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getFixtures(competition).enqueue(new Callback<FDFixtures>() {
             @Override
-            public void onResponse(Call<FDFixtures> call, Response<FDFixtures> response) {
+            public void onResponse(@Nullable Call<FDFixtures> call, @NonNull Response<FDFixtures> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDFixtures> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDFixtures> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -327,13 +327,13 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format("%d", id);
+        String competition = String.format(Locale.ENGLISH,"%d", id);
         int matchDay = 25;
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getFixturesMatch(competition, matchDay).enqueue(new Callback<FDFixtures>() {
             @Override
-            public void onResponse(Call<FDFixtures> call, Response<FDFixtures> response) {
+            public void onResponse(@Nullable Call<FDFixtures> call, @NonNull Response<FDFixtures> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDFixtures> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDFixtures> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -375,16 +375,16 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format("%d", id);
+        String competition = String.format(Locale.ENGLISH,"%d", id);
         int nDays = 50;
         String nTime = FD_TIME_PAST;
 
-        String timeFrame = String.format("%s%d", nTime, nDays);
+        String timeFrame = String.format(Locale.ENGLISH,"%s%d", nTime, nDays);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getFixturesTime(competition, timeFrame).enqueue(new Callback<FDFixtures>() {
             @Override
-            public void onResponse(Call<FDFixtures> call, Response<FDFixtures> response) {
+            public void onResponse(@Nullable Call<FDFixtures> call, @NonNull Response<FDFixtures> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDFixtures> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDFixtures> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -426,12 +426,12 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format("%d", id);
+        String competition = String.format(Locale.ENGLISH,"%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -449,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getTable(competition).enqueue(new Callback<FDTable>() {
             @Override
-            public void onResponse(Call<FDTable> call, Response<FDTable> response) {
+            public void onResponse(@Nullable Call<FDTable> call, @NonNull Response<FDTable> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDTable> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDTable> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -474,12 +474,12 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 524;
-        String team = String.format("%d", id);
+        String team = String.format(Locale.ENGLISH,"%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -497,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getTeam(team).enqueue(new Callback<FDTeam>() {
             @Override
-            public void onResponse(Call<FDTeam> call, Response<FDTeam> response) {
+            public void onResponse(@Nullable Call<FDTeam> call, @NonNull Response<FDTeam> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -507,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDTeam> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDTeam> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -522,12 +522,12 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 524;
-        String team = String.format("%d", id);
+        String team = String.format(Locale.ENGLISH,"%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -545,7 +545,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getTeamFixtures(team).enqueue(new Callback<FDFixtures>() {
             @Override
-            public void onResponse(Call<FDFixtures> call, Response<FDFixtures> response) {
+            public void onResponse(@Nullable Call<FDFixtures> call, @NonNull Response<FDFixtures> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -555,7 +555,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDFixtures> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDFixtures> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -632,7 +632,7 @@ public class MainActivity extends AppCompatActivity {
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -650,7 +650,7 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getTeamPlayers(team).enqueue(new Callback<FDPlayers>() {
             @Override
-            public void onResponse(Call<FDPlayers> call, Response<FDPlayers> response) {
+            public void onResponse(@Nullable Call<FDPlayers> call, @NonNull Response<FDPlayers> response) {
                 if (response.body() == null) {
                     showResult();
                     return;
@@ -660,7 +660,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<FDPlayers> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDPlayers> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -668,7 +668,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+  
 
     private void refresh(String action) {
         Intent intent = new Intent(action, null, this, UpdateService.class);
