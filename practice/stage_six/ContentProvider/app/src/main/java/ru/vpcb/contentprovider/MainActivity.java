@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,14 +17,10 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -33,7 +31,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.contentprovider.data.FDCompetitions;
-import ru.vpcb.contentprovider.add.FDDateType;
 import ru.vpcb.contentprovider.data.FDFixtures;
 import ru.vpcb.contentprovider.data.FDPlayers;
 import ru.vpcb.contentprovider.data.FDTable;
@@ -574,17 +571,17 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 524;
-        String team = String.format("%d", id);
+        String team = String.format(Locale.ENGLISH,"%d", id);
         int nDays = 5;
         String nTime = FD_TIME_FUTUTRE;
         String season = getCurrentYear();
-        String timeFrame = String.format("%s%d", nTime, nDays);
+        String timeFrame = String.format(Locale.ENGLISH,"%s%d", nTime, nDays);
 
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
                                 .build();
@@ -601,21 +598,21 @@ public class MainActivity extends AppCompatActivity {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
         mRetrofitAPI.getTeamFixtures(team, timeFrame, season).enqueue(new Callback<FDFixtures>() {
             @Override
-            public void onResponse(Call<FDFixtures> call, Response<FDFixtures> response) {
+            public void onResponse(@Nullable Call<FDFixtures> call, @NonNull Response<FDFixtures> response) {
                 if (response.body() == null) {
                     showResult();
-                    Timber.d(counter++ + ": " + response.toString());
+                    Timber.d(counter++ + ": " + response);
                     return;
                 }
                 FDFixtures fixtures = response.body();
 
-                Timber.d(counter++ + ": " + fixtures.toString());
+                Timber.d(counter++ + ": " + fixtures);
                 showResult();
 
             }
 
             @Override
-            public void onFailure(Call<FDFixtures> call, Throwable t) {
+            public void onFailure(@Nullable Call<FDFixtures> call, @NonNull Throwable t) {
                 Timber.d(t.getMessage());
                 showResult();
             }
@@ -629,7 +626,7 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 338;
-        final String team = String.format("%d", id);
+        final String team = String.format(Locale.ENGLISH,"%d", id);
 
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
@@ -671,103 +668,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void startRetrofitLoader() {
-        if (!isOnline(this)) {
-            return;
-        }
-        showProgress();
 
-        Calendar calendar = Calendar.getInstance();
-        String currentYear = String.format("%4d", calendar.get(Calendar.YEAR));
-
-// setup Retrofit
-        Gson gson = new GsonBuilder()
-                .setDateFormat(DateFormat.FULL, DateFormat.FULL)
-                .create();
-
-        Gson gson2 = new GsonBuilder()
-                .registerTypeAdapter(Date.class, new FDDateType())
-                .create();
-
-
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(FD_BASE_URI)                                           //Базовая часть адреса
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getCompetitions(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
-            @Override
-            public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
-                if (response.body() == null) {
-                    showResult();
-                    return;
-                }
-                List<FDCompetitions> competitions = response.body();
-
-
-// test!!! записать в ContentProvider
-//                RecipeUtils.bulkInsertBackground(mContext.getContentResolver(), getSupportLoaderManager(), list, mLoaderDb);
-// test!!!  сохранить  timestamp
-//                saveReLoadTimePreference();
-                showResult();
-            }
-
-            @Override
-            public void onFailure(Call<List<FDCompetitions>> call, Throwable t) {
-                Timber.d(t.getMessage());
-                showResult();
-            }
-        });
-    }
-
-    private void startRetrofitLoaderDateFull() {
-        if (!isOnline(this)) {
-            return;
-        }
-        showProgress();
-
-        Calendar calendar = Calendar.getInstance();
-        String currentYear = String.format("%4d", calendar.get(Calendar.YEAR));
-// setup Retrofit
-        Gson gson = new GsonBuilder()
-                .setDateFormat(DateFormat.FULL, DateFormat.FULL)
-                .create();
-
-        Gson gson2 = new GsonBuilder()
-                .registerTypeAdapter(Date.class, new FDDateType())
-                .create();
-
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(FD_BASE_URI)                                           //Базовая часть адреса
-                .addConverterFactory(GsonConverterFactory.create(gson2))
-                .build();
-
-        mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
-        mRetrofitAPI.getCompetitions(currentYear).enqueue(new Callback<List<FDCompetitions>>() {
-            @Override
-            public void onResponse(Call<List<FDCompetitions>> call, Response<List<FDCompetitions>> response) {
-                if (response.body() == null) {
-                    showResult();
-                    return;
-                }
-                List<FDCompetitions> competitions = response.body();
-
-
-// test!!! записать в ContentProvider
-//                RecipeUtils.bulkInsertBackground(mContext.getContentResolver(), getSupportLoaderManager(), list, mLoaderDb);
-// test!!!  сохранить  timestamp
-//                saveReLoadTimePreference();
-                showResult();
-            }
-
-            @Override
-            public void onFailure(Call<List<FDCompetitions>> call, Throwable t) {
-                Timber.d(t.getMessage());
-                showResult();
-            }
-        });
-    }
 
     private void refresh(String action) {
         Intent intent = new Intent(action, null, this, UpdateService.class);
