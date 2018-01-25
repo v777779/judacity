@@ -233,7 +233,7 @@ public class RecipeContentProvider extends ContentProvider {
                         try {
                             _id = db.insertOrThrow(RecipeEntry.TABLE_NAME, null, value);
                         } catch (SQLiteConstraintException e) {
-                            Timber.d(TAG, "Attempting to insert " +
+                            Timber.d(TAG+ "Attempting to insert " +
                                     value.getAsString(RecipeEntry.COLUMN_RECIPE_NAME)
                                     + " but value is already in database.");
                         }

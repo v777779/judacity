@@ -46,58 +46,35 @@ public class FDProvider extends ContentProvider {
     public static final int PLAYERS_WITH_TEAM_ID = 601;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-
+    private FDDbHelper mFDDbHelper;
 
     /**
      * Returns UriMatcher object which recognizes bulk or alone records Uri
      *
      * @return UriMatcher object
      */
-    public static UriMatcher buildUriMatcher(int type) {
-        UriMatcher uriMatcher = null;
-
-        switch (type) {
-            default:
-            case MATCHER_COMPETITIONS:
-                uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS, COMPETITIONS);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS + "/#", COMPETITIONS_WITH_ID);
-                return uriMatcher;
-
-            case MATCHER_TEAMS:
-                uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS, TEAMS);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS + "/#", TEAMS_WITH_ID);
-                return uriMatcher;
-
-            case MATCHER_FIXTURES:
-                uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES, FIXTURES);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_TEAM_ID);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_COMP_ID);
-                return uriMatcher;
-
-            case MATCHER_TABLES:
-                uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES, TABLES);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
-                return uriMatcher;
-
-            case MATCHER_PLAYERS:
-                uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS, PLAYERS);
-                uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS + "/#", PLAYERS_WITH_TEAM_ID);
-                return uriMatcher;
-        }
+    public static UriMatcher buildUriMatcher() {
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS, COMPETITIONS);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS + "/#", COMPETITIONS_WITH_ID);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS, TEAMS);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS + "/#", TEAMS_WITH_ID);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES, FIXTURES);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_TEAM_ID);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_COMP_ID);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES, TABLES);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS, PLAYERS);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS + "/#", PLAYERS_WITH_TEAM_ID);
+        return uriMatcher;
     }
 
 
-    private FDDbHelper mFDDbHelper;
 
     @Override
     public boolean onCreate() {
         Context context = getContext();
-        mFDDbHelper = new FDDbHelper(context);
+        mFDCompHelper = new FDDbHelper(context, TA);
         return true;
     }
 
@@ -116,13 +93,13 @@ public class FDProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
                         @Nullable String[] selectionArgs, @Nullable String sortOrder) {
 
-        final SQLiteDatabase db = mRecipesDbHelper.getReadableDatabase();
+        final SQLiteDatabase db = mFDDbHelper.getReadableDatabase();
         int match = sUriMatcher.match(uri);
         Cursor retCursor;
 
         switch (match) {
-            case RECIPES:
-                retCursor = db.query(TABLE_NAME,
+            case COMPETITIONS:
+                retCursor = db.query(TABLE_COMTABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -139,6 +116,9 @@ public class FDProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+
+
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
