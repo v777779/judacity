@@ -3,6 +3,8 @@ package ru.vpcb.contentprovider.fdbase;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.provider.BaseColumns;
 
 import static ru.vpcb.contentprovider.fdbase.FDContract.DATABASE_NAME;
 import static ru.vpcb.contentprovider.fdbase.FDContract.DATABASE_VERSION;
@@ -42,15 +44,26 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.CpEntry.COLUMN_NUMBER_GAMES + " INTEGER NOT NULL, " +            // int
                 FDContract.CpEntry.COLUMN_LAST_UPDATE + " TEXT NOT NULL);";                 // string from date
 
+        final String CREATE_TABLE_COMPETITION_TEAMS = "CREATE TABLE " + FDContract.CpTeamEntry.TABLE_NAME + " (" +
+//                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.CpTeamEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
+                FDContract.CpTeamEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL);";              // int
+
+        final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFixtureEntry.TABLE_NAME + " (" +
+//                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.CpFixtureEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " + // int
+                FDContract.CpFixtureEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL, " +        // int
+                FDContract.CpFixtureEntry.COLUMN_TEAM_HOME_ID + " INTEGER NOT NULL, " +      // int
+                FDContract.CpFixtureEntry.COLUMN_TEAM_AWAY_ID + " INTEGER NOT NULL);";       // int
 
         final String CREATE_TABLE_TEAMS = "CREATE TABLE " + FDContract.TmEntry.TABLE_NAME + " (" +
 //                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.TmEntry.COLUMN_TEAM_ID + " INTEGER PRIMARY KEY, " +      // int
-                FDContract.TmEntry.COLUMN_TEAM_NAME + " TEXT NOT NULL, " +          // string
-                FDContract.TmEntry.COLUMN_TEAM_CODE + " TEXT NOT NULL, " +          // string
-                FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME + " TEXT NOT NULL, " +     // string
-                FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE + " TEXT NOT NULL, " +  // string
-                FDContract.TmEntry.COLUMN_TEAM_CREST_URI + " TEXT NOT NULL);";     // string
+                FDContract.TmEntry.COLUMN_TEAM_ID + " INTEGER PRIMARY KEY, " +              // int
+                FDContract.TmEntry.COLUMN_TEAM_NAME + " TEXT NOT NULL, " +                  // string
+                FDContract.TmEntry.COLUMN_TEAM_CODE + " TEXT NOT NULL, " +                  // string
+                FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME + " TEXT NOT NULL, " +            // string
+                FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE + " TEXT NOT NULL, " +          // string
+                FDContract.TmEntry.COLUMN_TEAM_CREST_URI + " TEXT NOT NULL);";              // string
 
 
         final String CREATE_TABLE_FIXTURES = "CREATE TABLE " + FDContract.FxEntry.TABLE_NAME + " (" +
@@ -100,6 +113,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT NOT NULL);";     // string
 
         db.execSQL(CREATE_TABLE_COMPETITIONS);
+        db.execSQL(CREATE_TABLE_COMPETITION_TEAMS);
+        db.execSQL(CREATE_TABLE_COMPETITION_FIXTURES);
         db.execSQL(CREATE_TABLE_TEAMS);
         db.execSQL(CREATE_TABLE_FIXTURES);
         db.execSQL(CREATE_TABLE_TABLES);
@@ -117,6 +132,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpTeamEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpFixtureEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.TmEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.FxEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.TbEntry.TABLE_NAME);
