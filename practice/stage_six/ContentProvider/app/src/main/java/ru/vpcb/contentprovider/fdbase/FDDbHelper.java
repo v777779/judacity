@@ -4,19 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_ID;
-import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_IMAGE;
-import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_LENGTH;
-import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
-import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.COLUMN_RECIPE_VALUE;
-import static ru.vpcb.bakingapp.data.RecipeContract.RecipeEntry.TABLE_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.DATABASE_NAME;
-import static ru.vpcb.bakingapp.utils.Constants.DATABASE_VERSION;
 import static ru.vpcb.contentprovider.fdbase.FDContract.DATABASE_NAME;
 import static ru.vpcb.contentprovider.fdbase.FDContract.DATABASE_VERSION;
-import static ru.vpcb.contentprovider.fdbase.FDContract.TABLE_FIXTURES;
-import static ru.vpcb.contentprovider.fdbase.FDContract.TABLE_PLAYERS;
-import static ru.vpcb.contentprovider.fdbase.FDContract.TABLE_TABLES;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -41,71 +30,97 @@ public class FDDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String CREATE_TABLE_COMPETITIONS = "CREATE TABLE " + FDContract.CmEntry.TABLE_NAME + " (" +
-//                FDContract.CmEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.CmEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +       // int
-                FDContract.CmEntry.COLUMN_CAPTION + " TEXT NOT NULL, " +                    // string
-                FDContract.CmEntry.COLUMN_COMPETITION_LEAGUE + " TEXT NOT NULL, " +         // string
-                FDContract.CmEntry.COLUMN_COMPETITION_YEAR + " TEXT NOT NULL, " +           // string
-                FDContract.CmEntry.COLUMN_CURRENT_MATCHDAY + " INTEGER NOT NULL, " +        // int
-                FDContract.CmEntry.COLUMN_NUMBER_MATCHDAYS + " INTEGER NOT NULL, " +        // int
-                FDContract.CmEntry.COLUMN_NUMBER_TEAMS + " INTEGER NOT NULL, " +            // int
-                FDContract.CmEntry.COLUMN_NUMBER_GAMES + " INTEGER NOT NULL, " +            // int
-                FDContract.CmEntry.COLUMN_LAST_UPDATE + " TEXT NOT NULL);";                 // string from date
+        final String CREATE_TABLE_COMPETITIONS = "CREATE TABLE " + FDContract.CpEntry.TABLE_NAME + " (" +
+//                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.CpEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +       // int
+                FDContract.CpEntry.COLUMN_CAPTION + " TEXT NOT NULL, " +                    // string
+                FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE + " TEXT NOT NULL, " +         // string
+                FDContract.CpEntry.COLUMN_COMPETITION_YEAR + " TEXT NOT NULL, " +           // string
+                FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY + " INTEGER NOT NULL, " +        // int
+                FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS + " INTEGER NOT NULL, " +        // int
+                FDContract.CpEntry.COLUMN_NUMBER_TEAMS + " INTEGER NOT NULL, " +            // int
+                FDContract.CpEntry.COLUMN_NUMBER_GAMES + " INTEGER NOT NULL, " +            // int
+                FDContract.CpEntry.COLUMN_LAST_UPDATE + " TEXT NOT NULL);";                 // string from date
 
-
-        db.execSQL(CREATE_TABLE_COMPETITIONS);
 
         final String CREATE_TABLE_TEAMS = "CREATE TABLE " + FDContract.TmEntry.TABLE_NAME + " (" +
 //                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_RECIPE_ID + " INTEGER PRIMARY KEY, " +           // int
-                COLUMN_RECIPE_NAME + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_LENGTH + " INTEGER NOT NULL, " +          // int
-                COLUMN_RECIPE_IMAGE + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_VALUE + " TEXT NOT NULL);";               // string
+                FDContract.TmEntry.COLUMN_TEAM_ID + " INTEGER PRIMARY KEY, " +      // int
+                FDContract.TmEntry.COLUMN_TEAM_NAME + " TEXT NOT NULL, " +          // string
+                FDContract.TmEntry.COLUMN_TEAM_CODE + " TEXT NOT NULL, " +          // string
+                FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME + " TEXT NOT NULL, " +     // string
+                FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE + " TEXT NOT NULL, " +  // string
+                FDContract.TmEntry.COLUMN_TEAM_CREST_URI + " TEXT NOT NULL);";     // string
+
+
+        final String CREATE_TABLE_FIXTURES = "CREATE TABLE " + FDContract.FxEntry.TABLE_NAME + " (" +
+//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.FxEntry.COLUMN_FIXTURE_ID + " INTEGER PRIMARY KEY, " +       // int
+                FDContract.FxEntry.COLUMN_FIXTURE_DATE + " TEXT NOT NULL, " +           // string from date
+                FDContract.FxEntry.COLUMN_FIXTURE_DATE_LONG + " INTEGER NOT NULL, " +   // int from date
+                FDContract.FxEntry.COLUMN_FIXTURE_STATUS + " TEXT NOT NULL, " +         // string
+                FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY + " INTEGER NOT NULL, " +    // int
+                FDContract.FxEntry.COLUMN_FIXTURE_TEAM_HOME + " TEXT NOT NULL, " +      // string
+                FDContract.FxEntry.COLUMN_FIXTURE_TEAM_AWAY + " TEXT NOT NULL, " +      // string
+                FDContract.FxEntry.COLUMN_FIXTURE_GOALS_HOME + " INTEGER NOT NULL, " +  // int
+                FDContract.FxEntry.COLUMN_FIXTURE_GOALS_AWAY + " INTEGER NOT NULL, " +  // int
+                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN + " REAL NOT NULL, " +       // real
+                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW + " REAL NOT NULL, " +      // real
+                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_LOSE + " REAL NOT NULL);";       // real
+
+
+        final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
+//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.TbEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
+                FDContract.TbEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
+                FDContract.TbEntry.COLUMN_COMPETITION_MATCHDAY + " INTEGER NOT NULL, " +    // int
+                FDContract.TbEntry.COLUMN_LEAGUE_CAPTION + " TEXT NOT NULL, " +         // string
+                FDContract.TbEntry.COLUMN_TEAM_POSITION + " INTEGER NOT NULL, " +       // int
+                FDContract.TbEntry.COLUMN_TEAM_NAME + " TEXT NOT NULL, " +              // string
+                FDContract.TbEntry.COLUMN_CREST_URI + " TEXT NOT NULL, " +              // string
+                FDContract.TbEntry.COLUMN_TEAM_PLAYED_GAMES + " INTEGER NOT NULL, " +   // int
+                FDContract.TbEntry.COLUMN_TEAM_POINTS + " INTEGER NOT NULL, " +         // int
+                FDContract.TbEntry.COLUMN_TEAM_GOALS + " INTEGER NOT NULL, " +          // int
+                FDContract.TbEntry.COLUMN_TEAM_GOALS_AGAINST + " INTEGER NOT NULL, " +  // int
+                FDContract.TbEntry.COLUMN_TEAM_GOALS_DIFFERENCE + " INTEGER NOT NULL, " +   // int
+                FDContract.TbEntry.COLUMN_TEAM_WINS + " INTEGER NOT NULL, " +           // int
+                FDContract.TbEntry.COLUMN_TEAM_DRAWS + " INTEGER NOT NULL, " +          // int
+                FDContract.TbEntry.COLUMN_TEAM_LOSSES + " INTEGER NOT NULL);";          // int
+
+
+        final String CREATE_TABLE_PLAYERS = "CREATE TABLE " + FDContract.PlEntry.TABLE_NAME + " (" +
+//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.PlEntry.COLUMN_TEAM_ID + " INTEGER PRIMARY KEY, " +          // int
+                FDContract.PlEntry.COLUMN_PLAYER_NAME + " TEXT NOT NULL, " +            // string
+                FDContract.PlEntry.COLUMN_PLAYER_POSITION + " TEXT NOT NULL, " +        // string
+                FDContract.PlEntry.COLUMN_PLAYER_JERSEY_NUMBER + " INTEGER NOT NULL, " +    // int
+                FDContract.PlEntry.COLUMN_PLAYER_DATE_BIRTH + " TEXT NOT NULL, " +      // string from date
+                FDContract.PlEntry.COLUMN_PLAYER_NATIONALITY + " TEXT NOT NULL, " +     // string
+                FDContract.PlEntry.COLUMN_PLAYER_DATE_CONTRACT + " TEXT NOT NULL, " +   // string from date
+                FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT NOT NULL);";     // string
+
+        db.execSQL(CREATE_TABLE_COMPETITIONS);
         db.execSQL(CREATE_TABLE_TEAMS);
-
-        final String CREATE_TABLE_FIXTURES = "CREATE TABLE " + TABLE_FIXTURES + " (" +
-//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_RECIPE_ID + " INTEGER PRIMARY KEY, " +           // int
-                COLUMN_RECIPE_NAME + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_LENGTH + " INTEGER NOT NULL, " +          // int
-                COLUMN_RECIPE_IMAGE + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_VALUE + " TEXT NOT NULL);";               // string
         db.execSQL(CREATE_TABLE_FIXTURES);
-
-        final String CREATE_TABLE_TABLES = "CREATE TABLE " + TABLE_TABLES + " (" +
-//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_RECIPE_ID + " INTEGER PRIMARY KEY, " +           // int
-                COLUMN_RECIPE_NAME + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_LENGTH + " INTEGER NOT NULL, " +          // int
-                COLUMN_RECIPE_IMAGE + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_VALUE + " TEXT NOT NULL);";               // string
         db.execSQL(CREATE_TABLE_TABLES);
-
-        final String CREATE_TABLE_PLAYERS = "CREATE TABLE " + TABLE_PLAYERS + " (" +
-//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_RECIPE_ID + " INTEGER PRIMARY KEY, " +           // int
-                COLUMN_RECIPE_NAME + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_LENGTH + " INTEGER NOT NULL, " +          // int
-                COLUMN_RECIPE_IMAGE + " TEXT NOT NULL, " +               // string
-                COLUMN_RECIPE_VALUE + " TEXT NOT NULL);";               // string
         db.execSQL(CREATE_TABLE_PLAYERS);
-
 
     }
 
     /**
      * Upgrades old version database to new version
      *
-     * @param db         SQLiteDatabase databed for upgrading
+     * @param db         SQLiteDatabase database for upgrading
      * @param oldVersion int old version to compare
      * @param newVersion int new version to compare
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.TmEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.FxEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.TbEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.PlEntry.TABLE_NAME);
         onCreate(db);
-
     }
 }

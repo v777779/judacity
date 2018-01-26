@@ -3,6 +3,8 @@ package ru.vpcb.contentprovider.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_COMPETITIONS;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -67,6 +69,7 @@ public class FDStanding {
     @Expose
     private FDStat away;
 
+    private int id;
 
 
 
@@ -98,5 +101,20 @@ public class FDStanding {
         private int losses;
     }
 
+    public String getLinkTeam() {
+        return links.team.getHref();
+    }
+
+
+    public void setId() throws NullPointerException, NumberFormatException {
+        String href = getLinkTeam();
+        id = Integer.valueOf(href.replaceAll(FD_REGEX_COMPETITIONS, ""));
+        if (id == -1) throw new NumberFormatException();
+    }
+
+
+    public int getId() {
+        return id;
+    }
 
 }

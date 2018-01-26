@@ -7,8 +7,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
 
 import ru.vpcb.contentprovider.data.FDFixture;
+import ru.vpcb.contentprovider.data.FDStanding;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -29,13 +31,14 @@ public class FDContract {
     public static final int DATABASE_VERSION = 1;
 
 
-
     /**
      * Entry class for RecipeItem Database Content Provider
      */
-    public static final class CmEntry implements BaseColumns {
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_COMPETITIONS).build();
+
+
+    public static final class CpEntry implements BaseColumns {
         public static final String TABLE_NAME = TABLE_COMPETITIONS;
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
         public static final String COLUMN_CAPTION = "competition_caption";              // string
         public static final String COLUMN_COMPETITION_LEAGUE = "competition_league";    // string
@@ -45,13 +48,11 @@ public class FDContract {
         public static final String COLUMN_NUMBER_TEAMS = "number_teams";                // int
         public static final String COLUMN_NUMBER_GAMES = "number_games";                // int
         public static final String COLUMN_LAST_UPDATE = "last_update";                  // string from date
-
-
     }
 
     public static final class TmEntry implements BaseColumns {
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_TEAMS).build();
         public static final String TABLE_NAME = TABLE_TEAMS;
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_TEAM_ID = "team_id";                          // int
         public static final String COLUMN_TEAM_NAME = "team_name";                      // string
         public static final String COLUMN_TEAM_CODE = "team_code";                      // string
@@ -63,8 +64,8 @@ public class FDContract {
 
 
     public static final class FxEntry implements BaseColumns {
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_FIXTURES).build();
         public static final String TABLE_NAME = TABLE_FIXTURES;
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_FIXTURE_ID = "fixture_id";                    // int
         public static final String COLUMN_FIXTURE_DATE = "fixture_date";                // string from date
         public static final String COLUMN_FIXTURE_DATE_LONG = "fixture_date_long";      // int from date
@@ -81,25 +82,37 @@ public class FDContract {
     }
 
     public static final class TbEntry implements BaseColumns {
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_TABLES).build();
         public static final String TABLE_NAME = TABLE_TABLES;
-        public static final String COLUMN_RECIPE_ID = "recipe_id";                // int
-        public static final String COLUMN_RECIPE_NAME = "recipe_name";            // string
-        public static final String COLUMN_RECIPE_LENGTH = "recipe_length";        // int
-        public static final String COLUMN_RECIPE_IMAGE = "recipe_image";        // int
-        public static final String COLUMN_RECIPE_VALUE = "recipe_value";          // string
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static final String COLUMN_COMPETITION_ID = "competition_id";                // int
+        public static final String COLUMN_TEAM_ID = "team_id";                              // int
+        public static final String COLUMN_COMPETITION_MATCHDAY = "competition_matchday";    // int
+        public static final String COLUMN_LEAGUE_CAPTION = "league_caption";                // string
+        public static final String COLUMN_TEAM_POSITION = "team_position";                  // int
+        public static final String COLUMN_TEAM_NAME = "team_name";                          // string
+        public static final String COLUMN_CREST_URI = "crest_uri";                          // string
+        public static final String COLUMN_TEAM_PLAYED_GAMES = "team_played_games";          // int
+        public static final String COLUMN_TEAM_POINTS = "team_points";                      // int
+        public static final String COLUMN_TEAM_GOALS = "team_goals";                        // int
+        public static final String COLUMN_TEAM_GOALS_AGAINST = "team_goals_against";        // int
+        public static final String COLUMN_TEAM_GOALS_DIFFERENCE = "team_goals_difference";  // int
+        public static final String COLUMN_TEAM_WINS = "team_wins";                          // int
+        public static final String COLUMN_TEAM_DRAWS = "team_draws";                        // int
+        public static final String COLUMN_TEAM_LOSSES = "team_losses";                      // int
     }
 
     public static final class PlEntry implements BaseColumns {
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_PLAYERS).build();
-        public static final String TABLE_NAME =TABLE_PLAYERS;
-        public static final String COLUMN_RECIPE_ID = "recipe_id";                // int
-        public static final String COLUMN_RECIPE_NAME = "recipe_name";            // string
-        public static final String COLUMN_RECIPE_LENGTH = "recipe_length";        // int
-        public static final String COLUMN_RECIPE_IMAGE = "recipe_image";        // int
-        public static final String COLUMN_RECIPE_VALUE = "recipe_value";          // string
+        public static final String TABLE_NAME = TABLE_PLAYERS;
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static final String COLUMN_TEAM_ID = "team_id";                              // int
+        public static final String COLUMN_PLAYER_NAME = "player_name";                      // string
+        public static final String COLUMN_PLAYER_POSITION = "player_position";              // string
+        public static final String COLUMN_PLAYER_JERSEY_NUMBER = "player_jersey_number";    // int
+        public static final String COLUMN_PLAYER_DATE_BIRTH = "player_date_birth";          // string from date
+        public static final String COLUMN_PLAYER_NATIONALITY = "player_nationality";        // string
+        public static final String COLUMN_PLAYER_DATE_CONTRACT = "player_date_contract";    // string from date
+        public static final String COLUMN_PLAYER_MARKET_VALUE = "player_market_value";      // string
     }
-
 
 
 }

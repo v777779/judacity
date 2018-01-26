@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_COMPETITIONS;
+import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_TEAMS;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -28,6 +31,7 @@ public class FDTable {
     @Expose
     private List<FDStanding> standing;
 
+   private int id;
 
     public class FDLinks {
         @SerializedName("self")
@@ -38,5 +42,21 @@ public class FDTable {
         @Expose
         private FDLink competition;
 
+    }
+
+    public String getLinkCompetition() {
+        return links.competition.getHref();
+    }
+
+
+    public void setId() throws NullPointerException, NumberFormatException {
+        String href = getLinkCompetition();
+        id = Integer.valueOf(href.replaceAll(FD_REGEX_COMPETITIONS, ""));
+        if (id == -1) throw new NumberFormatException();
+    }
+
+
+    public int getId() {
+        return id;
     }
 }

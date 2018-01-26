@@ -32,6 +32,7 @@ public class Constants {
 
     public static final String FD_REGEX_TEAMS = ".*teams/";
     public static final String FD_REGEX_FIXTURES = ".*fixtures/";
+    public static final String FD_REGEX_COMPETITIONS = ".*competitions/";
 
     // update service
     public static final String UPDATE_SERVICE_TAG = "UpdaterService";
