@@ -1,9 +1,12 @@
 package ru.vpcb.contentprovider.fdbase;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
@@ -11,6 +14,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -28,6 +33,10 @@ public class FDProvider extends ContentProvider {
 
     public static final int COMPETITIONS = 100;
     public static final int COMPETITIONS_WITH_ID = 101;
+    public static final int COMPETITION_TEAMS = 150;
+    public static final int COMPETITION_TEAMS_WITH_ID = 151;
+    public static final int COMPETITION_FIXTURES = 170;
+    public static final int COMPETITION_FIXTURES_WITH_ID = 171;
     public static final int TEAMS = 200;
     public static final int TEAMS_WITH_ID = 201;
     public static final int TEAMS_WITH_COMP_ID = 202;
@@ -51,13 +60,23 @@ public class FDProvider extends ContentProvider {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS, COMPETITIONS);
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS + "/#", COMPETITIONS_WITH_ID);
+
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_TEAMS, COMPETITION_TEAMS);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_TEAMS + "/#", COMPETITION_TEAMS_WITH_ID);
+
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_FIXTURES, COMPETITION_FIXTURES);
+        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_FIXTURES + "/#", COMPETITION_FIXTURES_WITH_ID);
+
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS, TEAMS);
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS + "/#", TEAMS_WITH_ID);
+
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES, FIXTURES);
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_TEAM_ID);
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_COMP_ID);
+
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES, TABLES);
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
+
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS, PLAYERS);
         uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS + "/#", PLAYERS_WITH_TEAM_ID);
         return uriMatcher;
@@ -271,6 +290,24 @@ public class FDProvider extends ContentProvider {
                 return numInserted;
             default:
                 return super.bulkInsert(uri, contentValues);
+        }
+    }
+
+    @Override
+    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+            throws OperationApplicationException {
+        final SQLiteDatabase db = mFDDbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            final int numOperations = operations.size();
+            final ContentProviderResult[] results = new ContentProviderResult[numOperations];
+            for (int i = 0; i < numOperations; i++) {
+                results[i] = operations.get(i).apply(this, results, i);
+            }
+            db.setTransactionSuccessful();
+            return results;
+        } finally {
+            db.endTransaction();
         }
     }
 }

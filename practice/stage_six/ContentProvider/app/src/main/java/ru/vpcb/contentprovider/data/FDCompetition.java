@@ -58,6 +58,7 @@ public class FDCompetition {
     private Date lastUpdated;
 
     private List<FDTeam> teams;
+    private List<FDFixture> fixtures;
 
 
     public class FDLinks {
@@ -93,5 +94,13 @@ public class FDCompetition {
 
     public void setTeams(List<FDTeam> teams) {
         this.teams = teams;
+    }
+
+    public List<FDFixture> getFixtures() {
+        return fixtures;
+    }
+
+    public void setFixtures(List<FDFixture> fixtures) {
+        this.fixtures = fixtures;
     }
 }

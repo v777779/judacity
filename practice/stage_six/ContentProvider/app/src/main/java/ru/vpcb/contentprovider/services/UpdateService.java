@@ -91,17 +91,18 @@ public class UpdateService extends IntentService {
                 R.bool.pref_smart_update_default);
 
 // load data into local database
-        try {if(mMapCompetitions == null) {
-            mMapCompetitions = getMapCompetitions();
-            mMapTeams = getMapTeams(mMapCompetitions);
-        }
+        try {
+            if (mMapCompetitions == null) {
+                mMapCompetitions = getMapCompetitions();
+                mMapTeams = getMapTeams(mMapCompetitions);
+            }
 //            getMapFixtures(mMapCompetitions);
 //            mMapTables = getMapTables(mMapCompetitions);
 //            mMapPlayers = getMapPlayers(mMapTeams);
 
 // local
             FDCompetition competition = mMapCompetitions.get(446); // find by id
-            Map<Integer,FDTeam> mapTeams = getMapTeams(competition);
+            Map<Integer, FDTeam> mapTeams = getMapTeams(competition);
             mMapPlayers = getMapPlayers(mapTeams);  // for one competition
 
 
@@ -145,13 +146,13 @@ public class UpdateService extends IntentService {
         return map;
     }
 
-    private List<FDTeam> getTeams(FDCompetition competition) throws NumberFormatException, NullPointerException, IOException {
+    private List<FDTeam> getListTeams(FDCompetition competition) throws NumberFormatException, NullPointerException, IOException {
         String id = String.format("%d", competition.getId());
+//        if(competition.getTeams()!= null) return competition.getTeams();  // skip load
+
         FDTeams teams = loadTeams(id);
         if (teams == null) return null;
-
         List<FDTeam> list = new ArrayList<>();
-
         for (FDTeam team : teams.getTeams()) {
             try {
                 team.setId();
@@ -168,8 +169,7 @@ public class UpdateService extends IntentService {
             throws NumberFormatException, NullPointerException, IOException {
         Map<Integer, FDTeam> mapTeams = new HashMap<>();
         for (FDCompetition competition : competitions.values()) {
-
-            List<FDTeam> teams = getTeams(competition);
+            List<FDTeam> teams = getListTeams(competition);
             if (teams == null || teams.isEmpty()) continue;
             competition.setTeams(teams);        // attach teams
 
@@ -198,12 +198,12 @@ public class UpdateService extends IntentService {
         }
 
         return map;
-}
+    }
 
 
-    private List<FDFixture> getFixtures(FDCompetition competition)
+    private List<FDFixture> getListFixtures(FDCompetition competition)
             throws NumberFormatException, NullPointerException, IOException {
-
+//        if (competition.getFixtures() != null) return competition.getFixtures();
         String id = formatString(competition.getId());
 
         FDFixtures fixtures = loadFixtures(id);
@@ -218,6 +218,7 @@ public class UpdateService extends IntentService {
             }
             list.add(fixture);
         }
+        competition.setFixtures(list);  // set fixtures
         return list;
     }
 
@@ -226,7 +227,7 @@ public class UpdateService extends IntentService {
         Map<Integer, FDFixture> mapFixtures = new HashMap<>();
         for (FDCompetition competition : competitions.values()) {
 
-            List<FDFixture> fixtures = getFixtures(competition);
+            List<FDFixture> fixtures = getListFixtures(competition);
             if (fixtures == null || fixtures.isEmpty()) continue;
 
             for (FDFixture fixture : fixtures) {
@@ -344,7 +345,7 @@ public class UpdateService extends IntentService {
     private List<FDPlayer> getTeamPlayers(FDTeam team)
             throws NumberFormatException, NullPointerException, IOException {
         if (team == null || team.getId() <= 0) return null;
-        if(team.getPlayers()!= null )return team.getPlayers();
+//        if(team.getPlayers()!= null )return team.getPlayers();
 
         String id = formatString(team.getId());
         FDPlayers fdPlayers = loadPlayers(id);
