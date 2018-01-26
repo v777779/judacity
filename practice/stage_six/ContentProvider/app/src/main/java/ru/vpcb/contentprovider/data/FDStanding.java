@@ -16,6 +16,24 @@ public class FDStanding {
     @Expose
     private FDLinks links;
 
+    // cup
+    @SerializedName("group")
+    @Expose
+    private String group;
+
+    @SerializedName("rank")
+    @Expose
+    private int rank;
+
+    @SerializedName("team")
+    @Expose
+    private String team;
+
+    @SerializedName("teamId")
+    @Expose
+    private int id;
+// end cup
+
     @SerializedName("position")
     @Expose
     private int position;
@@ -69,9 +87,6 @@ public class FDStanding {
     @Expose
     private FDStat away;
 
-    private int id;
-
-
 
     public class FDLinks {
         @SerializedName("team")
@@ -109,7 +124,7 @@ public class FDStanding {
     public void setId() throws NullPointerException, NumberFormatException {
         String href = getLinkTeam();
         id = Integer.valueOf(href.replaceAll(FD_REGEX_COMPETITIONS, ""));
-        if (id == -1) throw new NumberFormatException();
+        if (id == 0) throw new NumberFormatException();
     }
 
 

@@ -5,9 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_COMPETITIONS;
-import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_TEAMS;
-
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -30,8 +27,15 @@ public class FDTable {
     @SerializedName("standing")
     @Expose
     private List<FDStanding> standing;
+// cup
+    @SerializedName("standings")
+    @Expose
+    private FDStandingGroup standings;
 
-   private int id;
+    private int id;
+
+    private boolean isChampionship;
+
 
     public class FDLinks {
         @SerializedName("self")
@@ -44,19 +48,37 @@ public class FDTable {
 
     }
 
-    public String getLinkCompetition() {
-        return links.competition.getHref();
-    }
-
-
-    public void setId() throws NullPointerException, NumberFormatException {
-        String href = getLinkCompetition();
-        id = Integer.valueOf(href.replaceAll(FD_REGEX_COMPETITIONS, ""));
+    public void setId(int id) throws NumberFormatException {
+        this.id = id;
         if (id == -1) throw new NumberFormatException();
     }
 
 
     public int getId() {
         return id;
+    }
+
+    public List<FDStanding> getStanding() {
+        return standing;
+    }
+
+    public void setStanding(List<FDStanding> standing) {
+        this.standing = standing;
+    }
+
+    public FDStandingGroup getStandings() {
+        return standings;
+    }
+
+    public void setStandings(FDStandingGroup standings) {
+        this.standings = standings;
+    }
+
+    public boolean isChampionship() {
+        return isChampionship;
+    }
+
+    public void setChampionship(boolean championship) {
+        isChampionship = championship;
     }
 }

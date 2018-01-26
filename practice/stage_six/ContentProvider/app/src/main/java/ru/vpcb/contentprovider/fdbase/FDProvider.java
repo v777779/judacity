@@ -14,12 +14,6 @@ import android.support.annotation.Nullable;
 
 import timber.log.Timber;
 
-import static ru.vpcb.contentprovider.utils.Constants.MATCHER_COMPETITIONS;
-import static ru.vpcb.contentprovider.utils.Constants.MATCHER_FIXTURES;
-import static ru.vpcb.contentprovider.utils.Constants.MATCHER_PLAYERS;
-import static ru.vpcb.contentprovider.utils.Constants.MATCHER_TABLES;
-import static ru.vpcb.contentprovider.utils.Constants.MATCHER_TEAMS;
-
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -70,11 +64,10 @@ public class FDProvider extends ContentProvider {
     }
 
 
-
     @Override
     public boolean onCreate() {
         Context context = getContext();
-        mFDCompHelper = new FDDbHelper(context, TA);
+        mFDDbHelper = new FDDbHelper(context);
         return true;
     }
 
@@ -99,7 +92,7 @@ public class FDProvider extends ContentProvider {
 
         switch (match) {
             case COMPETITIONS:
-                retCursor = db.query(TABLE_COMTABLE_NAME,
+                retCursor = db.query(FDContract.CpEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -107,8 +100,8 @@ public class FDProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
-            case RECIPES_WITH_ID:
-                retCursor = db.query(TABLE_NAME,
+            case COMPETITIONS_WITH_ID:
+                retCursor = db.query(FDContract.CpEntry.TABLE_NAME,
                         projection,
                         selection,      // RecipeEntry._ID + " = ?",
                         selectionArgs,  // new String[] {String.valueOf(ContentUris.parseId(uri)) },
@@ -116,7 +109,6 @@ public class FDProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
-
 
 
             default:
@@ -145,15 +137,15 @@ public class FDProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
 
-        final SQLiteDatabase mDb = mRecipesDbHelper.getWritableDatabase();
+        final SQLiteDatabase mDb = mFDDbHelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         Uri returnUri;
 
         switch (match) {
-            case RECIPES:
-                long id = mDb.insert(TABLE_NAME, null, contentValues);
+            case COMPETITIONS:
+                long id = mDb.insert(FDContract.CpEntry.TABLE_NAME, null, contentValues);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(FDContract.CpEntry.CONTENT_URI, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -177,22 +169,20 @@ public class FDProvider extends ContentProvider {
      */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        final SQLiteDatabase db = mRecipesDbHelper.getWritableDatabase();
+        final SQLiteDatabase db = mFDDbHelper.getWritableDatabase();
 
         int match = sUriMatcher.match(uri);
         int nDeleted;
 
         switch (match) {
-            case RECIPES:
-                nDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + RecipeEntry.TABLE_NAME + "'");
+            case COMPETITIONS:
+                nDeleted = db.delete(FDContract.CpEntry.TABLE_NAME, selection, selectionArgs);
+                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + FDContract.CpEntry.TABLE_NAME + "'");
                 break;
 
-            case RECIPES_WITH_ID:
-                nDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + RecipeEntry.TABLE_NAME + "'");
+            case COMPETITIONS_WITH_ID:
+                nDeleted = db.delete(FDContract.CpEntry.TABLE_NAME, selection, selectionArgs);
+                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + FDContract.CpEntry.TABLE_NAME + "'");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -216,13 +206,13 @@ public class FDProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
                       @Nullable String selection, @Nullable String[] selectionArgs) {
-        final SQLiteDatabase db = mRecipesDbHelper.getReadableDatabase();
+        final SQLiteDatabase db = mFDDbHelper.getReadableDatabase();
         int match = sUriMatcher.match(uri);
         int nUpdated;
 
         switch (match) {
-            case RECIPES_WITH_ID:
-                nUpdated = db.update(TABLE_NAME, contentValues, selection, selectionArgs);
+            case COMPETITIONS_WITH_ID:
+                nUpdated = db.update(FDContract.CpEntry.TABLE_NAME, contentValues, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -242,12 +232,12 @@ public class FDProvider extends ContentProvider {
      */
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] contentValues) {
-        final SQLiteDatabase db = mRecipesDbHelper.getWritableDatabase();
+        final SQLiteDatabase db = mFDDbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         if (contentValues == null) return 0;
 
         switch (match) {
-            case RECIPES:
+            case COMPETITIONS:
                 db.beginTransaction();
                 int numInserted = 0;
                 try {
@@ -257,11 +247,13 @@ public class FDProvider extends ContentProvider {
                         }
                         long _id = -1;
                         try {
-                            _id = db.insertOrThrow(RecipeEntry.TABLE_NAME, null, value);
+                            _id = db.insertOrThrow(FDContract.CpEntry.TABLE_NAME, null, value);
                         } catch (SQLiteConstraintException e) {
-                            Timber.d(TAG, "Attempting to insert " +
-                                    value.getAsString(RecipeEntry.COLUMN_RECIPE_NAME)
-                                    + " but value is already in database.");
+                            Timber.d("Attempting to insert id:" +
+                                    value.getAsString(FDContract.CpEntry.COLUMN_COMPETITION_ID) +
+                                    " name: " +
+                                    value.getAsString(FDContract.CpEntry.COLUMN_COMPETITION_CAPTION) +
+                                    " but value is already in database.");
                         }
                         if (_id != -1) {
                             numInserted++;

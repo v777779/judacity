@@ -62,7 +62,6 @@ public interface IRetrofitAPI {
     Call<FDFixtures> getFixturesTime(@Path(value = FD_QUERY_ID, encoded = true) String s,
                                      @Query(FD_QUERY_TIMEFRAME) String time);
 
-
     @GET(FD_COMPETITIONS_TABLE_GET)
     Call<FDTable> getTable(@Path(value = FD_QUERY_ID, encoded = true) String s);
 

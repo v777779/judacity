@@ -33,7 +33,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_COMPETITIONS = "CREATE TABLE " + FDContract.CpEntry.TABLE_NAME + " (" +
 //                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.CpEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +       // int
-                FDContract.CpEntry.COLUMN_CAPTION + " TEXT NOT NULL, " +                    // string
+                FDContract.CpEntry.COLUMN_COMPETITION_CAPTION + " TEXT NOT NULL, " +                    // string
                 FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE + " TEXT NOT NULL, " +         // string
                 FDContract.CpEntry.COLUMN_COMPETITION_YEAR + " TEXT NOT NULL, " +           // string
                 FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY + " INTEGER NOT NULL, " +        // int

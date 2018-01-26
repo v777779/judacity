@@ -21,6 +21,10 @@ import ru.vpcb.contentprovider.R;
 import ru.vpcb.contentprovider.data.FDCompetition;
 import ru.vpcb.contentprovider.data.FDFixture;
 import ru.vpcb.contentprovider.data.FDFixtures;
+import ru.vpcb.contentprovider.data.FDPlayers;
+import ru.vpcb.contentprovider.data.FDStanding;
+import ru.vpcb.contentprovider.data.FDStandingGroup;
+import ru.vpcb.contentprovider.data.FDTable;
 import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
@@ -48,7 +52,11 @@ public class UpdateService extends IntentService {
     private IRetrofitAPI mRetrofitAPI;
     private OkHttpClient mOkHttpClient;
 
-    private List<FDCompetition> competitions;
+    private Map<Integer, FDCompetition> mMapCompetitions;
+    private Map<Integer, FDTeam> mMapTeams;
+    private Map<Integer, FDFixture> mMapFixture;
+    private Map<Integer, FDTable> mMapTables;
+    private Map<Integer, FDPlayers> mMapPlayers;
 
 
     public UpdateService() {
@@ -83,10 +91,13 @@ public class UpdateService extends IntentService {
 
 // load data into local database
         try {
-            competitions = getCompetitions();
-// test!!!
-            getMapTeams(competitions);
-            getMapFixtures(competitions);
+            mMapCompetitions = getMapCompetitions();
+//            mMapTeams = getMapTeams(mMapCompetitions);
+//            getMapFixtures(mMapCompetitions);
+
+
+            mMapTables = getMapTables(mMapCompetitions);
+//            mMapPlayers = getMapPlayers(mMapTeams);
 
 
 // test !!!  catch errors
@@ -105,19 +116,30 @@ public class UpdateService extends IntentService {
     }
 
 
-    private List<FDCompetition> getCompetitions() throws NullPointerException, IOException {
-        List<FDCompetition> competitions = new ArrayList<>();
+    private Map<Integer, FDCompetition> getMapCompetitions() throws NullPointerException, IOException {
+        Map<Integer, FDCompetition> map = new HashMap<>();
         List<FDCompetition> list = loadCompetitions(getLastYear());
         if (list != null && !list.isEmpty()) {
-            competitions.addAll(list);
+            for (FDCompetition competition : list) {
+                if (competition == null || competition.getId() <= 0) {
+                    continue;
+                }
+                map.put(competition.getId(), competition);
+            }
 
         }
         list = loadCompetitions(getCurrentYear());
         if (list != null && !list.isEmpty()) {
-            competitions.addAll(list);
+            for (FDCompetition competition : list) {
+                if (competition == null || competition.getId() <= 0) {
+                    continue;
+                }
+                map.put(competition.getId(), competition);
+            }
+
         }
 
-        return competitions;
+        return map;
     }
 
     private List<FDTeam> getTeams(FDCompetition competition) throws NumberFormatException, NullPointerException, IOException {
@@ -128,23 +150,26 @@ public class UpdateService extends IntentService {
         List<FDTeam> list = new ArrayList<>();
 
         for (FDTeam team : teams.getTeams()) {
-            if (team == null) continue;
-            team.setId();
+            try {
+                team.setId();
+            } catch (NullPointerException | NumberFormatException e) {
+                continue;
+            }
             list.add(team);
         }
         return list;
     }
 
-
-    private Map<Integer, FDTeam> getMapTeams(List<FDCompetition> competitions)
+    private Map<Integer, FDTeam> getMapTeams(Map<Integer, FDCompetition> competitions)
             throws NumberFormatException, NullPointerException, IOException {
         Map<Integer, FDTeam> mapTeams = new HashMap<>();
-        for (FDCompetition competition : competitions) {
+        for (FDCompetition competition : competitions.values()) {
 
             List<FDTeam> teams = getTeams(competition);
             if (teams == null || teams.isEmpty()) continue;
 
             for (FDTeam team : teams) {
+                if (team == null || team.getId() <= 0) continue;
                 mapTeams.put(team.getId(), team);
             }
         }
@@ -162,28 +187,141 @@ public class UpdateService extends IntentService {
 
         List<FDFixture> list = new ArrayList<>();
         for (FDFixture fixture : fixtures.getFixtures()) {
-            if (fixture == null) continue;
-            fixture.setId();
+            try {
+                fixture.setId();
+            } catch (NullPointerException | NumberFormatException e) {
+                continue;
+            }
             list.add(fixture);
         }
         return list;
     }
 
-    private Map<Integer, FDFixture> getMapFixtures(List<FDCompetition> competitions)
+    private Map<Integer, FDFixture> getMapFixtures(Map<Integer, FDCompetition> competitions)
             throws NumberFormatException, NullPointerException, IOException {
         Map<Integer, FDFixture> mapFixtures = new HashMap<>();
-        for (FDCompetition competition : competitions) {
+        for (FDCompetition competition : competitions.values()) {
 
             List<FDFixture> fixtures = getFixtures(competition);
             if (fixtures == null || fixtures.isEmpty()) continue;
 
             for (FDFixture fixture : fixtures) {
+                if (fixture == null || fixture.getId() <= 0) continue;
                 mapFixtures.put(fixture.getId(), fixture);
             }
         }
 
         return mapFixtures;
     }
+
+
+    private void checkList(FDTable table) {
+        if(table == null ) return;
+
+        List<FDStanding> standingList = table.getStanding();
+        if(standingList == null) return;
+
+        List<FDStanding> list = new ArrayList<>();
+
+        for (FDStanding standing : standingList) {
+            try {
+                standing.setId();
+            } catch (NullPointerException | NumberFormatException e) {
+                continue;
+            }
+            list.add(standing);
+        }
+
+        table.setStanding(list);
+    }
+
+
+
+    private List<FDStanding> getCheckedGroupList(List<FDStanding> standingList) {
+        List<FDStanding> list = new ArrayList<>();
+        if (standingList == null) return null;
+
+        for (FDStanding standing : standingList) {
+            if (standing == null || standing.getId() <= 0) continue;
+            list.add(standing);
+
+        }
+        return list;
+    }
+
+    private void checkGroup(FDTable table) {
+        List<FDStanding> list;
+
+        if(table == null) return;
+
+        FDStandingGroup standings = table.getStandings();
+
+        if (standings == null) return;
+
+        list = getCheckedGroupList(standings.getGroupA());  // check all id groupA
+        standings.setGroupA(list);
+
+        list = getCheckedGroupList(standings.getGroupB());  // check all id groupB
+        standings.setGroupB(list);
+
+        list = getCheckedGroupList(standings.getGroupC());  // check all id groupC
+        standings.setGroupC(list);
+
+        list = getCheckedGroupList(standings.getGroupD());  // check all id groupD
+        standings.setGroupD(list);
+
+        list = getCheckedGroupList(standings.getGroupE());  // check all id groupE
+        standings.setGroupE(list);
+
+        list = getCheckedGroupList(standings.getGroupF());  // check all id groupF
+        standings.setGroupF(list);
+
+        list = getCheckedGroupList(standings.getGroupG());  // check all id groupG
+        standings.setGroupG(list);
+
+        list = getCheckedGroupList(standings.getGroupH());  // check all id groupH
+        standings.setGroupH(list);
+
+        table.setChampionship(true);
+    }
+
+
+
+
+    private Map<Integer, FDTable> getMapTables(Map<Integer, FDCompetition> competitions) throws
+            NullPointerException, IOException {
+        Map<Integer, FDTable> map = new HashMap<>();
+        for (FDCompetition competition : competitions.values()) {
+            if (competition == null || competition.getId() <= 0) continue;
+            String id = formatString(competition.getId());
+            FDTable table = loadTable(id);
+            try {
+                table.setId(competition.getId());
+                checkList(table);                   // check id for normal table
+                checkGroup(table);
+            } catch (NullPointerException | NumberFormatException e) {
+                continue;
+            }
+            map.put(table.getId(), table);
+        }
+        return map;
+    }
+
+
+    private Map<Integer, FDPlayers> getMapPlayers(Map<Integer, FDTeam> teams)
+            throws NumberFormatException, NullPointerException, IOException {
+        Map<Integer, FDPlayers> map = new HashMap<>();
+        for (FDTeam team : teams.values()) {
+            if (teams == null || teams.isEmpty() || team.getId() <= 0) continue;
+            String id = formatString(team.getId());
+            FDPlayers players = loadPlayers(id);
+            players.setId();
+            map.put(players.getId(), players);
+        }
+        return map;
+    }
+
+
     // test!!!
 // placeholder
 
@@ -229,15 +367,13 @@ public class UpdateService extends IntentService {
         mRetrofitAPI = mRetrofit.create(IRetrofitAPI.class);
     }
 
-// test!!!
-    private int counter= 0;
+    // test!!!
+    private int counter = 0;
 
     private List<FDCompetition> loadCompetitions(String season)
             throws NullPointerException, IOException {
         setupClient();
         setupRetrofit();
-// test!!!
-        Timber.d("retrofit: "+counter++);
         return mRetrofitAPI.getCompetitions(season).execute().body();
     }
 
@@ -245,8 +381,6 @@ public class UpdateService extends IntentService {
             throws NullPointerException, IOException {
         setupClient();
         setupRetrofit();
-// test!!!
-        Timber.d("retrofit: "+counter++);
         return mRetrofitAPI.getTeams(competition).execute().body();
     }
 
@@ -254,8 +388,48 @@ public class UpdateService extends IntentService {
             throws NullPointerException, IOException {
         setupClient();
         setupRetrofit();
-// test!!!
-        Timber.d("retrofit: "+counter++);
         return mRetrofitAPI.getFixtures(competition).execute().body();
+    }
+
+    private FDTable loadTable(String competition)
+            throws NullPointerException, IOException {
+        setupClient();
+        setupRetrofit();
+        return mRetrofitAPI.getTable(competition).execute().body();
+    }
+
+    private FDTable mFDTable;
+
+//    private FDTable loadTable2(String competition)
+//            throws NullPointerException, IOException {
+//        setupClient();
+//        setupRetrofit();
+//
+//        mFDTable = null;
+//        mRetrofitAPI.getTable(competition).enqueue(new Callback<FDTable>() {
+//            @Override
+//            public void onResponse(@Nullable Call<FDTable> call, @Nullable Response<FDTable> response) {
+//                if (response == null || response.body() == null) {
+//                    return;
+//                }
+//
+//                mFDTable = response.body();
+//            }
+//
+//            @Override
+//            public void onFailure(@Nullable Call<FDTable> call, @NonNull Throwable t) {
+//                Timber.d(t.getMessage());
+//            }
+//        });
+//
+//        return mFDTable;
+//    }
+
+
+    private FDPlayers loadPlayers(String team)
+            throws NullPointerException, IOException {
+        setupClient();
+        setupRetrofit();
+        return mRetrofitAPI.getTeamPlayers(team).execute().body();
     }
 }

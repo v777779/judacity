@@ -81,8 +81,7 @@ public class FDCompetition {
         return id;
     }
 
-    public String getStringId() {
-        return String.format(Locale.ENGLISH, "%4d", id);
+    public String getCaption() {
+        return caption;
     }
-
 }

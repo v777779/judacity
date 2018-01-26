@@ -40,7 +40,7 @@ public class FDContract {
         public static final String TABLE_NAME = TABLE_COMPETITIONS;
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
-        public static final String COLUMN_CAPTION = "competition_caption";              // string
+        public static final String COLUMN_COMPETITION_CAPTION = "competition_caption";              // string
         public static final String COLUMN_COMPETITION_LEAGUE = "competition_league";    // string
         public static final String COLUMN_COMPETITION_YEAR = "competition_year";        // string
         public static final String COLUMN_CURRENT_MATCHDAY = "current_matchday";        // int
