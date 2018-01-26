@@ -50,6 +50,10 @@ public class FDFixture {
 
     private int id;
 
+    public FDFixture() {
+        this.id = -1;
+    }
+
     private class FDLinks {
         @SerializedName("self")
         @Expose

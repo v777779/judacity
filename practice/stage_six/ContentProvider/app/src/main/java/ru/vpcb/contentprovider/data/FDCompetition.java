@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -44,7 +45,6 @@ public class FDCompetition {
     @Expose
     private int numberOfMatchDays;
 
-
     @SerializedName("numberOfTeams")
     @Expose
     private int numberOfTeams;
@@ -56,6 +56,8 @@ public class FDCompetition {
     @SerializedName("lastUpdated")
     @Expose
     private Date lastUpdated;
+
+    private List<FDTeam> teams;
 
 
     public class FDLinks {
@@ -83,5 +85,13 @@ public class FDCompetition {
 
     public String getCaption() {
         return caption;
+    }
+
+    public List<FDTeam> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<FDTeam> teams) {
+        this.teams = teams;
     }
 }

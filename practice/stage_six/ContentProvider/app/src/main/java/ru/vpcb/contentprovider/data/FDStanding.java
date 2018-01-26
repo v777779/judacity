@@ -87,6 +87,9 @@ public class FDStanding {
     @Expose
     private FDStat away;
 
+    public FDStanding() {
+        this.id = -1;
+    }
 
     public class FDLinks {
         @SerializedName("team")

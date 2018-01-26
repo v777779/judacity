@@ -36,6 +36,9 @@ public class FDTable {
 
     private boolean isChampionship;
 
+    public FDTable() {
+        this.id = -1;
+    }
 
     public class FDLinks {
         @SerializedName("self")

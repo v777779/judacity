@@ -28,6 +28,9 @@ public class FDPlayers {
     @Expose
     private List<FDPlayer> players;
 
+    public FDPlayers() {
+        this.id = -1;
+    }
 
     public class FDLinks {
         @SerializedName("self")
@@ -56,4 +59,7 @@ public class FDPlayers {
         return id;
     }
 
+    public List<FDPlayer> getPlayers() {
+        return players;
+    }
 }

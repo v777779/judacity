@@ -21,6 +21,7 @@ import ru.vpcb.contentprovider.R;
 import ru.vpcb.contentprovider.data.FDCompetition;
 import ru.vpcb.contentprovider.data.FDFixture;
 import ru.vpcb.contentprovider.data.FDFixtures;
+import ru.vpcb.contentprovider.data.FDPlayer;
 import ru.vpcb.contentprovider.data.FDPlayers;
 import ru.vpcb.contentprovider.data.FDStanding;
 import ru.vpcb.contentprovider.data.FDStandingGroup;
@@ -52,11 +53,11 @@ public class UpdateService extends IntentService {
     private IRetrofitAPI mRetrofitAPI;
     private OkHttpClient mOkHttpClient;
 
-    private Map<Integer, FDCompetition> mMapCompetitions;
-    private Map<Integer, FDTeam> mMapTeams;
+    private static Map<Integer, FDCompetition> mMapCompetitions;
+    private static Map<Integer, FDTeam> mMapTeams;
     private Map<Integer, FDFixture> mMapFixture;
     private Map<Integer, FDTable> mMapTables;
-    private Map<Integer, FDPlayers> mMapPlayers;
+    private Map<Integer, List<FDPlayer>> mMapPlayers;
 
 
     public UpdateService() {
@@ -90,14 +91,18 @@ public class UpdateService extends IntentService {
                 R.bool.pref_smart_update_default);
 
 // load data into local database
-        try {
+        try {if(mMapCompetitions == null) {
             mMapCompetitions = getMapCompetitions();
-//            mMapTeams = getMapTeams(mMapCompetitions);
+            mMapTeams = getMapTeams(mMapCompetitions);
+        }
 //            getMapFixtures(mMapCompetitions);
-
-
-            mMapTables = getMapTables(mMapCompetitions);
+//            mMapTables = getMapTables(mMapCompetitions);
 //            mMapPlayers = getMapPlayers(mMapTeams);
+
+// local
+            FDCompetition competition = mMapCompetitions.get(446); // find by id
+            Map<Integer,FDTeam> mapTeams = getMapTeams(competition);
+            mMapPlayers = getMapPlayers(mapTeams);  // for one competition
 
 
 // test !!!  catch errors
@@ -136,9 +141,7 @@ public class UpdateService extends IntentService {
                 }
                 map.put(competition.getId(), competition);
             }
-
         }
-
         return map;
     }
 
@@ -160,6 +163,7 @@ public class UpdateService extends IntentService {
         return list;
     }
 
+
     private Map<Integer, FDTeam> getMapTeams(Map<Integer, FDCompetition> competitions)
             throws NumberFormatException, NullPointerException, IOException {
         Map<Integer, FDTeam> mapTeams = new HashMap<>();
@@ -167,14 +171,34 @@ public class UpdateService extends IntentService {
 
             List<FDTeam> teams = getTeams(competition);
             if (teams == null || teams.isEmpty()) continue;
+            competition.setTeams(teams);        // attach teams
 
             for (FDTeam team : teams) {
-                if (team == null || team.getId() <= 0) continue;
                 mapTeams.put(team.getId(), team);
             }
+
+
         }
         return mapTeams;
     }
+
+    private Map<Integer, FDTeam> getMapTeams(FDCompetition competition)
+            throws NumberFormatException, NullPointerException, IOException {
+        Map<Integer, FDTeam> map = new HashMap<>();
+        if (competition == null) {
+            return null;
+        }
+        List<FDTeam> teams = competition.getTeams();
+        if (teams == null || teams.isEmpty()) {
+            return null;
+        }
+
+        for (FDTeam team : teams) {
+            map.put(team.getId(), team);
+        }
+
+        return map;
+}
 
 
     private List<FDFixture> getFixtures(FDCompetition competition)
@@ -216,10 +240,10 @@ public class UpdateService extends IntentService {
 
 
     private void checkList(FDTable table) {
-        if(table == null ) return;
+        if (table == null) return;
 
         List<FDStanding> standingList = table.getStanding();
-        if(standingList == null) return;
+        if (standingList == null) return;
 
         List<FDStanding> list = new ArrayList<>();
 
@@ -234,7 +258,6 @@ public class UpdateService extends IntentService {
 
         table.setStanding(list);
     }
-
 
 
     private List<FDStanding> getCheckedGroupList(List<FDStanding> standingList) {
@@ -252,7 +275,7 @@ public class UpdateService extends IntentService {
     private void checkGroup(FDTable table) {
         List<FDStanding> list;
 
-        if(table == null) return;
+        if (table == null) return;
 
         FDStandingGroup standings = table.getStandings();
 
@@ -286,8 +309,6 @@ public class UpdateService extends IntentService {
     }
 
 
-
-
     private Map<Integer, FDTable> getMapTables(Map<Integer, FDCompetition> competitions) throws
             NullPointerException, IOException {
         Map<Integer, FDTable> map = new HashMap<>();
@@ -308,17 +329,29 @@ public class UpdateService extends IntentService {
     }
 
 
-    private Map<Integer, FDPlayers> getMapPlayers(Map<Integer, FDTeam> teams)
+    private Map<Integer, List<FDPlayer>> getMapPlayers(Map<Integer, FDTeam> teams)
             throws NumberFormatException, NullPointerException, IOException {
-        Map<Integer, FDPlayers> map = new HashMap<>();
+        Map<Integer, List<FDPlayer>> map = new HashMap<>();
         for (FDTeam team : teams.values()) {
-            if (teams == null || teams.isEmpty() || team.getId() <= 0) continue;
-            String id = formatString(team.getId());
-            FDPlayers players = loadPlayers(id);
-            players.setId();
-            map.put(players.getId(), players);
+            List<FDPlayer> players = getTeamPlayers(team);
+            if (players == null) continue;
+            map.put(team.getId(), players);
         }
         return map;
+    }
+
+
+    private List<FDPlayer> getTeamPlayers(FDTeam team)
+            throws NumberFormatException, NullPointerException, IOException {
+        if (team == null || team.getId() <= 0) return null;
+        if(team.getPlayers()!= null )return team.getPlayers();
+
+        String id = formatString(team.getId());
+        FDPlayers fdPlayers = loadPlayers(id);
+        if (fdPlayers == null) return null;
+        List<FDPlayer> players = fdPlayers.getPlayers();
+        team.setPlayers(players);
+        return players;
     }
 
 

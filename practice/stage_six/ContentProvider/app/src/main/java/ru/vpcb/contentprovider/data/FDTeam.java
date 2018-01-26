@@ -3,6 +3,8 @@ package ru.vpcb.contentprovider.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import static ru.vpcb.contentprovider.utils.Constants.FD_BASE_URI;
 import static ru.vpcb.contentprovider.utils.Constants.FD_REGEX_TEAMS;
 
@@ -39,11 +41,38 @@ public class FDTeam {
 
     private int id;
 
+    private List<FDPlayer> players;
+
     public FDTeam() {
         id = -1;
     }
 
-    public class FDLinks {
+
+    public String getLinkSelf() {
+        return links.self.getHref();
+    }
+
+
+    public void setId() throws NullPointerException, NumberFormatException {
+        String href = getLinkSelf();
+        id = Integer.valueOf(href.replaceAll(FD_REGEX_TEAMS, ""));
+        if (id == -1) throw new NumberFormatException();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public List<FDPlayer> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<FDPlayer> players) {
+        this.players = players;
+    }
+
+    // classes
+    private class FDLinks {
         @SerializedName("self")
         @Expose
         private FDLink self;
@@ -59,19 +88,5 @@ public class FDTeam {
 
     }
 
-    public String getLinkSelf() {
-        return links.self.getHref();
-    }
 
-
-    public void setId() throws NullPointerException, NumberFormatException {
-        String href = getLinkSelf();
-        id = Integer.valueOf(href.replaceAll(FD_REGEX_TEAMS, ""));
-        if (id == -1) throw new NumberFormatException();
-    }
-
-
-    public int getId() {
-        return id;
-    }
 }
