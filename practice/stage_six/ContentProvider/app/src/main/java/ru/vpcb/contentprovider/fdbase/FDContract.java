@@ -3,15 +3,6 @@ package ru.vpcb.contentprovider.fdbase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
-import java.util.List;
-
-import ru.vpcb.contentprovider.data.FDFixture;
-import ru.vpcb.contentprovider.data.FDStanding;
-
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -19,8 +10,8 @@ import ru.vpcb.contentprovider.data.FDStanding;
  * Email: vadim.v.voronov@gmail.com
  */
 public class FDContract {
-    public static final String AUTHORITY = "ru.vpcb.footballassistant";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    public static final String CONTENT_AUTHORITY = "ru.vpcb.footballassistant";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String TABLE_COMPETITIONS = "competitions";
     public static final String TABLE_COMPETITION_TEAMS = "competition_teams";
     public static final String TABLE_COMPETITION_FIXTURES = "competition_fixtures";
@@ -50,6 +41,7 @@ public class FDContract {
         public static final String COLUMN_NUMBER_TEAMS = "number_teams";                // int
         public static final String COLUMN_NUMBER_GAMES = "number_games";                // int
         public static final String COLUMN_LAST_UPDATE = "last_update";                  // string from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
     }
 
     public static final class CpTeamEntry implements BaseColumns {
@@ -79,6 +71,7 @@ public class FDContract {
         public static final String COLUMN_TEAM_SHORT_NAME = "team_short_name";          // string
         public static final String COLUMN_TEAM_MARKET_VALUE = "team_market_value";      // string
         public static final String COLUMN_TEAM_CREST_URI = "team_crest_url";            // string
+        public static final String COLUMN_REFRESH_DATE = "last_refresh";                // string from date
     }
 
 
@@ -100,6 +93,7 @@ public class FDContract {
         public static final String COLUMN_FIXTURE_ODDS_WIN = "fixture_odds_home_win";   // real
         public static final String COLUMN_FIXTURE_ODDS_DRAW = "fixture_odds_draw";      // real
         public static final String COLUMN_FIXTURE_ODDS_LOSE = "fixture_odds_away_win";  // real
+        public static final String COLUMN_REFRESH_DATE = "last_refresh";                // string from date
 
     }
 
@@ -121,6 +115,7 @@ public class FDContract {
         public static final String COLUMN_TEAM_WINS = "team_wins";                          // int
         public static final String COLUMN_TEAM_DRAWS = "team_draws";                        // int
         public static final String COLUMN_TEAM_LOSSES = "team_losses";                      // int
+        public static final String COLUMN_REFRESH_DATE = "last_refresh";                    // int from date
     }
 
     public static final class PlEntry implements BaseColumns {
@@ -134,6 +129,7 @@ public class FDContract {
         public static final String COLUMN_PLAYER_NATIONALITY = "player_nationality";        // string
         public static final String COLUMN_PLAYER_DATE_CONTRACT = "player_date_contract";    // string from date
         public static final String COLUMN_PLAYER_MARKET_VALUE = "player_market_value";      // string
+        public static final String COLUMN_REFRESH_DATE = "last_refresh";                    // int from date
     }
 
 

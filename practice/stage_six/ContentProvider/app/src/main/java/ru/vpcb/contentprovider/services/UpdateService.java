@@ -1,12 +1,22 @@
 package ru.vpcb.contentprovider.services;
 
 import android.app.IntentService;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.OperationApplicationException;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +39,7 @@ import ru.vpcb.contentprovider.data.FDTable;
 import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
+import ru.vpcb.contentprovider.fdbase.FDContract;
 import timber.log.Timber;
 
 import static ru.vpcb.contentprovider.utils.Constants.FD_BASE_URI;
@@ -91,20 +102,25 @@ public class UpdateService extends IntentService {
                 R.bool.pref_smart_update_default);
 
 // load data into local database
+        readCompetitions();
         try {
             if (mMapCompetitions == null) {
                 mMapCompetitions = getMapCompetitions();
-                mMapTeams = getMapTeams(mMapCompetitions);
+//                mMapTeams = getMapTeams(mMapCompetitions);
             }
 //            getMapFixtures(mMapCompetitions);
 //            mMapTables = getMapTables(mMapCompetitions);
 //            mMapPlayers = getMapPlayers(mMapTeams);
 
 // local
-            FDCompetition competition = mMapCompetitions.get(446); // find by id
-            Map<Integer, FDTeam> mapTeams = getMapTeams(competition);
-            mMapPlayers = getMapPlayers(mapTeams);  // for one competition
+//            FDCompetition competition = mMapCompetitions.get(446); // find by id
+//            Map<Integer, FDTeam> mapTeams = getMapTeams(competition);
+//            mMapPlayers = getMapPlayers(mapTeams);  // for one competition
 
+
+            writeCompetitions();
+
+            readCompetitions();
 
 // test !!!  catch errors
         } catch (IOException e) {
@@ -115,12 +131,86 @@ public class UpdateService extends IntentService {
             Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
             sendBroadcast(new Intent(getString(R.string.broadcast_update_error)));
             return;
+        } catch (OperationApplicationException | RemoteException e) {
+            Timber.d(getString(R.string.update_content_error) + e.getMessage());
+            sendBroadcast(new Intent(getString(R.string.broadcast_update_error)));
+            return;
         }
-
 
         sendBroadcast(new Intent(getString(R.string.broadcast_update_finished)));
     }
 
+
+    private ContentProviderResult[] writeCompetitions()
+            throws OperationApplicationException, RemoteException {
+
+        ContentProviderResult[] results = null;
+
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<ContentProviderOperation>();
+        Uri uri = FDContract.CpEntry.CONTENT_URI;  // вся таблица
+        DateFormat dateformat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT);
+//        String currentTime = dateformat.format(Calendar.getInstance().getTime());
+        long refreshTime = Calendar.getInstance().getTime().getTime();
+
+
+        if (mMapCompetitions == null || mMapCompetitions.size() == 0) return results;
+
+        listOperations.add(ContentProviderOperation.newDelete(uri).build());  // delete for batch operation
+
+        for (Integer key : mMapCompetitions.keySet()) {
+            ContentValues values = new ContentValues();
+            FDCompetition competition = mMapCompetitions.get(key);
+            if (competition == null || competition.getId() <= 0) continue;
+            long lastUpdate = competition.getLastUpdated().getTime();
+
+
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_ID, competition.getId());                  // int
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_CAPTION, competition.getCaption());        // string
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE, competition.getLeague());          // string
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_YEAR, competition.getYear());              // string
+            values.put(FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY, competition.getCurrentMatchDay());   // int
+            values.put(FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS, competition.getNumberOfMatchDays()); // int
+            values.put(FDContract.CpEntry.COLUMN_NUMBER_TEAMS, competition.getNumberOfTeams());         // int
+            values.put(FDContract.CpEntry.COLUMN_NUMBER_GAMES, competition.getNumberOfGames());         // int
+            values.put(FDContract.CpEntry.COLUMN_LAST_UPDATE, lastUpdate);                              // string from date
+            values.put(FDContract.CpEntry.COLUMN_LAST_REFRESH, refreshTime);                            // string from date
+
+            listOperations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+        }
+
+
+        results = getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
+
+        return results;
+    }
+
+
+    private Cursor readCompetitions() {
+        Uri uri = FDContract.CpEntry.CONTENT_URI;  // вся таблица
+        String[] projection = {
+                FDContract.CpEntry.COLUMN_COMPETITION_ID,
+                FDContract.CpEntry.COLUMN_COMPETITION_CAPTION,
+                FDContract.CpEntry.COLUMN_LAST_UPDATE,
+                FDContract.CpEntry.COLUMN_LAST_REFRESH
+        };
+        String selection = FDContract.CpEntry.COLUMN_COMPETITION_YEAR + "= ?";
+        String[] selectionArgs = {
+                "2017"
+        };
+        String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
+
+
+        Cursor cursor = getContentResolver().query(
+                uri,
+                null,
+                selection,
+                selectionArgs,
+                sortOrder
+        );
+
+        return cursor;
+
+    }
 
     private Map<Integer, FDCompetition> getMapCompetitions() throws NullPointerException, IOException {
         Map<Integer, FDCompetition> map = new HashMap<>();

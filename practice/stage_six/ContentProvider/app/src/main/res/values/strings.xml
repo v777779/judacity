@@ -31,6 +31,8 @@
     <string name="broadcast_update_error">ru.vpcb.footballassistant.intent.action.UPDATE_ERROR</string>
     <string name="broadcast_no_network_empty">ru.vpcb.footballassistant.intent.action.NO_NETWORK_EMPTY</string>
 
+    <!--messages-->
+    <string name="update_content_error">Update content error: </string>
 
 
 </resources>

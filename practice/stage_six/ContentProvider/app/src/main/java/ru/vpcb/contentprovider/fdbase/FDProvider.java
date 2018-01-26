@@ -58,27 +58,27 @@ public class FDProvider extends ContentProvider {
      */
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS, COMPETITIONS);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITIONS + "/#", COMPETITIONS_WITH_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_COMPETITIONS, COMPETITIONS);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_COMPETITIONS + "/#", COMPETITIONS_WITH_ID);
 
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_TEAMS, COMPETITION_TEAMS);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_TEAMS + "/#", COMPETITION_TEAMS_WITH_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_COMPETITION_TEAMS, COMPETITION_TEAMS);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_COMPETITION_TEAMS + "/#", COMPETITION_TEAMS_WITH_ID);
 
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_FIXTURES, COMPETITION_FIXTURES);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_COMPETITION_FIXTURES + "/#", COMPETITION_FIXTURES_WITH_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_COMPETITION_FIXTURES, COMPETITION_FIXTURES);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_COMPETITION_FIXTURES + "/#", COMPETITION_FIXTURES_WITH_ID);
 
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS, TEAMS);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TEAMS + "/#", TEAMS_WITH_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_TEAMS, TEAMS);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_TEAMS + "/#", TEAMS_WITH_ID);
 
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES, FIXTURES);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_TEAM_ID);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_COMP_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_FIXTURES, FIXTURES);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_TEAM_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_FIXTURES + "/#", FIXTURES_WITH_COMP_ID);
 
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES, TABLES);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_TABLES, TABLES);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
 
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS, PLAYERS);
-        uriMatcher.addURI(FDContract.AUTHORITY, FDContract.TABLE_PLAYERS + "/#", PLAYERS_WITH_TEAM_ID);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_PLAYERS, PLAYERS);
+        uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, FDContract.TABLE_PLAYERS + "/#", PLAYERS_WITH_TEAM_ID);
         return uriMatcher;
     }
 

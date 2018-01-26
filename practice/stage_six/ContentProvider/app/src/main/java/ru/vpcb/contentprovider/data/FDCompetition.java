@@ -103,4 +103,32 @@ public class FDCompetition {
     public void setFixtures(List<FDFixture> fixtures) {
         this.fixtures = fixtures;
     }
+
+    public String getLeague() {
+        return league;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public int getCurrentMatchDay() {
+        return currentMatchDay;
+    }
+
+    public int getNumberOfMatchDays() {
+        return numberOfMatchDays;
+    }
+
+    public int getNumberOfTeams() {
+        return numberOfTeams;
+    }
+
+    public int getNumberOfGames() {
+        return numberOfGames;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
 }
