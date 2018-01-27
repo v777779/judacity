@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,8 @@ import ru.vpcb.contentprovider.data.FDTable;
 import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
-import ru.vpcb.contentprovider.fdbase.FDContract;
+import ru.vpcb.contentprovider.dbase.FDContract;
+import ru.vpcb.contentprovider.dbase.FDProvider;
 import timber.log.Timber;
 
 import static ru.vpcb.contentprovider.utils.Constants.FD_BASE_URI;
@@ -102,7 +103,7 @@ public class UpdateService extends IntentService {
                 R.bool.pref_smart_update_default);
 
 // load data into local database
-        readCompetitions();
+//        readCompetitions("2017");
         try {
             if (mMapCompetitions == null) {
                 mMapCompetitions = getMapCompetitions();
@@ -120,7 +121,24 @@ public class UpdateService extends IntentService {
 
             writeCompetitions();
 
-            readCompetitions();
+            Cursor cursor = readCompetitions("2017");
+            logCursor(cursor);
+
+            cursor = readCompetitions("2018");
+            logCursor(cursor);
+
+            cursor = deleteRecords(447, 2018);
+            logCursor(cursor);
+            cursor = deleteRecords(447, 2017);
+            logCursor(cursor);
+            cursor = deleteRecords(467, 2017);
+            logCursor(cursor);
+            cursor = deleteRecords(467, 2018);
+            logCursor(cursor);
+
+            cursor = deleteRecords(464);
+            logCursor(cursor);
+
 
 // test !!!  catch errors
         } catch (IOException e) {
@@ -148,7 +166,7 @@ public class UpdateService extends IntentService {
 
         ArrayList<ContentProviderOperation> listOperations = new ArrayList<ContentProviderOperation>();
         Uri uri = FDContract.CpEntry.CONTENT_URI;  // вся таблица
-        DateFormat dateformat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT);
+        DateFormat dateformat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 //        String currentTime = dateformat.format(Calendar.getInstance().getTime());
         long refreshTime = Calendar.getInstance().getTime().getTime();
 
@@ -185,7 +203,7 @@ public class UpdateService extends IntentService {
     }
 
 
-    private Cursor readCompetitions() {
+    private Cursor readCompetitions(String year) {
         Uri uri = FDContract.CpEntry.CONTENT_URI;  // вся таблица
         String[] projection = {
                 FDContract.CpEntry.COLUMN_COMPETITION_ID,
@@ -194,12 +212,8 @@ public class UpdateService extends IntentService {
                 FDContract.CpEntry.COLUMN_LAST_REFRESH
         };
         String selection = FDContract.CpEntry.COLUMN_COMPETITION_YEAR + "= ?";
-        String[] selectionArgs = {
-                "2017"
-        };
+        String[] selectionArgs = {year};
         String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
-
-
         Cursor cursor = getContentResolver().query(
                 uri,
                 null,
@@ -210,6 +224,63 @@ public class UpdateService extends IntentService {
 
         return cursor;
 
+    }
+
+    private Cursor readCompetitions() {
+        Uri uri = FDContract.CpEntry.CONTENT_URI;  // вся таблица
+        String[] projection = {
+                FDContract.CpEntry.COLUMN_COMPETITION_ID,
+                FDContract.CpEntry.COLUMN_COMPETITION_CAPTION,
+                FDContract.CpEntry.COLUMN_LAST_UPDATE,
+                FDContract.CpEntry.COLUMN_LAST_REFRESH
+        };
+
+
+        String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
+        Cursor cursor = getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+
+        return cursor;
+
+    }
+    private Cursor deleteRecords(int id, int year) {
+
+        Uri uri = FDContract.CpEntry.CONTENT_URI;
+
+        String[] selectionArgs = new String[]{"" + id, "" + year};
+
+//        StringBuilder sb = new StringBuilder();
+        String selection = FDContract.CpEntry.COLUMN_COMPETITION_ID + "=?" + " AND " +
+                FDContract.CpEntry.COLUMN_COMPETITION_YEAR + "=?";
+
+        getContentResolver().delete(uri, selection, selectionArgs);
+
+        return readCompetitions();
+    }
+
+
+    private Cursor deleteRecords(int id) {
+        Uri uri = FDProvider.buildItemIdUri(FDContract.CpEntry.TABLE_NAME, id);
+        getContentResolver().delete(uri, null, null);
+        return readCompetitions();
+    }
+
+
+    private void logCursor(Cursor cursor) {
+        if (cursor == null) return;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            Timber.d(cursor.getString(0) + " " +
+                    cursor.getString(1) + " " +
+                    cursor.getString(2) + " " +
+                    cursor.getString(3)
+
+            );
+        }
     }
 
     private Map<Integer, FDCompetition> getMapCompetitions() throws NullPointerException, IOException {
