@@ -105,7 +105,8 @@ public class UpdateService extends IntentService {
 // load data into local database
 //        readCompetitions("2017");
         try {
-            if (mMapCompetitions == null) {
+            Cursor cursor = readCompetitions();
+            if (mMapCompetitions == null && (cursor == null || cursor.getCount() == 0)) {
                 mMapCompetitions = getMapCompetitions();
 //                mMapTeams = getMapTeams(mMapCompetitions);
             }
@@ -118,10 +119,11 @@ public class UpdateService extends IntentService {
 //            Map<Integer, FDTeam> mapTeams = getMapTeams(competition);
 //            mMapPlayers = getMapPlayers(mapTeams);  // for one competition
 
+            if (cursor == null || cursor.getCount() == 0) {
+                writeCompetitions();
+            }
 
-            writeCompetitions();
-
-            Cursor cursor = readCompetitions("2017");
+            cursor = readCompetitions("2017");
             logCursor(cursor);
 
             cursor = readCompetitions("2018");
