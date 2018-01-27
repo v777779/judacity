@@ -248,6 +248,7 @@ public class UpdateService extends IntentService {
         return cursor;
 
     }
+
     private Cursor deleteRecords(int id, int year) {
 
         Uri uri = FDContract.CpEntry.CONTENT_URI;
@@ -273,8 +274,10 @@ public class UpdateService extends IntentService {
 
     private void logCursor(Cursor cursor) {
         if (cursor == null) return;
+        int counter = 1;
+        Timber.d("  new session  ");
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            Timber.d(cursor.getString(0) + " " +
+            Timber.d(counter++ + ". " + cursor.getString(0) + " " +
                     cursor.getString(1) + " " +
                     cursor.getString(2) + " " +
                     cursor.getString(3)
