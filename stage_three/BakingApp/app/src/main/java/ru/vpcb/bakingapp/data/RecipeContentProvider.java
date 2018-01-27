@@ -159,14 +159,10 @@ public class RecipeContentProvider extends ContentProvider {
         switch (match) {
             case RECIPES:
                 nDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + RecipeEntry.TABLE_NAME + "'");
                 break;
 
             case RECIPES_WITH_ID:
                 nDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + RecipeEntry.TABLE_NAME + "'");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
