@@ -43,20 +43,20 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.CpEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +              // int from date
                 FDContract.CpEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                 // int from date
 
-        final String CREATE_TABLE_COMPETITION_TEAMS = "CREATE TABLE " + FDContract.CpTeamEntry.TABLE_NAME + " (" +
-//                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.CpTeamEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
-                FDContract.CpTeamEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL);";              // int
+        final String CREATE_TABLE_COMPETITION_TEAMS = "CREATE TABLE " + FDContract.CpTmEntry.TABLE_NAME + " (" +
+//                FDContract.CpTmEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.CpTmEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
+                FDContract.CpTmEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL);";              // int
 
-        final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFixtureEntry.TABLE_NAME + " (" +
-//                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.CpFixtureEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " + // int
-                FDContract.CpFixtureEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL, " +        // int
-                FDContract.CpFixtureEntry.COLUMN_TEAM_HOME_ID + " INTEGER NOT NULL, " +      // int
-                FDContract.CpFixtureEntry.COLUMN_TEAM_AWAY_ID + " INTEGER NOT NULL);";       // int
+        final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFxEntry.TABLE_NAME + " (" +
+//                FDContract.CpFxEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " + // int
+                FDContract.CpFxEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL, " +        // int
+                FDContract.CpFxEntry.COLUMN_TEAM_HOME_ID + " INTEGER NOT NULL, " +      // int
+                FDContract.CpFxEntry.COLUMN_TEAM_AWAY_ID + " INTEGER NOT NULL);";       // int
 
         final String CREATE_TABLE_TEAMS = "CREATE TABLE " + FDContract.TmEntry.TABLE_NAME + " (" +
-//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
+//                FDContract.TmEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.TmEntry.COLUMN_TEAM_ID + " INTEGER PRIMARY KEY, " +              // int
                 FDContract.TmEntry.COLUMN_TEAM_NAME + " TEXT NOT NULL, " +                  // string
                 FDContract.TmEntry.COLUMN_TEAM_CODE + " TEXT NOT NULL, " +                  // string
@@ -67,7 +67,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
 
 
         final String CREATE_TABLE_FIXTURES = "CREATE TABLE " + FDContract.FxEntry.TABLE_NAME + " (" +
-//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
+//                FDContract.FxEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.FxEntry.COLUMN_FIXTURE_ID + " INTEGER PRIMARY KEY, " +       // int
                 FDContract.FxEntry.COLUMN_FIXTURE_DATE + " TEXT NOT NULL, " +           // string from date
                 FDContract.FxEntry.COLUMN_FIXTURE_DATE_LONG + " INTEGER NOT NULL, " +   // int from date
@@ -84,7 +84,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
-//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
+//                FDContract.TbEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.TbEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
                 FDContract.TbEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
                 FDContract.TbEntry.COLUMN_COMPETITION_MATCHDAY + " INTEGER NOT NULL, " +    // int
@@ -103,8 +103,9 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.TbEntry.COLUMN_REFRESH_DATE + " INTEGER NOT NULL);";         // int from date
 
         final String CREATE_TABLE_PLAYERS = "CREATE TABLE " + FDContract.PlEntry.TABLE_NAME + " (" +
-//                RecipeEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.PlEntry.COLUMN_TEAM_ID + " INTEGER PRIMARY KEY, " +          // int
+//                FDContract.PlEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.PlEntry.COLUMN_PLAYER_ID + " INTEGER PRIMARY KEY, " +        // int
+                FDContract.PlEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
                 FDContract.PlEntry.COLUMN_PLAYER_NAME + " TEXT NOT NULL, " +            // string
                 FDContract.PlEntry.COLUMN_PLAYER_POSITION + " TEXT NOT NULL, " +        // string
                 FDContract.PlEntry.COLUMN_PLAYER_JERSEY_NUMBER + " INTEGER NOT NULL, " +  // int
@@ -134,8 +135,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpTeamEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpFixtureEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpTmEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FDContract.CpFxEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.TmEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.FxEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FDContract.TbEntry.TABLE_NAME);

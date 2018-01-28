@@ -46,7 +46,7 @@ public class FDContract {
         public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
     }
 
-    public static final class CpTeamEntry implements BaseColumns {
+    public static final class CpTmEntry implements BaseColumns {
         public static final String TABLE_NAME = TABLE_COMPETITION_TEAMS;
         public static final int TABLE_MATCHER = 120;
         public static final int TABLE_ID_MATCHER = 121;
@@ -55,7 +55,7 @@ public class FDContract {
         public static final String COLUMN_TEAM_ID = "team_id";                          // int
     }
 
-    public static final class CpFixtureEntry implements BaseColumns {
+    public static final class CpFxEntry implements BaseColumns {
         public static final String TABLE_NAME = TABLE_COMPETITION_FIXTURES;
         public static final int TABLE_MATCHER = 140;
         public static final int TABLE_ID_MATCHER = 141;
@@ -135,6 +135,7 @@ public class FDContract {
         public static final int TABLE_MATCHER = 500;
         public static final int TABLE_ID_MATCHER = 501;
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static final String COLUMN_PLAYER_ID = "player_id";                          // int
         public static final String COLUMN_TEAM_ID = "team_id";                              // int
         public static final String COLUMN_PLAYER_NAME = "player_name";                      // string
         public static final String COLUMN_PLAYER_POSITION = "player_position";              // string
@@ -144,6 +145,31 @@ public class FDContract {
         public static final String COLUMN_PLAYER_DATE_CONTRACT = "player_date_contract";    // string from date
         public static final String COLUMN_PLAYER_MARKET_VALUE = "player_market_value";      // string
         public static final String COLUMN_REFRESH_DATE = "last_refresh";                    // int from date
+    }
+
+
+    public static final FDParams[] MATCH_PARAMETERS = new FDParams[]{
+            new FDParams(CpEntry.TABLE_NAME, CpEntry.TABLE_MATCHER, CpEntry.TABLE_ID_MATCHER, CpEntry.COLUMN_COMPETITION_ID),
+            new FDParams(CpTmEntry.TABLE_NAME, CpTmEntry.TABLE_MATCHER, CpTmEntry.TABLE_ID_MATCHER, CpTmEntry.COLUMN_COMPETITION_ID),
+            new FDParams(CpFxEntry.TABLE_NAME, CpFxEntry.TABLE_MATCHER, CpFxEntry.TABLE_ID_MATCHER, CpFxEntry.COLUMN_COMPETITION_ID),
+            new FDParams(TmEntry.TABLE_NAME, TmEntry.TABLE_MATCHER, TmEntry.TABLE_ID_MATCHER, TmEntry.COLUMN_TEAM_ID),
+            new FDParams(FxEntry.TABLE_NAME, FxEntry.TABLE_MATCHER, FxEntry.TABLE_ID_MATCHER, FxEntry.COLUMN_FIXTURE_ID),
+            new FDParams(TbEntry.TABLE_NAME, TbEntry.TABLE_MATCHER, TbEntry.TABLE_ID_MATCHER, TbEntry.COLUMN_COMPETITION_ID),
+            new FDParams(PlEntry.TABLE_NAME, PlEntry.TABLE_MATCHER, PlEntry.TABLE_ID_MATCHER, PlEntry.COLUMN_TEAM_ID),
+    };
+
+    public static final class FDParams {
+        String tableName;
+        int tableMatcher;
+        int tableIdMatcher;
+        String column_id;
+
+        public FDParams(String tableName, int tableMatcher, int tableIdMatcher, String column_id) {
+            this.tableName = tableName;
+            this.tableMatcher = tableMatcher;
+            this.tableIdMatcher = tableIdMatcher;
+            this.column_id = column_id;
+        }
     }
 
 
