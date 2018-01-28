@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="pref_smart_update_default">true</bool>
+    <integer name="pref_update_time_default">240</integer>
 
 
 </resources>

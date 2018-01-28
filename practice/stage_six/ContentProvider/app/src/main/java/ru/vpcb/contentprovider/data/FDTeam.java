@@ -71,6 +71,26 @@ public class FDTeam {
         this.players = players;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public String getSquadMarketValue() {
+        return squadMarketValue;
+    }
+
+    public String getCrestURL() {
+        return crestURL;
+    }
+
     // classes
     private class FDLinks {
         @SerializedName("self")

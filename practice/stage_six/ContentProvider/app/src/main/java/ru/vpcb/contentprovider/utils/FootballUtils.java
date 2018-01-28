@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
+import java.util.Locale;
+
 import ru.vpcb.contentprovider.R;
 
 /**
@@ -59,11 +61,11 @@ public class FootballUtils {
     }
 
     public static String formatString(int value) {
-        return String.format("%d", value);
+        return String.format(Locale.ENGLISH,"%d", value);
     }
 
     public static String formatStringWide(int value) {
-        return String.format("%4d", value);
+        return String.format(Locale.ENGLISH,"%4d", value);
     }
 
     public static String formatStringInt(String s) {

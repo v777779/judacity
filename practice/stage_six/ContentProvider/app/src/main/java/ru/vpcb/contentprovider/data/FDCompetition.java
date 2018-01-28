@@ -3,6 +3,8 @@ package ru.vpcb.contentprovider.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -35,11 +37,9 @@ public class FDCompetition {
     @Expose
     private String year;
 
-
     @SerializedName("currentMatchday")
     @Expose
     private int currentMatchDay;
-
 
     @SerializedName("numberOfMatchdays")
     @Expose
@@ -57,9 +57,34 @@ public class FDCompetition {
     @Expose
     private Date lastUpdated;
 
+    private Date lastRefresh;
+
     private List<FDTeam> teams;
     private List<FDFixture> fixtures;
 
+
+    public FDCompetition() {
+    }
+
+    public FDCompetition(int id, String caption, String league, String year,
+                         int currentMatchDay, int numberOfMatchDays,
+                         int numberOfTeams, int numberOfGames,
+                         long lastUpdated, long lastRefresh) {
+
+        this.links = null;
+        this.id = id;
+        this.caption = caption;
+        this.league = league;
+        this.year = year;
+        this.currentMatchDay = currentMatchDay;
+        this.numberOfMatchDays = numberOfMatchDays;
+        this.numberOfTeams = numberOfTeams;
+        this.numberOfGames = numberOfGames;
+        this.lastUpdated = new Date(lastUpdated);
+        this.lastRefresh = new Date(lastRefresh);
+        this.teams = null;
+        this.fixtures = null;
+    }
 
     public class FDLinks {
         @SerializedName("self")
@@ -130,5 +155,9 @@ public class FDCompetition {
 
     public Date getLastUpdated() {
         return lastUpdated;
+    }
+
+    public Date getLastRefresh() {
+        return lastRefresh;
     }
 }

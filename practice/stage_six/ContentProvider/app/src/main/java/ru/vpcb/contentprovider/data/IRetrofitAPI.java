@@ -38,12 +38,13 @@ public interface IRetrofitAPI {
      * @return List<RecipeItem>  list of recipes downloaded from the server
      */
 
+    // request with query   "baseURL/competitions/?seasons=2015"
     @GET(FD_COMPETITIONS_GET)
-    // request with query      "baseURL/competitions/?seasons=2015"
     Call<List<FDCompetition>> getCompetitions(@Query(FD_QUERY_SEASON) String s);
 
+    // request with query   "baseURL/competitions"
     @GET(FD_COMPETITIONS_GET)
-    Call<FDCompetition> getCompetitions();  // request with query   "baseURL/competitions"
+    Call<List<FDCompetition>> getCompetitions();
 
 
     @GET(FD_COMPETITIONS_TEAMS_GET)

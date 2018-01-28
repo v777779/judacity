@@ -16,6 +16,8 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.vpcb.contentprovider.utils.FDUtils.buildItemIdUri;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -177,10 +179,6 @@ public class FDProvider extends ContentProvider {
         }
     }
 
-
-    public static Uri buildItemIdUri(String tableName, long id) {
-        return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();
-    }
 
 
     private Selection getSelection(Uri uri, String selection, String[] selectionArgs) {
