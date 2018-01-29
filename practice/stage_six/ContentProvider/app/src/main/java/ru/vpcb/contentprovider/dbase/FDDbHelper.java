@@ -46,24 +46,27 @@ public class FDDbHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_COMPETITION_TEAMS = "CREATE TABLE " + FDContract.CpTmEntry.TABLE_NAME + " (" +
 //                FDContract.CpTmEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.CpTmEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
-                FDContract.CpTmEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL);";              // int
+                FDContract.CpTmEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +              // int
+                FDContract.CpTmEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                 // int from date
 
         final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFxEntry.TABLE_NAME + " (" +
 //                FDContract.CpFxEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " + // int
                 FDContract.CpFxEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL, " +        // int
                 FDContract.CpFxEntry.COLUMN_TEAM_HOME_ID + " INTEGER NOT NULL, " +      // int
-                FDContract.CpFxEntry.COLUMN_TEAM_AWAY_ID + " INTEGER NOT NULL);";       // int
+                FDContract.CpFxEntry.COLUMN_TEAM_AWAY_ID + " INTEGER NOT NULL, " +      // int
+                FDContract.CpFxEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";       // int from date
+
 
         final String CREATE_TABLE_TEAMS = "CREATE TABLE " + FDContract.TmEntry.TABLE_NAME + " (" +
 //                FDContract.TmEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.TmEntry.COLUMN_TEAM_ID + " INTEGER PRIMARY KEY, " +          // int
                 FDContract.TmEntry.COLUMN_TEAM_NAME + " TEXT NOT NULL, " +              // string
-                FDContract.TmEntry.COLUMN_TEAM_CODE + " TEXT, " +              // string
-                FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME + " TEXT, " +        // string
+                FDContract.TmEntry.COLUMN_TEAM_CODE + " TEXT, " +                       // string
+                FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME + " TEXT, " +                 // string
                 FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE + " TEXT, " +               // string
-                FDContract.TmEntry.COLUMN_TEAM_CREST_URI + " TEXT, " +          // string
-                FDContract.TmEntry.COLUMN_REFRESH_DATE + " INTEGER NOT NULL);";                 // int from date
+                FDContract.TmEntry.COLUMN_TEAM_CREST_URI + " TEXT, " +                  // string
+                FDContract.TmEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
 
         final String CREATE_TABLE_FIXTURES = "CREATE TABLE " + FDContract.FxEntry.TABLE_NAME + " (" +
 //                FDContract.FxEntry._ID + " INTEGER PRIMARY KEY, " +
@@ -79,7 +82,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN + " REAL, " +                // real
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW + " REAL, " +               // real
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_LOSE + " REAL, " +               // real
-                FDContract.FxEntry.COLUMN_REFRESH_DATE + " INTEGER NOT NULL);";         // int from date
+                FDContract.FxEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
@@ -99,7 +102,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.TbEntry.COLUMN_TEAM_WINS + " INTEGER NOT NULL, " +           // int
                 FDContract.TbEntry.COLUMN_TEAM_DRAWS + " INTEGER NOT NULL, " +          // int
                 FDContract.TbEntry.COLUMN_TEAM_LOSSES + " INTEGER NOT NULL, " +         // int
-                FDContract.TbEntry.COLUMN_REFRESH_DATE + " INTEGER NOT NULL);";         // int from date
+                FDContract.TbEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
 
         final String CREATE_TABLE_PLAYERS = "CREATE TABLE " + FDContract.PlEntry.TABLE_NAME + " (" +
 //                FDContract.PlEntry._ID + " INTEGER PRIMARY KEY, " +
@@ -112,7 +115,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.PlEntry.COLUMN_PLAYER_NATIONALITY + " TEXT, " +     // string
                 FDContract.PlEntry.COLUMN_PLAYER_DATE_CONTRACT + " TEXT, " +   // string from date
                 FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT, " +             // string
-                FDContract.PlEntry.COLUMN_REFRESH_DATE + " INTEGER NOT NULL);";         // int from date
+                FDContract.PlEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
 
         db.execSQL(CREATE_TABLE_COMPETITIONS);
         db.execSQL(CREATE_TABLE_COMPETITION_TEAMS);
@@ -176,7 +179,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_TEAM_SHORT_NAME = 3;     // string
         int COLUMN_TEAM_MARKET_VALUE = 4;   // string
         int COLUMN_TEAM_CREST_URI = 5;      // string
-        int COLUMN_REFRESH_DATE = 6;        // int from date
+        int COLUMN_LAST_REFRESH = 6;        // int from date
     }
 
     public interface IFxEntry {

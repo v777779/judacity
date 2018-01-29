@@ -106,6 +106,7 @@ public class FDCompetition {
     }
 
     public int getId() {
+        if (id <= 0) throw new NumberFormatException();
         return id;
     }
 

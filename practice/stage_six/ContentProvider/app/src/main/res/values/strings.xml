@@ -40,6 +40,8 @@
     <!--exception-->
     <string name="update_content_error">Update content error: </string>
     <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
+    <string name="get_competitions_competition">Get competitions, competition, getId() or loadListTeams() exception: </string>
+    <string name="content_provider_insert">Content provider insert exception: </string>
 
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -15,6 +16,9 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ru.vpcb.contentprovider.R;
+import timber.log.Timber;
 
 import static ru.vpcb.contentprovider.utils.FDUtils.buildItemIdUri;
 
@@ -107,12 +111,20 @@ public class FDProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         final SQLiteDatabase db = mFDDbHelper.getWritableDatabase();
         Selection builder = getSelection(uri, null, null);
-
-        long id = db.insertOrThrow(builder.table, null, contentValues);
-        if (id != 0) {
+        try {
+            long id = db.insertOrThrow(builder.table, null, contentValues);
             getContext().getContentResolver().notifyChange(uri, null);
+            return buildItemIdUri(builder.table, id);
+        } catch (SQLException e) {
+            long id = contentValues.getAsLong(builder.columnId);
+            int nUpdated = db.update(builder.table, contentValues, builder.selection, builder.selectionArgs);
+            if (nUpdated == 0) {
+                return null;
+            }
+            Timber.d(getContext().getString(R.string.content_provider_insert)+e.getMessage());
+            return buildItemIdUri(builder.table, id);  // skip insertion
         }
-        return buildItemIdUri(builder.table, id);
+
     }
 
 
@@ -126,7 +138,8 @@ public class FDProvider extends ContentProvider {
      * @return int number of deleted record, number > 0 valid for successful operation
      */
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[]
+            selectionArgs) {
         final SQLiteDatabase db = mFDDbHelper.getWritableDatabase();
         Selection builder = getSelection(uri, selection, selectionArgs);
         int nDeleted = db.delete(builder.table, builder.selection, builder.selectionArgs);
@@ -162,7 +175,8 @@ public class FDProvider extends ContentProvider {
 
 
     @Override
-    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+    public ContentProviderResult[] applyBatch
+            (ArrayList<ContentProviderOperation> operations)
             throws OperationApplicationException {
         final SQLiteDatabase db = mFDDbHelper.getWritableDatabase();
         db.beginTransaction();
@@ -180,21 +194,22 @@ public class FDProvider extends ContentProvider {
     }
 
 
-
     private Selection getSelection(Uri uri, String selection, String[] selectionArgs) {
         int match = mUriMatcher.match(uri);                             // code for switch
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             if (match == p.tableMatcher) {
-                return new Selection(FDContract.CpEntry.TABLE_NAME,
+                return new Selection(p.tableName,
                         selection,
-                        selectionArgs);
+                        selectionArgs,
+                        p.column_id);
             }
             if (match == p.tableIdMatcher) {
                 List<String> paths = uri.getPathSegments();
                 String _id = paths.get(1);
-                return new Selection(FDContract.CpEntry.TABLE_NAME,
-                        FDContract.CpEntry.COLUMN_COMPETITION_ID + "=?",
-                        new String[]{_id});
+                return new Selection(p.tableName,
+                        p.column_id + "=?",
+                        new String[]{_id},
+                        p.column_id);
             }
         }
         throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -205,11 +220,13 @@ public class FDProvider extends ContentProvider {
         String table;
         String selection;
         String[] selectionArgs;
+        String columnId;
 
-        public Selection(String table, String selection, String[] selectionArgs) {
+        public Selection(String table, String selection, String[] selectionArgs, String columnId) {
             this.table = table;
             this.selection = selection;
             this.selectionArgs = selectionArgs;
+            this.columnId = columnId;
         }
     }
 

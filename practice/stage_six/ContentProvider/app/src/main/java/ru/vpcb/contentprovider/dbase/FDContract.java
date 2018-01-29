@@ -55,6 +55,8 @@ public class FDContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
         public static final String COLUMN_TEAM_ID = "team_id";                          // int
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
+
     }
 
     public static final class CpFxEntry implements BaseColumns {
@@ -66,6 +68,7 @@ public class FDContract {
         public static final String COLUMN_FIXTURE_ID = "fixture_id";                    // int
         public static final String COLUMN_TEAM_HOME_ID = "team_home_id";                // int
         public static final String COLUMN_TEAM_AWAY_ID = "team_away_id";                // int
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
     }
 
 
@@ -81,7 +84,7 @@ public class FDContract {
         public static final String COLUMN_TEAM_SHORT_NAME = "team_short_name";          // string
         public static final String COLUMN_TEAM_MARKET_VALUE = "team_market_value";      // string
         public static final String COLUMN_TEAM_CREST_URI = "team_crest_url";            // string
-        public static final String COLUMN_REFRESH_DATE = "last_refresh";                // string from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
     }
 
 
@@ -105,7 +108,7 @@ public class FDContract {
         public static final String COLUMN_FIXTURE_ODDS_WIN = "fixture_odds_home_win";   // real
         public static final String COLUMN_FIXTURE_ODDS_DRAW = "fixture_odds_draw";      // real
         public static final String COLUMN_FIXTURE_ODDS_LOSE = "fixture_odds_away_win";  // real
-        public static final String COLUMN_REFRESH_DATE = "last_refresh";                // string from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
 
     }
 
@@ -129,7 +132,7 @@ public class FDContract {
         public static final String COLUMN_TEAM_WINS = "team_wins";                          // int
         public static final String COLUMN_TEAM_DRAWS = "team_draws";                        // int
         public static final String COLUMN_TEAM_LOSSES = "team_losses";                      // int
-        public static final String COLUMN_REFRESH_DATE = "last_refresh";                    // int from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                    // int from date
     }
 
     public static final class PlEntry implements BaseColumns {
@@ -146,7 +149,7 @@ public class FDContract {
         public static final String COLUMN_PLAYER_NATIONALITY = "player_nationality";        // string
         public static final String COLUMN_PLAYER_DATE_CONTRACT = "player_date_contract";    // string from date
         public static final String COLUMN_PLAYER_MARKET_VALUE = "player_market_value";      // string
-        public static final String COLUMN_REFRESH_DATE = "last_refresh";                    // int from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                    // int from date
     }
 
 

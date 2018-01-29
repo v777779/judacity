@@ -3,6 +3,7 @@ package ru.vpcb.contentprovider.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 import static ru.vpcb.contentprovider.utils.Constants.FD_BASE_URI;
@@ -40,12 +41,20 @@ public class FDTeam {
     private String crestURL;
 
     private int id;
-
     private List<FDPlayer> players;
+    private Date lastRefresh;
 
     public FDTeam() {
         id = -1;
     }
+
+    public FDTeam(int id, String name, long lastRefresh) {
+        this.id = id;
+        this.name = name;
+        this.lastRefresh = new Date(lastRefresh);
+    }
+
+    ;
 
 
     public String getLinkSelf() {
@@ -89,6 +98,10 @@ public class FDTeam {
 
     public String getCrestURL() {
         return crestURL;
+    }
+
+    public Date getLastRefresh() {
+        return lastRefresh;
     }
 
     // classes

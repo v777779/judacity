@@ -8,6 +8,7 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
+import android.util.SparseArray;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,78 +51,125 @@ import static ru.vpcb.contentprovider.utils.FootballUtils.getPrefInt;
 
 public class FDUtils {
 
-    public static ContentProviderResult[] writeCompetitions(Context context, Map<Integer, FDCompetition> map)
-            throws OperationApplicationException, RemoteException {
 
-        ArrayList<ContentProviderOperation> listOperations = new ArrayList<ContentProviderOperation>();
+    public static Uri buildItemIdUri(String tableName, long id) {
+        return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();
+    }
 
-        Uri uri = FDContract.CpEntry.CONTENT_URI;
+
+    public static ArrayList<ContentProviderOperation> writeCompetition(
+            FDCompetition competition, boolean forceDelete) {
+
+        if (competition == null || competition.getId() <= 0) return null;
+
+        Uri uri = buildItemIdUri(FDContract.CpEntry.TABLE_NAME, competition.getId());
         int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
 
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        if (forceDelete) {
+            operations.add(ContentProviderOperation.newDelete(uri).build());  // delete one record from Competitions table
+        }
+
+        ContentValues values = new ContentValues();
+        int lastUpdate = (int) (TimeUnit.MILLISECONDS.toMinutes(competition.getLastUpdated().getTime()));
+
+        values.put(FDContract.CpEntry.COLUMN_COMPETITION_ID, competition.getId());                  // int
+        values.put(FDContract.CpEntry.COLUMN_COMPETITION_CAPTION, competition.getCaption());        // string
+        values.put(FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE, competition.getLeague());          // string
+        values.put(FDContract.CpEntry.COLUMN_COMPETITION_YEAR, competition.getYear());              // string
+        values.put(FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY, competition.getCurrentMatchDay());   // int
+        values.put(FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS, competition.getNumberOfMatchDays()); // int
+        values.put(FDContract.CpEntry.COLUMN_NUMBER_TEAMS, competition.getNumberOfTeams());         // int
+        values.put(FDContract.CpEntry.COLUMN_NUMBER_GAMES, competition.getNumberOfGames());         // int
+        values.put(FDContract.CpEntry.COLUMN_LAST_UPDATE, lastUpdate);                              // int from date
+        values.put(FDContract.CpEntry.COLUMN_LAST_REFRESH, refreshTime);                            // string from date
+        operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+
+        return operations;
+    }
+
+    public static ContentProviderResult[] writeCompetition(Context context, FDCompetition competition, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeCompetition(competition, forceDelete));
+    }
+
+    public static ContentProviderResult[] writeCompetitions(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+
         if (map == null || map.size() == 0) return null;
-
-
-        listOperations.add(ContentProviderOperation.newDelete(uri).build());  // delete all records from Competitions table
+        Uri uri = FDContract.CpEntry.CONTENT_URI;
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<>();
+        if (forceDelete) {
+            listOperations.add(ContentProviderOperation.newDelete(uri).build());    // delete all records from Competitions table
+        }
 
         for (FDCompetition competition : map.values()) {
-            ContentValues values = new ContentValues();
-
-            if (competition == null || competition.getId() <= 0) continue;
-            int lastUpdate = (int) (TimeUnit.MILLISECONDS.toMinutes(competition.getLastUpdated().getTime()));
-
-
-            values.put(FDContract.CpEntry.COLUMN_COMPETITION_ID, competition.getId());                  // int
-            values.put(FDContract.CpEntry.COLUMN_COMPETITION_CAPTION, competition.getCaption());        // string
-            values.put(FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE, competition.getLeague());          // string
-            values.put(FDContract.CpEntry.COLUMN_COMPETITION_YEAR, competition.getYear());              // string
-            values.put(FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY, competition.getCurrentMatchDay());   // int
-            values.put(FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS, competition.getNumberOfMatchDays()); // int
-            values.put(FDContract.CpEntry.COLUMN_NUMBER_TEAMS, competition.getNumberOfTeams());         // int
-            values.put(FDContract.CpEntry.COLUMN_NUMBER_GAMES, competition.getNumberOfGames());         // int
-            values.put(FDContract.CpEntry.COLUMN_LAST_UPDATE, lastUpdate);                              // int from date
-            values.put(FDContract.CpEntry.COLUMN_LAST_REFRESH, refreshTime);                            // string from date
-            listOperations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+            List<ContentProviderOperation> operations = writeCompetition(competition, false);
+            if (operations == null) continue;
+            listOperations.addAll(operations);
         }
 
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
+    public static ArrayList<ContentProviderOperation> writeTeam(FDTeam team, boolean forceDelete) {
 
-    public static ContentProviderResult[] writeTeams(Context context, Map<Integer, FDCompetition> map)
-            throws OperationApplicationException, RemoteException {
+        if (team == null || team.getId() <= 0) return null;
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
-        ArrayList<ContentProviderOperation> listOperations = new ArrayList<ContentProviderOperation>();
-
+        Uri uri = buildItemIdUri(FDContract.TmEntry.TABLE_NAME, team.getId());
         long refreshTime = Calendar.getInstance().getTime().getTime();
+
+        if (forceDelete) { // force clear Teams table
+            operations.add(ContentProviderOperation.newDelete(uri).build());
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(FDContract.TmEntry.COLUMN_TEAM_ID, team.getId());                            // int
+        values.put(FDContract.TmEntry.COLUMN_TEAM_NAME, team.getName());                        // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_CODE, team.getCode());                        // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME, team.getShortName());             // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE, team.getSquadMarketValue());    // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_CREST_URI, team.getCrestURL());               // string
+        values.put(FDContract.TmEntry.COLUMN_LAST_REFRESH, refreshTime);                        // int from date
+
+        operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+        return operations;
+    }
+
+    public static ContentProviderResult[] writeTeam(Context context, FDTeam team, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeTeam(team,forceDelete));
+    }
+
+
+    public static ContentProviderResult[] writeTeams(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
 
         if (map == null || map.size() == 0) return null;
 
+
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<ContentProviderOperation>();
+        Uri uri = FDContract.TmEntry.CONTENT_URI;
+        if (forceDelete) { // force clear Teams table
+            listOperations.add(ContentProviderOperation.newDelete(uri).build());
+        }
+
         for (FDCompetition competition : map.values()) {
-            ContentValues values = new ContentValues();
-
-            Uri uri = FDContract.TmEntry.CONTENT_URI;
-            listOperations.add(ContentProviderOperation.newDelete(uri).build());  // delete all records from Teams table
-
             if (competition == null || competition.getId() <= 0) continue;
             List<FDTeam> teams = competition.getTeams();
             if (teams == null || teams.size() == 0) continue;
             for (FDTeam team : teams) {
-                if (team == null || team.getId() <= 0) continue;
-                values.put(FDContract.TmEntry.COLUMN_TEAM_ID, team.getId());                            // int
-                values.put(FDContract.TmEntry.COLUMN_TEAM_NAME, team.getName());                        // string
-                values.put(FDContract.TmEntry.COLUMN_TEAM_CODE, team.getCode());                        // string
-                values.put(FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME, team.getShortName());             // string
-                values.put(FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE, team.getSquadMarketValue());    // string
-                values.put(FDContract.TmEntry.COLUMN_TEAM_CREST_URI, team.getCrestURL());               // string
-                values.put(FDContract.TmEntry.COLUMN_REFRESH_DATE, refreshTime);                        // int from date
-                listOperations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+                List<ContentProviderOperation> operations = writeTeam(team,false);
+                if(operations == null) continue;
+                listOperations.addAll(operations);
             }
         }
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
 
-    public static Map<Integer, FDCompetition> readCompetitions(Context context, Map<Integer, FDCompetition> map) {
+    public static Map<Integer, FDCompetition> readCompetitions(Context context) {
         Uri uri = FDContract.CpEntry.CONTENT_URI;                               // вся таблица
 //        String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
         String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
@@ -133,13 +181,10 @@ public class FDUtils {
                 null,
                 sortOrder
         );
-
         if (cursor == null || cursor.getCount() == 0) return null;
 
-        if(map == null)  map = new HashMap<>();
-
+        Map<Integer, FDCompetition> map = new HashMap<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-
             int id = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_COMPETITION_ID);
             if (id <= 0) continue;
 
@@ -162,17 +207,45 @@ public class FDUtils {
 
             map.put(competition.getId(), competition);
         }
+        cursor.close();
         return map;
     }
 
 
-    public static Uri buildItemIdUri(String tableName, long id) {
-        return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();
+    public static Map<Integer, FDTeam> readTeams(Context context) {
+        Uri uri = FDContract.TmEntry.CONTENT_URI;                               // вся таблица
+//        String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
+        String sortOrder = FDContract.TmEntry.COLUMN_TEAM_ID + " ASC";   // sort by id
+
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+        if (cursor == null || cursor.getCount() == 0) return null;
+        Map<Integer, FDTeam> map = new HashMap<>();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int id = cursor.getInt(FDDbHelper.ITmEntry.COLUMN_TEAM_ID);
+            if (id <= 0) continue;
+
+            String name = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_NAME);
+            long lastRefresh = TimeUnit.MINUTES.toMillis(
+                    cursor.getInt(FDDbHelper.ITmEntry.COLUMN_LAST_REFRESH));
+
+
+            FDTeam team = new FDTeam(id, name, lastRefresh);
+
+            map.put(team.getId(), team);
+        }
+        cursor.close();
+        return map;
     }
 
 
     // network
-
     private static IRetrofitAPI setupRetrofit() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -259,24 +332,38 @@ public class FDUtils {
     }
 
     // competitions
-    public static Map<Integer,FDCompetition> getCompetitions(
+    public static Map<Integer, FDCompetition> getCompetitions(
             Context context, Map<Integer, FDCompetition> map, boolean forceUpdate)
             throws NullPointerException, IOException {
 
-        if (!forceUpdate && map != null && map.size() > 0) {
-            FDCompetition competition = map.values().iterator().next();
-            if (checkLastRefresh(context, competition.getLastRefresh())) {  // check smart update
-                return map;
+        if (forceUpdate || map == null || map.size() == 0) {
+            map = new HashMap<>();  // new HashMap()
+            List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
+            for (FDCompetition competition : list) {
+                try {
+                    map.put(competition.getId(), competition);        // NullPointerException, NumberFromatException
+                    List<FDTeam> teams = loadListTeams(competition);  // NullPointerException, NumberFromatException, IOException
+                    competition.setTeams(teams);
+                } catch (NullPointerException | NumberFormatException | IOException e) {
+                    Timber.d(context.getString(R.string.get_competitions_competition) +
+                            e.getMessage());
+                }
             }
-        }
-
-        map = new HashMap<>();  // new HashMap()
-        List<FDCompetition> list = loadListCompetitions();  // NullPointerException
-        for (FDCompetition competition : list) {
-            if (competition == null || competition.getId() <= 0) {
-                continue;
+        } else {
+// load teams or skip
+            for (FDCompetition competition : map.values()) {
+                try {
+                    if (!forceUpdate && competition.getTeams() != null &&
+                            checkLastRefresh(context, competition.getLastRefresh())) {  // check smart update
+                        continue;
+                    }
+                    List<FDTeam> teams = loadListTeams(competition);  // load
+                    competition.setTeams(teams);
+                } catch (NullPointerException | NumberFormatException | IOException e) {
+                    Timber.d(context.getString(R.string.get_competitions_competition) +
+                            e.getMessage());
+                }
             }
-            map.put(competition.getId(), competition);
         }
 
         return map;
@@ -284,17 +371,36 @@ public class FDUtils {
 
 
     // teams
+
+    // list from competition
+    private static List<FDTeam> loadListTeams(FDCompetition competition)
+            throws NumberFormatException, NullPointerException, IOException {
+        if (competition == null || competition.getId() <= 0) return null;
+
+        String id = formatString(competition.getId());
+        FDTeams teams = loadListTeams(id);      // NullPointerException
+        List<FDTeam> list = new ArrayList<>();
+        for (FDTeam team : teams.getTeams()) {
+            try {
+                team.setId();
+            } catch (NullPointerException | NumberFormatException e) {
+                continue;
+            }
+            list.add(team);
+        }
+        return list;
+    }
+
     // list from competition
     private static List<FDTeam> getListTeams(
             Context context, FDCompetition competition, boolean forceUpdate)
             throws NumberFormatException, NullPointerException, IOException {
         if (competition == null || competition.getId() <= 0) return null;
-
+// smart update check
         List<FDTeam> list = competition.getTeams();
         if (!forceUpdate && list != null && checkLastRefresh(context, competition.getLastRefresh())) {  // check smart update
             return list;
         }
-
 // no teams
         String id = formatString(competition.getId());
         FDTeams teams = loadListTeams(id);      // NullPointerException
@@ -319,7 +425,6 @@ public class FDUtils {
         competition.setTeams(teams);                        // NullPointerException
         for (FDTeam team : teams) {
             map.put(team.getId(), team);
-
         }
         return map;
     }

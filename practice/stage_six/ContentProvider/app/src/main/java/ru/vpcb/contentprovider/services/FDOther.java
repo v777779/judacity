@@ -3,6 +3,7 @@ package ru.vpcb.contentprovider.services;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -137,6 +139,76 @@ public class FDOther extends AppCompatActivity {
         results = getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
 
         return results;
+    }
+
+    public static ContentProviderResult[] writeTeams(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<ContentProviderOperation>();
+
+        Uri uri = FDContract.TmEntry.CONTENT_URI;
+        long refreshTime = Calendar.getInstance().getTime().getTime();
+
+        if (map == null || map.size() == 0) return null;
+
+        if (forceDelete) { // force clear Teams table
+            listOperations.add(ContentProviderOperation.newDelete(uri).build());
+        }
+
+        for (FDCompetition competition : map.values()) {
+            ContentValues values = new ContentValues();
+            if (competition == null || competition.getId() <= 0) continue;
+            List<FDTeam> teams = competition.getTeams();
+            if (teams == null || teams.size() == 0) continue;
+            for (FDTeam team : teams) {
+                if (team == null || team.getId() <= 0) continue;
+                values.put(FDContract.TmEntry.COLUMN_TEAM_ID, team.getId());                            // int
+                values.put(FDContract.TmEntry.COLUMN_TEAM_NAME, team.getName());                        // string
+                values.put(FDContract.TmEntry.COLUMN_TEAM_CODE, team.getCode());                        // string
+                values.put(FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME, team.getShortName());             // string
+                values.put(FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE, team.getSquadMarketValue());    // string
+                values.put(FDContract.TmEntry.COLUMN_TEAM_CREST_URI, team.getCrestURL());               // string
+                values.put(FDContract.TmEntry.COLUMN_LAST_REFRESH, refreshTime);                        // int from date
+
+                listOperations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+            }
+        }
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
+    }
+
+    public static ContentProviderResult[] writeCompetitions(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<ContentProviderOperation>();
+
+        Uri uri = FDContract.CpEntry.CONTENT_URI;
+        int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
+
+        if (map == null || map.size() == 0) return null;
+
+        listOperations.add(ContentProviderOperation.newDelete(uri).build());  // delete all records from Competitions table
+
+
+        for (FDCompetition competition : map.values()) {
+            ContentValues values = new ContentValues();
+
+            if (competition == null || competition.getId() <= 0) continue;
+            int lastUpdate = (int) (TimeUnit.MILLISECONDS.toMinutes(competition.getLastUpdated().getTime()));
+
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_ID, competition.getId());                  // int
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_CAPTION, competition.getCaption());        // string
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE, competition.getLeague());          // string
+            values.put(FDContract.CpEntry.COLUMN_COMPETITION_YEAR, competition.getYear());              // string
+            values.put(FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY, competition.getCurrentMatchDay());   // int
+            values.put(FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS, competition.getNumberOfMatchDays()); // int
+            values.put(FDContract.CpEntry.COLUMN_NUMBER_TEAMS, competition.getNumberOfTeams());         // int
+            values.put(FDContract.CpEntry.COLUMN_NUMBER_GAMES, competition.getNumberOfGames());         // int
+            values.put(FDContract.CpEntry.COLUMN_LAST_UPDATE, lastUpdate);                              // int from date
+            values.put(FDContract.CpEntry.COLUMN_LAST_REFRESH, refreshTime);                            // string from date
+            listOperations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+        }
+
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
 
