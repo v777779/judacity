@@ -74,6 +74,10 @@ public class FDTeam {
         if (id == -1) throw new NumberFormatException();
     }
 
+    public void setLastRefresh(long lastRefresh) {
+        this.lastRefresh = new Date(lastRefresh);
+    }
+
     public int getId() {
         return id;
     }

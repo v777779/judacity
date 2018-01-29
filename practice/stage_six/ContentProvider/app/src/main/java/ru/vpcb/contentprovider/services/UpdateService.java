@@ -53,7 +53,6 @@ public class UpdateService extends IntentService {
     private Map<Integer, FDTeam> mMapTeams;
 
 
-
     public UpdateService() {
         super(UPDATE_SERVICE_TAG);
     }
@@ -78,20 +77,30 @@ public class UpdateService extends IntentService {
 
         try {
 
-            mapCpTeams = FDUtils.readCompetitionTeams(this);
-            mMapTeams = FDUtils.readTeams(this);
+//            mapCpTeams = FDUtils.readCompetitionTeams(this);
+//            mMapTeams = FDUtils.readTeams(this);
+//
+//            mMapCompetitions = FDUtils.readCompetitions(this);
 
-            mMapCompetitions = FDUtils.readCompetitions(this);
+// loader imitation
+            Map<Integer, List<Integer>> mapTeamKeys = FDUtils.readCompetitionTeams(this);
+            Map<Integer, FDTeam> mapTeams = FDUtils.readTeams(this);
+            Map<Integer, List<Integer>> mapFixtureKeys = FDUtils.readCompetitionFixtures(this);
+            Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(this);
 
+// load competition
+            mMapCompetitions = new HashMap<>(); // mandatory before getCompetitions()
+            boolean requestUpdate = FDUtils.getCompetitions(
+                    this, mMapCompetitions, mapTeamKeys, mapTeams,
+                    mapFixtureKeys, mapFixtures, false);
 
-            mMapCompetitions = FDUtils.getCompetitions(this, mMapCompetitions, false);
-
-
-            FDUtils.writeCompetitions(this, mMapCompetitions, false);
-            FDUtils.writeTeams(this, mMapCompetitions, false);
-
-            FDUtils.writeCompetitionTeams(this, mMapCompetitions, false);
-
+// save competition and all
+            if (requestUpdate) {
+                FDUtils.writeCompetitions(this, mMapCompetitions, false);
+            }
+//            FDUtils.writeTeams(this, mMapCompetitions, false);
+//
+//            FDUtils.writeCompetitionTeams(this, mMapCompetitions, false);
 
 
         } catch (IOException e) {

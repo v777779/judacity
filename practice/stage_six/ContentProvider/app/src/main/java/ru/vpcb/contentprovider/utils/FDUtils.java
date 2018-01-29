@@ -57,6 +57,7 @@ import static ru.vpcb.contentprovider.utils.FootballUtils.getPrefInt;
 public class FDUtils {
 
 
+
     public static Uri buildItemIdUri(String tableName, long id) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();
     }
@@ -67,6 +68,23 @@ public class FDUtils {
                 .appendPath(Long.toString(id))
                 .appendPath(Long.toString(id2))
                 .build();
+    }
+
+    private static int currentTimeMinutes() {
+        return (int)TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis());
+    }
+
+    private static Date currentTimeMinutesToDate() {
+        return new Date(currentTimeMinutes());
+    }
+
+    private static int dateToMinutes(Date date) {
+        if(date == null) return 0;
+        return (int)TimeUnit.MILLISECONDS.toMinutes(date.getTime());
+    }
+
+    private static Date minutesToDate(int time) {
+        return new Date(TimeUnit.MINUTES.toMillis(time));
     }
 
 
@@ -163,10 +181,8 @@ public class FDUtils {
             int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
             int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
             int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
-            long lastUpdated = TimeUnit.MINUTES.toMillis(
-                    cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
-            long lastRefresh = TimeUnit.MINUTES.toMillis(
-                    cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
+            Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
+            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
 
 
             FDCompetition competition = new FDCompetition(id, caption, league,
@@ -237,7 +253,7 @@ public class FDUtils {
             long lastRefresh = TimeUnit.MINUTES.toMillis(
                     cursor.getInt(FDDbHelper.ITmEntry.COLUMN_LAST_REFRESH));
 
-            FDTeam team = new FDTeam(id, name, code, shortName, squadMarketValue,crestURL,lastRefresh);
+            FDTeam team = new FDTeam(id, name, code, shortName, squadMarketValue, crestURL, lastRefresh);
             map.put(team.getId(), team);
         }
         cursor.close();
@@ -295,8 +311,7 @@ public class FDUtils {
             int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
             if (id <= 0) continue;
 
-            long fixtureTime = TimeUnit.MINUTES.toMillis(
-                    cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE));
+            Date date = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE));
             String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
             int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
             String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
@@ -308,12 +323,11 @@ public class FDUtils {
             double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
             double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
             double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
-            long lastRefresh = TimeUnit.MINUTES.toMillis(
-                    cursor.getInt(FDDbHelper.IFxEntry.COLUMN_LAST_REFRESH));
+            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_LAST_REFRESH));
 
-            FDFixture fixture = new FDFixture(id,fixtureTime,status,matchday,
-                    homeTeamName,awayTeamName,goalsHomeTeam,goalsAwayTeam,
-                    homeWin,draw,awayWin,lastRefresh);
+            FDFixture fixture = new FDFixture(id, date, status, matchday,
+                    homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
+                    homeWin, draw, awayWin, lastRefresh);
 
             map.put(fixture.getId(), fixture);
         }
@@ -329,7 +343,7 @@ public class FDUtils {
         if (competition == null || competition.getId() <= 0) return null;
 
         Uri uri = buildItemIdUri(FDContract.CpEntry.TABLE_NAME, competition.getId());
-        int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
+
 
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         if (forceDelete) {
@@ -337,7 +351,8 @@ public class FDUtils {
         }
 
         ContentValues values = new ContentValues();
-        int lastUpdate = (int) (TimeUnit.MILLISECONDS.toMinutes(competition.getLastUpdated().getTime()));
+        int lastUpdate = dateToMinutes(competition.getLastUpdated());
+        int lastRefresh = currentTimeMinutes();
 
         values.put(FDContract.CpEntry.COLUMN_COMPETITION_ID, competition.getId());                  // int
         values.put(FDContract.CpEntry.COLUMN_COMPETITION_CAPTION, competition.getCaption());        // string
@@ -348,7 +363,7 @@ public class FDUtils {
         values.put(FDContract.CpEntry.COLUMN_NUMBER_TEAMS, competition.getNumberOfTeams());         // int
         values.put(FDContract.CpEntry.COLUMN_NUMBER_GAMES, competition.getNumberOfGames());         // int
         values.put(FDContract.CpEntry.COLUMN_LAST_UPDATE, lastUpdate);                              // int from date
-        values.put(FDContract.CpEntry.COLUMN_LAST_REFRESH, refreshTime);                            // string from date
+        values.put(FDContract.CpEntry.COLUMN_LAST_REFRESH, lastRefresh);                            // string from date
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
 
         return operations;
@@ -362,8 +377,8 @@ public class FDUtils {
     }
 
     // competitions
-    public static ContentProviderResult[] writeCompetitions(Context
-                                                                    context, Map<Integer, FDCompetition> map, boolean forceDelete)
+    public static ContentProviderResult[] writeCompetitions(
+            Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 
         if (map == null || map.size() == 0) return null;
@@ -709,6 +724,7 @@ public class FDUtils {
         return currentTime - refreshTime < delay;
     }
 
+    // load
     // competitions
     public static Map<Integer, FDCompetition> loadCompetitions(Context context, Map<Integer, FDCompetition> map)
             throws NullPointerException, IOException {
@@ -733,21 +749,26 @@ public class FDUtils {
     }
 
     // map != null
-    private static boolean getCompetitions(
-            Context context, Map<Integer, FDCompetition> map, boolean forceUpdate) {
+    public static boolean getCompetitions(
+            Context context, Map<Integer, FDCompetition> map,
+            Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
+            Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures,
+            boolean forceUpdate) throws NullPointerException, IOException {
+
 // load teams or skip
-        Map<Integer, List<Integer>> mapTeamKeys = readCompetitionTeams(context);
-        Map<Integer, FDTeam> mapTeams = readTeams(context);
-        Map<Integer, List<Integer>> mapFixtureKeys = readCompetitionFixtures(context);
-        Map<Integer, FDFixture> mapFixtures = readFixtures(context);
-
-        boolean requestUpdate = false;
-
-        if (mapTeamKeys == null) mapTeamKeys = new HashMap<>();
-        if (mapTeams == null) mapTeams = new HashMap<>();
-        if (mapFixtureKeys == null) mapFixtureKeys = new HashMap<>();
-        if (mapFixtures == null) mapFixtures = new HashMap<>();
-
+        boolean requestUpdate = (map == null || mapTeamKeys == null || mapTeams == null
+                || mapFixtureKeys == null || mapFixtures == null || forceUpdate);
+// load map
+        if (map == null || forceUpdate) {
+            map = new HashMap<>();
+            List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
+            Date lastRefresh = currentTimeMinutesToDate();
+            for (FDCompetition competition : list) {
+                if (competition == null || competition.getId() <= 0) continue;
+                competition.setLastRefresh(lastRefresh);
+                map.put(competition.getId(), competition);
+            }
+        }
 
         for (FDCompetition competition : map.values()) {
             if (competition == null || competition.getId() <= 0) continue;
@@ -796,11 +817,13 @@ public class FDUtils {
         if (competition == null || competition.getId() <= 0) return null;
 
         String id = formatString(competition.getId());
+        long lastRefresh = Calendar.getInstance().getTimeInMillis();
         FDTeams teams = loadListTeams(id);      // NullPointerException
         List<FDTeam> list = new ArrayList<>();
         for (FDTeam team : teams.getTeams()) {
             try {
                 team.setId();
+                team.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;
             }
@@ -870,11 +893,13 @@ public class FDUtils {
         if (competition == null || competition.getId() <= 0) return null;
 
         String id = formatString(competition.getId());
+        long lastRefresh = Calendar.getInstance().getTimeInMillis();
         FDFixtures fixtures = loadListFixtures(id);      // NullPointerException
         List<FDFixture> list = new ArrayList<>();
         for (FDFixture fixture : fixtures.getFixtures()) {
             try {
                 fixture.setId();
+                fixture.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;
             }

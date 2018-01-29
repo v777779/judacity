@@ -69,7 +69,7 @@ public class FDCompetition {
     public FDCompetition(int id, String caption, String league, String year,
                          int currentMatchDay, int numberOfMatchDays,
                          int numberOfTeams, int numberOfGames,
-                         long lastUpdated, long lastRefresh) {
+                         Date lastUpdated, Date lastRefresh) {
 
         this.links = null;
         this.id = id;
@@ -80,8 +80,8 @@ public class FDCompetition {
         this.numberOfMatchDays = numberOfMatchDays;
         this.numberOfTeams = numberOfTeams;
         this.numberOfGames = numberOfGames;
-        this.lastUpdated = new Date(lastUpdated);
-        this.lastRefresh = new Date(lastRefresh);
+        this.lastUpdated = lastUpdated;
+        this.lastRefresh = lastRefresh;
         this.teams = null;
         this.fixtures = null;
     }
@@ -103,6 +103,10 @@ public class FDCompetition {
         @Expose
         private FDLink table;
 
+    }
+
+    public void setLastRefresh(Date lastRefresh) {
+        this.lastRefresh = lastRefresh;
     }
 
     public int getId() {
@@ -129,6 +133,7 @@ public class FDCompetition {
     public void setFixtures(List<FDFixture> fixtures) {
         this.fixtures = fixtures;
     }
+
 
     public String getLeague() {
         return league;

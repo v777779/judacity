@@ -57,17 +57,17 @@ public class FDFixture {
     }
 
 
-    public FDFixture( int id, long fixtureTime, String status, int matchday,
+    public FDFixture( int id, Date fixtureTime, String status, int matchday,
                      String homeTeamName, String awayTeamName,
                       int goalsHomeTeam,int goalsAwayTeam,
-                     double homeWin, double draw, double awayWin, long lastRefresh ) {
+                     double homeWin, double draw, double awayWin, Date lastRefresh ) {
         this.id = id;
-        this.date = new Date(fixtureTime);
+        this.date = fixtureTime;
         this.status = status;
         this.matchday = matchday;
         this.result = new FDResult(goalsHomeTeam,goalsAwayTeam);
         this.odds = new FDOdds(homeWin,draw,awayWin);
-        this.lastRefresh = new Date(lastRefresh);
+        this.lastRefresh = lastRefresh;
     }
 
 
@@ -153,6 +153,10 @@ public class FDFixture {
         if (id == -1) throw new NumberFormatException();
     }
 
+    public void setLastRefresh(long lastRefresh) {
+        this.lastRefresh = new Date(lastRefresh);
+    }
+
     public int getId() {
         return id;
     }
@@ -207,5 +211,9 @@ public class FDFixture {
 
     public double getAwayWin() {
         return odds.awayWin;
+    }
+
+    public Date getLastRefresh() {
+        return lastRefresh;
     }
 }
