@@ -47,6 +47,10 @@ public class FDProvider extends ContentProvider {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName, p.tableMatcher);
             uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/#", p.tableIdMatcher);
+
+// support uri/table/100/200
+            if (p.column_id2 == null) continue;
+            uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/#/#", p.tableIdMatcher2);
         }
         return uriMatcher;
     }
@@ -116,13 +120,12 @@ public class FDProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
             return buildItemIdUri(builder.table, id);
         } catch (SQLException e) {
-            long id = contentValues.getAsLong(builder.columnId);
             int nUpdated = db.update(builder.table, contentValues, builder.selection, builder.selectionArgs);
             if (nUpdated == 0) {
                 return null;
             }
-            Timber.d(getContext().getString(R.string.content_provider_insert)+e.getMessage());
-            return buildItemIdUri(builder.table, id);  // skip insertion
+            Timber.d(getContext().getString(R.string.content_provider_insert) + e.getMessage());
+            return uri;             // skip insertion
         }
 
     }
@@ -200,17 +203,25 @@ public class FDProvider extends ContentProvider {
             if (match == p.tableMatcher) {
                 return new Selection(p.tableName,
                         selection,
-                        selectionArgs,
-                        p.column_id);
+                        selectionArgs);
             }
             if (match == p.tableIdMatcher) {
                 List<String> paths = uri.getPathSegments();
                 String _id = paths.get(1);
                 return new Selection(p.tableName,
                         p.column_id + "=?",
-                        new String[]{_id},
-                        p.column_id);
+                        new String[]{_id});
             }
+            if (match == p.tableIdMatcher2) {
+                List<String> paths = uri.getPathSegments();
+                String _id = paths.get(1);
+                String _id2 = paths.get(2);
+                return new Selection(p.tableName,
+                        p.column_id + "=?" + " AND " +
+                                p.column_id2 + "=?",
+                        new String[]{_id, _id2});
+            }
+
         }
         throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -220,13 +231,11 @@ public class FDProvider extends ContentProvider {
         String table;
         String selection;
         String[] selectionArgs;
-        String columnId;
 
-        public Selection(String table, String selection, String[] selectionArgs, String columnId) {
+        public Selection(String table, String selection, String[] selectionArgs) {
             this.table = table;
             this.selection = selection;
             this.selectionArgs = selectionArgs;
-            this.columnId = columnId;
         }
     }
 

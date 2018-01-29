@@ -72,15 +72,18 @@ public class UpdateService extends IntentService {
         sendBroadcast(new Intent(getString(R.string.broadcast_update_started)));
 
         try {
+            Map<Integer, List<Integer>> mapCpTeams = FDUtils.readCompetitionTeams(this);
             mMapCompetitions = FDUtils.readCompetitions(this);
             mMapTeams = FDUtils.readTeams(this);
-
-
             mMapCompetitions = FDUtils.getCompetitions(this, mMapCompetitions, false);
 
 
-            FDUtils.writeCompetitions(this, mMapCompetitions,false);
-            FDUtils.writeTeams(this,mMapCompetitions, false);
+            FDUtils.writeCompetitions(this, mMapCompetitions, false);
+            FDUtils.writeTeams(this, mMapCompetitions, false);
+
+            FDUtils.writeCompetitionTeams(this, mMapCompetitions, false);
+
+
 
         } catch (IOException e) {
 // test !!!  catch errors

@@ -44,10 +44,10 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.CpEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                 // int from date
 
         final String CREATE_TABLE_COMPETITION_TEAMS = "CREATE TABLE " + FDContract.CpTmEntry.TABLE_NAME + " (" +
-//                FDContract.CpTmEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.CpTmEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
-                FDContract.CpTmEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +              // int
-                FDContract.CpTmEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                 // int from date
+                FDContract.CpTmEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +                 // int
+                FDContract.CpTmEntry.COLUMN_COMPETITION_ID + " INTEGER NOT NULL, " +                // int
+                FDContract.CpTmEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +                       // int
+                FDContract.CpTmEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                   // int from date
 
         final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFxEntry.TABLE_NAME + " (" +
 //                FDContract.CpFxEntry._ID + " INTEGER PRIMARY KEY, " +
@@ -161,8 +161,10 @@ public class FDDbHelper extends SQLiteOpenHelper {
 
 
     public interface ICpTmEntry {
-        int COLUMN_COMPETITION_ID = 0;      // int
-        int COLUMN_TEAM_ID = 1;             // int
+        int _ID = 0;                        // int
+        int COLUMN_COMPETITION_ID = 1;      // int
+        int COLUMN_TEAM_ID = 2;             // int
+        int COLUMN_LAST_REFRESH = 3;        // int from date
     }
 
     public interface ICpFxEntry {
@@ -170,6 +172,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_FIXTURE_ID = 1;          // int
         int COLUMN_TEAM_HOME_ID = 2;        // int
         int COLUMN_TEAM_AWAY_ID = 3;        // int
+        int COLUMN_LAST_REFRESH = 4;        // int from date
     }
 
     public interface ITmEntry {
@@ -183,7 +186,6 @@ public class FDDbHelper extends SQLiteOpenHelper {
     }
 
     public interface IFxEntry {
-
         int COLUMN_FIXTURE_ID = 0;          // int
         int COLUMN_FIXTURE_DATE = 1;        // string from date
         int COLUMN_FIXTURE_DATE_LONG = 2;   // int from date
@@ -196,8 +198,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_FIXTURE_ODDS_WIN = 9;    // real
         int COLUMN_FIXTURE_ODDS_DRAW = 10;  // real
         int COLUMN_FIXTURE_ODDS_LOSE = 11;  // real
-        int COLUMN_REFRESH_DATE = 12;       // int from date
-
+        int COLUMN_LAST_REFRESH = 12;       // int from date
     }
 
     public interface ITbEntry {
@@ -216,7 +217,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_TEAM_WINS = 12;          // int
         int COLUMN_TEAM_DRAWS = 13;         // int
         int COLUMN_TEAM_LOSSES = 14;        // int
-        int COLUMN_REFRESH_DATE = 15;       // int from date
+        int COLUMN_LAST_REFRESH = 15;       // int from date
     }
 
     public interface IPlEntry {
@@ -230,7 +231,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_PLAYER_NATIONALITY = 6;  // string
         int COLUMN_PLAYER_DATE_CONTRACT = 7; // string from date
         int COLUMN_PLAYER_MARKET_VALUE = 8; // string
-        int COLUMN_REFRESH_DATE = 9;        // int from date
+        int COLUMN_LAST_REFRESH = 9;        // int from date
     }
 
 }

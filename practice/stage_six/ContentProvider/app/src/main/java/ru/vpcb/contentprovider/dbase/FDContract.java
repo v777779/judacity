@@ -52,6 +52,7 @@ public class FDContract {
         public static final String TABLE_NAME = TABLE_COMPETITION_TEAMS;
         public static final int TABLE_MATCHER = 120;
         public static final int TABLE_ID_MATCHER = 121;
+        public static final int TABLE_ID_MATCHER2 = 122;
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
         public static final String COLUMN_TEAM_ID = "team_id";                          // int
@@ -155,7 +156,10 @@ public class FDContract {
 
     public static final FDParams[] MATCH_PARAMETERS = new FDParams[]{
             new FDParams(CpEntry.TABLE_NAME, CpEntry.TABLE_MATCHER, CpEntry.TABLE_ID_MATCHER, CpEntry.COLUMN_COMPETITION_ID),
-            new FDParams(CpTmEntry.TABLE_NAME, CpTmEntry.TABLE_MATCHER, CpTmEntry.TABLE_ID_MATCHER, CpTmEntry.COLUMN_COMPETITION_ID),
+            new FDParams(CpTmEntry.TABLE_NAME, CpTmEntry.TABLE_MATCHER,
+                    CpTmEntry.TABLE_ID_MATCHER, CpTmEntry.COLUMN_COMPETITION_ID,
+                    CpTmEntry.TABLE_ID_MATCHER2, CpTmEntry.COLUMN_TEAM_ID
+            ),
             new FDParams(CpFxEntry.TABLE_NAME, CpFxEntry.TABLE_MATCHER, CpFxEntry.TABLE_ID_MATCHER, CpFxEntry.COLUMN_COMPETITION_ID),
             new FDParams(TmEntry.TABLE_NAME, TmEntry.TABLE_MATCHER, TmEntry.TABLE_ID_MATCHER, TmEntry.COLUMN_TEAM_ID),
             new FDParams(FxEntry.TABLE_NAME, FxEntry.TABLE_MATCHER, FxEntry.TABLE_ID_MATCHER, FxEntry.COLUMN_FIXTURE_ID),
@@ -164,19 +168,36 @@ public class FDContract {
     };
 
 
-
     public static final class FDParams {
         String tableName;
         int tableMatcher;
         int tableIdMatcher;
         String column_id;
+        int tableIdMatcher2;
+        String column_id2;
 
         public FDParams(String tableName, int tableMatcher, int tableIdMatcher, String column_id) {
             this.tableName = tableName;
             this.tableMatcher = tableMatcher;
             this.tableIdMatcher = tableIdMatcher;
             this.column_id = column_id;
+            this.tableIdMatcher2 = -1;   // exception if using
+            this.column_id2 = null;
+
         }
+
+        public FDParams(String tableName, int tableMatcher, int tableIdMatcher, String column_id,
+                        int tableIdMatcher2, String column_id2) {
+            this.tableName = tableName;
+            this.tableMatcher = tableMatcher;
+            this.tableIdMatcher = tableIdMatcher;
+            this.column_id = column_id;
+            this.tableIdMatcher2 = tableIdMatcher2;
+            this.column_id2 = column_id2;
+
+        }
+
+
     }
 
 
