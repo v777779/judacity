@@ -48,13 +48,19 @@ public class FDTeam {
         id = -1;
     }
 
-    public FDTeam(int id, String name, long lastRefresh) {
+
+    public FDTeam(int id, String name, String code, String shortName,
+                  String squadMarketValue, String crestURL, long lastRefresh) {
         this.id = id;
         this.name = name;
+        this.code=code;
+        this.shortName = shortName;
+        this.squadMarketValue = squadMarketValue;
+        this.crestURL = crestURL;
         this.lastRefresh = new Date(lastRefresh);
     }
 
-    ;
+
 
 
     public String getLinkSelf() {

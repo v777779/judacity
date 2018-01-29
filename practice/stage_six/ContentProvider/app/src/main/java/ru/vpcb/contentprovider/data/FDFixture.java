@@ -49,10 +49,27 @@ public class FDFixture {
     private FDOdds odds;
 
     private int id;
+    private Date lastRefresh;
+
 
     public FDFixture() {
         this.id = -1;
     }
+
+
+    public FDFixture( int id, long fixtureTime, String status, int matchday,
+                     String homeTeamName, String awayTeamName,
+                      int goalsHomeTeam,int goalsAwayTeam,
+                     double homeWin, double draw, double awayWin, long lastRefresh ) {
+        this.id = id;
+        this.date = new Date(fixtureTime);
+        this.status = status;
+        this.matchday = matchday;
+        this.result = new FDResult(goalsHomeTeam,goalsAwayTeam);
+        this.odds = new FDOdds(homeWin,draw,awayWin);
+        this.lastRefresh = new Date(lastRefresh);
+    }
+
 
     private class FDLinks {
         @SerializedName("self")
@@ -98,6 +115,11 @@ public class FDFixture {
         @Expose
         private FDHalfTime halfTime;
 
+        public FDResult(int goalsHomeTeam, int goalsAwayTeam) {
+            this.goalsHomeTeam = goalsHomeTeam;
+            this.goalsAwayTeam = goalsAwayTeam;
+            this.halfTime = null;
+        }
     }
 
     private class FDOdds {
@@ -113,6 +135,11 @@ public class FDFixture {
         @Expose
         private double awayWin;
 
+        public FDOdds(double homeWin, double draw, double awayWin) {
+            this.homeWin = homeWin;
+            this.draw = draw;
+            this.awayWin = awayWin;
+        }
     }
 
     public String getLinkSelf() {
@@ -130,13 +157,55 @@ public class FDFixture {
         return id;
     }
 
+    public Date getDate() {
+        return date;
+    }
 
-    @Override
-    public String toString() {
-        return "FDFixture{" +
-                "date=" + date +
-                ", homeTeamName='" + homeTeamName + '\'' +
-                ", awayTeamName='" + awayTeamName + '\'' +
-                '}';
+    public long getTime() {
+        if(date == null) return 0;
+        return date.getTime();
+    }
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public int getMatchday() {
+        return matchday;
+    }
+
+    public String getHomeTeamName() {
+        return homeTeamName;
+    }
+
+    public String getAwayTeamName() {
+        return awayTeamName;
+    }
+
+    public FDResult getResult() {
+        return result;
+    }
+
+    public int getGoalsHome() {
+        if(result == null) return -1;
+        return result.goalsHomeTeam;
+    }
+
+    public int getGoalsAway() {
+        if(result == null) return -1;
+        return result.goalsAwayTeam;
+    }
+
+    public double getHomeWin() {
+        return odds.homeWin;
+    }
+
+    public double getDraw() {
+        return odds.draw;
+    }
+
+    public double getAwayWin() {
+        return odds.awayWin;
     }
 }

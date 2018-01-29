@@ -43,10 +43,15 @@ public class UpdateService extends IntentService {
     private OkHttpClient mOkHttpClient;
 
     private Map<Integer, FDCompetition> mMapCompetitions;
-    private Map<Integer, FDTeam> mMapTeams;
+
     private Map<Integer, FDFixture> mMapFixture;
     private Map<Integer, FDTable> mMapTables;
     private Map<Integer, List<FDPlayer>> mMapPlayers;
+
+
+    private Map<Integer, List<Integer>> mapCpTeams;
+    private Map<Integer, FDTeam> mMapTeams;
+
 
 
     public UpdateService() {
@@ -72,9 +77,13 @@ public class UpdateService extends IntentService {
         sendBroadcast(new Intent(getString(R.string.broadcast_update_started)));
 
         try {
-            Map<Integer, List<Integer>> mapCpTeams = FDUtils.readCompetitionTeams(this);
-            mMapCompetitions = FDUtils.readCompetitions(this);
+
+            mapCpTeams = FDUtils.readCompetitionTeams(this);
             mMapTeams = FDUtils.readTeams(this);
+
+            mMapCompetitions = FDUtils.readCompetitions(this);
+
+
             mMapCompetitions = FDUtils.getCompetitions(this, mMapCompetitions, false);
 
 

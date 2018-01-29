@@ -40,8 +40,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS + " INTEGER NOT NULL, " +        // int
                 FDContract.CpEntry.COLUMN_NUMBER_TEAMS + " INTEGER NOT NULL, " +            // int
                 FDContract.CpEntry.COLUMN_NUMBER_GAMES + " INTEGER NOT NULL, " +            // int
-                FDContract.CpEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +              // int from date
-                FDContract.CpEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                 // int from date
+                FDContract.CpEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +             // int from date
+                FDContract.CpEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";             // int from date
 
         final String CREATE_TABLE_COMPETITION_TEAMS = "CREATE TABLE " + FDContract.CpTmEntry.TABLE_NAME + " (" +
                 FDContract.CpTmEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +                 // int
@@ -50,11 +50,9 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.CpTmEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                   // int from date
 
         final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFxEntry.TABLE_NAME + " (" +
-//                FDContract.CpFxEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " + // int
+                FDContract.CpFxEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " INTEGER NOT NULL, " + // int
                 FDContract.CpFxEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL, " +        // int
-                FDContract.CpFxEntry.COLUMN_TEAM_HOME_ID + " INTEGER NOT NULL, " +      // int
-                FDContract.CpFxEntry.COLUMN_TEAM_AWAY_ID + " INTEGER NOT NULL, " +      // int
                 FDContract.CpFxEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";       // int from date
 
 
@@ -71,8 +69,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_FIXTURES = "CREATE TABLE " + FDContract.FxEntry.TABLE_NAME + " (" +
 //                FDContract.FxEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.FxEntry.COLUMN_FIXTURE_ID + " INTEGER PRIMARY KEY, " +       // int
-                FDContract.FxEntry.COLUMN_FIXTURE_DATE + " TEXT NOT NULL, " +           // string from date
-                FDContract.FxEntry.COLUMN_FIXTURE_DATE_LONG + " INTEGER NOT NULL, " +   // int from date
+                FDContract.FxEntry.COLUMN_FIXTURE_DATE + " INTEGER NOT NULL, " +   // int from date
                 FDContract.FxEntry.COLUMN_FIXTURE_STATUS + " TEXT NOT NULL, " +         // string
                 FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY + " INTEGER NOT NULL, " +    // int
                 FDContract.FxEntry.COLUMN_FIXTURE_TEAM_HOME + " TEXT NOT NULL, " +      // string
@@ -81,7 +78,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.FxEntry.COLUMN_FIXTURE_GOALS_AWAY + " INTEGER NOT NULL, " +  // int
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN + " REAL, " +                // real
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW + " REAL, " +               // real
-                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_LOSE + " REAL, " +               // real
+                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY + " REAL, " +               // real
                 FDContract.FxEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
 
 
@@ -109,11 +106,11 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.PlEntry.COLUMN_PLAYER_ID + " INTEGER PRIMARY KEY, " +        // int
                 FDContract.PlEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
                 FDContract.PlEntry.COLUMN_PLAYER_NAME + " TEXT NOT NULL, " +            // string
-                FDContract.PlEntry.COLUMN_PLAYER_POSITION + " TEXT, " +        // string
-                FDContract.PlEntry.COLUMN_PLAYER_JERSEY_NUMBER + " INTEGER, " +  // int
-                FDContract.PlEntry.COLUMN_PLAYER_DATE_BIRTH + " TEXT, " +      // string from date
-                FDContract.PlEntry.COLUMN_PLAYER_NATIONALITY + " TEXT, " +     // string
-                FDContract.PlEntry.COLUMN_PLAYER_DATE_CONTRACT + " TEXT, " +   // string from date
+                FDContract.PlEntry.COLUMN_PLAYER_POSITION + " TEXT, " +                 // string
+                FDContract.PlEntry.COLUMN_PLAYER_JERSEY_NUMBER + " INTEGER, " +         // int
+                FDContract.PlEntry.COLUMN_PLAYER_DATE_BIRTH + " TEXT, " +               // int from date
+                FDContract.PlEntry.COLUMN_PLAYER_NATIONALITY + " TEXT, " +              // string
+                FDContract.PlEntry.COLUMN_PLAYER_DATE_CONTRACT + " TEXT, " +            // int from date
                 FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT, " +             // string
                 FDContract.PlEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
 
@@ -147,91 +144,89 @@ public class FDDbHelper extends SQLiteOpenHelper {
     }
 
     public interface ICpEntry {
-        int COLUMN_COMPETITION_ID = 0;      // int
-        int COLUMN_COMPETITION_CAPTION = 1; // string
-        int COLUMN_COMPETITION_LEAGUE = 2;  // string
-        int COLUMN_COMPETITION_YEAR = 3;    // string
-        int COLUMN_CURRENT_MATCHDAY = 4;    // int
-        int COLUMN_NUMBER_MATCHDAYS = 5;    // int
-        int COLUMN_NUMBER_TEAMS = 6;        // int
-        int COLUMN_NUMBER_GAMES = 7;        // int
-        int COLUMN_LAST_UPDATE = 8;         // int from date
-        int COLUMN_LAST_REFRESH = 9;        // int from date
+        int COLUMN_COMPETITION_ID = 0;          // int
+        int COLUMN_COMPETITION_CAPTION = 1;     // string
+        int COLUMN_COMPETITION_LEAGUE = 2;      // string
+        int COLUMN_COMPETITION_YEAR = 3;        // string
+        int COLUMN_CURRENT_MATCHDAY = 4;        // int
+        int COLUMN_NUMBER_MATCHDAYS = 5;        // int
+        int COLUMN_NUMBER_TEAMS = 6;            // int
+        int COLUMN_NUMBER_GAMES = 7;            // int
+        int COLUMN_LAST_UPDATE = 8;             // int from date
+        int COLUMN_LAST_REFRESH = 9;            // int from date
     }
 
 
     public interface ICpTmEntry {
-        int _ID = 0;                        // int
-        int COLUMN_COMPETITION_ID = 1;      // int
-        int COLUMN_TEAM_ID = 2;             // int
-        int COLUMN_LAST_REFRESH = 3;        // int from date
+        int _ID = 0;                            // int
+        int COLUMN_COMPETITION_ID = 1;          // int
+        int COLUMN_TEAM_ID = 2;                 // int
+        int COLUMN_LAST_REFRESH = 3;            // int from date
     }
 
     public interface ICpFxEntry {
-        int COLUMN_COMPETITION_ID = 0;      // int
-        int COLUMN_FIXTURE_ID = 1;          // int
-        int COLUMN_TEAM_HOME_ID = 2;        // int
-        int COLUMN_TEAM_AWAY_ID = 3;        // int
-        int COLUMN_LAST_REFRESH = 4;        // int from date
+        int _ID = 0;                            // int
+        int COLUMN_COMPETITION_ID = 1;          // int
+        int COLUMN_FIXTURE_ID = 2;              // int
+        int COLUMN_LAST_REFRESH = 3;            // int from date
     }
 
     public interface ITmEntry {
-        int COLUMN_TEAM_ID = 0;             // int
-        int COLUMN_TEAM_NAME = 1;           // string
-        int COLUMN_TEAM_CODE = 2;           // string
-        int COLUMN_TEAM_SHORT_NAME = 3;     // string
-        int COLUMN_TEAM_MARKET_VALUE = 4;   // string
-        int COLUMN_TEAM_CREST_URI = 5;      // string
-        int COLUMN_LAST_REFRESH = 6;        // int from date
+        int COLUMN_TEAM_ID = 0;                 // int
+        int COLUMN_TEAM_NAME = 1;               // string
+        int COLUMN_TEAM_CODE = 2;               // string
+        int COLUMN_TEAM_SHORT_NAME = 3;         // string
+        int COLUMN_TEAM_MARKET_VALUE = 4;       // string
+        int COLUMN_TEAM_CREST_URI = 5;          // string
+        int COLUMN_LAST_REFRESH = 6;            // int from date
     }
 
     public interface IFxEntry {
-        int COLUMN_FIXTURE_ID = 0;          // int
-        int COLUMN_FIXTURE_DATE = 1;        // string from date
-        int COLUMN_FIXTURE_DATE_LONG = 2;   // int from date
-        int COLUMN_FIXTURE_STATUS = 3;      // string
-        int COLUMN_FIXTURE_MATCHDAY = 4;    // int
-        int COLUMN_FIXTURE_TEAM_HOME = 5;   // string
-        int COLUMN_FIXTURE_TEAM_AWAY = 6;   // string
-        int COLUMN_FIXTURE_GOALS_HOME = 7;  // int
-        int COLUMN_FIXTURE_GOALS_AWAY = 8;  // int
-        int COLUMN_FIXTURE_ODDS_WIN = 9;    // real
-        int COLUMN_FIXTURE_ODDS_DRAW = 10;  // real
-        int COLUMN_FIXTURE_ODDS_LOSE = 11;  // real
-        int COLUMN_LAST_REFRESH = 12;       // int from date
+        int COLUMN_FIXTURE_ID = 0;              // int
+        int COLUMN_FIXTURE_DATE = 1;            // int from date
+        int COLUMN_FIXTURE_STATUS = 2;          // string
+        int COLUMN_FIXTURE_MATCHDAY = 3;        // int
+        int COLUMN_FIXTURE_TEAM_HOME = 4;       // string
+        int COLUMN_FIXTURE_TEAM_AWAY = 5;       // string
+        int COLUMN_FIXTURE_GOALS_HOME = 6;      // int
+        int COLUMN_FIXTURE_GOALS_AWAY = 7;      // int
+        int COLUMN_FIXTURE_ODDS_WIN = 8;        // real
+        int COLUMN_FIXTURE_ODDS_DRAW = 9;      // real
+        int COLUMN_FIXTURE_ODDS_AWAY = 10;      // real
+        int COLUMN_LAST_REFRESH = 11;           // int from date
     }
 
     public interface ITbEntry {
-        int COLUMN_COMPETITION_ID = 0;      // int
-        int COLUMN_TEAM_ID = 1;             // int
-        int COLUMN_COMPETITION_MATCHDAY = 2; // int
-        int COLUMN_LEAGUE_CAPTION = 3;      // string
-        int COLUMN_TEAM_POSITION = 4;       // int
-        int COLUMN_TEAM_NAME = 5;           // string
-        int COLUMN_CREST_URI = 6;           // string
-        int COLUMN_TEAM_PLAYED_GAMES = 7;   // int
-        int COLUMN_TEAM_POINTS = 8;         // int
-        int COLUMN_TEAM_GOALS = 9;          // int
-        int COLUMN_TEAM_GOALS_AGAINST = 10; // int
-        int COLUMN_TEAM_GOALS_DIFFERENCE = 11; // int
-        int COLUMN_TEAM_WINS = 12;          // int
-        int COLUMN_TEAM_DRAWS = 13;         // int
-        int COLUMN_TEAM_LOSSES = 14;        // int
-        int COLUMN_LAST_REFRESH = 15;       // int from date
+        int COLUMN_COMPETITION_ID = 0;          // int
+        int COLUMN_TEAM_ID = 1;                 // int
+        int COLUMN_COMPETITION_MATCHDAY = 2;    // int
+        int COLUMN_LEAGUE_CAPTION = 3;          // string
+        int COLUMN_TEAM_POSITION = 4;           // int
+        int COLUMN_TEAM_NAME = 5;               // string
+        int COLUMN_CREST_URI = 6;               // string
+        int COLUMN_TEAM_PLAYED_GAMES = 7;       // int
+        int COLUMN_TEAM_POINTS = 8;             // int
+        int COLUMN_TEAM_GOALS = 9;              // int
+        int COLUMN_TEAM_GOALS_AGAINST = 10;     // int
+        int COLUMN_TEAM_GOALS_DIFFERENCE = 11;  // int
+        int COLUMN_TEAM_WINS = 12;              // int
+        int COLUMN_TEAM_DRAWS = 13;             // int
+        int COLUMN_TEAM_LOSSES = 14;            // int
+        int COLUMN_LAST_REFRESH = 15;           // int from date
     }
 
     public interface IPlEntry {
         //                int _ID + " INTEGER PRIMARY KEY, " +
-        int COLUMN_PLAYER_ID = 0;           // int
-        int COLUMN_TEAM_ID = 1;             // int
-        int COLUMN_PLAYER_NAME = 2;         // string
-        int COLUMN_PLAYER_POSITION = 3;     // string
-        int COLUMN_PLAYER_JERSEY_NUMBER = 4; // int
-        int COLUMN_PLAYER_DATE_BIRTH = 5;   // string from date
-        int COLUMN_PLAYER_NATIONALITY = 6;  // string
-        int COLUMN_PLAYER_DATE_CONTRACT = 7; // string from date
-        int COLUMN_PLAYER_MARKET_VALUE = 8; // string
-        int COLUMN_LAST_REFRESH = 9;        // int from date
+        int COLUMN_PLAYER_ID = 0;               // int
+        int COLUMN_TEAM_ID = 1;                 // int
+        int COLUMN_PLAYER_NAME = 2;             // string
+        int COLUMN_PLAYER_POSITION = 3;         // string
+        int COLUMN_PLAYER_JERSEY_NUMBER = 4;    // int
+        int COLUMN_PLAYER_DATE_BIRTH = 5;       // int from date
+        int COLUMN_PLAYER_NATIONALITY = 6;      // string
+        int COLUMN_PLAYER_DATE_CONTRACT = 7;    // int from date
+        int COLUMN_PLAYER_MARKET_VALUE = 8;     // string
+        int COLUMN_LAST_REFRESH = 9;            // int from date
     }
 
 }

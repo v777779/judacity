@@ -44,8 +44,8 @@ public class FDContract {
         public static final String COLUMN_NUMBER_MATCHDAYS = "number_matchdays";        // int
         public static final String COLUMN_NUMBER_TEAMS = "number_teams";                // int
         public static final String COLUMN_NUMBER_GAMES = "number_games";                // int
-        public static final String COLUMN_LAST_UPDATE = "last_update";                  // string from date
-        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
+        public static final String COLUMN_LAST_UPDATE = "last_update";                  // int from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // int from date
     }
 
     public static final class CpTmEntry implements BaseColumns {
@@ -56,7 +56,7 @@ public class FDContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
         public static final String COLUMN_TEAM_ID = "team_id";                          // int
-        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // int from date
 
     }
 
@@ -67,9 +67,7 @@ public class FDContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
         public static final String COLUMN_FIXTURE_ID = "fixture_id";                    // int
-        public static final String COLUMN_TEAM_HOME_ID = "team_home_id";                // int
-        public static final String COLUMN_TEAM_AWAY_ID = "team_away_id";                // int
-        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // int from date
     }
 
 
@@ -85,7 +83,7 @@ public class FDContract {
         public static final String COLUMN_TEAM_SHORT_NAME = "team_short_name";          // string
         public static final String COLUMN_TEAM_MARKET_VALUE = "team_market_value";      // string
         public static final String COLUMN_TEAM_CREST_URI = "team_crest_url";            // string
-        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // int from date
     }
 
 
@@ -98,7 +96,7 @@ public class FDContract {
         public static final String COLUMN_FIXTURE_ID = "fixture_id";                    // int
         public static final String COLUMN_TEAM_HOME_ID = "team_home_id";                // int
         public static final String COLUMN_TEAM_AWAY_ID = "team_away_id";                // int
-        public static final String COLUMN_FIXTURE_DATE = "fixture_date";                // string from date
+        public static final String COLUMN_FIXTURE_DATE = "fixture_date";                // int from date
         public static final String COLUMN_FIXTURE_DATE_LONG = "fixture_date_long";      // int from date
         public static final String COLUMN_FIXTURE_STATUS = "fixture_status";            // string
         public static final String COLUMN_FIXTURE_MATCHDAY = "fixture_matchday";        // int
@@ -108,8 +106,8 @@ public class FDContract {
         public static final String COLUMN_FIXTURE_GOALS_AWAY = "fixture_goals_away";    // int
         public static final String COLUMN_FIXTURE_ODDS_WIN = "fixture_odds_home_win";   // real
         public static final String COLUMN_FIXTURE_ODDS_DRAW = "fixture_odds_draw";      // real
-        public static final String COLUMN_FIXTURE_ODDS_LOSE = "fixture_odds_away_win";  // real
-        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // string from date
+        public static final String COLUMN_FIXTURE_ODDS_AWAY = "fixture_odds_away_win";  // real
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // int from date
 
     }
 
@@ -146,9 +144,9 @@ public class FDContract {
         public static final String COLUMN_PLAYER_NAME = "player_name";                      // string
         public static final String COLUMN_PLAYER_POSITION = "player_position";              // string
         public static final String COLUMN_PLAYER_JERSEY_NUMBER = "player_jersey_number";    // int
-        public static final String COLUMN_PLAYER_DATE_BIRTH = "player_date_birth";          // string from date
+        public static final String COLUMN_PLAYER_DATE_BIRTH = "player_date_birth";          // int from date
         public static final String COLUMN_PLAYER_NATIONALITY = "player_nationality";        // string
-        public static final String COLUMN_PLAYER_DATE_CONTRACT = "player_date_contract";    // string from date
+        public static final String COLUMN_PLAYER_DATE_CONTRACT = "player_date_contract";    // int from date
         public static final String COLUMN_PLAYER_MARKET_VALUE = "player_market_value";      // string
         public static final String COLUMN_LAST_REFRESH = "last_refresh";                    // int from date
     }
