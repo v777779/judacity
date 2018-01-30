@@ -53,7 +53,6 @@ import static ru.vpcb.contentprovider.utils.FootballUtils.getPrefInt;
 public class FDUtils {
 
 
-
     public static Uri buildTableNameUri(String tableName) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).build();
     }
@@ -171,30 +170,8 @@ public class FDUtils {
                 sortOrder
         );
         if (cursor == null || cursor.getCount() == 0) return null;
-
-        Map<Integer, FDCompetition> map = new HashMap<>();
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            int id = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_COMPETITION_ID);
-            if (id <= 0) continue;
-
-            String caption = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_CAPTION);
-            String league = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_LEAGUE);
-            String year = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_YEAR);
-            int currentMatchDay = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_CURRENT_MATCHDAY);
-            int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
-            int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
-            int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
-            Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
-            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
-
-
-            FDCompetition competition = new FDCompetition(id, caption, league,
-                    year, currentMatchDay, numberOfMatchDays, numberOfTeams,
-                    numberOfGames, lastUpdated, lastRefresh);
-
-            map.put(competition.getId(), competition);
-        }
-        cursor.close();
+        Map<Integer, FDCompetition> map = readCompetitions(cursor);
+        cursor.close();      // disables notifications
         return map;
     }
 
@@ -212,19 +189,8 @@ public class FDUtils {
                 sortOrder
         );
         if (cursor == null || cursor.getCount() == 0) return null;
-        Map<Integer, List<Integer>> map = new HashMap<>();
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            int id = cursor.getInt(FDDbHelper.ICpTmEntry.COLUMN_COMPETITION_ID);
-            int id2 = cursor.getInt(FDDbHelper.ICpTmEntry.COLUMN_TEAM_ID);
-            if (id <= 0 || id2 <= 0) continue;
-
-            List<Integer> list = map.get(id);
-            if (list == null) list = new ArrayList<>();
-            list.add(id2);
-            map.put(id, list);
-        }
-        cursor.close();
+        Map<Integer, List<Integer>> map = readCompetitionTeams(cursor);
+        cursor.close();     // disables notifications
         return map;
     }
 
@@ -242,24 +208,8 @@ public class FDUtils {
                 sortOrder
         );
         if (cursor == null || cursor.getCount() == 0) return null;
-        Map<Integer, FDTeam> map = new HashMap<>();
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            int id = cursor.getInt(FDDbHelper.ITmEntry.COLUMN_TEAM_ID);
-            if (id <= 0) continue;
-
-            String name = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_NAME);
-            String code = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_CODE);
-            String shortName = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_SHORT_NAME);
-            String squadMarketValue = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_MARKET_VALUE);
-            String crestURL = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_CREST_URI);
-            long lastRefresh = TimeUnit.MINUTES.toMillis(
-                    cursor.getInt(FDDbHelper.ITmEntry.COLUMN_LAST_REFRESH));
-
-            FDTeam team = new FDTeam(id, name, code, shortName, squadMarketValue, crestURL, lastRefresh);
-            map.put(team.getId(), team);
-        }
-        cursor.close();
+        Map<Integer, FDTeam> map = readTeams(cursor);
+        cursor.close();     // disables notifications
         return map;
     }
 
@@ -278,19 +228,8 @@ public class FDUtils {
                 sortOrder
         );
         if (cursor == null || cursor.getCount() == 0) return null;
-        Map<Integer, List<Integer>> map = new HashMap<>();
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            int id = cursor.getInt(FDDbHelper.ICpFxEntry.COLUMN_COMPETITION_ID);
-            int id2 = cursor.getInt(FDDbHelper.ICpFxEntry.COLUMN_FIXTURE_ID);
-            if (id <= 0 || id2 <= 0) continue;
-
-            List<Integer> list = map.get(id);
-            if (list == null) list = new ArrayList<>();
-            list.add(id2);
-            map.put(id, list);
-        }
-        cursor.close();
+        Map<Integer, List<Integer>> map = readCompetitionFixtures(cursor);
+        cursor.close();     // disables notifications
         return map;
     }
 
@@ -308,33 +247,8 @@ public class FDUtils {
                 sortOrder
         );
         if (cursor == null || cursor.getCount() == 0) return null;
-        Map<Integer, FDFixture> map = new HashMap<>();
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
-            if (id <= 0) continue;
-
-            Date date = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE));
-            String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
-            int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
-            String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
-            String awayTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_AWAY);
-
-            int goalsHomeTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_HOME);
-            int goalsAwayTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_AWAY);
-
-            double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
-            double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
-            double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
-            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_LAST_REFRESH));
-
-            FDFixture fixture = new FDFixture(id, date, status, matchday,
-                    homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
-                    homeWin, draw, awayWin, lastRefresh);
-
-            map.put(fixture.getId(), fixture);
-        }
-        cursor.close();
+        Map<Integer, FDFixture> map = readFixtures(cursor);
+        cursor.close();     // disables notifications
         return map;
     }
 
@@ -375,6 +289,134 @@ public class FDUtils {
             mapFixtures.clear();
             mapFixtures.putAll(readMapFixtures);
         }
+    }
+
+    // read cursors
+// read
+// competitions
+    public static Map<Integer, FDCompetition> readCompetitions(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+
+        Map<Integer, FDCompetition> map = new HashMap<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int id = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_COMPETITION_ID);
+            if (id <= 0) continue;
+
+            String caption = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_CAPTION);
+            String league = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_LEAGUE);
+            String year = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_YEAR);
+            int currentMatchDay = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_CURRENT_MATCHDAY);
+            int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
+            int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
+            int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
+            Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
+            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
+
+            FDCompetition competition = new FDCompetition(id, caption, league,
+                    year, currentMatchDay, numberOfMatchDays, numberOfTeams,
+                    numberOfGames, lastUpdated, lastRefresh);
+
+            map.put(competition.getId(), competition);
+        }
+//        cursor.close();  // notification support
+        return map;
+    }
+
+    // competition_teams
+    public static Map<Integer, List<Integer>> readCompetitionTeams(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int id = cursor.getInt(FDDbHelper.ICpTmEntry.COLUMN_COMPETITION_ID);
+            int id2 = cursor.getInt(FDDbHelper.ICpTmEntry.COLUMN_TEAM_ID);
+            if (id <= 0 || id2 <= 0) continue;
+
+            List<Integer> list = map.get(id);
+            if (list == null) list = new ArrayList<>();
+            list.add(id2);
+            map.put(id, list);
+        }
+//        cursor.close(); // notification support
+        return map;
+    }
+
+    // teams
+    public static Map<Integer, FDTeam> readTeams(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+        Map<Integer, FDTeam> map = new HashMap<>();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int id = cursor.getInt(FDDbHelper.ITmEntry.COLUMN_TEAM_ID);
+            if (id <= 0) continue;
+
+            String name = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_NAME);
+            String code = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_CODE);
+            String shortName = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_SHORT_NAME);
+            String squadMarketValue = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_MARKET_VALUE);
+            String crestURL = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_CREST_URI);
+            long lastRefresh = TimeUnit.MINUTES.toMillis(
+                    cursor.getInt(FDDbHelper.ITmEntry.COLUMN_LAST_REFRESH));
+
+            FDTeam team = new FDTeam(id, name, code, shortName, squadMarketValue, crestURL, lastRefresh);
+            map.put(team.getId(), team);
+        }
+//        cursor.close();
+        return map;
+    }
+
+
+    // fixtures
+    // competition_fixture
+    public static Map<Integer, List<Integer>> readCompetitionFixtures(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int id = cursor.getInt(FDDbHelper.ICpFxEntry.COLUMN_COMPETITION_ID);
+            int id2 = cursor.getInt(FDDbHelper.ICpFxEntry.COLUMN_FIXTURE_ID);
+            if (id <= 0 || id2 <= 0) continue;
+
+            List<Integer> list = map.get(id);
+            if (list == null) list = new ArrayList<>();
+            list.add(id2);
+            map.put(id, list);
+        }
+//        cursor.close(); // notification support
+        return map;
+    }
+
+    // fixture
+    public static Map<Integer, FDFixture> readFixtures(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+        Map<Integer, FDFixture> map = new HashMap<>();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
+            if (id <= 0) continue;
+
+            Date date = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE));
+            String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
+            int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
+            String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
+            String awayTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_AWAY);
+
+            int goalsHomeTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_HOME);
+            int goalsAwayTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_AWAY);
+
+            double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
+            double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
+            double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
+            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_LAST_REFRESH));
+
+            FDFixture fixture = new FDFixture(id, date, status, matchday,
+                    homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
+                    homeWin, draw, awayWin, lastRefresh);
+
+            map.put(fixture.getId(), fixture);
+        }
+//        cursor.close(); // notification support
+        return map;
     }
 
 

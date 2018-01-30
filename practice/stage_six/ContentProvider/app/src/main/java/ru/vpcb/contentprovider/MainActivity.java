@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,8 +24,10 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -34,6 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.contentprovider.data.FDCompetition;
+import ru.vpcb.contentprovider.data.FDFixture;
 import ru.vpcb.contentprovider.data.FDFixtures;
 import ru.vpcb.contentprovider.data.FDPlayers;
 import ru.vpcb.contentprovider.data.FDTable;
@@ -44,6 +49,7 @@ import ru.vpcb.contentprovider.data.IRetrofitAPI;
 import ru.vpcb.contentprovider.dbase.FDContract;
 import ru.vpcb.contentprovider.dbase.FDLoader;
 import ru.vpcb.contentprovider.services.UpdateService;
+import ru.vpcb.contentprovider.utils.FDUtils;
 import timber.log.Timber;
 
 
@@ -69,6 +75,13 @@ public class MainActivity extends AppCompatActivity
     private OkHttpClient mOkHttpClient;
     private MessageReceiver mMessageReceiver;
 
+    private Map<Integer, FDCompetition> map = new HashMap<>();
+    private Map<Integer, List<Integer>> mapTeamKeys = new HashMap<>();
+    private Map<Integer, FDTeam> mapTeams = new HashMap<>();
+    private Map<Integer, List<Integer>> mapFixtureKeys = new HashMap<>();
+    private Map<Integer, FDFixture> mapFixtures = new HashMap<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,11 +104,25 @@ public class MainActivity extends AppCompatActivity
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
 
-                Intent intent = new Intent(MainActivity.this, BottomActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, BottomActivity.class);
+//                startActivity(intent);
+
+
+                FDCompetition competition = new FDCompetition(524, "MyCompetition", "New League",
+                        "2017", 1, 12, 0, 24,
+                        Calendar.getInstance().getTime(), Calendar.getInstance().getTime());
+                try {
+                    FDUtils.writeCompetition(MainActivity.this, competition, false);
+                } catch (OperationApplicationException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
 
@@ -711,7 +738,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (loader.getId()) {
             case FDContract.CpEntry.LOADER_ID:
-
+                map = FDUtils.readCompetitions(data);
                 break;
 
             case FDContract.CpTmEntry.LOADER_ID:

@@ -93,6 +93,10 @@ public class FDProvider extends ContentProvider {
                 null,
                 sortOrder);
 
+// notifications about changes underlying data
+        if (cursor != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return cursor;
     }
 
@@ -122,11 +126,11 @@ public class FDProvider extends ContentProvider {
             return buildItemIdUri(builder.table, id);
         } catch (SQLException e) {
             int nUpdated = db.update(builder.table, contentValues, builder.selection, builder.selectionArgs);
-            if (nUpdated == 0) {
-                return null;
+            if (nUpdated != 0) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }else {
+                return null;  // throws UnsupportedOperationException
             }
-// test!!!
-            Timber.d(getContext().getString(R.string.content_provider_insert) + e.getMessage());
             return uri;             // skip insertion
         }
 
