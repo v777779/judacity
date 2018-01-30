@@ -64,7 +64,7 @@ public class FDUtils {
                 .build();
     }
 
-    private static int currentTimeMinutes() {
+    public static int currentTimeMinutes() {
         return (int) TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis());
     }
 
@@ -758,13 +758,11 @@ public class FDUtils {
         if (lastRefresh == null) return false;
 
         if (!getPrefBool(context, R.string.pref_smart_update_key, R.bool.pref_smart_update_default)) {
-            return false; // no smart update mode
+            return false; // update always
         }
 
         long delay = TimeUnit.MINUTES.toMillis(
-                getPrefInt(context,
-                        R.string.pref_update_time_key,
-                        R.integer.pref_update_time_default));
+                getPrefInt(context, R.string.pref_delay_time_key, R.integer.pref_delay_time_default));
         long currentTime = Calendar.getInstance().getTimeInMillis();
         long refreshTime = lastRefresh.getTime();
 

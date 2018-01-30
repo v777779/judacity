@@ -17,6 +17,12 @@
     <string name="pref_update_time_on">Update Time Enabled</string>
     <string name="pref_update_time_label">Update Time Delay(min)</string>
 
+    <string name="pref_delay_time_key">pref_delay_time_key</string>
+    <string name="pref_delay_time_off">Delay Time Value</string>
+    <string name="pref_delay_time_on">Delay Time Value</string>
+    <string name="pref_delay_time_label">Delay Time Value(min)</string>
+
+
 
     <!--retrofit-->
     <string name="retrofit_response_empty">Retrofit response is empty</string>

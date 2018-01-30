@@ -21,6 +21,7 @@ import ru.vpcb.contentprovider.data.FDTable;
 import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
 import ru.vpcb.contentprovider.utils.FDUtils;
+import ru.vpcb.contentprovider.utils.FootballUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.contentprovider.utils.Constants.UPDATE_SERVICE_TAG;
@@ -68,6 +69,9 @@ public class UpdateService extends IntentService {
     }
 
     private void onActionUpdate() {
+        if(FootballUtils.isRefreshTime(this)) return;  // data updated
+
+
         if (!isOnline(this)) {                                     // no network
             sendBroadcast(new Intent(getString(R.string.broadcast_no_network)));
             return;
@@ -75,12 +79,6 @@ public class UpdateService extends IntentService {
         sendBroadcast(new Intent(getString(R.string.broadcast_update_started)));
 
         try {
-
-//            mapCpTeams = FDUtils.readCompetitionTeams(this);
-//            mMapTeams = FDUtils.readTeams(this);
-//
-//            mMapCompetitions = FDUtils.readCompetitions(this);
-
 // loader imitation
             Map<Integer,FDCompetition> map = new HashMap<>();
             Map<Integer, List<Integer>> mapTeamKeys = new HashMap<>();
@@ -91,14 +89,14 @@ public class UpdateService extends IntentService {
                     mapFixtureKeys,mapFixtures);
 
 // load database
-         boolean isUpdated =    FDUtils.loadDatabase(this,map,mapTeamKeys,mapTeams,
+         boolean isUpdated = FDUtils.loadDatabase(this,map,mapTeamKeys,mapTeams,
                     mapFixtureKeys,mapFixtures,false);
 
 // save database
             if (isUpdated) {
                 FDUtils.writeDatabase(this, map, false);
             }
-
+            FootballUtils.setRefreshTime(this);
 
         } catch (IOException e) {
 // test !!!  catch errors
