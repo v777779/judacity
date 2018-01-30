@@ -772,7 +772,7 @@ public class MainActivity extends AppCompatActivity
         boolean isUpdated = FDUtils.loadCompetitions(map,mapTeamKeys,mapTeams,mapFixtureKeys,mapFixtures);
         if(isUpdated) {
 // test!!!
-            Timber.d("RecyclerView or ViewPager adapter notification update");
+            Timber.d("RecyclerView or ViewPager adapter notification update: "+map.size());
         }
 
     }
