@@ -64,6 +64,7 @@ public class FDContract {
         public static final String TABLE_NAME = TABLE_COMPETITION_FIXTURES;
         public static final int TABLE_MATCHER = 140;
         public static final int TABLE_ID_MATCHER = 141;
+        public static final int TABLE_ID_MATCHER2 = 142;
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
         public static final String COLUMN_FIXTURE_ID = "fixture_id";                    // int
@@ -158,7 +159,10 @@ public class FDContract {
                     CpTmEntry.TABLE_ID_MATCHER, CpTmEntry.COLUMN_COMPETITION_ID,
                     CpTmEntry.TABLE_ID_MATCHER2, CpTmEntry.COLUMN_TEAM_ID
             ),
-            new FDParams(CpFxEntry.TABLE_NAME, CpFxEntry.TABLE_MATCHER, CpFxEntry.TABLE_ID_MATCHER, CpFxEntry.COLUMN_COMPETITION_ID),
+            new FDParams(CpFxEntry.TABLE_NAME, CpFxEntry.TABLE_MATCHER,
+                    CpFxEntry.TABLE_ID_MATCHER, CpFxEntry.COLUMN_COMPETITION_ID,
+                    CpFxEntry.TABLE_ID_MATCHER2, CpFxEntry.COLUMN_FIXTURE_ID
+            ),
             new FDParams(TmEntry.TABLE_NAME, TmEntry.TABLE_MATCHER, TmEntry.TABLE_ID_MATCHER, TmEntry.COLUMN_TEAM_ID),
             new FDParams(FxEntry.TABLE_NAME, FxEntry.TABLE_MATCHER, FxEntry.TABLE_ID_MATCHER, FxEntry.COLUMN_FIXTURE_ID),
             new FDParams(TbEntry.TABLE_NAME, TbEntry.TABLE_MATCHER, TbEntry.TABLE_ID_MATCHER, TbEntry.COLUMN_COMPETITION_ID),

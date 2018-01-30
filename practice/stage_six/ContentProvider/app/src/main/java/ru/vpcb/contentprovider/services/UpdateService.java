@@ -24,7 +24,6 @@ import ru.vpcb.contentprovider.utils.FDUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.contentprovider.utils.Constants.UPDATE_SERVICE_TAG;
-import static ru.vpcb.contentprovider.utils.FootballUtils.getPrefBool;
 import static ru.vpcb.contentprovider.utils.FootballUtils.isOnline;
 
 /**
@@ -83,24 +82,22 @@ public class UpdateService extends IntentService {
 //            mMapCompetitions = FDUtils.readCompetitions(this);
 
 // loader imitation
-            Map<Integer, List<Integer>> mapTeamKeys = FDUtils.readCompetitionTeams(this);
-            Map<Integer, FDTeam> mapTeams = FDUtils.readTeams(this);
-            Map<Integer, List<Integer>> mapFixtureKeys = FDUtils.readCompetitionFixtures(this);
-            Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(this);
+            Map<Integer,FDCompetition> map = new HashMap<>();
+            Map<Integer, List<Integer>> mapTeamKeys = new HashMap<>();
+            Map<Integer, FDTeam> mapTeams = new HashMap<>();
+            Map<Integer, List<Integer>> mapFixtureKeys = new HashMap<>();
+            Map<Integer, FDFixture> mapFixtures = new HashMap<>();
+            FDUtils.readDatabase(this,map,mapTeamKeys,mapTeams,
+                    mapFixtureKeys,mapFixtures);
 
-// load competition
-            mMapCompetitions = new HashMap<>(); // mandatory before getCompetitions()
-            boolean requestUpdate = FDUtils.getCompetitions(
-                    this, mMapCompetitions, mapTeamKeys, mapTeams,
-                    mapFixtureKeys, mapFixtures, false);
+// load database
+         boolean isUpdated =    FDUtils.loadDatabase(this,map,mapTeamKeys,mapTeams,
+                    mapFixtureKeys,mapFixtures,false);
 
-// save competition and all
-            if (requestUpdate) {
-                FDUtils.writeCompetitions(this, mMapCompetitions, false);
+// save database
+            if (isUpdated) {
+                FDUtils.writeDatabase(this, map, false);
             }
-//            FDUtils.writeTeams(this, mMapCompetitions, false);
-//
-//            FDUtils.writeCompetitionTeams(this, mMapCompetitions, false);
 
 
         } catch (IOException e) {

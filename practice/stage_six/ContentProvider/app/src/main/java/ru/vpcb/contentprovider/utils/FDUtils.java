@@ -8,13 +8,8 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.util.SparseArray;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
-import java.io.PipedReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,7 +52,6 @@ import static ru.vpcb.contentprovider.utils.FootballUtils.getPrefInt;
 public class FDUtils {
 
 
-
     public static Uri buildItemIdUri(String tableName, long id) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();
     }
@@ -71,16 +65,16 @@ public class FDUtils {
     }
 
     private static int currentTimeMinutes() {
-        return (int)TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis());
+        return (int) TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis());
     }
 
     private static Date currentTimeMinutesToDate() {
-        return new Date(currentTimeMinutes());
+        return minutesToDate(currentTimeMinutes());
     }
 
     private static int dateToMinutes(Date date) {
-        if(date == null) return 0;
-        return (int)TimeUnit.MILLISECONDS.toMinutes(date.getTime());
+        if (date == null) return 0;
+        return (int) TimeUnit.MILLISECONDS.toMinutes(date.getTime());
     }
 
     private static Date minutesToDate(int time) {
@@ -335,6 +329,46 @@ public class FDUtils {
         return map;
     }
 
+    // read database
+    public static void readDatabase(
+            Context context, Map<Integer, FDCompetition> map,
+            Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
+            Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures) {
+
+
+        Map<Integer, FDCompetition> readMap = readCompetitions(context);
+        Map<Integer, List<Integer>> readMapTeamKeys = readCompetitionTeams(context);
+        Map<Integer, FDTeam> readMapTeams = readTeams(context);
+        Map<Integer, List<Integer>> readMapFixtureKeys = readCompetitionFixtures(context);
+        Map<Integer, FDFixture> readMapFixtures = readFixtures(context);
+
+        if (readMap != null && readMap.size() > 0) {
+            map.clear();
+            map.putAll(readMap);
+        }
+
+        if (readMapTeamKeys != null && readMapTeamKeys.size() > 0) {
+            mapTeamKeys.clear();
+            mapTeamKeys.putAll(readMapTeamKeys);
+        }
+
+        if (readMapTeams != null && readMapTeams.size() > 0) {
+            mapTeams.clear();
+            mapTeams.putAll(readMapTeams);
+        }
+
+        if (readMapFixtureKeys != null && readMapFixtureKeys.size() > 0) {
+            mapFixtureKeys.clear();
+            mapFixtureKeys.putAll(readMapFixtureKeys);
+        }
+
+        if (readMapFixtures != null && readMapFixtures.size() > 0) {
+            mapFixtures.clear();
+            mapFixtures.putAll(readMapFixtures);
+        }
+    }
+
+
     // write
     // competition
     public static ArrayList<ContentProviderOperation> writeCompetition(
@@ -398,19 +432,18 @@ public class FDUtils {
     }
 
     // competition_team
-    public static ArrayList<ContentProviderOperation> writeCompetitionTeams(FDCompetition
-                                                                                    competition, boolean forceDelete) {
+    public static ArrayList<ContentProviderOperation> writeCompetitionTeams(FDCompetition competition) {
 
         int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-        if (forceDelete) {
-            Uri uri = buildItemIdUri(FDContract.CpTmEntry.TABLE_NAME, competition.getId());
-            operations.add(ContentProviderOperation.newDelete(uri).build());  // delete all records for Competition from table
-        }
+        // must be deleted because of ids are not keys
+        Uri uri = buildItemIdUri(FDContract.CpTmEntry.TABLE_NAME, competition.getId());
+        operations.add(ContentProviderOperation.newDelete(uri).build());  // delete all records for Competition from table
+
 
         for (FDTeam team : competition.getTeams()) {
             if (team == null || team.getId() <= 0) continue;
-            Uri uri = buildItemIdUri(FDContract.CpTmEntry.TABLE_NAME, competition.getId(), team.getId());
+            uri = buildItemIdUri(FDContract.CpTmEntry.TABLE_NAME, competition.getId(), team.getId());
 
             ContentValues values = new ContentValues();
             values.put(FDContract.CpTmEntry.COLUMN_COMPETITION_ID, competition.getId());                // int
@@ -425,7 +458,7 @@ public class FDUtils {
             competition,
                                                                 boolean forceDelete)
             throws OperationApplicationException, RemoteException {
-        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeCompetitionTeams(competition, forceDelete));
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeCompetitionTeams(competition));
     }
 
     public static ContentProviderResult[] writeCompetitionTeams(
@@ -444,7 +477,7 @@ public class FDUtils {
         for (FDCompetition competition : map.values()) {
             if (competition == null || competition.getId() <= 0 ||
                     competition.getTeams() == null) continue;
-            List<ContentProviderOperation> operations = writeCompetitionTeams(competition, false);
+            List<ContentProviderOperation> operations = writeCompetitionTeams(competition);
             if (operations == null) continue;
             listOperations.addAll(operations);
 
@@ -516,18 +549,19 @@ public class FDUtils {
 
     // competition fixture
     public static ArrayList<ContentProviderOperation> writeCompetitionFixtures(
-            FDCompetition competition, boolean forceDelete) {
+            FDCompetition competition) {
 
-        int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
+
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-        if (forceDelete) {
-            Uri uri = buildItemIdUri(FDContract.CpFxEntry.TABLE_NAME, competition.getId());
-            operations.add(ContentProviderOperation.newDelete(uri).build());  // delete all records for Competition from table
-        }
+        // all fixtures of given competition  must be deleted because ids are not key
+        Uri uri = buildItemIdUri(FDContract.CpFxEntry.TABLE_NAME, competition.getId());
+        operations.add(ContentProviderOperation.newDelete(uri).build());  // delete all records for Competition from table
+
 
         for (FDFixture fixture : competition.getFixtures()) {
             if (fixture == null || fixture.getId() <= 0) continue;
-            Uri uri = buildItemIdUri(FDContract.CpFxEntry.TABLE_NAME, competition.getId(), fixture.getId());
+            uri = buildItemIdUri(FDContract.CpFxEntry.TABLE_NAME, competition.getId(), fixture.getId());
+            int refreshTime = dateToMinutes(fixture.getLastRefresh());
 
             ContentValues values = new ContentValues();
             values.put(FDContract.CpFxEntry.COLUMN_COMPETITION_ID, competition.getId());                // int
@@ -541,7 +575,7 @@ public class FDUtils {
     public static ContentProviderResult[] writeCompetitionFixtures(
             Context context, FDCompetition competition, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
-        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeCompetitionTeams(competition, forceDelete));
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeCompetitionTeams(competition));
     }
 
     public static ContentProviderResult[] writeCompetitionFixtures(
@@ -560,7 +594,7 @@ public class FDUtils {
         for (FDCompetition competition : map.values()) {
             if (competition == null || competition.getId() <= 0 || competition.getFixtures() == null)
                 continue;
-            List<ContentProviderOperation> operations = writeCompetitionFixtures(competition, false);
+            List<ContentProviderOperation> operations = writeCompetitionFixtures(competition);
             if (operations == null) continue;
             listOperations.addAll(operations);
 
@@ -580,13 +614,13 @@ public class FDUtils {
             operations.add(ContentProviderOperation.newDelete(uri).build());
         }
 
-        int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
-        int fixtureTime = (int) TimeUnit.MILLISECONDS.toMinutes(fixture.getTime());
+        int refreshTime = dateToMinutes(fixture.getLastRefresh());
+        int fixtureDate = dateToMinutes(fixture.getDate());
 
 
         ContentValues values = new ContentValues();
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_ID, fixture.getId());                            // int
-        values.put(FDContract.FxEntry.COLUMN_FIXTURE_DATE, fixtureTime);                             // int
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_DATE, fixtureDate);                             // int
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_STATUS, fixture.getStatus());                        // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY, fixture.getMatchday());             // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_TEAM_HOME, fixture.getHomeTeamName());    // string
@@ -636,9 +670,19 @@ public class FDUtils {
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
+    // write database
+    public static void writeDatabase(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+
+        writeCompetitions(context, map, forceDelete);
+        writeCompetitionTeams(context, map, forceDelete);
+        writeTeams(context, map, forceDelete);
+        writeCompetitionFixtures(context, map, forceDelete);
+        writeFixtures(context, map, forceDelete);
+    }
+
 
     // network
-
     private static IRetrofitAPI setupRetrofit() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -707,7 +751,7 @@ public class FDUtils {
     }
 
     // data
-    private static boolean checkLastRefresh(Context context, Date lastRefresh) {
+    private static boolean isRefreshed(Context context, Date lastRefresh) {
         if (lastRefresh == null) return false;
 
         if (!getPrefBool(context, R.string.pref_smart_update_key, R.bool.pref_smart_update_default)) {
@@ -748,19 +792,29 @@ public class FDUtils {
         return map;
     }
 
-    // map != null
-    public static boolean getCompetitions(
+    private static boolean isCompetitionsRefreshed(Context context, Map<Integer, FDCompetition> map) {
+        if (map == null || map.isEmpty()) return false;
+        for (FDCompetition competition : map.values()) {
+            if (competition == null || competition.getId() <= 0 ||
+                    !isRefreshed(context, competition.getLastRefresh())) return false;
+        }
+        return true; // all data ok and refreshed
+    }
+
+    // all maps read by loaders
+// load competitions
+    public static boolean loadDatabase(
             Context context, Map<Integer, FDCompetition> map,
             Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
             Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures,
             boolean forceUpdate) throws NullPointerException, IOException {
 
 // load teams or skip
-        boolean requestUpdate = (map == null || mapTeamKeys == null || mapTeams == null
-                || mapFixtureKeys == null || mapFixtures == null || forceUpdate);
+        boolean isUpdated = false;
 // load map
-        if (map == null || forceUpdate) {
-            map = new HashMap<>();
+        if (forceUpdate || !isCompetitionsRefreshed(context, map)) {
+            isUpdated = true;
+            map.clear();
             List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
             Date lastRefresh = currentTimeMinutesToDate();
             for (FDCompetition competition : list) {
@@ -773,40 +827,49 @@ public class FDUtils {
         for (FDCompetition competition : map.values()) {
             if (competition == null || competition.getId() <= 0) continue;
 // teams
-            if (!forceUpdate && checkLastRefresh(context, competition.getLastRefresh())) {  // check smart update
-                if (competition.getTeams() != null) continue;               // data presented
-                if (setListTeams(competition, mapTeamKeys, mapTeams)) continue; // data read
+            boolean isRefreshed = false;
+            if (!forceUpdate && isRefreshed(context, competition.getLastRefresh())) {  // check smart update
+                isRefreshed = true;
+                if (competition.getTeams() == null) {
+                    isRefreshed = setListTeams(competition, mapTeamKeys, mapTeams);    // restore teams from keys
+                }
             }
 
-            try {
-                requestUpdate = true;                                               // one item changed
-                List<FDTeam> teams = loadListTeams(competition);                    // load
-                competition.setTeams(teams);
+            if (!isRefreshed) {
+                try {
+                    isUpdated = true;                                                   // one item changed
+                    List<FDTeam> teams = loadListTeams(competition);                    // load
+                    competition.setTeams(teams);
 
-            } catch (NullPointerException | NumberFormatException | IOException e) {
-                Timber.d(context.getString(R.string.get_competitions_competition) +
-                        e.getMessage());
+                } catch (NullPointerException | NumberFormatException | IOException e) {
+                    Timber.d(context.getString(R.string.get_competitions_competition) +
+                            e.getMessage());
+                }
             }
 // fixtures
-            if (!forceUpdate && checkLastRefresh(context, competition.getLastRefresh())) {  // check smart update
-                if (competition.getFixtures() != null)
-                    continue;                            // data presented
-                if (setListFixtures(competition, mapFixtureKeys, mapFixtures))
-                    continue;           // data read
+            isRefreshed = false;
+            if (!forceUpdate && isRefreshed(context, competition.getLastRefresh())) {       // check smart update
+                isRefreshed = true;
+                if (competition.getFixtures() == null) {
+                    isRefreshed = setListFixtures(competition, mapFixtureKeys, mapFixtures);
+                }
             }
 
-            try {
-                requestUpdate = true;                                               // one item changed
-                List<FDFixture> fixtures = loadListFixtures(competition);                    // load
-                competition.setFixtures(fixtures);
+            if (!isRefreshed) {
+                try {
+                    isUpdated = true;                                                   // one item changed
+                    List<FDFixture> fixtures = loadListFixtures(competition);           // load
+                    competition.setFixtures(fixtures);
 
-            } catch (NullPointerException | NumberFormatException | IOException e) {
-                Timber.d(context.getString(R.string.get_competitions_competition) +
-                        e.getMessage());
+                } catch (NullPointerException | NumberFormatException | IOException e) {
+                    Timber.d(context.getString(R.string.get_competitions_competition) +
+                            e.getMessage());
+                }
+
             }
 
         }
-        return requestUpdate;
+        return isUpdated;
     }
 
 
@@ -839,7 +902,7 @@ public class FDUtils {
         if (competition == null || competition.getId() <= 0) return null;
 // smart update check
         List<FDTeam> list = competition.getTeams();
-        if (!forceUpdate && list != null && checkLastRefresh(context, competition.getLastRefresh())) {  // check smart update
+        if (!forceUpdate && list != null && isRefreshed(context, competition.getLastRefresh())) {  // check smart update
             return list;
         }
 // no teams
