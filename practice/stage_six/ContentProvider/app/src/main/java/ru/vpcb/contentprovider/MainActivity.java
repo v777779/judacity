@@ -4,11 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -37,6 +40,9 @@ import ru.vpcb.contentprovider.data.FDTable;
 import ru.vpcb.contentprovider.data.FDTeam;
 import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
+
+import ru.vpcb.contentprovider.dbase.FDContract;
+import ru.vpcb.contentprovider.dbase.FDLoader;
 import ru.vpcb.contentprovider.services.UpdateService;
 import timber.log.Timber;
 
@@ -46,7 +52,8 @@ import static ru.vpcb.contentprovider.utils.Constants.FD_TIME_FUTUTRE;
 import static ru.vpcb.contentprovider.utils.Constants.FD_TIME_PAST;
 import static ru.vpcb.contentprovider.utils.FootballUtils.isOnline;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
     /**
      * The flag is true it Timber.Tree is exists
      */
@@ -115,6 +122,10 @@ public class MainActivity extends AppCompatActivity {
 
         setupReceiver();
 
+        getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+
     }
 
 
@@ -169,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String getCurrentYear() {
         Calendar calendar = Calendar.getInstance();
-        return String.format(Locale.ENGLISH,"%4d", calendar.get(Calendar.YEAR));
+        return String.format(Locale.ENGLISH, "%4d", calendar.get(Calendar.YEAR));
     }
 
     private void startRetrofitLoaderC() {
@@ -231,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 
 // setup data
         int id = 450;
-        String competition = String.format(Locale.ENGLISH,"%d", id);
+        String competition = String.format(Locale.ENGLISH, "%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -279,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format(Locale.ENGLISH,"%d", id);
+        String competition = String.format(Locale.ENGLISH, "%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -327,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format(Locale.ENGLISH,"%d", id);
+        String competition = String.format(Locale.ENGLISH, "%d", id);
         int matchDay = 25;
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
@@ -375,11 +386,11 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format(Locale.ENGLISH,"%d", id);
+        String competition = String.format(Locale.ENGLISH, "%d", id);
         int nDays = 50;
         String nTime = FD_TIME_PAST;
 
-        String timeFrame = String.format(Locale.ENGLISH,"%s%d", nTime, nDays);
+        String timeFrame = String.format(Locale.ENGLISH, "%s%d", nTime, nDays);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -426,7 +437,7 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 446;
-        String competition = String.format(Locale.ENGLISH,"%d", id);
+        String competition = String.format(Locale.ENGLISH, "%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -474,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 524;
-        String team = String.format(Locale.ENGLISH,"%d", id);
+        String team = String.format(Locale.ENGLISH, "%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -522,7 +533,7 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 524;
-        String team = String.format(Locale.ENGLISH,"%d", id);
+        String team = String.format(Locale.ENGLISH, "%d", id);
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
@@ -571,11 +582,11 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 524;
-        String team = String.format(Locale.ENGLISH,"%d", id);
+        String team = String.format(Locale.ENGLISH, "%d", id);
         int nDays = 5;
         String nTime = FD_TIME_FUTUTRE;
         String season = getCurrentYear();
-        String timeFrame = String.format(Locale.ENGLISH,"%s%d", nTime, nDays);
+        String timeFrame = String.format(Locale.ENGLISH, "%s%d", nTime, nDays);
 
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
@@ -626,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
         showProgress();
 // setup data
         int id = 338;
-        final String team = String.format(Locale.ENGLISH,"%d", id);
+        final String team = String.format(Locale.ENGLISH, "%d", id);
 
 // setup okHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
@@ -668,8 +679,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-  
-
     private void refresh(String action) {
         Intent intent = new Intent(action, null, this, UpdateService.class);
         startService(intent);
@@ -689,6 +698,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void unregisterReceiver() {
         unregisterReceiver(mMessageReceiver);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return FDLoader.getInstance(this, id);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (loader == null || loader.getId() <= 0 || data == null || data.getCount() == 0) return;
+
+        switch (loader.getId()) {
+            case FDContract.CpEntry.LOADER_ID:
+
+                break;
+
+            case FDContract.CpTmEntry.LOADER_ID:
+
+                break;
+            case FDContract.TmEntry.LOADER_ID:
+
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown id: " + loader.getId());
+        }
+
+
+    }
+
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     private class MessageReceiver extends BroadcastReceiver {

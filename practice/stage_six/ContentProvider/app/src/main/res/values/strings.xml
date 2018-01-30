@@ -23,7 +23,6 @@
     <string name="pref_delay_time_label">Delay Time Value(min)</string>
 
 
-
     <!--retrofit-->
     <string name="retrofit_response_empty">Retrofit response is empty</string>
     <string name="retrofit_response_exception">Retrofit response is exception:</string>
@@ -48,6 +47,9 @@
     <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
     <string name="get_competitions_competition">Get competitions, competition, getId() or loadListTeams() exception: </string>
     <string name="content_provider_insert">Content provider insert exception: </string>
+
+    <string name="unknown_uri">Unknown uri: %1$s"</string>
+    <string name="unknown_loader_id">Unknown id: %1$d"</string>
 
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>

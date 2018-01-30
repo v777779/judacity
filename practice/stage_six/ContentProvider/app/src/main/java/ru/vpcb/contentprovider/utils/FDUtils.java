@@ -35,6 +35,7 @@ import ru.vpcb.contentprovider.data.FDTeams;
 import ru.vpcb.contentprovider.data.IRetrofitAPI;
 import ru.vpcb.contentprovider.dbase.FDContract;
 import ru.vpcb.contentprovider.dbase.FDDbHelper;
+import ru.vpcb.contentprovider.dbase.FDProvider;
 import timber.log.Timber;
 
 import static ru.vpcb.contentprovider.utils.Constants.FD_BASE_URI;
@@ -51,6 +52,11 @@ import static ru.vpcb.contentprovider.utils.FootballUtils.getPrefInt;
 
 public class FDUtils {
 
+
+
+    public static Uri buildTableNameUri(String tableName) {
+        return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).build();
+    }
 
     public static Uri buildItemIdUri(String tableName, long id) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();

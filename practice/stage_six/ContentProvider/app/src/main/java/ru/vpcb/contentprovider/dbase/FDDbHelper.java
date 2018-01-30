@@ -216,7 +216,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
     }
 
     public interface IPlEntry {
-        //                int _ID + " INTEGER PRIMARY KEY, " +
+        //  int _ID + " INTEGER PRIMARY KEY, " +
         int COLUMN_PLAYER_ID = 0;               // int
         int COLUMN_TEAM_ID = 1;                 // int
         int COLUMN_PLAYER_NAME = 2;             // string

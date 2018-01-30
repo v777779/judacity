@@ -41,12 +41,6 @@ public class Constants {
     // retrofit
 
 
-    // content provider
-    public static final int MATCHER_COMPETITIONS = 1;
-    public static final int MATCHER_TEAMS = 2;
-    public static final int MATCHER_FIXTURES = 3;
-    public static final int MATCHER_TABLES = 4;
-    public static final int MATCHER_PLAYERS = 5;
-
+    // loaders
 
 }

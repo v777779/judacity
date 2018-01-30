@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.vpcb.contentprovider.R;
+import ru.vpcb.contentprovider.utils.FDUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.contentprovider.utils.FDUtils.buildItemIdUri;
@@ -34,7 +35,7 @@ import static ru.vpcb.contentprovider.utils.FDUtils.buildItemIdUri;
  */
 public class FDProvider extends ContentProvider {
 
-    private UriMatcher mUriMatcher;
+    private UriMatcher mUriMatcher;  // for static methods
     private FDDbHelper mFDDbHelper;
 
     /**
@@ -49,7 +50,7 @@ public class FDProvider extends ContentProvider {
             uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/#", p.tableIdMatcher);
 
 // support uri/table/100/200
-            if (p.column_id2 == null) continue;
+            if (p.columnId2 == null) continue;
             uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/#/#", p.tableIdMatcher2);
         }
         return uriMatcher;
@@ -124,6 +125,7 @@ public class FDProvider extends ContentProvider {
             if (nUpdated == 0) {
                 return null;
             }
+// test!!!
             Timber.d(getContext().getString(R.string.content_provider_insert) + e.getMessage());
             return uri;             // skip insertion
         }
@@ -209,7 +211,7 @@ public class FDProvider extends ContentProvider {
                 List<String> paths = uri.getPathSegments();
                 String _id = paths.get(1);
                 return new Selection(p.tableName,
-                        p.column_id + "=?",
+                        p.columnId + "=?",
                         new String[]{_id});
             }
             if (match == p.tableIdMatcher2) {
@@ -217,26 +219,47 @@ public class FDProvider extends ContentProvider {
                 String _id = paths.get(1);
                 String _id2 = paths.get(2);
                 return new Selection(p.tableName,
-                        p.column_id + "=?" + " AND " +
-                                p.column_id2 + "=?",
+                        p.columnId + "=?" + " AND " +
+                                p.columnId2 + "=?",
                         new String[]{_id, _id2});
             }
 
         }
-        throw new UnsupportedOperationException("Unknown uri: " + uri);
+        throw new UnsupportedOperationException(getContext().getString(R.string.unknown_uri, uri.toString()));
+    }
 
+    public static Uri buildLoaderIdUri(Context context, int id) {
+        for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
+            if (id == p.id) {
+                return FDUtils.buildTableNameUri(p.tableName);
+            }
+        }
+        throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
+    }
+
+    public static String buildLoaderIdSortOrder(Context context, int id) {
+        for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
+            if (id == p.id) {
+                return p.columnId + " ASC";
+            }
+        }
+        throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
     }
 
     private class Selection {
         String table;
         String selection;
         String[] selectionArgs;
+        Uri uri;
+        int id;
 
         public Selection(String table, String selection, String[] selectionArgs) {
             this.table = table;
             this.selection = selection;
             this.selectionArgs = selectionArgs;
         }
+
+
     }
 
 }
