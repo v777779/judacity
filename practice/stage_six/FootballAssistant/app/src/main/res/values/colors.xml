@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+
+    <color name="colorPrimary">#b0096c52</color>
+    <color name="colorPrimaryDark">#c5012a29</color>
+    <color name="colorAccent">#2a8d41</color>
+
 
     <!--progress_bar-->
     <color name="progress_back_start">#c3c3c3</color>

@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         while (mProgressCounter < 100) {
-                            mProgressCounter += 1;
+                            mProgressCounter += 5;
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
