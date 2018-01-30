@@ -151,7 +151,10 @@ public class MainActivity extends AppCompatActivity
 
         getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
         getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
         getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+
 
     }
 
@@ -742,16 +745,35 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case FDContract.CpTmEntry.LOADER_ID:
-
+                mapTeamKeys = FDUtils.readCompetitionTeams(data);
                 break;
-            case FDContract.TmEntry.LOADER_ID:
 
+            case FDContract.TmEntry.LOADER_ID:
+                mapTeams = FDUtils.readTeams(data);
+                break;
+
+            case FDContract.CpFxEntry.LOADER_ID:
+                mapFixtureKeys = FDUtils.readCompetitionFixtures(data);
+                break;
+
+            case FDContract.FxEntry.LOADER_ID:
+                mapFixtures = FDUtils.readFixtures(data);
+                break;
+
+            case FDContract.TbEntry.LOADER_ID:
+                break;
+
+            case FDContract.PlEntry.LOADER_ID:
                 break;
 
             default:
                 throw new IllegalArgumentException("Unknown id: " + loader.getId());
         }
-
+        boolean isUpdated = FDUtils.loadCompetitions(map,mapTeamKeys,mapTeams,mapFixtureKeys,mapFixtures);
+        if(isUpdated) {
+// test!!!
+            Timber.d("RecyclerView or ViewPager adapter notification update");
+        }
 
     }
 

@@ -1020,4 +1020,32 @@ public class FDUtils {
         return list;
     }
 
+    // load competitions
+    public static boolean loadCompetitions(
+            Map<Integer, FDCompetition> map,
+            Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
+            Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures) {
+
+        if (map == null || map.size() == 0 ||
+                mapTeamKeys == null || mapTeamKeys.isEmpty() ||
+                mapTeams == null || mapTeams.isEmpty() ||
+                mapFixtureKeys == null || mapFixtureKeys.isEmpty() ||
+                mapFixtures == null || mapFixtures.isEmpty()) return false;
+
+// load map
+        for (FDCompetition competition : map.values()) {
+            if (competition == null || competition.getId() <= 0) continue;
+// teams
+            if (competition.getTeams() == null) {
+                setListTeams(competition, mapTeamKeys, mapTeams);    // restore teams from keys
+            }
+// fixtures
+            if (competition.getFixtures() == null) {
+                setListFixtures(competition, mapFixtureKeys, mapFixtures);
+            }
+        }
+        return true;
+    }
+
+
 }
