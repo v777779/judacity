@@ -4,9 +4,21 @@
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#FF4081</color>-->
 
-    <color name="colorPrimary">#b0096c52</color>
-    <color name="colorPrimaryDark">#c5012a29</color>
+    <!--<color name="colorPrimary">#7609266c</color>-->
+    <!--<color name="colorPrimaryDark">#b2010d2a</color>-->
     <color name="colorAccent">#2a8d41</color>
+
+    <color name="colorPrimary">#b0096c52</color>
+    <color name="colorPrimaryDark">#d2012a29</color>
+    <!--<color name="colorAccent">#2a8d41</color>-->
+
+    <!--toolbar-->
+    <color name="colorToolbarLight">#d035a286</color>
+    <color name="colorToolbarDark">#d41a4847</color>
+
+    <!--<color name="colorToolbarLight">#d035a286</color>-->
+    <!--<color name="colorToolbarDark">#d40d3332</color>-->
+
 
 
     <!--progress_bar-->

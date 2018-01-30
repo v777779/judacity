@@ -5,7 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!--appbar-->
-    <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="status_bar_height">0dp</dimen>
     <dimen name="toolbar_top_margin">6dp</dimen>
     <dimen name="toolbar_bottom_margin">6dp</dimen>
 
