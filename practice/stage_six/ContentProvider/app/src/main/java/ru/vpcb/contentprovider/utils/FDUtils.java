@@ -91,14 +91,16 @@ public class FDUtils {
                 mapTeams == null || mapTeams.isEmpty()) return false;
 
         List<Integer> listKeys = mapKeys.get(competition.getId());
-        if (listKeys == null) return false;
+//        if (listKeys == null) return false;
+        if (listKeys == null) return true;   // map does not have keys by source
+
         List<FDTeam> list = new ArrayList<>();
         for (Integer key : listKeys) {
             FDTeam team = mapTeams.get(key);
             if (team == null || team.getId() != key) continue;
             list.add(team);
         }
-        if (list == null || list.isEmpty()) return false;
+//        if (list == null || list.isEmpty()) return false;
         competition.setTeams(list);
         return true;
     }
@@ -112,14 +114,15 @@ public class FDUtils {
 
 
         List<Integer> listKeys = mapKeys.get(competition.getId());
-        if (listKeys == null) return false;
+//        if (listKeys == null) return false;
+        if (listKeys == null) return true;  // map does not have keys by source
         List<FDFixture> list = new ArrayList<>();
         for (Integer key : listKeys) {
             FDFixture fixture = mapFixtures.get(key);
             if (fixture == null || fixture.getId() != key) continue;
             list.add(fixture);
         }
-        if (list == null || list.isEmpty()) return false;
+//        if (list == null || list.isEmpty()) return false;
         competition.setFixtures(list);
         return true;
     }
