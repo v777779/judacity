@@ -5,4 +5,52 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <!--preferences-->
+    <string name="pref_smart_update_key">pref_smart_update_key</string>
+    <string name="pref_smart_update_off">Smart Update Disabled</string>
+    <string name="pref_smart_update_on">Smart Update Enabled</string>
+    <string name="pref_smart_update_label">Smart Update Mode</string>
+
+    <string name="pref_update_time_key">pref_update_time_key</string>
+    <string name="pref_update_time_off">Update Time Disabled</string>
+    <string name="pref_update_time_on">Update Time Enabled</string>
+    <string name="pref_update_time_label">Update Time Delay(min)</string>
+
+    <string name="pref_delay_time_key">pref_delay_time_key</string>
+    <string name="pref_delay_time_off">Delay Time Value</string>
+    <string name="pref_delay_time_on">Delay Time Value</string>
+    <string name="pref_delay_time_label">Delay Time Value(min)</string>
+
+
+    <!--retrofit-->
+    <string name="retrofit_response_empty">Retrofit response is empty</string>
+    <string name="retrofit_response_exception">Retrofit response is exception:</string>
+
+    <!--action-->
+    <string name="action_update">ru.vpcb.footballassistant.intent.action.ACTION_UPDATE</string>
+    <string name="action_refresh">ru.vpcb.footballassistant.intent.action.ACTION_REFRESH</string>
+
+    <!--extra-->
+    <string name="extra_empty_cursor">ru.vpcb.footballassistant.intent.extra.EMPTY_CURSOR</string>
+
+    <!--broadcast-->
+    <string name="broadcast_update_started">ru.vpcb.footballassistant.intent.action.UPDATE_STARTED</string>
+    <string name="broadcast_update_finished">ru.vpcb.footballassistant.intent.action.UPDATE_FINISHED</string>
+    <string name="broadcast_no_network">ru.vpcb.footballassistant.intent.action.NO_NETWORK</string>
+    <string name="broadcast_update_error">ru.vpcb.footballassistant.intent.action.UPDATE_ERROR</string>
+    <string name="broadcast_no_network_empty">ru.vpcb.footballassistant.intent.action.NO_NETWORK_EMPTY</string>
+
+    <!--messages-->
+    <!--exception-->
+    <string name="update_content_error">Update content error: </string>
+    <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
+    <string name="get_competitions_competition">Get competitions, competition, getId() or loadListTeams() exception: </string>
+    <string name="content_provider_insert">Content provider insert exception: </string>
+
+    <string name="unknown_uri">Unknown uri: %1$s"</string>
+    <string name="unknown_loader_id">Unknown id: %1$d"</string>
+
+    <!--diagnostic-->
+    <string name="get_competitions_map_null">Get competitions map must not be null</string>
 </resources>

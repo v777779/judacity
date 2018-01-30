@@ -9,6 +9,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField 'String', 'FD_API_KEY', FB_DATA_API_KEY
+
     }
     buildTypes {
         release {
@@ -26,4 +28,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+// retrofit2
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+// okhttp3
+    compile 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+// timber
+    compile 'com.jakewharton.timber:timber:4.6.0'
+
 }

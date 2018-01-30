@@ -3,4 +3,22 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--progress_bar-->
+    <color name="progress_back_start">#c3c3c3</color>
+    <color name="progress_back_center">#a5a5a5</color>
+    <color name="progress_back_end">#d5d5d5</color>
+
+    <color name="progress_primary_start">#FF43a47d</color>
+    <color name="progress_primary_center">#FF63d9a4</color>
+    <color name="progress_primary_end">#FF339479</color>
+
+    <color name="progress_primary_sweep">#44b075</color>
+
+    <color name="progress_secondary_start">#8043a47d</color>
+    <color name="progress_secondary_center">#8063d9a4</color>
+    <color name="progress_secondary_end">#80339479</color>
+
+    <color name="progress_text_back">#f8f8f8</color>
+    <color name="progress_text_color">#FF3a3a3a</color>
 </resources>
