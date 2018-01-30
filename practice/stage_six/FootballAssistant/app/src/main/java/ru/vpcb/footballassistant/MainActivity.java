@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().hide();
 
 
         // log
@@ -108,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        mFab.setVisibility(View.INVISIBLE);
+        mFab2.setVisibility(View.INVISIBLE);
+        mFab2.performClick();
     }
 
     @Override

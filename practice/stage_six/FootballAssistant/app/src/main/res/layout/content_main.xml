@@ -42,39 +42,10 @@
         android:indeterminateDrawable="@drawable/progress_ring"
         android:indeterminateOnly="false"
         android:progressDrawable="@drawable/progress_round"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
-
-    <!--android:progressDrawable="@drawable/progress_circle"-->
-    <!--android:indeterminateDrawable="@drawable/progress_circle"-->
-
-
-    <ProgressBar
-        android:id="@+id/progress_value2"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:indeterminateDrawable="@drawable/progress_ring"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progress_value3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="8dp"
-        android:indeterminate="true"
-        android:indeterminateDrawable="@drawable/progress_ring"
-        android:indeterminateOnly="false"
-        android:progressDrawable="@drawable/progress_round"
-        app:layout_constraintStart_toStartOf="@+id/progress_value2"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/progress_text"
