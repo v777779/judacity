@@ -22,8 +22,6 @@
         style="@style/Progress_Bar_Horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
-
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toTopOf="@+id/guide_h1"
@@ -39,10 +37,11 @@
 
     <ProgressBar
         android:id="@+id/progress_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    android:progressDrawable="@drawable/progress_round"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:indeterminateDrawable="@drawable/progress_ring"
         android:indeterminateOnly="false"
+        android:progressDrawable="@drawable/progress_round"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,13 +63,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <ProgressBar
         android:id="@+id/progress_value3"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="96dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/progress_round"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progress_ring"
+        android:indeterminateOnly="false"
+        android:progressDrawable="@drawable/progress_round"
         app:layout_constraintStart_toStartOf="@+id/progress_value2"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,7 +88,38 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar"
-        tools:text="50" />
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
 
+    <ImageView
+        android:id="@+id/front_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/ball_image"
+        app:layout_constraintBottom_toTopOf="@+id/guide_h2"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guide_v1"
+        app:layout_constraintTop_toTopOf="@+id/guide_h2" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_h2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 </android.support.constraint.ConstraintLayout>

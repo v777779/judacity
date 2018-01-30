@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mProgressText;
     private int mProgressCounter;
 
+    private ProgressBar mProgressValue3;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressText = findViewById(R.id.progress_text);
         mProgressValue = findViewById(R.id.progress_value);
+        mProgressValue.setIndeterminate(true);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,17 +69,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mProgressCounter = 0;
-
+                mProgressValue.setIndeterminate(true);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         while (mProgressCounter < 100) {
-                            mProgressCounter+=10;
+                            mProgressCounter += 1;
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
@@ -88,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
                                     mProgressBar.setProgress(mProgressCounter);
                                     mProgressText.setText(String.valueOf(mProgressCounter));
                                     mProgressValue.setProgress(mProgressCounter);
+
+                                    if (mProgressCounter >= 100) {
+                                        mProgressValue.setIndeterminate(false);
+                                    }
+
                                 }
                             });
                         }
