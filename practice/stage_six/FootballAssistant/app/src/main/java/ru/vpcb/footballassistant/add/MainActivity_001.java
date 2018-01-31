@@ -1,4 +1,4 @@
-package ru.vpcb.footballassistant;
+package ru.vpcb.footballassistant.add;
 
 
 import android.content.BroadcastReceiver;
@@ -14,9 +14,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.vpcb.footballassistant.DetailActivity;
+import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
@@ -34,7 +36,7 @@ import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity_001 extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static boolean sIsTimber;
 
@@ -49,15 +51,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     // progress
     private int mProgressCounter;
     private MessageReceiver mMessageReceiver;
-    private boolean mIsProgressEinished;
-
-
     // mMap
     private Map<Integer, FDCompetition> mMap = new HashMap<>();
     private Map<Integer, List<Integer>> mMapTeamKeys = new HashMap<>();
     private Map<Integer, FDTeam> mMapTeams = new HashMap<>();
     private Map<Integer, List<Integer>> mMapFixtureKeys = new HashMap<>();
     private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
+    private Cursor mCursor;
+    private Cursor mTeamKeysCursor;
+    private Cursor mTeamsCursor;
+    private Cursor mFixtureKeysCursor;
+    private Cursor mFixturesCursor;
 
 
     @Override
@@ -84,14 +88,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressText = findViewById(R.id.progress_text);
         mProgressValue = findViewById(R.id.progress_value);
-
+        mProgressValue.setIndeterminate(true);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                Intent intent = new Intent(MainActivity_001.this, DetailActivity.class);
                 startActivity(intent);
             }
         });
@@ -99,16 +103,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                refresh(getString(R.string.action_update));
             }
         });
 
         mFab.setVisibility(View.INVISIBLE);
         mFab2.setVisibility(View.INVISIBLE);
-// progress
-        setupProgress();
+
+
         setupReceiver();
-        refresh(getString(R.string.action_update));
 
         getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
         getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
@@ -168,22 +171,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (loader.getId()) {
             case FDContract.CpEntry.LOADER_ID:
                 mMap = FDUtils.readCompetitions(cursor);
+                mCursor = cursor;
                 break;
 
             case FDContract.CpTmEntry.LOADER_ID:
                 mMapTeamKeys = FDUtils.readCompetitionTeams(cursor);
+                mTeamKeysCursor = cursor;
                 break;
 
             case FDContract.TmEntry.LOADER_ID:
                 mMapTeams = FDUtils.readTeams(cursor);
+                mTeamsCursor = cursor;
                 break;
 
             case FDContract.CpFxEntry.LOADER_ID:
                 mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursor);
+                mFixtureKeysCursor = cursor;
                 break;
 
             case FDContract.FxEntry.LOADER_ID:
                 mMapFixtures = FDUtils.readFixtures(cursor);
+                mFixturesCursor = cursor;
                 break;
 
             case FDContract.TbEntry.LOADER_ID:
@@ -195,10 +203,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             default:
                 throw new IllegalArgumentException("Unknown id: " + loader.getId());
         }
-
-
-        setProgressValue(checkProgress());
-
         boolean isUpdated = FDUtils.loadCompetitions(mMap, mMapTeamKeys, mMapTeams, mMapFixtureKeys, mMapFixtures);
         if (isUpdated) {
 // test!!!
@@ -209,51 +213,57 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-// cursors will be closed by default by supportLoaderManager()
+        if (loader == null || loader.getId() <= 0) return;
+
+        switch (loader.getId()) {
+            case FDContract.CpEntry.LOADER_ID:
+                if (mCursor != null) mCursor.close();
+                mCursor = null;
+                break;
+
+            case FDContract.CpTmEntry.LOADER_ID:
+                if (mTeamsCursor != null) mTeamsCursor.close();
+                mTeamsCursor = null;
+                break;
+
+            case FDContract.TmEntry.LOADER_ID:
+                if (mTeamsCursor != null) mTeamsCursor.close();
+                mTeamsCursor = null;
+                break;
+
+            case FDContract.CpFxEntry.LOADER_ID:
+                if (mFixtureKeysCursor != null) mFixtureKeysCursor.close();
+                mFixtureKeysCursor = null;
+                break;
+
+            case FDContract.FxEntry.LOADER_ID:
+                if (mFixturesCursor != null) mFixturesCursor.close();
+                mFixturesCursor = null;
+                break;
+
+            case FDContract.TbEntry.LOADER_ID:
+                break;
+
+            case FDContract.PlEntry.LOADER_ID:
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown id: " + loader.getId());
+        }
+        boolean isUpdated = FDUtils.loadCompetitions(mMap, mMapTeamKeys, mMapTeams, mMapFixtureKeys, mMapFixtures);
+        if (isUpdated) {
+// test!!!
+            Timber.d("RecyclerView or ViewPager adapter notification update: " + mMap.size());
+        }
 
     }
 
 
     // methods
-
-    private int checkProgress() {
-        int count = 0;
-        if (!mMap.isEmpty()) count += 20;
-        if (!mMapTeamKeys.isEmpty()) count += 20;
-        if (!mMapTeams.isEmpty()) count += 20;
-        if (!mMapFixtureKeys.isEmpty()) count += 20;
-        if (!mMapFixtures.isEmpty()) count += 20;
-        return count;
-    }
-
-    private void setProgressValue(boolean isIndeterminate) {
-        mProgressValue.setIndeterminate(isIndeterminate);
-    }
-
-    private void setProgressValue(int value) {
-        if(value < 0) return;
-        if(value > 100) value  = 100;
-        mProgressBar.setProgress(value);
-        mProgressText.setText(String.valueOf(value));
-        mProgressValue.setProgress(value);
-
-        if (value >= 100) {
-            mProgressValue.setIndeterminate(false);
-
-        }
-    }
-
-    private void setupProgress() {
-        mIsProgressEinished = false;            // local updates
-        setProgressValue(mProgressCounter);
-        setProgressValue(false);                // static at start
-    }
-
     private void refresh(String action) {
         Intent intent = new Intent(action, null, this, UpdateService.class);
         startService(intent);
     }
-
 
     private void setupReceiver() {
         mMessageReceiver = new MessageReceiver();
@@ -316,18 +326,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (intent != null) {
                 String action = intent.getAction();
                 if (action.equals(context.getString(R.string.broadcast_update_started))) {
-                    setProgressValue(true); // indeterminate
+                    Toast.makeText(context, "Broadcast message: update started", Toast.LENGTH_SHORT).show();
 
                 } else if (action.equals(context.getString(R.string.broadcast_update_finished))) {
-                    mProgressCounter = 100;
-                    setProgressValue(mProgressCounter);
-
-                } else if (action.equals(context.getString(R.string.broadcast_update_progress))) {
-                    int value = intent.getIntExtra(getString(R.string.extra_progress_counter), -1);
-                    if (value >= 0) {
-                        mProgressCounter = value;
-                        setProgressValue(mProgressCounter);
-                    }
+                    Toast.makeText(context, "Broadcast message: update finished", Toast.LENGTH_SHORT).show();
                 } else if (action.equals(context.getString(R.string.broadcast_no_network))) {
                     Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
                 } else {

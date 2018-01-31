@@ -39,13 +39,15 @@
         android:id="@+id/progress_value"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:indeterminate="true"
         android:indeterminateDrawable="@drawable/progress_ring"
         android:indeterminateOnly="false"
         android:progressDrawable="@drawable/progress_round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/progress_text"
@@ -53,13 +55,14 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:text="0"
         android:textColor="@color/progress_text_color"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+        android:visibility="visible"
+        />
 
     <ImageView
         android:id="@+id/front_image"
