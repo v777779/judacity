@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.vpcb.footballassistant">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +30,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.vpcb.footballassistant.MainActivity" />
         </activity>
+
+        <service android:name=".services.UpdateService" />
+
+        <provider
+            android:name=".dbase.FDProvider"
+            android:authorities="ru.vpcb.footballassistant"
+            android:exported="false">
+
+        </provider>
+
     </application>
 
 </manifest>

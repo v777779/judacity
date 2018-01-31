@@ -87,11 +87,11 @@ public class UpdateService extends IntentService {
             Map<Integer, FDFixture> mapFixtures = new HashMap<>();
             FDUtils.readDatabase(this,map,mapTeamKeys,mapTeams,
                     mapFixtureKeys,mapFixtures);
-
+//0%
 // load database
          boolean isUpdated = FDUtils.loadDatabase(this,map,mapTeamKeys,mapTeams,
                     mapFixtureKeys,mapFixtures,false);
-
+// 95%
 // save database
             if (isUpdated) {
                 FDUtils.writeDatabase(this, map, false);

@@ -33,6 +33,8 @@
 
     <!--extra-->
     <string name="extra_empty_cursor">ru.vpcb.footballassistant.intent.extra.EMPTY_CURSOR</string>
+    <string name="extra_progress_counter">ru.vpcb.footballassistant.intent.extra.PROGRESS_COUNTER</string>
+
 
     <!--broadcast-->
     <string name="broadcast_update_started">ru.vpcb.footballassistant.intent.action.UPDATE_STARTED</string>
@@ -40,6 +42,7 @@
     <string name="broadcast_no_network">ru.vpcb.footballassistant.intent.action.NO_NETWORK</string>
     <string name="broadcast_update_error">ru.vpcb.footballassistant.intent.action.UPDATE_ERROR</string>
     <string name="broadcast_no_network_empty">ru.vpcb.footballassistant.intent.action.NO_NETWORK_EMPTY</string>
+    <string name="broadcast_update_progress">ru.vpcb.footballassistant.intent.action.UPDATE_PROGRESS</string>
 
     <!--messages-->
     <!--exception-->
