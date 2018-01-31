@@ -212,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         boolean isUpdated = FDUtils.loadCompetitions(mMap, mMapTeamKeys, mMapTeams, mMapFixtureKeys, mMapFixtures);
         if (isUpdated) {
+            getSupportActionBar().show();
             makeTransition(R.layout.content_detail,R.transition.transition_fade);
         }
 
