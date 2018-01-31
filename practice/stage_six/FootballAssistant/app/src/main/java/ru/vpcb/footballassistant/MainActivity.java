@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Scene;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar mProgressBar;
     private ProgressBar mProgressValue;
     private TextView mProgressText;
-
+    private ImageView mToolbarLogo;
     // progress
 
 
@@ -73,10 +75,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-//        getSupportActionBar().hide();
+
 
 
         // log
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressText = findViewById(R.id.progress_text);
         mProgressValue = findViewById(R.id.progress_value);
+        mToolbarLogo = findViewById(R.id.toolbar_logo);
 
 
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 // progress
         setupProgress();
         setupReceiver();
+        setupActionBar();
+
         refresh(getString(R.string.action_update));
 
         getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
@@ -277,12 +280,34 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+
+
     private void setupProgress() {
         mIsProgressEinished = false;            // local updates
         mActivityProgress = 0;
         mServiceProgress = 0;
         setProgressValue();
         setProgressValue(false);                // static at start
+    }
+
+    private void setupActionBar() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mToolbarLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("");
+        }
+
+//        getSupportActionBar().hide();
+
     }
 
     private void refresh(String action) {
