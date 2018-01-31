@@ -220,20 +220,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 break;
 
             case FDContract.CpTmEntry.LOADER_ID:
-                if(mTeamsCursor!= null) mTeamsCursor.close();
+                if (mTeamsCursor != null) mTeamsCursor.close();
                 mTeamsCursor = null;
                 break;
 
             case FDContract.TmEntry.LOADER_ID:
-                mTeamsCursor.close();
+                if (mTeamsCursor != null) mTeamsCursor.close();
+                mTeamsCursor = null;
                 break;
 
             case FDContract.CpFxEntry.LOADER_ID:
-                mFixtureKeysCursor.close();
+                if (mFixtureKeysCursor != null) mFixtureKeysCursor.close();
+                mFixtureKeysCursor = null;
                 break;
 
             case FDContract.FxEntry.LOADER_ID:
-                mFixturesCursor.close();
+                if (mFixturesCursor != null) mFixturesCursor.close();
+                mFixturesCursor = null;
                 break;
 
             case FDContract.TbEntry.LOADER_ID:
