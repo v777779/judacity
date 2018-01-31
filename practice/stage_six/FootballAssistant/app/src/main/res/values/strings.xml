@@ -56,4 +56,12 @@
 
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>
+
+    <!--progress-->
+    <string name="progress_constant">100</string>
+
+    <!--content description-->
+    <string name="front_image_application">The Ball front image of application</string>
+
+
 </resources>

@@ -14,9 +14,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Scene;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +44,8 @@ import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static boolean sIsTimber;
+    private static Handler mHandler;
 
-    private Handler mHandler;
     private FloatingActionButton mFab;
     private FloatingActionButton mFab2;
 
@@ -81,7 +85,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             sIsTimber = true;
         }
 // handler
-        mHandler = new Handler();
+        if(mHandler == null) {
+            mHandler = new Handler();
+        }
 
 // bind
         mFab = findViewById(R.id.fab);
@@ -94,22 +100,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                startActivity(intent);
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                makeTransition(R.layout.content_detail,R.transition.transition_fade);
             }
         });
 
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                makeTransition(R.layout.content_main,R.transition.transition_fade_back);
             }
         });
 
-        mFab.setVisibility(View.INVISIBLE);
-        mFab2.setVisibility(View.INVISIBLE);
 // progress
         setupProgress();
         setupReceiver();
@@ -206,8 +209,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         boolean isUpdated = FDUtils.loadCompetitions(mMap, mMapTeamKeys, mMapTeams, mMapFixtureKeys, mMapFixtures);
         if (isUpdated) {
-// test!!!
-            Timber.d("RecyclerView or ViewPager adapter notification update: " + mMap.size());
+            makeTransition(R.layout.content_detail,R.transition.transition_fade);
         }
 
     }
@@ -220,6 +222,30 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     // methods
+
+    private void makeTransition(int layoutId, int setId) {
+        TransitionManager.go(
+                Scene.getSceneForLayout(
+                        (ViewGroup) findViewById(R.id.container_layout),
+                        layoutId,
+                        MainActivity.this),
+                TransitionInflater.from(MainActivity.this)
+                        .inflateTransition(setId)
+        );
+    }
+
+
+    private void startTransition() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+            makeTransition(R.layout.content_detail, R.transition.transition_fade);
+            }
+        });
+
+
+
+    }
 
     private int checkProgress() {
         int count = 0;

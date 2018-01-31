@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <fade
+        android:duration="250"
+        android:startDelay="1000"
+        android:fadingMode="fade_in"
+        >
+        <targets>
+            <target android:targetId="@id/content_detail" />
+
+        </targets>
+    </fade>
+
+    <fade
+        android:duration="250"
+        android:fadingMode="fade_out"
+        android:startDelay="1000">
+        <targets>
+            <target android:targetId="@id/content_main" />
+        </targets>
+    </fade>
+</transitionSet>
