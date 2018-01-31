@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-// cursors will be closed by default by supportLoaderManager()
+// cursors will be closed by supportLoaderManager().CursorLoader()
 
     }
 
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (value >= max) {
             mProgressValue.setIndeterminate(false);
-
+            mProgressValue.setProgress(value);
         }
     }
 
@@ -274,6 +274,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         intentFilter.addAction(getString(R.string.broadcast_update_started));
         intentFilter.addAction(getString(R.string.broadcast_update_finished));
         intentFilter.addAction(getString(R.string.broadcast_no_network));
+        intentFilter.addAction(getString(R.string.broadcast_update_progress));
         registerReceiver(mMessageReceiver, intentFilter);
     }
 

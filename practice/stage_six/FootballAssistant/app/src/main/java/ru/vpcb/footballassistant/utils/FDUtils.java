@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Constants.FD_BASE_URI;
+import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
 import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefBool;
 import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefInt;
@@ -849,7 +851,7 @@ public class FDUtils {
         return true; // all data ok and refreshed
     }
 
-// all maps read by loaders
+    // all maps read by loaders
 // load competitions
     public static boolean loadDatabase(
             Context context, Map<Integer, FDCompetition> map,
@@ -858,7 +860,8 @@ public class FDUtils {
             boolean forceUpdate) throws NullPointerException, IOException {
 
 // progress
-
+        double step;
+        double progress = 0;
 
 // load teams or skip
         boolean isUpdated = false;
@@ -874,6 +877,11 @@ public class FDUtils {
                 map.put(competition.getId(), competition);
             }
         }
+
+        step = UPDATE_SERVICE_PROGRESS * 0.8 / (map.size() + 1); // 1 + t.map.size + f.map.size
+        progress = step;
+        sendProgress(context, (int) progress);  // +1
+
 
         for (FDCompetition competition : map.values()) {
             if (competition == null || competition.getId() <= 0) continue;
@@ -918,7 +926,9 @@ public class FDUtils {
                 }
 
             }
-
+// progress
+            progress += step;
+            sendProgress(context, (int) progress);// t,f
         }
         return isUpdated;
     }
@@ -1049,5 +1059,13 @@ public class FDUtils {
         return true;
     }
 
+    public static void sendProgress(Context context, int value) {
+        if (value < 0) return;
+        if (value > UPDATE_SERVICE_PROGRESS) value = UPDATE_SERVICE_PROGRESS;
+
+        context.sendBroadcast(new Intent(context.getString(R.string.broadcast_update_progress))
+                .putExtra(context.getString(R.string.extra_progress_counter), value));
+
+    }
 
 }
