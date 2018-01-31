@@ -8,13 +8,18 @@
     <!--<color name="colorPrimaryDark">#b2010d2a</color>-->
     <color name="colorAccent">#2a8d41</color>
 
-    <color name="colorPrimary">#b0096c52</color>
-    <color name="colorPrimaryDark">#d2012a29</color>
+    <color name="colorPrimary">#1e7e61</color>
+    <color name="colorPrimaryDark">#3a5a5a</color>
     <!--<color name="colorAccent">#2a8d41</color>-->
 
-    <!--toolbar-->
-    <color name="colorToolbarLight">#d035a286</color>
-    <color name="colorToolbarDark">#d41a4847</color>
+    <!--<color name="colorPrimary">#b0096c52</color>-->
+    <!--<color name="colorPrimaryDark">#d2012a29</color>-->
+       <!--toolbar-->
+    <color name="colorToolbarLight">#3a9d83</color>
+    <color name="colorToolbarDark">#336c5d</color>
+
+    <!--<color name="colorToolbarLight">#d035a286</color>-->
+    <!--<color name="colorToolbarDark">#d41a4847</color>-->
 
     <!--<color name="colorToolbarLight">#d035a286</color>-->
     <!--<color name="colorToolbarDark">#d40d3332</color>-->
