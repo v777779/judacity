@@ -24,6 +24,7 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_TAG;
 import static ru.vpcb.footballassistant.utils.FootballUtils.isOnline;
 
@@ -68,9 +69,12 @@ public class UpdateService extends IntentService {
         }
     }
 
-    private void onActionUpdate() {
-        if(FootballUtils.isRefreshTime(this)) return;  // data updated
 
+    private void onActionUpdate() {
+        if(FootballUtils.isRefreshTime(this)) {
+            sendBroadcast(new Intent(getString(R.string.broadcast_update_finished)));
+            return;  // data updated
+        }
 
         if (!isOnline(this)) {                                     // no network
             sendBroadcast(new Intent(getString(R.string.broadcast_no_network)));
@@ -91,7 +95,7 @@ public class UpdateService extends IntentService {
 // load database
          boolean isUpdated = FDUtils.loadDatabase(this,map,mapTeamKeys,mapTeams,
                     mapFixtureKeys,mapFixtures,false);
-// 95%
+// 50%
 // save database
             if (isUpdated) {
                 FDUtils.writeDatabase(this, map, false);
@@ -112,7 +116,7 @@ public class UpdateService extends IntentService {
             sendBroadcast(new Intent(getString(R.string.broadcast_update_error)));
             return;
         }
-
+//60%
         sendBroadcast(new Intent(getString(R.string.broadcast_update_finished)));
     }
 

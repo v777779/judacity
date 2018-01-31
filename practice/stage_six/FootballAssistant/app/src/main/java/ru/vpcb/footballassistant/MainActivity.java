@@ -34,6 +34,9 @@ import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static boolean sIsTimber;
@@ -47,10 +50,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private TextView mProgressText;
 
     // progress
-    private int mProgressCounter;
+
+
     private MessageReceiver mMessageReceiver;
     private boolean mIsProgressEinished;
-
+    private int mActivityProgress;
+    private int mServiceProgress;
 
     // mMap
     private Map<Integer, FDCompetition> mMap = new HashMap<>();
@@ -196,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 throw new IllegalArgumentException("Unknown id: " + loader.getId());
         }
 
-
-        setProgressValue(checkProgress());
+        mActivityProgress = checkProgress();
+        setProgressValue();
 
         boolean isUpdated = FDUtils.loadCompetitions(mMap, mMapTeamKeys, mMapTeams, mMapFixtureKeys, mMapFixtures);
         if (isUpdated) {
@@ -218,11 +223,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private int checkProgress() {
         int count = 0;
-        if (!mMap.isEmpty()) count += 20;
-        if (!mMapTeamKeys.isEmpty()) count += 20;
-        if (!mMapTeams.isEmpty()) count += 20;
-        if (!mMapFixtureKeys.isEmpty()) count += 20;
-        if (!mMapFixtures.isEmpty()) count += 20;
+        int step = MAIN_ACTIVITY_PROGRESS / 5;
+        if (!mMap.isEmpty()) count += step;
+        if (!mMapTeamKeys.isEmpty()) count += step;
+        if (!mMapTeams.isEmpty()) count += step;
+        if (!mMapFixtureKeys.isEmpty()) count += step;
+        if (!mMapFixtures.isEmpty()) count += step;
         return count;
     }
 
@@ -230,14 +236,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressValue.setIndeterminate(isIndeterminate);
     }
 
-    private void setProgressValue(int value) {
-        if(value < 0) return;
-        if(value > 100) value  = 100;
+    private void setProgressValue() {
+        int value = mActivityProgress + mServiceProgress;
+        int max = MAIN_ACTIVITY_PROGRESS + UPDATE_SERVICE_PROGRESS;
+        if (value < 0) return;
+        if (value > max) value = max;
         mProgressBar.setProgress(value);
         mProgressText.setText(String.valueOf(value));
         mProgressValue.setProgress(value);
 
-        if (value >= 100) {
+        if (value >= max) {
             mProgressValue.setIndeterminate(false);
 
         }
@@ -245,7 +253,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void setupProgress() {
         mIsProgressEinished = false;            // local updates
-        setProgressValue(mProgressCounter);
+        mActivityProgress = 0;
+        mServiceProgress = 0;
+        setProgressValue();
         setProgressValue(false);                // static at start
     }
 
@@ -272,41 +282,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-    // test!!!
-    private void testProgress() {
-        mProgressCounter = 0;
-        mProgressValue.setIndeterminate(true);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (mProgressCounter < 100) {
-                    mProgressCounter += 5;
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    mHandler.post(new Runnable() {  // access from thread to main views
-                        @Override
-                        public void run() {
-                            mProgressBar.setProgress(mProgressCounter);
-                            mProgressText.setText(String.valueOf(mProgressCounter));
-                            mProgressValue.setProgress(mProgressCounter);
-
-                            if (mProgressCounter >= 100) {
-                                mProgressValue.setIndeterminate(false);
-                            }
-
-                        }
-                    });
-                }
-            }
-        }).start();
-
-    }
-
-
     // classes
     private class MessageReceiver extends BroadcastReceiver {
 
@@ -319,14 +294,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     setProgressValue(true); // indeterminate
 
                 } else if (action.equals(context.getString(R.string.broadcast_update_finished))) {
-                    mProgressCounter = 100;
-                    setProgressValue(mProgressCounter);
+                    mServiceProgress = UPDATE_SERVICE_PROGRESS;
+                    setProgressValue();
 
                 } else if (action.equals(context.getString(R.string.broadcast_update_progress))) {
                     int value = intent.getIntExtra(getString(R.string.extra_progress_counter), -1);
                     if (value >= 0) {
-                        mProgressCounter = value;
-                        setProgressValue(mProgressCounter);
+                        mServiceProgress = value;
+                        setProgressValue();
                     }
                 } else if (action.equals(context.getString(R.string.broadcast_no_network))) {
                     Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();

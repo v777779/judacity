@@ -849,13 +849,16 @@ public class FDUtils {
         return true; // all data ok and refreshed
     }
 
-    // all maps read by loaders
+// all maps read by loaders
 // load competitions
     public static boolean loadDatabase(
             Context context, Map<Integer, FDCompetition> map,
             Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
             Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures,
             boolean forceUpdate) throws NullPointerException, IOException {
+
+// progress
+
 
 // load teams or skip
         boolean isUpdated = false;
