@@ -41,6 +41,13 @@
     <color name="progress_secondary_center">#8063d9a4</color>
     <color name="progress_secondary_end">#80339479</color>
 
+    <!--text-->
     <color name="progress_text_back">#f8f8f8</color>
     <color name="progress_text_color">#FF3a3a3a</color>
+
+    <!--icon-->
+    <color name="service_icon_notification">#a5a5a5</color>
+    <color name="service_icon_star">#f4b331</color>
+
+
 </resources>

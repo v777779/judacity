@@ -1,9 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recycler_matches_item"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recycler_match_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/image_rm_item_home"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/image_rm_item_team_logo"
+        android:src="@drawable/logo_chelsea"
+        app:layout_constraintEnd_toStartOf="@+id/text_tm_item_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_rm_item_away"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/image_rm_item_team_logo"
+        android:src="@drawable/logo_stoke_city"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_tm_item_time"
+        style="@style/TextRecycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/text_rm_item_match_time"
+        android:textSize="@dimen/text_rm_item_large_size"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="19:05" />
+
+    <TextView
+        android:id="@+id/text_tm_item_home"
+        style="@style/TextRecycler"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/text_rm_item_team_name"
+        android:textSize="@dimen/text_rm_item_size"
+
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_rm_item_home"
+        tools:text="Chelsea" />
+
+    <TextView
+        android:id="@+id/text_tm_item_away"
+        style="@style/TextRecycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/text_rm_item_team_name"
+        android:textSize="@dimen/text_rm_item_size"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/image_rm_item_away"
+        tools:text="Manchester United" />
+
+    <ImageView
+        android:id="@+id/icon_rm_item_notification"
+        android:layout_width="@dimen/icon_rm_item_size"
+        android:layout_height="@dimen/icon_rm_item_size"
+        android:contentDescription="@string/image_rm_item_service_icon"
+        android:src="@drawable/ic_star_border"
+        tools:layout_editor_absoluteX="280dp"
+        tools:layout_editor_absoluteY="26dp" />
+
+    <ImageView
+        android:id="@+id/icon_rm_item_notify"
+        android:layout_width="@dimen/icon_rm_item_size"
+        android:layout_height="@dimen/icon_rm_item_size"
+        android:contentDescription="@string/image_rm_item_service_icon"
+        android:src="@drawable/ic_notifications"
+        tools:layout_editor_absoluteX="331dp"
+        tools:layout_editor_absoluteY="26dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="280dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="140dp" />
 
 
 </android.support.constraint.ConstraintLayout>

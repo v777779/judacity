@@ -74,11 +74,11 @@
     <!--screen2-->
 
 
-    <string name="recycler_match_image">The Football Team Logo image</string>
-    <string name="recycler_match_team">The Football Team Name</string>
-    <string name="recycler_match_icon">The Football Match service icon</string>
-    <string name="recycler_match_time">The Football Match time</string>
-    <string name="recycler_match_league">The Football League Name</string>
+    <string name="image_rm_item_team_logo">The Football Team Logo image</string>
+    <string name="text_rm_item_team_name">The Football Team Name</string>
+    <string name="image_rm_item_service_icon">The Football Match service icon</string>
+    <string name="text_rm_item_match_time">The Football Match time</string>
+    <string name="text_rm_item_league_name">The Football League Name</string>
 
     <!--titles-->
     <string name="screen_match">Matches</string>
