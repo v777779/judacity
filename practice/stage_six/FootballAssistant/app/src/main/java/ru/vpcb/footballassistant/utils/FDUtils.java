@@ -835,8 +835,7 @@ public class FDUtils {
                 competition.setFixtures(fixtures);
 
             } catch (NullPointerException | NumberFormatException | IOException e) {
-                Timber.d(context.getString(R.string.get_competitions_competition) +
-                        e.getMessage());
+                Timber.d(context.getString(R.string.load_database, e.getMessage()));
             }
         }
         return map;
@@ -853,7 +852,7 @@ public class FDUtils {
 
     // all maps read by loaders
 // load competitions
-    public static boolean loadDatabase(
+    public static boolean loadDatabaseRefresh(
             Context context, Map<Integer, FDCompetition> map,
             Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
             Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures,
@@ -865,9 +864,11 @@ public class FDUtils {
 
 // load teams or skip
         boolean isUpdated = false;
+        boolean isCompetitionUpdated = false;
 // load map
         if (forceUpdate || !isCompetitionsRefreshed(context, map)) {
             isUpdated = true;
+            isCompetitionUpdated = true;
             map.clear();
             List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
             Date lastRefresh = currentTimeMinutesToDate();
@@ -882,15 +883,15 @@ public class FDUtils {
         progress = step;
         sendProgress(context, (int) progress);  // +1
 
-
         for (FDCompetition competition : map.values()) {
             if (competition == null || competition.getId() <= 0) continue;
 // teams
             boolean isRefreshed = false;
-            if (!forceUpdate && isRefreshed(context, competition.getLastRefresh())) {  // check smart update
+            if (!forceUpdate && !isCompetitionUpdated &&                                // if competitions updated load teams
+                    isRefreshed(context, competition.getLastRefresh())) {               // check smart update
                 isRefreshed = true;
                 if (competition.getTeams() == null) {
-                    isRefreshed = setListTeams(competition, mapTeamKeys, mapTeams);    // restore teams from keys
+                    isRefreshed = setListTeams(competition, mapTeamKeys, mapTeams);     // restore teams from keys
                 }
             }
 
@@ -899,15 +900,14 @@ public class FDUtils {
                     isUpdated = true;                                                   // one item changed
                     List<FDTeam> teams = loadListTeams(competition);                    // load
                     competition.setTeams(teams);
-
                 } catch (NullPointerException | NumberFormatException | IOException e) {
-                    Timber.d(context.getString(R.string.get_competitions_competition) +
-                            e.getMessage());
+                    Timber.d(context.getString(R.string.load_database, e.getMessage()));
                 }
             }
 // fixtures
             isRefreshed = false;
-            if (!forceUpdate && isRefreshed(context, competition.getLastRefresh())) {       // check smart update
+            if (!forceUpdate && !isCompetitionUpdated &&                                // if competitions updated load fixtures
+                    isRefreshed(context, competition.getLastRefresh())) {               // check smart update
                 isRefreshed = true;
                 if (competition.getFixtures() == null) {
                     isRefreshed = setListFixtures(competition, mapFixtureKeys, mapFixtures);
@@ -919,10 +919,8 @@ public class FDUtils {
                     isUpdated = true;                                                   // one item changed
                     List<FDFixture> fixtures = loadListFixtures(competition);           // load
                     competition.setFixtures(fixtures);
-
                 } catch (NullPointerException | NumberFormatException | IOException e) {
-                    Timber.d(context.getString(R.string.get_competitions_competition) +
-                            e.getMessage());
+                    Timber.d(context.getString(R.string.load_database, e.getMessage()));
                 }
 
             }
@@ -933,6 +931,56 @@ public class FDUtils {
         return isUpdated;
     }
 
+
+    // all maps read by loaders
+// load competitions
+    public static boolean loadDatabase(
+            Context context, Map<Integer, FDCompetition> map,
+            Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
+            Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures
+    ) throws NullPointerException, IOException {
+
+// progress
+        double step;
+        double progress = 0;
+
+// load map
+        map.clear();
+        List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
+        Date lastRefresh = currentTimeMinutesToDate();
+        for (FDCompetition competition : list) {
+            if (competition == null || competition.getId() <= 0) continue;
+            competition.setLastRefresh(lastRefresh);
+            map.put(competition.getId(), competition);
+        }
+
+        step = UPDATE_SERVICE_PROGRESS * 0.8 / (map.size() + 1); // 1 + t.map.size + f.map.size
+        progress = step;
+        sendProgress(context, (int) progress);  // +1
+
+        for (FDCompetition competition : map.values()) {
+            if (competition == null || competition.getId() <= 0) continue;
+// teams
+            try {
+                List<FDTeam> teams = loadListTeams(competition);                    // load
+                competition.setTeams(teams);
+            } catch (NullPointerException | NumberFormatException | IOException e) {
+                Timber.d(context.getString(R.string.load_database, e.getMessage()));
+            }
+// fixtures
+            try {
+                List<FDFixture> fixtures = loadListFixtures(competition);           // load
+                competition.setFixtures(fixtures);
+
+            } catch (NullPointerException | NumberFormatException | IOException e) {
+                Timber.d(context.getString(R.string.load_database, e.getMessage()));
+            }
+// progress
+            progress += step;
+            sendProgress(context, (int) progress);// t,f
+        }
+        return true;
+    }
 
     // teams
     // list from competition

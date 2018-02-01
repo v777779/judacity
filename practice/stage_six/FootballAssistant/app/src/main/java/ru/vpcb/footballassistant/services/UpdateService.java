@@ -95,7 +95,7 @@ public class UpdateService extends IntentService {
             FDUtils.sendProgress(this, 0);
 // load database
             boolean isUpdated = FDUtils.loadDatabase(this, map, mapTeamKeys, mapTeams,
-                    mapFixtureKeys, mapFixtures, false);
+                    mapFixtureKeys, mapFixtures);
 // 50%
             FDUtils.sendProgress(this, (int) (UPDATE_SERVICE_PROGRESS * 0.8));
 // save database
