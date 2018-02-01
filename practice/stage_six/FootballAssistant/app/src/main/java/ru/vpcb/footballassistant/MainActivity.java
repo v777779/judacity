@@ -16,6 +16,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Scene;
 import android.transition.Transition;
@@ -25,7 +28,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,20 +45,22 @@ import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.services.UpdateService;
+import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_INDEFINITE;
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_PROGRESS;
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_0;
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_1;
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_2;
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_3;
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_4;
-import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_5;
-import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_0;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_1;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_2;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_3;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_4;
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_5;
+import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private static boolean sIsTimber;
     private static Handler mHandler;
@@ -65,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar mProgressValue;
     private TextView mProgressText;
     private ImageView mToolbarLogo;
+
+    private RecyclerView mRecyclerView;
+
 
     private BottomNavigationView mBottomNavigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigationListener;
@@ -110,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
         mBottomNavigation = findViewById(R.id.bottom_navigation);
-
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
@@ -243,8 +252,56 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+    @Override
+    public void onCallback(View view, int pos) {
+        Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
+    }
+
+    @Override
+    public void onCallback(int mode) {
+
+    }
+
 
     // methods
+    private void setupState(int state) {
+        switch (state) {
+            case MAIN_ACTIVITY_STATE_0:
+                break;
+            case MAIN_ACTIVITY_STATE_1:
+// bind
+                mRecyclerView = findViewById(R.id.recycler_match);
+                setupBottomNavigation();
+                changeActionBar(mState);
+                setupRecycler();
+                break;
+            case MAIN_ACTIVITY_STATE_2:
+                break;
+            case MAIN_ACTIVITY_STATE_3:
+                break;
+            case MAIN_ACTIVITY_STATE_4:
+                break;
+            case MAIN_ACTIVITY_STATE_5:
+                break;
+            default:
+
+        }
+    }
+
+
+    private void setupRecycler() {
+        Config.Span sp = Config.getDisplayMetrics(this);
+
+        RecyclerAdapter adapter = new RecyclerAdapter(this, sp);
+        adapter.setHasStableIds(true);
+        mRecyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+    }
+
 
     private void moveState(int state) {
         if (mState == state) return;  // block repetitions
@@ -254,9 +311,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 changeActionBar(state);
                 break;
             case MAIN_ACTIVITY_STATE_1:
-//                changeActionBar(state);
-                makeTransition(R.layout.content_detail, R.transition.transition_fade);
                 mState = MAIN_ACTIVITY_STATE_1;
+                makeTransition(R.layout.content_detail, R.transition.transition_fade);
                 break;
             case MAIN_ACTIVITY_STATE_2:
                 break;
@@ -273,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-// test!!!
+    // test!!!
     private void makeTransition(int layoutId, int setId) {
         Scene scene = Scene.getSceneForLayout((ViewGroup) findViewById(R.id.container_layout),
                 layoutId, MainActivity.this);
@@ -281,8 +337,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         transition.addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                setupBottomNavigation();
-                changeActionBar(mState);
+                setupState(mState);
 
             }
         });

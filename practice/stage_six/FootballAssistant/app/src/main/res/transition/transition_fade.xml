@@ -2,7 +2,7 @@
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
     <fade
         android:duration="250"
-        android:startDelay="750"
+        android:startDelay="500"
         android:fadingMode="fade_in"
         >
         <targets>
@@ -14,7 +14,7 @@
     <fade
         android:duration="250"
         android:fadingMode="fade_out"
-        android:startDelay="750">
+        android:startDelay="500">
         <targets>
             <target android:targetId="@id/content_main" />
         </targets>

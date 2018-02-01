@@ -14,13 +14,24 @@
     <dimen name="progress_text_size">16sp</dimen>
 
     <!--recycler_match-->
-    <dimen name="image_rm_item_size">50dp</dimen>
-    <dimen name="text_rm_item_size">16sp</dimen>
-    <dimen name="text_rm_item_large_size">24sp</dimen>
+    <dimen name="image_rm_item_size">32dp</dimen>
+    <dimen name="text_rm_item_size">12sp</dimen>
+    <dimen name="text_rm_item_large_size">32sp</dimen>
     <dimen name="icon_rm_item_size">24dp</dimen>
 
     <dimen name="image_rm_head_size">50dp</dimen>
-    <dimen name="image_rm_head_text_size">20sp</dimen>
+    <dimen name="text_rm_head_size">20sp</dimen>
     <dimen name="image_rm_head_icon_size">24dp</dimen>
+
+    <dimen name="border_rm_item_size">2dp</dimen>
+
+    <!--margins-->
+    <dimen name="margin_micro">2dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_normal">8dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_super">32dp</dimen>
+    <dimen name="margin_extra">64dp</dimen>
+
 
 </resources>

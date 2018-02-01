@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--system-->
+    <bool name="is_wide">false</bool>
+    <bool name="is_land">false</bool>
+
+
+    <!--preferences-->
     <bool name="pref_smart_update_default">true</bool>
 
 </resources>

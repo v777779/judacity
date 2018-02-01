@@ -3,7 +3,7 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import static ru.vpcb.footballassistant.utils.Constants.FD_REGEX_COMPETITIONS;
+import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_COMPETITIONS;
 
 /**
  * Exercise for course : Android Developer Nanodegree

@@ -79,9 +79,21 @@
     <string name="image_rm_item_service_icon">The Football Match service icon</string>
     <string name="text_rm_item_match_time">The Football Match time</string>
     <string name="text_rm_item_league_name">The Football League Name</string>
+    <string name="image_rm_item_league_logo">The Football League Logo image</string>
 
     <!--titles-->
     <string name="screen_match">Matches</string>
+
+
+
+    <!--test-->
+    <string name="text_test_rm_item_team_home">Chelsea</string>
+    <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
+    <string name="text_test_rm_item_match_time">19:05</string>
+    <string name="text_test_rm_item_league">Premier League 2017/18</string>
+    <string name="text_test_rm_item_league2">Championship 2017/18</string>
+    <string name="text_test_rm_item_league3">League One 2017/18</string>
+    <string name="text_test_rm_item_league4">League Two 2017/18</string>
 
 
 </resources>

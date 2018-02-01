@@ -36,17 +36,39 @@
         <item name="android:textStyle">italic</item>
         <item name="android:gravity">start|center</item>
         <item name="android:layout_gravity">start|center</item>
-
     </style>
 
-    <style name="TextRecycler" parent="TextAppearance.AppCompat.Medium">
+    <style name="Item.TextRecycler" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/rm_text_color_dark</item>
+    </style>
+
+    <style name="Left.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="Right.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="Large.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_large_size</item>
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="Head.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_head_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lines">2</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
 
-
-
+    </style>
 
 
 </resources>

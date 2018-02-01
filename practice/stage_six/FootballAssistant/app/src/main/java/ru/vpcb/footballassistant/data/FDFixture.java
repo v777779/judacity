@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import static ru.vpcb.footballassistant.utils.Constants.FD_REGEX_FIXTURES;
+import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_FIXTURES;
 
 
 /**

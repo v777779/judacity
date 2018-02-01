@@ -7,17 +7,17 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-import static ru.vpcb.footballassistant.utils.Constants.FD_COMPETITIONS_FIXTURES_GET;
-import static ru.vpcb.footballassistant.utils.Constants.FD_COMPETITIONS_GET;
-import static ru.vpcb.footballassistant.utils.Constants.FD_COMPETITIONS_TABLE_GET;
-import static ru.vpcb.footballassistant.utils.Constants.FD_COMPETITIONS_TEAMS_GET;
-import static ru.vpcb.footballassistant.utils.Constants.FD_QUERY_ID;
-import static ru.vpcb.footballassistant.utils.Constants.FD_QUERY_MATCHDAY;
-import static ru.vpcb.footballassistant.utils.Constants.FD_QUERY_SEASON;
-import static ru.vpcb.footballassistant.utils.Constants.FD_QUERY_TIMEFRAME;
-import static ru.vpcb.footballassistant.utils.Constants.FD_TEAM_FIXTURES_GET;
-import static ru.vpcb.footballassistant.utils.Constants.FD_TEAM_GET;
-import static ru.vpcb.footballassistant.utils.Constants.FD_TEAM_PLAYERS_GET;
+import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_FIXTURES_GET;
+import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_GET;
+import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_TABLE_GET;
+import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_TEAMS_GET;
+import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_ID;
+import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_MATCHDAY;
+import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_SEASON;
+import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_TIMEFRAME;
+import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_FIXTURES_GET;
+import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_GET;
+import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_PLAYERS_GET;
 
 
 /**

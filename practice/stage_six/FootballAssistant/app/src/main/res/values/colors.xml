@@ -43,11 +43,30 @@
 
     <!--text-->
     <color name="progress_text_back">#f8f8f8</color>
-    <color name="progress_text_color">#FF3a3a3a</color>
+    <color name="progress_text_color">#3a3a3a</color>
 
     <!--icon-->
-    <color name="service_icon_notification">#a5a5a5</color>
+    <color name="service_icon_notification">#56618d</color>
     <color name="service_icon_star">#f4b331</color>
 
+<!--recycler-->
+    <color name="rm_text_color_dark">#3a3a3a</color>
+    <color name="rm_text_color_light">#f8f8f8</color>
+
+    <color name="rm_view_border_back">#d5d5d5</color>
+    <color name="rm_item_card_back">#f8f8f8</color>
+    <color name="rm_head_card_back">#e8e8e8</color>
+
+    <!--<color name="rm_item_card_back">#f7fff6</color>-->
+    <!--<color name="rm_head_card_back">#e7d7c8</color>-->
+
+    <!--<color name="rm_item_card_back">#f7fff6</color>-->
+    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
+
+    <!--<color name="rm_item_card_back">#f8f8f8</color>-->
+    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
+
+    <!--<color name="rm_item_card_back">#e8e8e8</color>-->
+    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
 
 </resources>

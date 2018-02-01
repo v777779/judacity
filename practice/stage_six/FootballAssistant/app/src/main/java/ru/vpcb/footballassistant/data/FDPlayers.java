@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import static ru.vpcb.footballassistant.utils.Constants.FD_REGEX_TEAMS;
+import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
 
 
 /**

@@ -24,8 +24,8 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
-import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
-import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_TAG;
+import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_TAG;
 import static ru.vpcb.footballassistant.utils.FootballUtils.isOnline;
 
 /**

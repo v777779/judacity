@@ -38,8 +38,8 @@ import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import timber.log.Timber;
 
-import static ru.vpcb.footballassistant.utils.Constants.FD_BASE_URI;
-import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Config.FD_BASE_URI;
+import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
 import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefBool;
 import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefInt;
