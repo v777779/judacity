@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
@@ -16,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Scene;
+import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
 import android.view.View;
@@ -40,6 +43,7 @@ import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_0;
 import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_1;
@@ -61,10 +65,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar mProgressValue;
     private TextView mProgressText;
     private ImageView mToolbarLogo;
-    // progress
 
+    private BottomNavigationView mBottomNavigation;
+    private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigationListener;
 
+    // receiver
     private MessageReceiver mMessageReceiver;
+    // progress
     private boolean mIsProgressEinished;
     private int mActivityProgress;
     private int mServiceProgress;
@@ -102,8 +109,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressText = findViewById(R.id.progress_text);
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
+        mBottomNavigation = findViewById(R.id.bottom_navigation);
 
-        mState = MAIN_ACTIVITY_STATE_0;
+
+// params
+        mState = MAIN_ACTIVITY_INDEFINITE;
 
 
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -123,11 +133,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
 // progress
+        setupActionBar();
         setupProgress();
         setupReceiver();
 
-        setupActionBar();
-
+        moveState(MAIN_ACTIVITY_STATE_0);
 
         refresh(getString(R.string.action_update));
 
@@ -237,14 +247,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     // methods
 
     private void moveState(int state) {
-        if(mState == state) return;  // block repetitions
+        if (mState == state) return;  // block repetitions
 
         switch (state) {
             case MAIN_ACTIVITY_STATE_0:
+                changeActionBar(state);
                 break;
             case MAIN_ACTIVITY_STATE_1:
-
-                showActionBar(true);
+//                changeActionBar(state);
                 makeTransition(R.layout.content_detail, R.transition.transition_fade);
                 mState = MAIN_ACTIVITY_STATE_1;
                 break;
@@ -263,15 +273,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+// test!!!
     private void makeTransition(int layoutId, int setId) {
-        TransitionManager.go(
-                Scene.getSceneForLayout(
-                        (ViewGroup) findViewById(R.id.container_layout),
-                        layoutId,
-                        MainActivity.this),
-                TransitionInflater.from(MainActivity.this)
-                        .inflateTransition(setId)
-        );
+        Scene scene = Scene.getSceneForLayout((ViewGroup) findViewById(R.id.container_layout),
+                layoutId, MainActivity.this);
+        Transition transition = TransitionInflater.from(MainActivity.this).inflateTransition(setId);
+        transition.addListener(new TransitionAdapter() {
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                setupBottomNavigation();
+                changeActionBar(mState);
+
+            }
+        });
+
+        TransitionManager.go(scene, transition);
+
     }
 
 
@@ -325,15 +342,36 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setProgressValue(false);                // static at start
     }
 
-    private void showActionBar(boolean isShow) {
+    private void changeActionBar(int state) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
-        if (isShow) {
-            actionBar.show();
-        } else {
-            actionBar.hide();
+
+        switch (state) {
+            case MAIN_ACTIVITY_STATE_0:
+                mToolbarLogo.setVisibility(View.VISIBLE);
+                actionBar.hide();
+                break;
+
+            case MAIN_ACTIVITY_STATE_1:
+                mToolbarLogo.setVisibility(View.INVISIBLE);
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                toolbar.setTitle(getString(R.string.screen_match));
+                actionBar.show();
+                break;
+            case MAIN_ACTIVITY_STATE_2:
+                break;
+            case MAIN_ACTIVITY_STATE_3:
+                break;
+            case MAIN_ACTIVITY_STATE_4:
+                break;
+            case MAIN_ACTIVITY_STATE_5:
+                break;
+            default:
+
+
         }
     }
+
 
     private void setupActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -349,8 +387,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (actionBar != null) {
             actionBar.setTitle("");
         }
-
-        showActionBar(false);
 
     }
 
@@ -409,4 +445,56 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         }
     }
+
+    private void setupBottomNavigation() {
+        mBottomNavigation = findViewById(R.id.bottom_navigation);
+        if (mBottomNavigation == null) return;
+
+        mBottomNavigation.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.navigation_home:
+
+                                return true;
+                            case R.id.navigation_dashboard:
+
+                                return true;
+                            case R.id.navigation_notifications:
+
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+    }
+
+    private class TransitionAdapter implements Transition.TransitionListener {
+        @Override
+        public void onTransitionStart(Transition transition) {
+        }
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+
+        }
+    }
+
+
 }

@@ -61,7 +61,27 @@
     <string name="progress_constant">100</string>
 
     <!--content description-->
+    <!--appbar-->
+    <!--screen1-->
+    <string name="image_application_logo">Application Logo Image</string>
+    <!--screen2-->
+    <string name="text_application_name">Application Name Text</string>
+
+
+    <!--screen1-->
     <string name="front_image_application">The Ball front image of application</string>
+
+    <!--screen2-->
+
+
+    <string name="recycler_match_image">The Football Team Logo image</string>
+    <string name="recycler_match_team">The Football Team Name</string>
+    <string name="recycler_match_icon">The Football Match service icon</string>
+    <string name="recycler_match_time">The Football Match time</string>
+    <string name="recycler_match_league">The Football League Name</string>
+
+    <!--titles-->
+    <string name="screen_match">Matches</string>
 
 
 </resources>

@@ -9,33 +9,42 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
         android:layout_marginTop="@dimen/status_bar_height"
         android:background="@drawable/toolbar_background"
-        >
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        <ImageView
-            android:id="@+id/toolbar_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start|center_vertical"
-            android:layout_marginTop="@dimen/toolbar_top_margin"
-            android:layout_marginBottom="@dimen/toolbar_bottom_margin"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="fitStart"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/football_logo_rounded"
-            />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <ImageView
+                    android:id="@+id/toolbar_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginBottom="@dimen/toolbar_bottom_margin"
+                    android:layout_marginTop="@dimen/toolbar_top_margin"
+                    android:clickable="true"
+                    android:contentDescription="@string/image_application_logo"
+                    android:focusable="true"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/football_logo_rounded" />
 
+                <TextView
+                    android:id="@+id/toolbar_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="@style/TextToolbar"
+                    android:text="@string/screen_match"
+                    android:contentDescription="@string/text_application_name"
+                    />
+            </FrameLayout>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
@@ -43,7 +52,10 @@
     <FrameLayout
         android:id="@+id/container_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        >
+
         <include layout="@layout/content_main" />
 
     </FrameLayout>
@@ -55,9 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"
         android:visibility="invisible"
-        />
+        app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab2"
@@ -65,9 +76,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_24dp"
         android:visibility="invisible"
-        />
+        app:srcCompat="@drawable/ic_add_24dp" />
 
 
 </android.support.design.widget.CoordinatorLayout>

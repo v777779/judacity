@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recycler_matches_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<ImageView
+    android:layout_width="@dimen/rm_item_image_size"
+    android:layout_height="@dimen/rm_item_image_size"
+
+
+    />
+
+</android.support.constraint.ConstraintLayout>

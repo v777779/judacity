@@ -52,5 +52,7 @@ public class Constants {
     public static final int  MAIN_ACTIVITY_STATE_3 = 3;
     public static final int  MAIN_ACTIVITY_STATE_4 = 4;
     public static final int  MAIN_ACTIVITY_STATE_5 = 5;
+    public static final int  MAIN_ACTIVITY_INDEFINITE = -1;
+
 
 }
