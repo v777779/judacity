@@ -5,7 +5,7 @@
     android:id="@+id/content_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="@color/rm_view_border_back"
     tools:context="ru.vpcb.footballassistant.DetailActivity">
 
 
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/rm_navigation_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -26,14 +26,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.40" />
+        app:layout_constraintGuide_percent="0.0" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_h2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.80" />
+        app:layout_constraintGuide_percent="0.89" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_v1"
@@ -49,26 +49,26 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="1" />
 
-    <FrameLayout
-        android:id="@+id/container_recycler_match_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/container_recycler_match_head">
+    <!--<FrameLayout-->
+        <!--android:id="@+id/container_recycler_match_item"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/container_recycler_match_head">-->
 
-        <include layout="@layout/recycler_match_item" />
-    </FrameLayout>
+        <!--<include layout="@layout/recycler_match_item" />-->
+    <!--</FrameLayout>-->
 
 
-    <FrameLayout
-        android:id="@+id/container_recycler_match_head"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toTopOf="parent">
+    <!--<FrameLayout-->
+        <!--android:id="@+id/container_recycler_match_head"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--app:layout_constraintTop_toTopOf="parent">-->
 
-        <include layout="@layout/recycler_match_head" />
-    </FrameLayout>
+        <!--<include layout="@layout/recycler_match_head" />-->
+    <!--</FrameLayout>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_match"
@@ -76,23 +76,13 @@
         android:layout_height="0dp"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/image_rm_view_border"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guide_h1">
+        app:layout_constraintTop_toTopOf="parent">
 
     </android.support.v7.widget.RecyclerView>
 
-    <View
-        android:id="@+id/image_rm_view_border"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginBottom="4dp"
-        android:background="@color/rm_view_border_back"
-        app:layout_constraintBottom_toTopOf="@+id/guide_h2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

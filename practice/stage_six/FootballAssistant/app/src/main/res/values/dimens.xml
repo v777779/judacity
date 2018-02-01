@@ -14,13 +14,13 @@
     <dimen name="progress_text_size">16sp</dimen>
 
     <!--recycler_match-->
-    <dimen name="image_rm_item_size">32dp</dimen>
+    <dimen name="image_rm_item_size">28dp</dimen>
     <dimen name="text_rm_item_size">12sp</dimen>
-    <dimen name="text_rm_item_large_size">32sp</dimen>
+    <dimen name="text_rm_item_large_size">24sp</dimen>
     <dimen name="icon_rm_item_size">24dp</dimen>
 
     <dimen name="image_rm_head_size">50dp</dimen>
-    <dimen name="text_rm_head_size">20sp</dimen>
+    <dimen name="text_rm_head_size">18sp</dimen>
     <dimen name="image_rm_head_icon_size">24dp</dimen>
 
     <dimen name="border_rm_item_size">2dp</dimen>

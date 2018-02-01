@@ -42,6 +42,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/rm_text_color_dark</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="Left.Item.TextRecycler" parent="Item.TextRecycler">
@@ -59,11 +60,13 @@
     <style name="Large.Item.TextRecycler" parent="Item.TextRecycler">
         <item name="android:textSize">@dimen/text_rm_item_large_size</item>
         <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Head.Item.TextRecycler" parent="Item.TextRecycler">
         <item name="android:textSize">@dimen/text_rm_head_size</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">start|center</item>
         <item name="android:lines">2</item>
         <!--<item name="android:textStyle">bold</item>-->
         <!--<item name="android:textStyle">bold</item>-->

@@ -211,9 +211,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 if(mTextTeamAway!= null)
                 mTextTeamAway.setText(mContext.getString(R.string.text_test_rm_item_team_home));
                 if(mTextLeague!= null)
-                    mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_league));
+                    mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_favorites));
                 if(mImageLeague!= null)
-                    mImageLeague.setImageResource(R.drawable.logo_002_eng_cs);
+                    mImageLeague.setImageResource(R.drawable.ic_star);
 
 
             }else {
@@ -222,7 +222,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 if(mTextLeague!= null)
                     mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_league2));
                 if(mImageLeague!= null)
-                    mImageLeague.setImageResource(R.drawable.logo_004_l2);
+                    mImageLeague.setImageResource(R.drawable.icon_ball);
             }
 
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);

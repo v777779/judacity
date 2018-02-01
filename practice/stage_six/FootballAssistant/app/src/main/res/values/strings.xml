@@ -91,9 +91,10 @@
     <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
     <string name="text_test_rm_item_match_time">19:05</string>
     <string name="text_test_rm_item_league">Premier League 2017/18</string>
-    <string name="text_test_rm_item_league2">Championship 2017/18</string>
+    <string name="text_test_rm_item_league2">Champions League 2017/18</string>
     <string name="text_test_rm_item_league3">League One 2017/18</string>
     <string name="text_test_rm_item_league4">League Two 2017/18</string>
+    <string name="text_test_rm_item_favorites">Favorite matches</string>
 
 
 </resources>
