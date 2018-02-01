@@ -41,6 +41,12 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_0;
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_1;
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_2;
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_3;
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_4;
+import static ru.vpcb.footballassistant.utils.Constants.MAIN_ACTIVITY_STATE_5;
 import static ru.vpcb.footballassistant.utils.Constants.UPDATE_SERVICE_PROGRESS;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -62,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean mIsProgressEinished;
     private int mActivityProgress;
     private int mServiceProgress;
+    private int mState;
+
 
     // mMap
     private Map<Integer, FDCompetition> mMap = new HashMap<>();
@@ -77,15 +85,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
 
-
-
         // log
         if (!sIsTimber) {
             Timber.plant(new Timber.DebugTree());
             sIsTimber = true;
         }
 // handler
-        if(mHandler == null) {
+        if (mHandler == null) {
             mHandler = new Handler();
         }
 
@@ -97,27 +103,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
 
+        mState = MAIN_ACTIVITY_STATE_0;
+
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                makeTransition(R.layout.content_detail,R.transition.transition_fade);
+                makeTransition(R.layout.content_detail, R.transition.transition_fade);
             }
         });
 
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeTransition(R.layout.content_main,R.transition.transition_fade_back);
+                makeTransition(R.layout.content_main, R.transition.transition_fade_back);
             }
         });
 
 // progress
         setupProgress();
         setupReceiver();
+
         setupActionBar();
+
 
         refresh(getString(R.string.action_update));
 
@@ -212,8 +222,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         boolean isUpdated = FDUtils.loadCompetitions(mMap, mMapTeamKeys, mMapTeams, mMapFixtureKeys, mMapFixtures);
         if (isUpdated) {
-            getSupportActionBar().show();
-            makeTransition(R.layout.content_detail,R.transition.transition_fade);
+            moveState(MAIN_ACTIVITY_STATE_1);
         }
 
     }
@@ -226,6 +235,33 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     // methods
+
+    private void moveState(int state) {
+        if(mState == state) return;  // block repetitions
+
+        switch (state) {
+            case MAIN_ACTIVITY_STATE_0:
+                break;
+            case MAIN_ACTIVITY_STATE_1:
+
+                showActionBar(true);
+                makeTransition(R.layout.content_detail, R.transition.transition_fade);
+                mState = MAIN_ACTIVITY_STATE_1;
+                break;
+            case MAIN_ACTIVITY_STATE_2:
+                break;
+            case MAIN_ACTIVITY_STATE_3:
+                break;
+
+            case MAIN_ACTIVITY_STATE_4:
+                break;
+            case MAIN_ACTIVITY_STATE_5:
+                break;
+            default:
+
+        }
+
+    }
 
     private void makeTransition(int layoutId, int setId) {
         TransitionManager.go(
@@ -243,10 +279,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-            makeTransition(R.layout.content_detail, R.transition.transition_fade);
+                makeTransition(R.layout.content_detail, R.transition.transition_fade);
             }
         });
-
 
 
     }
@@ -282,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-
     private void setupProgress() {
         mIsProgressEinished = false;            // local updates
         mActivityProgress = 0;
@@ -291,8 +325,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setProgressValue(false);                // static at start
     }
 
-    private void setupActionBar() {
+    private void showActionBar(boolean isShow) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) return;
+        if (isShow) {
+            actionBar.show();
+        } else {
+            actionBar.hide();
+        }
+    }
 
+    private void setupActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -307,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             actionBar.setTitle("");
         }
 
-//        getSupportActionBar().hide();
+        showActionBar(false);
 
     }
 
