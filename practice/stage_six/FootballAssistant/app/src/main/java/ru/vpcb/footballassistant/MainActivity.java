@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -14,9 +15,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,15 +29,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -45,8 +42,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -68,6 +63,7 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_3;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_4;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_5;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -84,6 +80,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView mToolbarLogo;
 
     private RecyclerView mRecyclerView;
+    private ViewPager mViewPager;
 
 
     private BottomNavigationView mBottomNavigation;
@@ -96,7 +93,7 @@ public class MainActivity extends AppCompatActivity
     private int mActivityProgress;
     private int mServiceProgress;
     private int mState;
-
+    private int mUpdateCounter;
 
     // mMap
     private Map<Integer, FDCompetition> mMap = new HashMap<>();
@@ -105,12 +102,14 @@ public class MainActivity extends AppCompatActivity
     private Map<Integer, List<Integer>> mMapFixtureKeys = new HashMap<>();
     private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
 
+    private List<List<FDFixture>> mViewPagerList;
+    private int mViewPagerPos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         // log
         if (!sIsTimber) {
@@ -211,8 +210,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private  int mUpdateCounter = 0;
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (loader == null || loader.getId() <= 0 || cursor == null || cursor.getCount() == 0)
@@ -260,8 +257,8 @@ public class MainActivity extends AppCompatActivity
 
         if (mUpdateCounter == LOADERS_UPDATE_COUNTER) {
             moveState(MAIN_ACTIVITY_STATE_1);
-
             setupViewPagerSource();
+
             mUpdateCounter = 0;
         }
 
@@ -287,6 +284,8 @@ public class MainActivity extends AppCompatActivity
 
 
     // methods
+
+
     private void setupState(int state) {
         switch (state) {
             case MAIN_ACTIVITY_STATE_0:
@@ -297,6 +296,8 @@ public class MainActivity extends AppCompatActivity
                 setupBottomNavigation();
                 changeActionBar(mState);
                 setupRecycler();
+                setupViewPager();
+
                 break;
             case MAIN_ACTIVITY_STATE_2:
                 break;
@@ -312,10 +313,25 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private RecyclerView getRecycler(List<FDFixture> list) {
+        Config.Span sp = Config.getDisplayMetrics(this);
+
+        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
+        RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
+
+        RecyclerAdapter adapter = new RecyclerAdapter(this, sp, list);
+        adapter.setHasStableIds(true);
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        return recyclerView;
+    }
+
     private void setupRecycler() {
         Config.Span sp = Config.getDisplayMetrics(this);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this, sp);
+        RecyclerAdapter adapter = new RecyclerAdapter(this, sp, null);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
 
@@ -365,6 +381,11 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    private void setZeroTime(Calendar c) {
+        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+    }
+
+
     private void setNextDay(Calendar c, Date date) {
         c.setTime(date);
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
@@ -379,7 +400,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private List<List<FDFixture>> setupViewPagerSource() {
+    private void setupViewPagerSource() {
         int last = 0;
         int next = 0;
         int current = 0;
@@ -389,19 +410,51 @@ public class MainActivity extends AppCompatActivity
         List<List<FDFixture>> list = new ArrayList<>();
 
         Calendar c = Calendar.getInstance();
-        setNextDay(c, c.getTime());
+        setZeroTime(c);
         current = getIndex(fixtures, c);  // index of current day
 
         while (next < fixtures.size()) {
             setNextDay(c, fixtures.get(next).getDate());
             next = getIndex(fixtures, c);
-            if (next == current) {
-                current = list.size();  // index of current day records
-            }
             list.add(new ArrayList<>(fixtures.subList(last, next)));
             last = next;
+            if (next == current) current = list.size();  // index of current day records
         }
-        return list;
+
+        mViewPagerPos = current;
+        mViewPagerList = list;
+    }
+
+    private void setupViewPager() {
+        mViewPager = findViewById(R.id.viewpager_main);
+        if (mViewPagerList == null) return;
+
+        List<View> recyclers = new ArrayList<>();
+
+
+        for (List<FDFixture> list : mViewPagerList) {
+            recyclers.add(getRecycler(list));
+        }
+
+        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers);
+        mViewPager.setAdapter(listPagerAdapter);
+        mViewPager.setCurrentItem(mViewPagerPos);
+        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
     }
 
     // test!!!
@@ -414,7 +467,6 @@ public class MainActivity extends AppCompatActivity
             public void onTransitionEnd(Transition transition) {
                 setupState(mState);
 // test!!!
-
 
 
             }

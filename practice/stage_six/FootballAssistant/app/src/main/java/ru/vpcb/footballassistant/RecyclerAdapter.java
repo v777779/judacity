@@ -4,12 +4,10 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
+
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,10 +15,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.data.FDFixtures;
 import ru.vpcb.footballassistant.utils.Config;
 
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
@@ -56,16 +61,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      */
     private Resources mRes;
 
+    private List<FDFixture> mList;
+
     /**
      * Constructor of RecyclerAdapter
      *
      * @param context Context of calling activity
      * @param sp      Span  object used for RecyclerView as storage of display item parameters
      */
-    public RecyclerAdapter(Context context, Config.Span sp) {
+    public RecyclerAdapter(Context context, Config.Span sp, List<FDFixture> list) {
         mContext = context;
         mSpan = sp;
         mRes = context.getResources();
+        mList = list;
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
@@ -146,19 +154,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      */
     @Override
     public int getItemCount() {
-// test!!!
-        return 12;
+        if (mList == null) return 0;
+        return mList.size();
     }
 
     /**
-     * Replaces mCursor with new Cursor object and
+     * Replaces mList with new List<FDFixture> object and
      * calls notifyDataSetChanged() method.
      *
-     * @param cursor Cursor parameter.
+     * @param list List<FDFixture> parameter.
      */
-    public void swap(Cursor cursor) {
-        if (cursor == null) return;
-        mCursor = cursor;
+    public void swap(List<FDFixture> list) {
+        if (list == null) return;
+        mList = list;
         notifyDataSetChanged();
     }
 
@@ -207,23 +215,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
          * @param position int position of item in RecyclerView
          */
         private void fill(int position) {
-            if(position%2 == 0) {
-                if(mTextTeamAway!= null)
-                mTextTeamAway.setText(mContext.getString(R.string.text_test_rm_item_team_home));
-                if(mTextLeague!= null)
+            if(mList == null) return;
+
+            FDFixture fixture = mList.get(position);
+
+            if(getItemViewType()==RM_HEAD_VIEW_TYPE) {
+                if (position == 0) {
                     mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_favorites));
-                if(mImageLeague!= null)
                     mImageLeague.setImageResource(R.drawable.ic_star);
-
-
-            }else {
-                if(mTextTeamAway!= null)
-                    mTextTeamAway.setText(mContext.getString(R.string.text_test_rm_item_team_away));
-                if(mTextLeague!= null)
+                } else {
                     mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_league2));
-                if(mImageLeague!= null)
                     mImageLeague.setImageResource(R.drawable.icon_ball);
+                }
             }
+
+            if(getItemViewType() == RM_ITEM_VIEW_TYPE) {
+               DateFormat timeFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
+               StringBuffer sb = new StringBuffer();
+                timeFormat.format(fixture.getDate(),sb, new FieldPosition(0));
+                sb.append(":");
+                timeFormat.format(fixture.getDate(),sb, new FieldPosition(1));
+
+               mTextTeamHome.setText(fixture.getHomeTeamName());
+               mTextTeamAway.setText(fixture.getAwayTeamName());
+               mTextTime.setText(sb.toString());
+
+            }
+
+
 
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 //
@@ -245,7 +264,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //            mItemImage.setTransitionName(mRes.getString(R.string.transition_image, getItemId()));
 //            mItemTitle.setTransitionName(mRes.getString(R.string.transition_title, getItemId()));
         }
-
 
 
     }

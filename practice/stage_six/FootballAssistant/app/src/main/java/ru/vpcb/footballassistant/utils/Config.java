@@ -48,10 +48,8 @@ public class Config {
 
     // retrofit
 
-
     // loaders
     public static final int LOADERS_UPDATE_COUNTER = 5;
-
 
 
     //main_activity
@@ -62,9 +60,6 @@ public class Config {
     public static final int MAIN_ACTIVITY_STATE_4 = 4;
     public static final int MAIN_ACTIVITY_STATE_5 = 5;
     public static final int MAIN_ACTIVITY_INDEFINITE = -1;
-
-
-
 
 
     // recycler
@@ -79,6 +74,9 @@ public class Config {
 
     public static final int RM_ITEM_VIEW_TYPE = 0;
     public static final int RM_HEAD_VIEW_TYPE = 1;
+
+    // viewpager
+    public static final int VIEWPAGER_OFF_SCREEN_PAGE_NUMBER = 3;
 
 
     /**

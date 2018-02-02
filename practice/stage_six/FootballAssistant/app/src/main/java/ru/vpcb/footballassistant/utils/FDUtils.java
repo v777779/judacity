@@ -88,8 +88,7 @@ public class FDUtils {
     }
 
     private static String format(Context context, int id, FDCompetition competition, String message) {
-        return context.getString(R.string.load_database, id,
-                competition.getId(), competition.getCaption(), message);
+        return context.getString(R.string.load_database, id, competition.getId(), message);
     }
 
     // data
