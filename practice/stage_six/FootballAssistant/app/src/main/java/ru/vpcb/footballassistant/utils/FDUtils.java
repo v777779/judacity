@@ -87,6 +87,10 @@ public class FDUtils {
         return new Date(TimeUnit.MINUTES.toMillis(time));
     }
 
+    private static String format(Context context, int id, FDCompetition competition, String message) {
+        return context.getString(R.string.load_database, id,
+                competition.getId(), competition.getCaption(), message);
+    }
 
     // data
     private static boolean setListTeams(FDCompetition competition,
@@ -834,8 +838,8 @@ public class FDUtils {
                 List<FDFixture> fixtures = loadListFixtures(competition);  // load
                 competition.setFixtures(fixtures);
 
-            } catch (NullPointerException | NumberFormatException | IOException e) {
-                Timber.d(context.getString(R.string.load_database, e.getMessage()));
+            } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+                Timber.d(format(context, 1, competition, e.getMessage()));
             }
         }
         return map;
@@ -900,8 +904,8 @@ public class FDUtils {
                     isUpdated = true;                                                   // one item changed
                     List<FDTeam> teams = loadListTeams(competition);                    // load
                     competition.setTeams(teams);
-                } catch (NullPointerException | NumberFormatException | IOException e) {
-                    Timber.d(context.getString(R.string.load_database, e.getMessage()));
+                } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+                    Timber.d(format(context, 2, competition, e.getMessage()));
                 }
             }
 // fixtures
@@ -919,8 +923,8 @@ public class FDUtils {
                     isUpdated = true;                                                   // one item changed
                     List<FDFixture> fixtures = loadListFixtures(competition);           // load
                     competition.setFixtures(fixtures);
-                } catch (NullPointerException | NumberFormatException | IOException e) {
-                    Timber.d(context.getString(R.string.load_database, e.getMessage()));
+                } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+                    Timber.d(format(context, 3, competition, e.getMessage()));
                 }
 
             }
@@ -964,16 +968,16 @@ public class FDUtils {
             try {
                 List<FDTeam> teams = loadListTeams(competition);                    // load
                 competition.setTeams(teams);
-            } catch (NullPointerException | NumberFormatException | IOException e) {
-                Timber.d(context.getString(R.string.load_database, e.getMessage()));
+            } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+                Timber.d(format(context, 4, competition, e.getMessage()));
             }
 // fixtures
             try {
                 List<FDFixture> fixtures = loadListFixtures(competition);           // load
                 competition.setFixtures(fixtures);
 
-            } catch (NullPointerException | NumberFormatException | IOException e) {
-                Timber.d(context.getString(R.string.load_database, e.getMessage()));
+            } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+                Timber.d(format(context, 5, competition, e.getMessage()));
             }
 // progress
             progress += step;
@@ -985,12 +989,17 @@ public class FDUtils {
     // teams
     // list from competition
     private static List<FDTeam> loadListTeams(FDCompetition competition)
-            throws NumberFormatException, NullPointerException, IOException {
+            throws NumberFormatException, NullPointerException, IOException, InterruptedException {
         if (competition == null || competition.getId() <= 0) return null;
 
         String id = formatString(competition.getId());
         long lastRefresh = Calendar.getInstance().getTimeInMillis();
         FDTeams teams = loadListTeams(id);      // NullPointerException
+        if (teams == null) {
+// test!!!
+//            Thread.sleep(100);
+//            teams = loadListTeams(id); // second trial
+        }
         List<FDTeam> list = new ArrayList<>();
         for (FDTeam team : teams.getTeams()) {
             try {
@@ -1061,12 +1070,17 @@ public class FDUtils {
 
     // list from competition
     private static List<FDFixture> loadListFixtures(FDCompetition competition)
-            throws NumberFormatException, NullPointerException, IOException {
+            throws NumberFormatException, NullPointerException, IOException, InterruptedException {
         if (competition == null || competition.getId() <= 0) return null;
 
         String id = formatString(competition.getId());
         long lastRefresh = Calendar.getInstance().getTimeInMillis();
         FDFixtures fixtures = loadListFixtures(id);      // NullPointerException
+        if (fixtures == null) {
+// test!!!
+//            Thread.sleep(100);
+//            fixtures = loadListFixtures(id); // second trial
+        }
         List<FDFixture> list = new ArrayList<>();
         for (FDFixture fixture : fixtures.getFixtures()) {
             try {

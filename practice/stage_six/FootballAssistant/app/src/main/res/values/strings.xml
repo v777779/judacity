@@ -48,7 +48,7 @@
     <!--exception-->
     <string name="update_content_error">Update content error: </string>
     <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
-    <string name="load_database">LoadDatabase, loadTeams(), loadFixtures() exception: %1$s</string>
+    <string name="load_database">LoadDatabase, loadTeams(), loadFixtures() exception(%1$d)%2$d-%3$s: %4$s</string>
     <string name="content_provider_insert">Content provider insert exception: </string>
 
     <string name="unknown_uri">Unknown uri: %1$s"</string>
