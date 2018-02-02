@@ -16,7 +16,9 @@
         android:id="@+id/constraint_recycler_match_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/rm_item_card_back">
+        android:background="@color/rm_item_card_back"
+        android:paddingEnd="@dimen/margin_normal"
+        android:paddingStart="@dimen/margin_normal"      >
 
 
         <ImageView
@@ -24,8 +26,8 @@
             android:layout_width="@dimen/image_rm_item_size"
             android:layout_height="@dimen/image_rm_item_size"
 
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginStart="@dimen/margin_normal"
             android:contentDescription="@string/image_rm_item_team_logo"
             android:src="@drawable/logo_chelsea"
             app:layout_constraintBottom_toBottomOf="@+id/text_tm_item_time"
@@ -37,12 +39,12 @@
             android:id="@+id/image_rm_item_away"
             android:layout_width="@dimen/image_rm_item_size"
             android:layout_height="@dimen/image_rm_item_size"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/margin_normal"
 
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginStart="@dimen/margin_normal"
 
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_normal"
             android:contentDescription="@string/image_rm_item_team_logo"
             android:src="@drawable/logo_stoke_city"
             app:layout_constraintBottom_toBottomOf="@+id/text_tm_item_time"
@@ -55,8 +57,8 @@
             style="@style/Large.Item.TextRecycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="@dimen/margin_extend"
+            android:layout_marginTop="@dimen/margin_small"
             android:contentDescription="@string/text_rm_item_match_time"
             android:text="@string/text_test_rm_item_match_time"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -93,8 +95,8 @@
             android:layout_width="@dimen/icon_rm_item_size"
             android:layout_height="@dimen/icon_rm_item_size"
 
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
 
             android:contentDescription="@string/image_rm_item_service_icon"
             android:src="@drawable/ic_star_border"
