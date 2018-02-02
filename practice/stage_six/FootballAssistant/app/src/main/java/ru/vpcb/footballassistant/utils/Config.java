@@ -50,6 +50,9 @@ public class Config {
 
 
     // loaders
+    public static final int LOADERS_UPDATE_COUNTER = 5;
+
+
 
     //main_activity
     public static final int MAIN_ACTIVITY_STATE_0 = 0;
@@ -59,6 +62,9 @@ public class Config {
     public static final int MAIN_ACTIVITY_STATE_4 = 4;
     public static final int MAIN_ACTIVITY_STATE_5 = 5;
     public static final int MAIN_ACTIVITY_INDEFINITE = -1;
+
+
+
 
 
     // recycler

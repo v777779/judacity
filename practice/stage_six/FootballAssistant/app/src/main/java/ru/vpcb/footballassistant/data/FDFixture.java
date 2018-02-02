@@ -3,6 +3,8 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_FIXTURES;
@@ -55,19 +57,26 @@ public class FDFixture {
         this.id = -1;
     }
 
+    public FDFixture(Date date) {  // for comparator
+        this.id = -1;
+        this.date = date;
+        this.homeTeamName="home_team";
+        this.awayTeamName ="away_team";
+        this.status ="demo";
+    }
 
-    public FDFixture( int id, Date date, String status, int matchday,
+    public FDFixture(int id, Date date, String status, int matchday,
                      String homeTeamName, String awayTeamName,
-                      int goalsHomeTeam,int goalsAwayTeam,
-                     double homeWin, double draw, double awayWin, Date lastRefresh ) {
+                     int goalsHomeTeam, int goalsAwayTeam,
+                     double homeWin, double draw, double awayWin, Date lastRefresh) {
         this.id = id;
         this.date = date;
         this.status = status;
         this.matchday = matchday;
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
-        this.result = new FDResult(goalsHomeTeam,goalsAwayTeam);
-        this.odds = new FDOdds(homeWin,draw,awayWin);
+        this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
+        this.odds = new FDOdds(homeWin, draw, awayWin);
         this.lastRefresh = lastRefresh;
     }
 
@@ -187,31 +196,38 @@ public class FDFixture {
     }
 
     public int getGoalsHome() {
-        if(result == null) return -1;
+        if (result == null) return -1;
         return result.goalsHomeTeam;
     }
 
     public int getGoalsAway() {
-        if(result == null) return -1;
+        if (result == null) return -1;
         return result.goalsAwayTeam;
     }
 
     public double getHomeWin() {
-        if(odds == null) return -1;
+        if (odds == null) return -1;
         return odds.homeWin;
     }
 
     public double getDraw() {
-        if(odds == null) return -1;
+        if (odds == null) return -1;
         return odds.draw;
     }
 
     public double getAwayWin() {
-        if(odds == null) return -1;
+        if (odds == null) return -1;
         return odds.awayWin;
     }
 
     public Date getLastRefresh() {
         return lastRefresh;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s:%s %s", SimpleDateFormat.getDateTimeInstance(
+                DateFormat.MEDIUM,DateFormat.SHORT).format(date),
+                homeTeamName.trim(), awayTeamName.trim(), status);
     }
 }

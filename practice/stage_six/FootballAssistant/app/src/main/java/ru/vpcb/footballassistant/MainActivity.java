@@ -35,9 +35,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -49,6 +58,7 @@ import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_0;
@@ -200,6 +210,9 @@ public class MainActivity extends AppCompatActivity
         return FDLoader.getInstance(this, id);
     }
 
+
+    private  int mUpdateCounter = 0;
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (loader == null || loader.getId() <= 0 || cursor == null || cursor.getCount() == 0)
@@ -208,22 +221,27 @@ public class MainActivity extends AppCompatActivity
         switch (loader.getId()) {
             case FDContract.CpEntry.LOADER_ID:
                 mMap = FDUtils.readCompetitions(cursor);
+                mUpdateCounter++;
                 break;
 
             case FDContract.CpTmEntry.LOADER_ID:
                 mMapTeamKeys = FDUtils.readCompetitionTeams(cursor);
+                mUpdateCounter++;
                 break;
 
             case FDContract.TmEntry.LOADER_ID:
                 mMapTeams = FDUtils.readTeams(cursor);
+                mUpdateCounter++;
                 break;
 
             case FDContract.CpFxEntry.LOADER_ID:
                 mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursor);
+                mUpdateCounter++;
                 break;
 
             case FDContract.FxEntry.LOADER_ID:
                 mMapFixtures = FDUtils.readFixtures(cursor);
+                mUpdateCounter++;
                 break;
 
             case FDContract.TbEntry.LOADER_ID:
@@ -239,9 +257,12 @@ public class MainActivity extends AppCompatActivity
         mActivityProgress = checkProgress();
         setProgressValue();
 
-        boolean isUpdated = FDUtils.loadCompetitions(mMap, mMapTeamKeys, mMapTeams, mMapFixtureKeys, mMapFixtures);
-        if (isUpdated) {
+
+        if (mUpdateCounter == LOADERS_UPDATE_COUNTER) {
             moveState(MAIN_ACTIVITY_STATE_1);
+
+            setupViewPagerSource();
+            mUpdateCounter = 0;
         }
 
     }
@@ -313,6 +334,7 @@ public class MainActivity extends AppCompatActivity
             case MAIN_ACTIVITY_STATE_1:
                 mState = MAIN_ACTIVITY_STATE_1;
                 makeTransition(R.layout.content_detail, R.transition.transition_fade);
+
                 break;
             case MAIN_ACTIVITY_STATE_2:
                 break;
@@ -330,6 +352,59 @@ public class MainActivity extends AppCompatActivity
     }
 
     // test!!!
+    private static Comparator<FDFixture> cFx = new Comparator<FDFixture>() {
+        @Override
+        public int compare(FDFixture o1, FDFixture o2) {
+            if (o1 == null || o2 == null ||
+                    o1.getDate() == null || o2.getDate() == null)
+                throw new IllegalArgumentException();
+
+
+            return o1.getDate().compareTo(o2.getDate());
+
+        }
+    };
+
+    private void setNextDay(Calendar c, Date date) {
+        c.setTime(date);
+        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        c.add(Calendar.DATE, 1);  // next day
+    }
+
+    private int getIndex(List<FDFixture> list, Calendar c) {
+        int index = Collections.binarySearch(list, new FDFixture(c.getTime()), cFx);  // for givent day
+        if (index < 0) index = -index - 1;
+        if (index > list.size()) index = list.size() - 1;
+        return index;
+
+    }
+
+    private List<List<FDFixture>> setupViewPagerSource() {
+        int last = 0;
+        int next = 0;
+        int current = 0;
+        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
+
+        Collections.sort(fixtures, cFx);
+        List<List<FDFixture>> list = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();
+        setNextDay(c, c.getTime());
+        current = getIndex(fixtures, c);  // index of current day
+
+        while (next < fixtures.size()) {
+            setNextDay(c, fixtures.get(next).getDate());
+            next = getIndex(fixtures, c);
+            if (next == current) {
+                current = list.size();  // index of current day records
+            }
+            list.add(new ArrayList<>(fixtures.subList(last, next)));
+            last = next;
+        }
+        return list;
+    }
+
+    // test!!!
     private void makeTransition(int layoutId, int setId) {
         Scene scene = Scene.getSceneForLayout((ViewGroup) findViewById(R.id.container_layout),
                 layoutId, MainActivity.this);
@@ -338,6 +413,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTransitionEnd(Transition transition) {
                 setupState(mState);
+// test!!!
+
+
 
             }
         });
