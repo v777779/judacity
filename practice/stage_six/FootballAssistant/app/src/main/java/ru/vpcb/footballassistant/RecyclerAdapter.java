@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +18,11 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.FieldPosition;
-import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +30,7 @@ import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDFixtures;
 import ru.vpcb.footballassistant.utils.Config;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
 
@@ -62,6 +65,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Resources mRes;
 
     private List<FDFixture> mList;
+    private DateFormat mDateFormat;
 
     /**
      * Constructor of RecyclerAdapter
@@ -77,6 +81,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
+        mDateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
     }
 
     /**
@@ -100,7 +105,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public int getItemViewType(int position) {
 // test  every 3rd is header
-        return (position % 3 == 0) ? RM_HEAD_VIEW_TYPE : RM_ITEM_VIEW_TYPE;
+//        return (position % 3 == 0) ? RM_HEAD_VIEW_TYPE : RM_ITEM_VIEW_TYPE;
+        return  RM_ITEM_VIEW_TYPE;
     }
 
     /**
@@ -215,11 +221,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
          * @param position int position of item in RecyclerView
          */
         private void fill(int position) {
-            if(mList == null) return;
+            if (mList == null) return;
 
             FDFixture fixture = mList.get(position);
 
-            if(getItemViewType()==RM_HEAD_VIEW_TYPE) {
+            if (getItemViewType() == RM_HEAD_VIEW_TYPE) {
                 if (position == 0) {
                     mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_favorites));
                     mImageLeague.setImageResource(R.drawable.ic_star);
@@ -229,21 +235,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
             }
 
-            if(getItemViewType() == RM_ITEM_VIEW_TYPE) {
-               DateFormat timeFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
-               StringBuffer sb = new StringBuffer();
-                timeFormat.format(fixture.getDate(),sb, new FieldPosition(0));
-                sb.append(":");
-                timeFormat.format(fixture.getDate(),sb, new FieldPosition(1));
-
-               mTextTeamHome.setText(fixture.getHomeTeamName());
-               mTextTeamAway.setText(fixture.getAwayTeamName());
-               mTextTime.setText(sb.toString());
-
+            if (getItemViewType() == RM_ITEM_VIEW_TYPE) {
+                mTextTeamHome.setText(fixture.getHomeTeamName());
+                mTextTeamAway.setText(fixture.getAwayTeamName());
+                mTextTime.setText(fixture.getMatchTime());
             }
-
-
-
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 //
 //            Glide.with(mContext)

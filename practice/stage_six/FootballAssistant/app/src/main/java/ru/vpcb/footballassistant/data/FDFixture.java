@@ -1,12 +1,19 @@
 package ru.vpcb.footballassistant.data;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_FIXTURES;
 
 
@@ -60,9 +67,9 @@ public class FDFixture {
     public FDFixture(Date date) {  // for comparator
         this.id = -1;
         this.date = date;
-        this.homeTeamName="home_team";
-        this.awayTeamName ="away_team";
-        this.status ="demo";
+        this.homeTeamName = "home_team";
+        this.awayTeamName = "away_team";
+        this.status = "demo";
     }
 
     public FDFixture(int id, Date date, String status, int matchday,
@@ -183,11 +190,18 @@ public class FDFixture {
         return matchday;
     }
 
+
     public String getHomeTeamName() {
+        if (homeTeamName == null || homeTeamName.isEmpty()) {
+            return EMPTY_TEAM_NAME;
+        }
         return homeTeamName;
     }
 
     public String getAwayTeamName() {
+        if (awayTeamName == null || awayTeamName.isEmpty()) {
+            return EMPTY_TEAM_NAME;
+        }
         return awayTeamName;
     }
 
@@ -224,10 +238,19 @@ public class FDFixture {
         return lastRefresh;
     }
 
+
+    public String getMatchTime() {
+        if (date == null) return EMPTY_MATCH_TIME;
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return String.format(Locale.ENGLISH,
+                "%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+    }
+
     @Override
     public String toString() {
         return String.format("%s %s:%s %s", SimpleDateFormat.getDateTimeInstance(
-                DateFormat.MEDIUM,DateFormat.SHORT).format(date),
+                DateFormat.MEDIUM, DateFormat.SHORT).format(date),
                 homeTeamName.trim(), awayTeamName.trim(), status);
     }
 }

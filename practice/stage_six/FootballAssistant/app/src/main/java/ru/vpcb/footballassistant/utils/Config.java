@@ -79,6 +79,21 @@ public class Config {
     public static final int VIEWPAGER_OFF_SCREEN_PAGE_NUMBER = 3;
 
 
+
+    // competitions
+    public static final String EMPTY_TEAM_NAME = "-";
+    public static final String EMPTY_MATCH_TIME = "-- : --";
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Span class used for RecyclerView as storage of display item parameters
      */
