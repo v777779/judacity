@@ -96,9 +96,8 @@
     <color name="sliding_tab_text">#7e7e7e</color>
     <color name="sliding_tab_slider">#3a3a3a</color>
 
-    <color name="sliding_tab_back_light">#d9f8f8f8</color>
-    <color name="sliding_tab_back">#919191</color>
-
+    <color name="sliding_tab_back_light">#fbe0b5</color>
+    <color name="sliding_tab_back">#a69476</color>
 
 
 
