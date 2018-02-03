@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity
 // bind
                 mRecyclerView = findViewById(R.id.recycler_match);
                 setupBottomNavigation();
-                changeActionBar(mState);
+//                changeActionBar(mState);
                 setupRecycler();
                 setupViewPager();
 
@@ -349,6 +349,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case MAIN_ACTIVITY_STATE_1:
                 mState = MAIN_ACTIVITY_STATE_1;
+                changeActionBar(mState);
                 makeTransition(R.layout.content_detail, R.transition.transition_fade);
 
                 break;

@@ -25,6 +25,9 @@
 
     <dimen name="border_rm_item_size">2dp</dimen>
 
+    <dimen name="card_corner_radius">4dp</dimen>
+
+
     <!--margins-->
     <dimen name="margin_micro">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
