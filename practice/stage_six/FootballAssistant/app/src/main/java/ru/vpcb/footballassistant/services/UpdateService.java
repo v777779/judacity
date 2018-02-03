@@ -63,7 +63,7 @@ public class UpdateService extends IntentService {
 
         if (intent != null) {
             String action = intent.getAction();
-            if (action == getString(R.string.action_update)) {
+            if (action.equals(getString(R.string.action_update))) {
                 onActionUpdate();
             }
         }

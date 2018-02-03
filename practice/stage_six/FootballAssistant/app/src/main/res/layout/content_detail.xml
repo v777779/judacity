@@ -89,7 +89,7 @@
         android:id="@+id/image_viewpager_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.0"
+        android:alpha="0.25"
         android:scaleType="centerCrop"
         android:src="@drawable/back_003" />
 

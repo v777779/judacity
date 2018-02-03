@@ -193,14 +193,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void startTransition() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(MainActivity.this,
+                        android.R.anim.fade_in, android.R.anim.fade_out)
+                        .toBundle();
+                startActivity(intent, bundle);
 
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
-                R.anim.fade_in, R.anim.fade_out)
-                .toBundle();
-        startActivity(intent, bundle);
-
+            }
+        }, 250);
 
 
     }
