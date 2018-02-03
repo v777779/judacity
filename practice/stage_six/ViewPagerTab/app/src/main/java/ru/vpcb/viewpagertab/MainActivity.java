@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         setupViewPagerList();
         setupViewPager();
 
+
+
     }
 
     @Override
