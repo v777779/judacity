@@ -62,6 +62,15 @@ public class Config {
     public static final int MAIN_ACTIVITY_INDEFINITE = -1;
 
 
+    public static final int [] IMAGE_IDS = {
+            R.drawable.back_001,
+            R.drawable.back_002,
+            R.drawable.back_003,
+            R.drawable.back_004
+
+    };
+
+
     // recycler
     private static final int HIGH_SCALE_WIDTH = 180;     // dpi
     private static final int HIGH_SCALE_HEIGHT = 300;     // dpi 200
@@ -83,6 +92,7 @@ public class Config {
     // competitions
     public static final String EMPTY_TEAM_NAME = "-";
     public static final String EMPTY_MATCH_TIME = "-- : --";
+
 
 
 

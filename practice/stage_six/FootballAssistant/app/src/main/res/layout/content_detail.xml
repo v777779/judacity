@@ -86,7 +86,7 @@
 
     <!--background transparent-->
     <ImageView
-        android:id="@+id/image_background"
+        android:id="@+id/image_viewpager_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.25"

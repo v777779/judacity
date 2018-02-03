@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -51,6 +50,7 @@ import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
@@ -460,9 +460,19 @@ public class MainActivity extends AppCompatActivity
 
     // test!!!
     private void makeTransition(int layoutId, int setId) {
-        Scene scene = Scene.getSceneForLayout((ViewGroup) findViewById(R.id.container_layout),
+       final Scene scene = Scene.getSceneForLayout((ViewGroup) findViewById(R.id.container_layout),
                 layoutId, MainActivity.this);
         Transition transition = TransitionInflater.from(MainActivity.this).inflateTransition(setId);
+
+        scene.setEnterAction(new Runnable() {
+            @Override
+            public void run() {
+                if(mState == MAIN_ACTIVITY_STATE_1) {
+                    ImageView imageViewPagerBack = scene.getSceneRoot().findViewById(R.id.image_viewpager_back);
+                    imageViewPagerBack.setImageResource(FootballUtils.getImageId());
+                }
+            }
+        });
         transition.addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {

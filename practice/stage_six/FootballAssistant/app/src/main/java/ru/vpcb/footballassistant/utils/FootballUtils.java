@@ -8,8 +8,11 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import java.util.Locale;
+import java.util.Random;
 
 import ru.vpcb.footballassistant.R;
+
+import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -18,6 +21,28 @@ import ru.vpcb.footballassistant.R;
  * Email: vadim.v.voronov@gmail.com
  */
 public class FootballUtils {
+    private static Random rnd = new Random();
+
+    // strings
+    public static String formatString(int value) {
+        return String.format(Locale.ENGLISH, "%d", value);
+    }
+
+    public static String formatStringWide(int value) {
+        return String.format(Locale.ENGLISH, "%4d", value);
+    }
+
+    public static String formatStringInt(String s) {
+        return s.substring(s.lastIndexOf("/") + 1);
+    }
+
+    // images
+
+    public  static int getImageId() {
+        return IMAGE_IDS[rnd.nextInt(IMAGE_IDS.length)];
+    }
+
+    // connection
 
     /**
      * Returns status of connection to network
@@ -31,6 +56,7 @@ public class FootballUtils {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
 
 // test!!!
 
@@ -49,14 +75,14 @@ public class FootballUtils {
     public static boolean getPrefBool(Context context, int keyId, int valueId) {
         Resources res = context.getResources();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean value = sp.getBoolean(res.getString(keyId),   res.getBoolean(valueId));
+        boolean value = sp.getBoolean(res.getString(keyId), res.getBoolean(valueId));
         return value;
     }
 
     public static int getPrefInt(Context context, int keyId, int defaultId) {
         Resources res = context.getResources();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        int value = sp.getInt(res.getString(keyId),   res.getInteger(defaultId));
+        int value = sp.getInt(res.getString(keyId), res.getInteger(defaultId));
         return value;
     }
 
@@ -65,11 +91,11 @@ public class FootballUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(res.getString(R.string.pref_update_time_key),FDUtils.currentTimeMinutes());
+        editor.putInt(res.getString(R.string.pref_update_time_key), FDUtils.currentTimeMinutes());
         editor.apply();
     }
 
-    public static boolean  isRefreshTime(Context context) {
+    public static boolean isRefreshTime(Context context) {
         int time = getPrefInt(context,
                 R.string.pref_update_time_key,
                 R.integer.pref_update_time_default);
@@ -77,24 +103,8 @@ public class FootballUtils {
                 R.string.pref_delay_time_key,
                 R.integer.pref_delay_time_default);
 
-        return FDUtils.currentTimeMinutes()-time < delay;
+        return FDUtils.currentTimeMinutes() - time < delay;
     }
-
-
-
-    public static String formatString(int value) {
-        return String.format(Locale.ENGLISH,"%d", value);
-    }
-
-    public static String formatStringWide(int value) {
-        return String.format(Locale.ENGLISH,"%4d", value);
-    }
-
-    public static String formatStringInt(String s) {
-        return  s.substring(s.lastIndexOf("/")+1);
-    }
-
-
 
 
 }
