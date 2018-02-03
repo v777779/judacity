@@ -89,4 +89,14 @@
 
     <!--navigation-->
     <color name="rm_navigation_back">#ececec</color>
+
+    <!--sliding tabs-->
+    <color name="sliding_tab_back">#e6fcfbf3</color>
+    <color name="sliding_tab_text_selected">#3a3a3a</color>
+    <color name="sliding_tab_text">#a1a1a1</color>
+    <color name="sliding_tab_slider">#3a3a3a</color>
+
+    <!--<color name="sliding_tab_back">#e6fcfaf3</color>-->
+    <!--<color name="sliding_tab_back">#e6f3fcf9</color>-->
+
 </resources>

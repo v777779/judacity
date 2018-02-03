@@ -7,11 +7,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
 import ru.vpcb.footballassistant.R;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
 
 /**
@@ -36,9 +39,19 @@ public class FootballUtils {
         return s.substring(s.lastIndexOf("/") + 1);
     }
 
+    public static String formatStringDate(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
+        String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
+        String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
+        return day + "/" + month + "/" + year.substring(2, year.length());
+    }
+
     // images
 
-    public  static int getImageId() {
+    public static int getImageBackId() {
         return IMAGE_IDS[rnd.nextInt(IMAGE_IDS.length)];
     }
 

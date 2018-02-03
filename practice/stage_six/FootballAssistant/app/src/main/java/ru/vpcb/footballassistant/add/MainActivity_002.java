@@ -441,7 +441,7 @@ public class MainActivity_002 extends AppCompatActivity
             recyclers.add(getRecycler(list));
         }
 
-        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers);
+        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers, null);
         mViewPager.setAdapter(listPagerAdapter);
         mViewPager.setCurrentItem(mViewPagerPos);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
@@ -473,7 +473,7 @@ public class MainActivity_002 extends AppCompatActivity
             public void run() {
                 if(mState == MAIN_ACTIVITY_STATE_1) {
                     ImageView imageViewPagerBack = scene.getSceneRoot().findViewById(R.id.image_viewpager_back);
-                    imageViewPagerBack.setImageResource(FootballUtils.getImageId());
+                    imageViewPagerBack.setImageResource(FootballUtils.getImageBackId());
                 }
             }
         });

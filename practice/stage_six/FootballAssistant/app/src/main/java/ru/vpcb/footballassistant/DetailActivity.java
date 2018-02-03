@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -53,6 +54,7 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
@@ -81,6 +83,8 @@ public class DetailActivity extends AppCompatActivity
 
     private RecyclerView mRecyclerView;
     private ViewPager mViewPager;
+    private ImageView mViewPagerBack;
+    private TabLayout mTabLayout;
 
 
     private BottomNavigationView mBottomNavigation;
@@ -127,6 +131,9 @@ public class DetailActivity extends AppCompatActivity
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
         mBottomNavigation = findViewById(R.id.bottom_navigation);
+        mViewPager = findViewById(R.id.viewpager_main);
+        mViewPagerBack = findViewById(R.id.image_viewpager_back);
+        mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
@@ -137,7 +144,6 @@ public class DetailActivity extends AppCompatActivity
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-
             }
         });
 
@@ -149,11 +155,12 @@ public class DetailActivity extends AppCompatActivity
         });
 
 // progress
+
         setupActionBar();
         setupProgress();
         setupReceiver();
         setupViewPager();
-
+        mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
         refresh(getString(R.string.action_update));
 
@@ -355,18 +362,30 @@ public class DetailActivity extends AppCompatActivity
         mViewPagerList = list;
     }
 
+
+    private String getRecyclerTitle(List<FDFixture> list) {
+        try {
+            return FootballUtils.formatStringDate(list.get(0).getDate());
+        } catch (NullPointerException e) {
+            return EMPTY_FIXTURE_DATE;
+        }
+    }
+
     private void setupViewPager() {
-        mViewPager = findViewById(R.id.viewpager_main);
+
+
         if (mViewPagerList == null) return;
 
         List<View> recyclers = new ArrayList<>();
+        List<String> titles = new ArrayList<>();
 
 
         for (List<FDFixture> list : mViewPagerList) {
             recyclers.add(getRecycler(list));
+            titles.add(getRecyclerTitle(list));
         }
 
-        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers);
+        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers, titles);
         mViewPager.setAdapter(listPagerAdapter);
         mViewPager.setCurrentItem(mViewPagerPos, true);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
@@ -385,6 +404,7 @@ public class DetailActivity extends AppCompatActivity
             }
         });
 
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 
 

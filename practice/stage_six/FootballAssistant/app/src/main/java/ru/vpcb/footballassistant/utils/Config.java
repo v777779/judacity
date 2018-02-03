@@ -45,7 +45,6 @@ public class Config {
     public static final int UPDATE_SERVICE_PROGRESS = 100;
     public static final int MAIN_ACTIVITY_PROGRESS = 100;
 
-
     // retrofit
 
     // loaders
@@ -92,6 +91,7 @@ public class Config {
     // competitions
     public static final String EMPTY_TEAM_NAME = "-";
     public static final String EMPTY_MATCH_TIME = "-- : --";
+    public static final String EMPTY_FIXTURE_DATE = "--/--/--";
 
 
 

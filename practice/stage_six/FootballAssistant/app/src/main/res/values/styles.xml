@@ -73,5 +73,12 @@
 
     </style>
 
+    <style name="TextTab" parent="TextAppearance.Design.Tab">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/sliding_tabs_text_size</item>
+        <item name="android:gravity">center</item>
+
+    </style>
 
 </resources>

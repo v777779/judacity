@@ -8,6 +8,26 @@
     android:background="@color/rm_view_border_back"
     tools:context="ru.vpcb.footballassistant.add.DetailActivity_002">
 
+    <android.support.design.widget.TabLayout
+        android:id="@+id/toolbar_sliding_tabs"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabBackground="@color/sliding_tab_back"
+        app:tabContentStart="@dimen/sliding_tabs_start"
+        app:tabGravity="center"
+        app:tabIndicatorColor="@color/sliding_tab_slider"
+        app:tabIndicatorHeight="@dimen/sliding_tabs_slider"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/sliding_tab_text_selected"
+        app:tabTextAppearance="@style/TextTab"
+        app:tabTextColor="@color/sliding_tab_text"
+        android:elevation="8dp">
+
+    </android.support.design.widget.TabLayout>
+
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -76,6 +96,7 @@
         android:layout_height="0dp"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -87,11 +108,16 @@
     <!--background transparent-->
     <ImageView
         android:id="@+id/image_viewpager_back"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:alpha="0.25"
         android:scaleType="centerCrop"
-        android:src="@drawable/back_003" />
+        android:src="@drawable/back_003"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
     <!--background solid-->
     <!--<ImageView/> = null-->
@@ -100,13 +126,14 @@
         android:id="@+id/viewpager_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
+
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_sliding_tabs">
 
     </android.support.v4.view.ViewPager>
 
