@@ -368,7 +368,7 @@ public class DetailActivity extends AppCompatActivity
 
         ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers);
         mViewPager.setAdapter(listPagerAdapter);
-        mViewPager.setCurrentItem(mViewPagerPos);
+        mViewPager.setCurrentItem(mViewPagerPos, true);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
