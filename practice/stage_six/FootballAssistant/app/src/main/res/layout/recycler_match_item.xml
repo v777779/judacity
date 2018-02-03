@@ -10,7 +10,12 @@
 
     android:layout_marginBottom="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_small">
+    android:layout_marginStart="@dimen/margin_small"
+
+    android:backgroundTint="@android:color/transparent"
+    >
+    <!--background solid-->
+    <!--android:backgroundTint=""/> = null-->
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_recycler_match_item"
