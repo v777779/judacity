@@ -9,5 +9,11 @@
     <!--recycler-->
     <color name="recycler_back">#4ddee1e6</color>
     <color name="recycler_text">#383838</color>
+
+    <!--sliding tabs-->
+    <color name="sliding_tab_back">#f1f1f1</color>
+    <color name="sliding_tab_text_selected">#333333</color>
+    <color name="sliding_tab_text">#b4b4b4</color>
+    <color name="sliding_tab_slider">#c5c4c3</color>
 </resources>
 

@@ -3,6 +3,7 @@ package ru.vpcb.viewpagertab;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private List<List<String>> mViewPagerList;
     private int mViewPagerPos;
+    private TabLayout mTabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mViewPager = findViewById(R.id.viewpager_main);
+        mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setupViewPagerList();
         setupViewPager();
 
+        mTabLayout.setupWithViewPager(mViewPager);
 
 
     }
@@ -84,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             List<String> listTeams = new ArrayList<>();
             list.add(listTeams);
 
-            for (int j = 0; j < rnd.nextInt(25) +25; j++) {
+            for (int j = 0; j < rnd.nextInt(25) + 25; j++) {
                 listTeams.add(TEAMS[rnd.nextInt(TEAMS.length)]);
             }
         }
@@ -109,18 +118,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private String getDate(Calendar c) {
+        String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
+
+        String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
+
+        String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
+
+
+        return day+"/"+month+"/"+year.substring(2,year.length());
+
+
+    }
+
     private void setupViewPager() {
         mViewPager = findViewById(R.id.viewpager_main);
         if (mViewPagerList == null) return;
 
-        List<View> recyclers = new ArrayList<>();
+        List<View> listRecyclers = new ArrayList<>();
+        List<String> listRecyclerTitles = new ArrayList<>();
 
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -mViewPagerList.size() / 2);
 
         for (List<String> list : mViewPagerList) {
-            recyclers.add(getRecycler(list));
+            listRecyclers.add(getRecycler(list));
+            listRecyclerTitles.add(getDate(c));
+            c.add(Calendar.DATE, 1);
         }
 
-        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers);
+        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(listRecyclers, listRecyclerTitles);
         mViewPager.setAdapter(listPagerAdapter);
         mViewPager.setCurrentItem(mViewPagerPos);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception

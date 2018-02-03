@@ -1,9 +1,11 @@
 package ru.vpcb.viewpagertab;
 
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,15 +16,17 @@ import java.util.List;
  */
 
 class ViewPagerAdapter extends PagerAdapter {
-    private final List<View> listPages;
+    private List<View> listPages;
+    private List<String> listTitles;
 
     /**
      * Constructor  created object from List<View>> data source
      *
      * @param listPages  input List<View> data source
      */
-    public ViewPagerAdapter(List<View> listPages) {
+    public ViewPagerAdapter(List<View> listPages, List<String> listTitles) {
         this.listPages = listPages;
+        this.listTitles = listTitles;
     }
 
     @Override
@@ -46,5 +50,10 @@ class ViewPagerAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view.equals(object);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return listTitles.get(position);
     }
 }
