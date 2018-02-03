@@ -13,7 +13,7 @@ import java.util.List;
  * Email: vadim.v.voronov@gmail.com
  */
 
-class ViewPagerAdapter extends PagerAdapter {
+public class ViewPagerAdapter extends PagerAdapter {
     private final List<View> listPages;
 
     /**

@@ -1,4 +1,4 @@
-package ru.vpcb.footballassistant;
+package ru.vpcb.footballassistant.add;
 
 
 import android.content.BroadcastReceiver;
@@ -42,6 +42,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.vpcb.footballassistant.ICallback;
+import ru.vpcb.footballassistant.R;
+import ru.vpcb.footballassistant.RecyclerAdapter;
+import ru.vpcb.footballassistant.ViewPagerAdapter;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
@@ -65,7 +69,7 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_5;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 
-public class DetailActivity extends AppCompatActivity
+public class MainActivity_002 extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private static boolean sIsTimber;
@@ -109,7 +113,7 @@ public class DetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_main);
 
         // log
         if (!sIsTimber) {
@@ -139,14 +143,14 @@ public class DetailActivity extends AppCompatActivity
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-
+                makeTransition(R.layout.content_detail, R.transition.transition_fade);
             }
         });
 
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                makeTransition(R.layout.content_main, R.transition.transition_fade_back);
             }
         });
 
@@ -154,8 +158,8 @@ public class DetailActivity extends AppCompatActivity
         setupActionBar();
         setupProgress();
         setupReceiver();
-        setupViewPager();
 
+        moveState(MAIN_ACTIVITY_STATE_0);
 
         refresh(getString(R.string.action_update));
 
@@ -256,8 +260,9 @@ public class DetailActivity extends AppCompatActivity
 
 
         if (mUpdateCounter == LOADERS_UPDATE_COUNTER) {
+            moveState(MAIN_ACTIVITY_STATE_1);
             setupViewPagerSource();
-            setupViewPager();
+
             mUpdateCounter = 0;
         }
 
@@ -285,6 +290,33 @@ public class DetailActivity extends AppCompatActivity
     // methods
 
 
+    private void setupState(int state) {
+        switch (state) {
+            case MAIN_ACTIVITY_STATE_0:
+                break;
+            case MAIN_ACTIVITY_STATE_1:
+// bind
+                mRecyclerView = findViewById(R.id.recycler_match);
+                setupBottomNavigation();
+//                changeActionBar(mState);
+                setupRecycler();
+                setupViewPager();
+
+                break;
+            case MAIN_ACTIVITY_STATE_2:
+                break;
+            case MAIN_ACTIVITY_STATE_3:
+                break;
+            case MAIN_ACTIVITY_STATE_4:
+                break;
+            case MAIN_ACTIVITY_STATE_5:
+                break;
+            default:
+
+        }
+    }
+
+
     private RecyclerView getRecycler(List<FDFixture> list) {
         Config.Span sp = Config.getDisplayMetrics(this);
 
@@ -300,7 +332,47 @@ public class DetailActivity extends AppCompatActivity
         return recyclerView;
     }
 
+    private void setupRecycler() {
+        Config.Span sp = Config.getDisplayMetrics(this);
 
+        RecyclerAdapter adapter = new RecyclerAdapter(this, sp, null);
+        adapter.setHasStableIds(true);
+        mRecyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+    }
+
+
+    private void moveState(int state) {
+        if (mState == state) return;  // block repetitions
+
+        switch (state) {
+            case MAIN_ACTIVITY_STATE_0:
+                changeActionBar(state);
+                break;
+            case MAIN_ACTIVITY_STATE_1:
+                mState = MAIN_ACTIVITY_STATE_1;
+                changeActionBar(mState);
+                makeTransition(R.layout.content_detail, R.transition.transition_fade);
+
+                break;
+            case MAIN_ACTIVITY_STATE_2:
+                break;
+            case MAIN_ACTIVITY_STATE_3:
+                break;
+
+            case MAIN_ACTIVITY_STATE_4:
+                break;
+            case MAIN_ACTIVITY_STATE_5:
+                break;
+            default:
+
+        }
+
+    }
+
+    //  test!!!
     private static Comparator<FDFixture> cFx = new Comparator<FDFixture>() {
         @Override
         public int compare(FDFixture o1, FDFixture o2) {
@@ -390,6 +462,46 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
+    // test!!!
+    private void makeTransition(int layoutId, int setId) {
+       final Scene scene = Scene.getSceneForLayout((ViewGroup) findViewById(R.id.container_layout),
+                layoutId, MainActivity_002.this);
+        Transition transition = TransitionInflater.from(MainActivity_002.this).inflateTransition(setId);
+
+        scene.setEnterAction(new Runnable() {
+            @Override
+            public void run() {
+                if(mState == MAIN_ACTIVITY_STATE_1) {
+                    ImageView imageViewPagerBack = scene.getSceneRoot().findViewById(R.id.image_viewpager_back);
+                    imageViewPagerBack.setImageResource(FootballUtils.getImageId());
+                }
+            }
+        });
+        transition.addListener(new TransitionAdapter() {
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                setupState(mState);
+// test!!!
+
+
+            }
+        });
+
+        TransitionManager.go(scene, transition);
+
+    }
+
+
+    private void startTransition() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                makeTransition(R.layout.content_detail, R.transition.transition_fade);
+            }
+        });
+
+
+    }
 
     private int checkProgress() {
         int count = 0;
@@ -403,14 +515,10 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void setProgressValue(boolean isIndeterminate) {
-        if (mProgressValue == null) return;
-        mProgressValue.setIndeterminate(true);
+        mProgressValue.setIndeterminate(isIndeterminate);
     }
 
     private void setProgressValue() {
-        mProgressValue.setIndeterminate(true);
-        if (mProgressBar == null) return;
-
         int value = mActivityProgress + mServiceProgress;
         int max = MAIN_ACTIVITY_PROGRESS + UPDATE_SERVICE_PROGRESS;
         if (value < 0) return;
@@ -434,17 +542,50 @@ public class DetailActivity extends AppCompatActivity
         setProgressValue(false);                // static at start
     }
 
+    private void changeActionBar(int state) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) return;
+
+        switch (state) {
+            case MAIN_ACTIVITY_STATE_0:
+                mToolbarLogo.setVisibility(View.VISIBLE);
+                actionBar.hide();
+                break;
+
+            case MAIN_ACTIVITY_STATE_1:
+                mToolbarLogo.setVisibility(View.INVISIBLE);
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                toolbar.setTitle(getString(R.string.screen_match));
+                actionBar.show();
+                break;
+            case MAIN_ACTIVITY_STATE_2:
+                break;
+            case MAIN_ACTIVITY_STATE_3:
+                break;
+            case MAIN_ACTIVITY_STATE_4:
+                break;
+            case MAIN_ACTIVITY_STATE_5:
+                break;
+            default:
+
+
+        }
+    }
+
 
     private void setupActionBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.screen_match));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mToolbarLogo.setVisibility(View.INVISIBLE);
+        mToolbarLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("");
-            actionBar.show();
         }
 
     }

@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.vpcb.footballassistant.DetailActivity;
 import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -95,7 +94,7 @@ public class MainActivity_001 extends AppCompatActivity implements LoaderManager
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity_001.this, DetailActivity.class);
+                Intent intent = new Intent(MainActivity_001.this, DetailActivity_002.class);
                 startActivity(intent);
             }
         });

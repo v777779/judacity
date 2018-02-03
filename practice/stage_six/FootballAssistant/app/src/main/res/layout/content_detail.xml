@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/rm_view_border_back"
-    tools:context="ru.vpcb.footballassistant.DetailActivity">
+    tools:context="ru.vpcb.footballassistant.add.DetailActivity_002">
 
 
     <android.support.design.widget.BottomNavigationView
@@ -91,8 +91,7 @@
         android:layout_height="match_parent"
         android:alpha="0.25"
         android:scaleType="centerCrop"
-        android:src="@drawable/back_003"
-        />
+        android:src="@drawable/back_003" />
 
     <!--background solid-->
     <!--<ImageView/> = null-->
@@ -111,5 +110,19 @@
 
     </android.support.v4.view.ViewPager>
 
+    <ProgressBar
+        android:id="@+id/progress_value"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_height="@dimen/progress_bar_size"
+        android:indeterminate="false"
+        android:indeterminateDrawable="@drawable/progress_ring"
+        android:indeterminateOnly="false"
+        android:progress="@string/progress_constant"
+        android:progressDrawable="@drawable/progress_round"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
 </android.support.constraint.ConstraintLayout>
