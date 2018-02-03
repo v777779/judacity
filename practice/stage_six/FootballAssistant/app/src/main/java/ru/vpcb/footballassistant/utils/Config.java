@@ -43,7 +43,7 @@ public class Config {
     // update service
     public static final String UPDATE_SERVICE_TAG = "UpdaterService";
     public static final int UPDATE_SERVICE_PROGRESS = 100;
-    public static final int MAIN_ACTIVITY_PROGRESS = 40;
+    public static final int MAIN_ACTIVITY_PROGRESS = 100;
 
 
     // retrofit

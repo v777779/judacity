@@ -124,8 +124,6 @@ public class DetailActivity extends AppCompatActivity
 // bind
         mFab = findViewById(R.id.fab);
         mFab2 = findViewById(R.id.fab2);
-        mProgressBar = findViewById(R.id.progress_bar);
-        mProgressText = findViewById(R.id.progress_text);
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
         mBottomNavigation = findViewById(R.id.bottom_navigation);
@@ -251,13 +249,12 @@ public class DetailActivity extends AppCompatActivity
                 throw new IllegalArgumentException("Unknown id: " + loader.getId());
         }
 
-        mActivityProgress = checkProgress();
-        setProgressValue();
-
 
         if (mUpdateCounter == LOADERS_UPDATE_COUNTER) {
             setupViewPagerSource();
             setupViewPager();
+            stopProgress();
+
             mUpdateCounter = 0;
         }
 
@@ -402,36 +399,14 @@ public class DetailActivity extends AppCompatActivity
         return count;
     }
 
-    private void setProgressValue(boolean isIndeterminate) {
-        if (mProgressValue == null) return;
-        mProgressValue.setIndeterminate(true);
-    }
-
-    private void setProgressValue() {
-        mProgressValue.setIndeterminate(true);
-        if (mProgressBar == null) return;
-
-        int value = mActivityProgress + mServiceProgress;
-        int max = MAIN_ACTIVITY_PROGRESS + UPDATE_SERVICE_PROGRESS;
-        if (value < 0) return;
-        if (value > max) value = max;
-        mProgressBar.setProgress(value);
-        mProgressText.setText(String.valueOf(value));
-        mProgressValue.setProgress(value);
-
-        if (value >= max) {
-            mProgressValue.setIndeterminate(false);
-            mProgressValue.setProgress(value);
-        }
+    private void stopProgress() {
+        mProgressValue.setVisibility(View.INVISIBLE);
     }
 
 
     private void setupProgress() {
-        mIsProgressEinished = false;            // local updates
-        mActivityProgress = 0;
-        mServiceProgress = 0;
-        setProgressValue();
-        setProgressValue(false);                // static at start
+        mProgressValue.setIndeterminate(true);
+        mProgressValue.setVisibility(View.INVISIBLE);
     }
 
 
@@ -482,18 +457,11 @@ public class DetailActivity extends AppCompatActivity
             if (intent != null) {
                 String action = intent.getAction();
                 if (action.equals(context.getString(R.string.broadcast_update_started))) {
-                    setProgressValue(true); // indeterminate
 
                 } else if (action.equals(context.getString(R.string.broadcast_update_finished))) {
-                    mServiceProgress = UPDATE_SERVICE_PROGRESS;
-                    setProgressValue();
 
                 } else if (action.equals(context.getString(R.string.broadcast_update_progress))) {
-                    int value = intent.getIntExtra(getString(R.string.extra_progress_counter), -1);
-                    if (value >= 0) {
-                        mServiceProgress = value;
-                        setProgressValue();
-                    }
+
                 } else if (action.equals(context.getString(R.string.broadcast_no_network))) {
                     Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
                 } else {
