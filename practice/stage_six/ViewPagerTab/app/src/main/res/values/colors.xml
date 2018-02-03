@@ -7,7 +7,7 @@
     <!--viewpager-->
     <color name="viewpager_back">#c9ffffff</color>
     <!--recycler-->
-    <color name="recycler_back">#72c1c4c8</color>
+    <color name="recycler_back">#4ddee1e6</color>
     <color name="recycler_text">#383838</color>
 </resources>
 
