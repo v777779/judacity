@@ -46,7 +46,7 @@ public class FootballUtils {
         String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
         String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
         String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
-        return day + "/" + month + "/" + year.substring(2, year.length());
+        return ""+day + "/" + month + "/" + year.substring(2, year.length())+"";
     }
 
     // images
