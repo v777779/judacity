@@ -15,5 +15,25 @@
     <color name="sliding_tab_text_selected">#333333</color>
     <color name="sliding_tab_text">#b4b4b4</color>
     <color name="sliding_tab_slider">#585858</color>
+
+
+
+
+
+
+    <!--text colors-->
+    <color name="colorText">#3A3A3A</color>
+    <color name="colorButtonText">#4cb5ac</color>
+    <color name="color_dialog_head_text">#ffffff</color>
+    <!--dialog-->
+    <color name="color_dialog_head_back">#dda062</color>
+    <color name="color_calendar_head_back">#009788</color>
+    <color name="color_calendar_head_text">#ffffff</color>
+    <color name="color_calendar_date_text">#3a3a3a</color>
+    <color name="color_calendar_week_text">#919191</color>
+    <color name="color_calendar_month_text">#3a3a3a</color>
+    <color name="color_calendar_accent">#009788</color>
+
+
 </resources>
 

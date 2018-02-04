@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">ViewPagerTab</string>
+    <!--menu-->
     <string name="action_settings">Settings</string>
+    <string name="action_calendar">Calendar</string>
+
+    <!--calendar-->
+    <string name="calendar_title">Calendar</string>
+    <string name="calendar_btn_ok">APPLY</string>
+    <string name="calendar_btn_cancel">CANCEL</string>
+
+
+    <!--other-->
+    <string name="common_title">COMMON DIALOG</string>
+
+
+
+    <!--tests-->
+    <string name="test_calendar_line1">2017</string>
+    <string name="test_calendar_line2">Thu, Apr 3</string>
+
 </resources>
+

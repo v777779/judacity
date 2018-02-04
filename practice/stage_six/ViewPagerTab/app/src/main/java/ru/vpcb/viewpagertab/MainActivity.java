@@ -1,9 +1,12 @@
 package ru.vpcb.viewpagertab;
 
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IFragment {
     private final String[] TEAMS = new String[]{
             "HolstenKiel", "Jahn Regensburg", "Sd Eibar", "Sevilla FC",
             "FC Ingolstadt 04", "SpBff Greuther Furth", "Burnley FC", "Manchester City FC",
@@ -82,8 +85,22 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if(id==R.id.action_calendar) {
+            startFragment();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = FragmentDialog.newInstance(this,R.layout.fragment_calendar);
+
+        fm.beginTransaction()
+                .add(fragment,"fragment")
+                .commit();
+
     }
 
     private void setupViewPagerList() {
@@ -126,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
 
 
-        return day+"/"+month+"/"+year.substring(2,year.length());
+        return day + "/" + month + "/" + year.substring(2, year.length());
 
 
     }
@@ -166,5 +183,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onComplete(int value) {
+        String s = (value == 0 ? "Action_OK" : "Action_Cancel");
+        Snackbar.make(getWindow().getDecorView(), s, Snackbar.LENGTH_SHORT).show();
     }
 }
