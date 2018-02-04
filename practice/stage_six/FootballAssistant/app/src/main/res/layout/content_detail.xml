@@ -5,8 +5,9 @@
     android:id="@+id/content_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
     android:background="@color/rm_view_border_back"
-    tools:context="ru.vpcb.footballassistant.add.DetailActivity_002">
+    >
 
     <android.support.design.widget.TabLayout
         android:id="@+id/toolbar_sliding_tabs"
@@ -29,18 +30,6 @@
     </android.support.design.widget.TabLayout>
 
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:background="@color/rm_navigation_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation"
-        />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_h1"
@@ -70,42 +59,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="1" />
 
-    <!--<FrameLayout-->
-    <!--android:id="@+id/container_recycler_match_item"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/container_recycler_match_head">-->
-
-    <!--<include layout="@layout/recycler_match_item" />-->
-    <!--</FrameLayout>-->
-
-
-    <!--<FrameLayout-->
-    <!--android:id="@+id/container_recycler_match_head"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--app:layout_constraintTop_toTopOf="parent">-->
-
-    <!--<include layout="@layout/recycler_match_head" />-->
-    <!--</FrameLayout>-->
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_match"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="4dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </android.support.v7.widget.RecyclerView>
-
     <!--background transparent-->
     <ImageView
         android:id="@+id/image_viewpager_back"
@@ -127,8 +80,8 @@
         android:id="@+id/viewpager_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="@dimen/margin_small"
 
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
@@ -153,5 +106,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guide_h1" />
+
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:background="@color/rm_navigation_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation"
+        />
 
 </android.support.constraint.ConstraintLayout>

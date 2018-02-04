@@ -296,7 +296,7 @@ public class MainActivity_002 extends AppCompatActivity
                 break;
             case MAIN_ACTIVITY_STATE_1:
 // bind
-                mRecyclerView = findViewById(R.id.recycler_match);
+//                mRecyclerView = findViewById(R.id.recycler_match);
                 setupBottomNavigation();
 //                changeActionBar(mState);
                 setupRecycler();
