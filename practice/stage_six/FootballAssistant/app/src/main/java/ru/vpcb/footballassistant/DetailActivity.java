@@ -1,6 +1,7 @@
 package ru.vpcb.footballassistant;
 
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -157,6 +158,7 @@ public class DetailActivity extends AppCompatActivity
 // progress
 
         setupActionBar();
+        setupBottomNavigation();
         setupProgress();
         setupReceiver();
         setupViewPager();
@@ -189,6 +191,11 @@ public class DetailActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Snackbar.make(getWindow().getDecorView(),"Action Settings",Snackbar.LENGTH_SHORT).show();
+            return true;
+        }
+        if(id== R.id.action_calendar) {
+            Snackbar.make(getWindow().getDecorView(),"Action Calendar",Snackbar.LENGTH_SHORT).show();
             return true;
         }
 
@@ -495,21 +502,25 @@ public class DetailActivity extends AppCompatActivity
 
     private void setupBottomNavigation() {
         mBottomNavigation = findViewById(R.id.bottom_navigation);
-        if (mBottomNavigation == null) return;
-
         mBottomNavigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        View rootView = getWindow().getDecorView();
+
+                        Context context = DetailActivity.this;
                         switch (item.getItemId()) {
-                            case R.id.navigation_home:
-
+                            case R.id.navigation_matches:
+                                Toast.makeText(context,"Action matches",Toast.LENGTH_SHORT).show();
                                 return true;
-                            case R.id.navigation_dashboard:
-
+                            case R.id.navigation_news:
+                                Toast.makeText(context,"Action news",Toast.LENGTH_SHORT).show();
                                 return true;
-                            case R.id.navigation_notifications:
-
+                            case R.id.navigation_favorites:
+                                Toast.makeText(context,"Action favorites",Toast.LENGTH_SHORT).show();
+                                return true;
+                            case R.id.navigation_settings:
+                                Toast.makeText(context,"Action settings",Toast.LENGTH_SHORT).show();
                                 return true;
                         }
                         return false;

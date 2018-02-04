@@ -654,15 +654,19 @@ public class MainActivity_002 extends AppCompatActivity
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        View rootView = getWindow().getDecorView();
                         switch (item.getItemId()) {
-                            case R.id.navigation_home:
-
+                            case R.id.navigation_matches:
+                                Snackbar.make(rootView,"Action matches",Snackbar.LENGTH_SHORT).show();
                                 return true;
-                            case R.id.navigation_dashboard:
-
+                            case R.id.navigation_news:
+                                Snackbar.make(rootView,"Action news",Snackbar.LENGTH_SHORT).show();
                                 return true;
-                            case R.id.navigation_notifications:
-
+                            case R.id.navigation_favorites:
+                                Snackbar.make(rootView,"Action favorites",Snackbar.LENGTH_SHORT).show();
+                                return true;
+                            case R.id.navigation_settings:
+                                Snackbar.make(rootView,"Action settings",Snackbar.LENGTH_SHORT).show();
                                 return true;
                         }
                         return false;
