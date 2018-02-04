@@ -78,7 +78,63 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/sliding_tabs_text_size</item>
         <item name="android:gravity">center</item>
-
     </style>
+
+    <!--text styles-->
+    <style name="TextNormal" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextHead" parent="TextNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/head_text_size</item>
+    </style>
+
+    <style name="Color.TextHead" parent="TextHead">
+        <item name="android:textColor">@color/color_dialog_head_text</item>
+    </style>
+
+    <style name="Text.Calendar" parent="TextNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/color_calendar_head_back</item>
+        <item name="android:textColor">@color/color_calendar_head_text</item>
+    </style>
+
+    <style name="Large.Text.Calendar" parent="Text.Calendar">
+        <item name="android:textSize">@dimen/calendar_head_large_text_size</item>
+    </style>
+
+
+    <!--dialog-->
+    <style name="Dialog.Title" parent="android:Widget.TextView">
+        <item name="android:background">@color/color_dialog_head_back</item>
+        <item name="android:textAppearance">@style/Color.TextHead</item>
+        <item name="android:padding">@dimen/margin_normal</item>
+    </style>
+
+    <style name="Custom.Dialog" parent="@style/Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowTitleStyle">@style/Dialog.Title</item>
+        <item name="android:buttonStyle">@style/dialog_button_style</item>
+    </style>
+
+
+    <style name="Calendar.Dialog" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/window_background</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="colorAccent">@color/color_calendar_accent</item>
+
+        <item name="android:buttonStyle">@style/dialog_button_style</item>
+    </style>
+
+
+    <style name="dialog_button_style" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/colorButtonText</item>
+    </style>
+
 
 </resources>

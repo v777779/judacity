@@ -5,32 +5,24 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
 import java.text.DateFormat;
-import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDFixture;
-import ru.vpcb.footballassistant.data.FDFixtures;
 import ru.vpcb.footballassistant.utils.Config;
 
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
 
@@ -147,7 +139,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ICallback) mContext).onCallback(view, pos);
+                ((ICallback) mContext).onComplete(view, pos);
             }
         });
 

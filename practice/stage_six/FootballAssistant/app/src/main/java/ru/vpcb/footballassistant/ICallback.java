@@ -9,6 +9,9 @@ package ru.vpcb.footballassistant;
 
 import android.view.View;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  *  ICallback callback common user interface.
  */
@@ -17,12 +20,12 @@ public interface ICallback {
      *  Performs callback processing for RecyclerView
      *  in MainActivity
      */
-    void onCallback(View view, int pos);
+    void onComplete(View view, int pos);
     /**
      *  Performs callback processing for FragmentError
-     *  in MainActivity
+     *  in DetailActivity
      */
-    void onCallback(int mode);
+    void onComplete(int mode, Calendar calendar);
 
 
 

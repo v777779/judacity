@@ -93,6 +93,15 @@
 
     <!--competition-->
 
+    <!--dialog-->
+    <string name="dialog_title">Dialog</string>
+
+    <!--calendar-->
+    <string name="calendar_title">Calendar</string>
+    <string name="calendar_text_year">%1$04d</string>
+    <string name="calendar_text_date">%1$s, %2$s %3$02d</string>
+
+
 
     <!--test-->
     <string name="text_test_rm_item_team_home">Chelsea</string>
@@ -103,6 +112,9 @@
     <string name="text_test_rm_item_league3">League One 2017/18</string>
     <string name="text_test_rm_item_league4">League Two 2017/18</string>
     <string name="text_test_rm_item_favorites">Favorite matches</string>
+
+    <string name="text_test_calendar_line1">2017</string>
+    <string name="text_test_calendar_line2">Thu, Apr 3</string>
 
 
 </resources>

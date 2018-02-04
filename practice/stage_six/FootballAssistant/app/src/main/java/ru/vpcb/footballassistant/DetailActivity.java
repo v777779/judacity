@@ -14,6 +14,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -30,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,6 +58,7 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
@@ -108,6 +112,7 @@ public class DetailActivity extends AppCompatActivity
     private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
 
     private List<List<FDFixture>> mViewPagerList;
+    private Map<Long, Integer> mViewPagerMap;
     private int mViewPagerPos;
 
 
@@ -191,11 +196,11 @@ public class DetailActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Snackbar.make(getWindow().getDecorView(),"Action Settings",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
             return true;
         }
-        if(id== R.id.action_calendar) {
-            Snackbar.make(getWindow().getDecorView(),"Action Calendar",Snackbar.LENGTH_SHORT).show();
+        if (id == R.id.action_calendar) {
+            startCalendar();
             return true;
         }
 
@@ -281,20 +286,74 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCallback(View view, int pos) {
+    public void onComplete(View view, int pos) {
         Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
     }
 
     @Override
-    public void onCallback(int mode) {
+    public void onComplete(int mode, Calendar calendar) {
 
+        if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
+            if (mViewPager != null && mViewPagerList != null) {
+                setZeroTime(calendar);
+
+                long time = calendar.getTimeInMillis();
+                long first = getViewPagerDate(0);
+                long last = getViewPagerDate(mViewPagerList.size()-1);
+                if(first > 0 && time < first ) time = first;
+                if(last > 0 && time > last) time = last;
+
+
+                Integer pos = mViewPagerMap.get(time);
+                long current = getViewPagerDate().getTimeInMillis();
+                while(pos == null &&  time < last  ) {
+                    time += 86400000;
+                    pos = mViewPagerMap.get(time);
+                }
+                if(pos != null) mViewPager.setCurrentItem(pos,true);
+
+            }
+        }
     }
 
 
     // methods
 
+    private long getViewPagerDate(int index) {
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(mViewPagerList.get(index).get(0).getDate());
+            setZeroTime(calendar);
+            return   calendar.getTimeInMillis();
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            return -1;
+        }
+    }
+
+    private Calendar getViewPagerDate() {
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(mViewPagerList.get(mViewPager.getCurrentItem()).get(0).getDate());
+            setZeroTime(calendar);
+            return calendar;
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    private void startCalendar() {
+        if (mViewPager == null || mViewPagerList == null) return;
+
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = CalendarDialog.newInstance(this, getViewPagerDate());
+        fm.beginTransaction()
+                .add(fragment, getString(R.string.calendar_title))
+                .commit();
+
+    }
 
     private RecyclerView getRecycler(List<FDFixture> list) {
         Config.Span sp = Config.getDisplayMetrics(this);
@@ -330,10 +389,9 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-    private void setNextDay(Calendar c, Date date) {
+    private void setDay(Calendar c, Date date) {
         c.setTime(date);
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        c.add(Calendar.DATE, 1);  // next day
     }
 
     private int getIndex(List<FDFixture> list, Calendar c) {
@@ -349,6 +407,7 @@ public class DetailActivity extends AppCompatActivity
         int next = 0;
         int current = 0;
         List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
+        Map<Long, Integer> map = new HashMap<>();
 
         Collections.sort(fixtures, cFx);
         List<List<FDFixture>> list = new ArrayList<>();
@@ -358,7 +417,9 @@ public class DetailActivity extends AppCompatActivity
         current = getIndex(fixtures, c);  // index of current day
 
         while (next < fixtures.size()) {
-            setNextDay(c, fixtures.get(next).getDate());
+            setDay(c, fixtures.get(next).getDate());
+            map.put(c.getTimeInMillis(),list.size());
+            c.add(Calendar.DATE, 1);  // next day
             next = getIndex(fixtures, c);
             list.add(new ArrayList<>(fixtures.subList(last, next)));
             last = next;
@@ -367,6 +428,7 @@ public class DetailActivity extends AppCompatActivity
 
         mViewPagerPos = current;
         mViewPagerList = list;
+        mViewPagerMap = map;
     }
 
 
@@ -511,16 +573,16 @@ public class DetailActivity extends AppCompatActivity
                         Context context = DetailActivity.this;
                         switch (item.getItemId()) {
                             case R.id.navigation_matches:
-                                Toast.makeText(context,"Action matches",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Action matches", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_news:
-                                Toast.makeText(context,"Action news",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Action news", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_favorites:
-                                Toast.makeText(context,"Action favorites",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Action favorites", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_settings:
-                                Toast.makeText(context,"Action settings",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Action settings", Toast.LENGTH_SHORT).show();
                                 return true;
                         }
                         return false;

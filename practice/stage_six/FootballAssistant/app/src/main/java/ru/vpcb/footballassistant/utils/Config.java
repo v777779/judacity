@@ -93,7 +93,9 @@ public class Config {
     public static final String EMPTY_MATCH_TIME = "-- : --";
     public static final String EMPTY_FIXTURE_DATE = "--/--/--";
 
-
+    //detail activity
+    public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
+    public static final int CALENDAR_DIALOG_ACTION_CANCEL = 1;
 
 
 

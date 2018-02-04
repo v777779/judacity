@@ -45,5 +45,11 @@
     <dimen name="sliding_tabs_start">60dp</dimen>
     <dimen name="sliding_tabs_elevation">6dp</dimen>
 
+    <!--text-->
+    <dimen name="text_size">14sp</dimen>
+    <dimen name="head_text_size">16sp</dimen>
+
+    <!--calendar-->
+    <dimen name="calendar_head_large_text_size">22sp</dimen>
 
 </resources>

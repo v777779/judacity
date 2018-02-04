@@ -96,10 +96,13 @@
     <color name="sliding_tab_text">#7e7e7e</color>
     <color name="sliding_tab_slider">#3a3a3a</color>
 
-    <color name="sliding_tab_back_light">#fbe0b5</color>
-    <color name="sliding_tab_back">#a69476</color>
+    <color name="sliding_tab_back_light">#bdf8f8f8</color>
+    <color name="sliding_tab_back">#919191</color>
 
-<!--silver-->
+    <!--gold-->
+    <!--<color name="sliding_tab_back_light">#fbe0b5</color>-->
+    <!--<color name="sliding_tab_back">#a69476</color>-->
+    <!--silver-->
     <!--<color name="sliding_tab_back_light">#bdf8f8f8</color>-->
     <!--<color name="sliding_tab_back">#919191</color>-->
 
@@ -118,5 +121,19 @@
 
     <!--<color name="sliding_tab_back">#e6fcfaf3</color>-->
     <!--<color name="sliding_tab_back">#e6f3fcf9</color>-->
+
+    <!--text colors-->
+    <color name="colorText">#3A3A3A</color>
+    <color name="colorButtonText">#4cb5ac</color>
+    <color name="color_dialog_head_text">#ffffff</color>
+
+    <!--dialog-->
+    <color name="color_dialog_head_back">#dda062</color>
+
+    <!--calendar-->
+    <color name="color_calendar_head_back">#009788</color>
+    <color name="color_calendar_head_text">#ffffff</color>
+    <color name="color_calendar_accent">#009788</color>
+
 
 </resources>

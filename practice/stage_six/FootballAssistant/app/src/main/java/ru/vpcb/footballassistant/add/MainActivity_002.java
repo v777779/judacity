@@ -275,14 +275,14 @@ public class MainActivity_002 extends AppCompatActivity
     }
 
     @Override
-    public void onCallback(View view, int pos) {
+    public void onComplete(View view, int pos) {
         Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
     }
 
     @Override
-    public void onCallback(int mode) {
+    public void onComplete(int mode, Calendar calendar) {
 
     }
 

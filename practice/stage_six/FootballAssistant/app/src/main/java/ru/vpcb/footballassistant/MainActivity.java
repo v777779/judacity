@@ -13,6 +13,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -67,7 +69,7 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_5;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private static boolean sIsTimber;
     private static Handler mHandler;
@@ -157,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -174,7 +177,9 @@ public class MainActivity extends AppCompatActivity {
 
 // callbacks
 
-    // methods
+
+// methods
+
 
 
     private void makeTransition() {
