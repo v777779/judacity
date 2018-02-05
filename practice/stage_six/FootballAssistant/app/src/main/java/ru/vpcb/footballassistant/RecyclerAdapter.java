@@ -194,6 +194,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         @Nullable
         @BindView(R.id.image_rm_head_league)
         ImageView mImageLeague;
+        @Nullable
+        @BindView(R.id.text_tm_item_date)
+        TextView mTextDate;
 
         /**
          * Constructor
@@ -230,7 +233,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             if (getItemViewType() == RM_ITEM_VIEW_TYPE) {
                 mTextTeamHome.setText(fixture.getHomeTeamName());
                 mTextTeamAway.setText(fixture.getAwayTeamName());
-                mTextTime.setText(fixture.getMatchTime());
+                String dateTime = fixture.getMatchDate();
+                mTextTime.setText(dateTime.substring(0,5));
+                mTextDate.setText(dateTime.substring(6));
+
             }
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 //

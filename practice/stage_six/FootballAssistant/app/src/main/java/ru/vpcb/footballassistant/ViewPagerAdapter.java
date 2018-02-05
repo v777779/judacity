@@ -38,6 +38,11 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {  // notificationDataSetChange() update
+        return POSITION_NONE;
+    }
+
+    @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = recyclers.get(position);
         container.addView(view, 0);
@@ -76,7 +81,6 @@ public class ViewPagerAdapter extends PagerAdapter {
         this.recyclers = recyclers;
         this.titles = titles;
         notifyDataSetChanged();
-
     }
 
     private RecyclerView getRecycler(List<FDFixture> list) {

@@ -61,6 +61,7 @@
     <string name="unknown_loader_id">Unknown id: %1$d"</string>
 
     <string name="calendar_set_date_exception">Calendar set date exception: %1$s</string>
+    <string name="viewpager_tab_exception">Tab Layout Titles exception: %1$s</string>
 
 
     <!--diagnostic-->
@@ -110,6 +111,7 @@
     <string name="text_test_rm_item_team_home">Chelsea</string>
     <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
     <string name="text_test_rm_item_match_time">19:05</string>
+    <string name="text_test_rm_item_match_date">05/02/18</string>
     <string name="text_test_rm_item_league">Premier League 2017/18</string>
     <string name="text_test_rm_item_league2">Champions League 2017/18</string>
     <string name="text_test_rm_item_league3">League One 2017/18</string>

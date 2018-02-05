@@ -62,11 +62,11 @@
             style="@style/Large.Item.TextRecycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_extend"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="@dimen/margin_small"
             android:contentDescription="@string/text_rm_item_match_time"
             android:text="@string/text_test_rm_item_match_time"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/text_tm_item_date"
             app:layout_constraintEnd_toStartOf="@+id/guide_v1"
             app:layout_constraintStart_toStartOf="@+id/guide_v1"
             app:layout_constraintTop_toTopOf="parent" />
@@ -94,6 +94,19 @@
             app:layout_constraintEnd_toStartOf="@+id/guide_v2"
             app:layout_constraintStart_toStartOf="@+id/guide_v7"
             app:layout_constraintTop_toBottomOf="@+id/image_rm_item_away" />
+
+        <TextView
+            android:id="@+id/text_tm_item_date"
+            style="@style/Item.TextRecycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/text_rm_item_match_time"
+            android:text="@string/text_test_rm_item_match_date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guide_v1"
+            app:layout_constraintStart_toStartOf="@+id/guide_v1" />
+
 
         <ImageView
             android:id="@+id/icon_rm_item_notification"

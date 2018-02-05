@@ -247,6 +247,18 @@ public class FDFixture {
                 "%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
     }
 
+    public String getMatchDate() {
+        if (date == null) return EMPTY_MATCH_TIME;
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return String.format(Locale.ENGLISH,
+                "%02d:%02d,%02d/%02d/%04d",
+                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
+                c.get(Calendar.DAY_OF_MONTH),c.get(Calendar.MONTH)+1,
+                c.get(Calendar.YEAR));
+    }
+
+
     @Override
     public String toString() {
         return String.format("%s %s:%s %s", SimpleDateFormat.getDateTimeInstance(

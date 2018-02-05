@@ -115,7 +115,7 @@ public class DetailActivity extends AppCompatActivity
 
 
     private Cursor[] mCursors;
-// test!!!   make parcelable
+    // test!!!   make parcelable
     private static ViewPagerData mViewPagerData;
 
     @Override
@@ -168,9 +168,9 @@ public class DetailActivity extends AppCompatActivity
         setupBottomNavigation();
         setupProgress();
         setupReceiver();
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             setupViewPager();
-        }else  {
+        } else {
 // test!!!  check data
             setupViewPager(mViewPagerData);
         }
@@ -311,25 +311,25 @@ public class DetailActivity extends AppCompatActivity
 
         try {
             if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
-                    setZeroTime(calendar);
-                    long time = calendar.getTimeInMillis();
-                    long first = getViewPagerDate(0);
-                    long last = getViewPagerDate(mViewPagerData.getList().size() - 1);
-                    if (first > 0 && time < first) time = first;
-                    if (last > 0 && time > last) time = last;
+                setZeroTime(calendar);
+                long time = calendar.getTimeInMillis();
+                long first = getViewPagerDate(0);
+                long last = getViewPagerDate(mViewPagerData.getList().size() - 1);
+                if (first > 0 && time < first) time = first;
+                if (last > 0 && time > last) time = last;
 
 
-                    Integer pos = mViewPagerData.getMap().get(time);
+                Integer pos = mViewPagerData.getMap().get(time);
 
-                    while (pos == null && time < last) {
-                        time += TimeUnit.DAYS.toMillis(1);
-                        pos = mViewPagerData.getMap().get(time);
-                    }
-                    if (pos != null) mViewPager.setCurrentItem(pos, true);
+                while (pos == null && time < last) {
+                    time += TimeUnit.DAYS.toMillis(1);
+                    pos = mViewPagerData.getMap().get(time);
+                }
+                if (pos != null) mViewPager.setCurrentItem(pos, true);
             }
 
-        }catch (NullPointerException e) {
-            Timber.d(getString(R.string.calendar_set_date_exception,e.getMessage()));
+        } catch (NullPointerException e) {
+            Timber.d(getString(R.string.calendar_set_date_exception, e.getMessage()));
         }
 
     }
@@ -493,7 +493,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this,null, null);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -557,17 +557,59 @@ public class DetailActivity extends AppCompatActivity
 //        mTabLayout.setupWithViewPager(mViewPager);
 //    }
 
+    // test!!!  update mTabLayout workaround
+    private void updateTabLayout(ViewPagerData data, ViewPagerData last) {
+        try {
+
+            List<String> titles = data.getTitles();
+            int lastSize = last.getTitles().size();
+
+            int size = data.getTitles().size();
+            if (size < lastSize) {
+                for (int i = size; i < lastSize; i++) {
+                    mTabLayout.removeTabAt(size);
+                }
+            } else {
+                for (int i = lastSize; i < size; i++) {
+                    mTabLayout.addTab(mTabLayout.newTab());
+                }
+            }
+            for (int i = 0; i < size; i++) {
+                mTabLayout.getTabAt(i).setText(titles.get(i));
+            }
+        }catch (NullPointerException e)  {
+            Timber.d(getString(R.string.viewpager_tab_exception,e.getMessage()));
+        }
+    }
+
     private void updateViewPager(final ViewPagerData data) {
         if (mViewPager == null || data == null) return;
         int pos = mViewPager.getCurrentItem();
+
+
         if (pos == 0) {
             pos = data.mPos;                    // current day
         } else {
+
+// test!!!
+//            data.getList().remove(210);
+//            data.getList().remove(211);
+//            data.getList().remove(212);
+//            data.getRecyclers().remove(210);
+//            data.getRecyclers().remove(211);
+//            data.getRecyclers().remove(212);
+//            data.getTitles().remove(210);
+//            data.getTitles().remove(211);
+//            data.getTitles().remove(212);
+// end test!!!
+
+            updateTabLayout(data, mViewPagerData);
             if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
         }
-
+        mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(pos);
+
     }
 
 //    private void setupViewPager2() {
@@ -788,6 +830,7 @@ public class DetailActivity extends AppCompatActivity
             return mMap;
         }
     }
+
     private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {
 
 
