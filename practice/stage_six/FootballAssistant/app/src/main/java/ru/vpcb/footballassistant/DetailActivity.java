@@ -177,13 +177,16 @@ public class DetailActivity extends AppCompatActivity
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
-        refresh(getString(R.string.action_update));
 
-        getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+
+        if(savedInstanceState == null) {
+//            refresh(getString(R.string.action_update));
+            getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+        }
 
 
     }
