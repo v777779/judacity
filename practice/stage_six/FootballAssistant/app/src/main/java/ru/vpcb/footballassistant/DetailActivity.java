@@ -115,8 +115,8 @@ public class DetailActivity extends AppCompatActivity
 
 
     private Cursor[] mCursors;
-
-    private ViewPagerData mViewPagerData;
+// test!!!   make parcelable
+    private static ViewPagerData mViewPagerData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +168,13 @@ public class DetailActivity extends AppCompatActivity
         setupBottomNavigation();
         setupProgress();
         setupReceiver();
-        setupViewPager();
+        if(savedInstanceState == null) {
+            setupViewPager();
+        }else  {
+// test!!!  check data
+            setupViewPager(mViewPagerData);
+        }
+
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
         refresh(getString(R.string.action_update));
@@ -505,6 +511,28 @@ public class DetailActivity extends AppCompatActivity
         });
 
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    private void setupViewPager(ViewPagerData viewPagerData) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, viewPagerData.getRecyclers(), viewPagerData.getTitles());
+        mViewPager.setAdapter(adapter);
+        mViewPager.setCurrentItem(mViewPagerData.getPos());
+        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        mTabLayout.setupWithViewPager(mViewPager, false);
     }
 
 //    private void setupViewPager(ViewPagerDataExt data) {
