@@ -487,7 +487,6 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void setupViewPager() {
-
         ViewPagerAdapter adapter = new ViewPagerAdapter(this,null, null);
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
@@ -539,7 +538,7 @@ public class DetailActivity extends AppCompatActivity
             if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
         }
 
-        ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mList, data.mTitles);
+        ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(pos);
     }
 

@@ -1,6 +1,5 @@
 package ru.vpcb.footballassistant;
 
-import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,24 +22,24 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
  */
 
 public class ViewPagerAdapter extends PagerAdapter {
-    private List<List<FDFixture>> listPages;
-    private List<String> listTitles;
+    private List<View> recyclers;
+    private List<String> titles;
     private AppCompatActivity mActivity;
 
     /**
      * Constructor  created object from List<View>> data source
      *
-     * @param listPages input List<View> data source
+     * @param recyclers input List<View> data source
      */
-    public ViewPagerAdapter(AppCompatActivity activity, List<List<FDFixture>> listPages, List<String> listTitles) {
+    public ViewPagerAdapter(AppCompatActivity activity, List<View> recyclers, List<String> listTitles) {
         this.mActivity = activity;
-        this.listPages = listPages;
-        this.listTitles = listTitles;
+        this.recyclers = recyclers;
+        this.titles = listTitles;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View view = getRecycler(listPages.get(position));
+        View view = recyclers.get(position);
         container.addView(view, 0);
         return view;
     }
@@ -52,8 +51,8 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        if(listPages == null) return 0;
-        return listPages.size();
+        if(recyclers == null) return 0;
+        return recyclers.size();
     }
 
 
@@ -64,18 +63,18 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (listTitles == null || position < 0 || position >= listTitles.size())
+        if (titles == null || position < 0 || position >= titles.size())
             return EMPTY_FIXTURE_DATE;
-        String title = listTitles.get(position);
+        String title = titles.get(position);
         if (title == null) title = EMPTY_FIXTURE_DATE;
         return title;
     }
 
-    public void swap(List<List<FDFixture>> list, List<String> titles) {
-        if (list == null || list.isEmpty() || titles == null || titles.isEmpty()) return;
+    public void swap(List<View> recyclers, List<String> titles) {
+        if (recyclers == null || recyclers.isEmpty() || titles == null || titles.isEmpty()) return;
 
-        listPages = list;
-        listTitles = titles;
+        this.recyclers = recyclers;
+        this.titles = titles;
         notifyDataSetChanged();
 
     }
