@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.vpcb.footballassistant.add.DetailActivity_002;
+
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
