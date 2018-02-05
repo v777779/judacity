@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -112,9 +113,6 @@ public class DetailActivity extends AppCompatActivity
     private Map<Integer, List<Integer>> mMapFixtureKeys = new HashMap<>();
     private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
 
-    private List<List<FDFixture>> mViewPagerList;
-    private Map<Long, Integer> mViewPagerMap;
-    private int mViewPagerPos;
 
     private Cursor[] mCursors;
 
@@ -305,27 +303,29 @@ public class DetailActivity extends AppCompatActivity
     @Override
     public void onComplete(int mode, Calendar calendar) {
 
-        if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
-            if (mViewPager != null && mViewPagerList != null) {
-                setZeroTime(calendar);
+        try {
+            if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
+                    setZeroTime(calendar);
+                    long time = calendar.getTimeInMillis();
+                    long first = getViewPagerDate(0);
+                    long last = getViewPagerDate(mViewPagerData.getList().size() - 1);
+                    if (first > 0 && time < first) time = first;
+                    if (last > 0 && time > last) time = last;
 
-                long time = calendar.getTimeInMillis();
-                long first = getViewPagerDate(0);
-                long last = getViewPagerDate(mViewPagerList.size() - 1);
-                if (first > 0 && time < first) time = first;
-                if (last > 0 && time > last) time = last;
 
+                    Integer pos = mViewPagerData.getMap().get(time);
 
-                Integer pos = mViewPagerMap.get(time);
-                long current = getViewPagerDate().getTimeInMillis();
-                while (pos == null && time < last) {
-                    time += 86400000;
-                    pos = mViewPagerMap.get(time);
-                }
-                if (pos != null) mViewPager.setCurrentItem(pos, true);
-
+                    while (pos == null && time < last) {
+                        time += TimeUnit.DAYS.toMillis(1);
+                        pos = mViewPagerData.getMap().get(time);
+                    }
+                    if (pos != null) mViewPager.setCurrentItem(pos, true);
             }
+
+        }catch (NullPointerException e) {
+            Timber.d(getString(R.string.calendar_set_date_exception,e.getMessage()));
         }
+
     }
 
 
@@ -507,7 +507,7 @@ public class DetailActivity extends AppCompatActivity
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-//    private void setupViewPager(ViewPagerData data) {
+//    private void setupViewPager(ViewPagerDataExt data) {
 //        ViewPagerAdapter adapter = new ViewPagerAdapter(data.mRecyclers, data.mTitles);
 //        mViewPager.setAdapter(adapter);
 //        mViewPager.setCurrentItem(data.mPos, true);
@@ -595,7 +595,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void setupProgress() {
         mProgressValue.setIndeterminate(true);
-        mProgressValue.setVisibility(View.VISIBLE);
+        mProgressValue.setVisibility(View.INVISIBLE);
     }
 
 
@@ -738,6 +738,26 @@ public class DetailActivity extends AppCompatActivity
             this.mList = list;
             this.mMap = map;
 
+        }
+
+        public List<View> getRecyclers() {
+            return mRecyclers;
+        }
+
+        public List<String> getTitles() {
+            return mTitles;
+        }
+
+        public int getPos() {
+            return mPos;
+        }
+
+        public List<List<FDFixture>> getList() {
+            return mList;
+        }
+
+        public Map<Long, Integer> getMap() {
+            return mMap;
         }
     }
     private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {

@@ -60,6 +60,9 @@
     <string name="unknown_uri">Unknown uri: %1$s"</string>
     <string name="unknown_loader_id">Unknown id: %1$d"</string>
 
+    <string name="calendar_set_date_exception">Calendar set date exception: %1$s</string>
+
+
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>
 
