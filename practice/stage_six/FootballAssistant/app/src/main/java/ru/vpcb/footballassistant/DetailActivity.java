@@ -115,7 +115,8 @@ public class DetailActivity extends AppCompatActivity
 
 
     private Cursor[] mCursors;
-    // test!!!   make parcelable
+// test!!!
+// TODO  make parcelable for ViewPager and rotation
     private static ViewPagerData mViewPagerData;
 
     @Override
@@ -163,7 +164,6 @@ public class DetailActivity extends AppCompatActivity
         });
 
 // progress
-
         setupActionBar();
         setupBottomNavigation();
         setupProgress();
@@ -557,7 +557,9 @@ public class DetailActivity extends AppCompatActivity
 //        mTabLayout.setupWithViewPager(mViewPager);
 //    }
 
-    // test!!!  update mTabLayout workaround
+// test!!!  update mTabLayout workaround
+// TODO Check workaround of TabLayout update for better solution
+
     private void updateTabLayout(ViewPagerData data, ViewPagerData last) {
         try {
 
@@ -592,6 +594,7 @@ public class DetailActivity extends AppCompatActivity
         } else {
 
 // test!!!
+// TODO CHECK MAP  AFTER deletion  all works but Map
 //            data.getList().remove(210);
 //            data.getList().remove(211);
 //            data.getList().remove(212);
@@ -601,6 +604,10 @@ public class DetailActivity extends AppCompatActivity
 //            data.getTitles().remove(210);
 //            data.getTitles().remove(211);
 //            data.getTitles().remove(212);
+//            List<Long> keys = new ArrayList<>(data.getMap().keySet());
+//            data.getMap().remove(keys.get(210));
+//            data.getMap().remove(keys.get(212));
+//            data.getMap().remove(keys.get(214));
 // end test!!!
 
             updateTabLayout(data, mViewPagerData);
@@ -831,6 +838,7 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
+// TODO Make encapsulation data and maps to ViewPager and other Activities
     private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {
 
 
