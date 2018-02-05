@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.vpcb.footballassistant">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -24,8 +24,8 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.vpcb.footballassistant.MainActivity" />
@@ -36,10 +36,17 @@
         <provider
             android:name=".dbase.FDProvider"
             android:authorities="ru.vpcb.footballassistant"
-            android:exported="false">
+            android:exported="false"></provider>
 
-        </provider>
-
+        <activity
+            android:name=".MatchActivity"
+            android:label="@string/title_activity_match"
+            android:parentActivityName=".DetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.vpcb.footballassistant.DetailActivity" />
+        </activity>
     </application>
 
 </manifest>

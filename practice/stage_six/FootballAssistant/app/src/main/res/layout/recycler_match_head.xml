@@ -9,7 +9,11 @@
     android:layout_marginTop="8dp"
     android:layout_marginBottom="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_small"
-    android:layout_marginStart="@dimen/margin_small">
+    android:layout_marginStart="@dimen/margin_small"
+    android:backgroundTint="@android:color/transparent"
+    app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
+
+    >
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_recycler_match_head"

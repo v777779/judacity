@@ -115,7 +115,7 @@ public class DetailActivity extends AppCompatActivity
 
 
     private Cursor[] mCursors;
-// test!!!
+    // test!!!
 // TODO  make parcelable for ViewPager and rotation
     private static ViewPagerData mViewPagerData;
 
@@ -168,7 +168,7 @@ public class DetailActivity extends AppCompatActivity
         setupBottomNavigation();
         setupProgress();
         setupReceiver();
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && mViewPagerData == null) {
             setupViewPager();
         } else {
 // test!!!  check data
@@ -190,19 +190,14 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
             return true;
@@ -303,7 +298,7 @@ public class DetailActivity extends AppCompatActivity
     public void onComplete(View view, int pos) {
         Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-
+        startMatchActivity();
     }
 
     @Override
@@ -336,7 +331,12 @@ public class DetailActivity extends AppCompatActivity
 
 
     // methods
-// test!!!
+    private void startMatchActivity() {
+        Intent intent = new Intent(this, MatchActivity.class);
+        startActivity(intent);
+    }
+
+    // test!!!
     private long getViewPagerDate(int index) {
         Calendar calendar = Calendar.getInstance();
         try {
@@ -579,8 +579,8 @@ public class DetailActivity extends AppCompatActivity
             for (int i = 0; i < size; i++) {
                 mTabLayout.getTabAt(i).setText(titles.get(i));
             }
-        }catch (NullPointerException e)  {
-            Timber.d(getString(R.string.viewpager_tab_exception,e.getMessage()));
+        } catch (NullPointerException e) {
+            Timber.d(getString(R.string.viewpager_tab_exception, e.getMessage()));
         }
     }
 
@@ -838,7 +838,7 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
-// TODO Make encapsulation data and maps to ViewPager and other Activities
+    // TODO Make encapsulation data and maps to ViewPager and other Activities
     private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {
 
 

@@ -17,15 +17,28 @@
     <dimen name="image_rm_item_size">28dp</dimen>
     <dimen name="text_rm_item_size">12sp</dimen>
     <dimen name="text_rm_item_large_size">24sp</dimen>
+    <dimen name="text_rm_item_country_size">14sp</dimen>
+    <dimen name="text_rm_item_league_size">16sp</dimen>
     <dimen name="icon_rm_item_size">24dp</dimen>
-
     <dimen name="image_rm_head_size">50dp</dimen>
     <dimen name="text_rm_head_size">18sp</dimen>
     <dimen name="image_rm_head_icon_size">24dp</dimen>
-
     <dimen name="border_rm_item_size">2dp</dimen>
+    <dimen name="card_corner_rm_item_radius">4dp</dimen>
 
-    <dimen name="card_corner_radius">4dp</dimen>
+    <!--screen_match-->
+    <dimen name="image_sm_item_size">40dp</dimen>
+    <dimen name="text_sm_item_size">14sp</dimen>
+    <dimen name="text_sm_item_time_size">36sp</dimen>
+    <dimen name="text_sm_item_date_size">16sp</dimen>
+    <dimen name="text_sm_item_country_size">14sp</dimen>
+    <dimen name="text_sm_item_league_size">18sp</dimen>
+    <dimen name="icon_sm_item_size">24dp</dimen>
+    <dimen name="image_sm_head_size">50dp</dimen>
+    <dimen name="text_sm_head_size">18sp</dimen>
+    <dimen name="image_sm_head_icon_size">24dp</dimen>
+    <dimen name="border_sm_item_size">2dp</dimen>
+    <dimen name="card_corner_sm_item_radius">4dp</dimen>
 
 
     <!--margins-->
@@ -51,5 +64,7 @@
 
     <!--calendar-->
     <dimen name="calendar_head_large_text_size">22sp</dimen>
+    <dimen name="app_bar_height">280dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

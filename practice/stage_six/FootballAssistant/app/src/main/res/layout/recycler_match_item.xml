@@ -12,7 +12,7 @@
     android:layout_marginStart="@dimen/margin_small"
 
     android:backgroundTint="@android:color/transparent"
-    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
     >
     <!--background solid-->
     <!--android:backgroundTint=""/> = null-->

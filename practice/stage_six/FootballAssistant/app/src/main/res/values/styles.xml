@@ -63,6 +63,57 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Country.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_country_size</item>
+    </style>
+
+    <style name="League.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_league_size</item>
+    </style>
+
+<!--match-->
+    <style name="Match.TextRecycler" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/sm_text_color_light</item>
+        <item name="android:textSize">@dimen/text_sm_item_size</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Left.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="Right.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="Large.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_time_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Date.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_date_size</item>
+    </style>
+
+
+    <style name="Country.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_country_size</item>
+    </style>
+
+    <style name="League.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_league_size</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <!--recycler-->
     <style name="Head.Item.TextRecycler" parent="Item.TextRecycler">
         <item name="android:textSize">@dimen/text_rm_head_size</item>
         <item name="android:gravity">start|center</item>
