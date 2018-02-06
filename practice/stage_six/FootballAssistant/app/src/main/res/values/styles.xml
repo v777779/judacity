@@ -83,6 +83,7 @@
 
     <style name="Match.Light.TextRecycler" parent="Match.TextRecycler">
         <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Left.Match.TextRecycler" parent="Match.TextRecycler">
@@ -121,17 +122,17 @@
 
     <style name="League.Match.TextRecycler" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_league_size</item>
-        <item name="android:textStyle">normal|bold</item>
+
     </style>
 
     <style name="Score.Match.TextRecycler" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_score_size</item>
-        <item name="android:textStyle">bold</item>
+
     </style>
 
     <style name="Status.Match.TextRecycler" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_status_size</item>
-        <item name="android:textStyle">normal|bold</item>
+
     </style>
 
 
@@ -158,12 +159,46 @@
 
     <style name="Subscript.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_start_subscript_size</item>
+        <item name="android:textColor">@color/match_start_subscript</item>
 
     </style>
 
     <style name="Start.Subscript.Match.TextRecycler" parent="Subscript.Match.TextRecycler">
         <item name="android:textColor">@color/match_start_subscript</item>
     </style>
+
+    <!--bet-->
+    <style name="Back.Bet.Match" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_bet_back</item>
+        <item name="android:textColor">@color/match_bet_text_back</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/match_bet_back</item>
+        <!--<item name="android:paddingStart">@dimen/margin_normal</item>-->
+        <!--<item name="android:paddingEnd">@dimen/margin_normal</item>-->
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="Home.Back.Bet.Match" parent="Back.Bet.Match">
+        <item name="android:background">@drawable/match_bet_home_back</item>
+        <item name="android:textColor">@color/match_bet_home_text_back</item>
+    </style>
+
+    <style name="Away.Back.Bet.Match" parent="Back.Bet.Match">
+        <item name="android:background">@drawable/match_bet_away_back</item>
+        <item name="android:textColor">@color/match_bet_away_text_back</item>
+    </style>
+
+    <style name="Bet.Match" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_bet_size</item>
+        <item name="android:textColor">@color/match_bet_text</item>
+        <item name="android:gravity">center</item>
+
+
+    </style>
+
+
+
 
     <!--recycler-->
     <style name="Head.Item.TextRecycler" parent="Item.TextRecycler">

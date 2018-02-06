@@ -44,11 +44,17 @@
     <dimen name="text_sm_item_score_size">20sp</dimen>
     <dimen name="text_sm_item_status_size">14sp</dimen>
     <dimen name="text_sm_item_status_back">100dp</dimen>
-
+<!--start-->
     <dimen name="text_sm_item_start_header_size">14sp</dimen>
     <dimen name="text_sm_item_start_date_size">14sp</dimen>
     <dimen name="text_sm_item_start_letter_size">18sp</dimen>
     <dimen name="text_sm_item_start_subscript_size">16sp</dimen>
+<!--bet-->
+    <dimen name="text_sm_item_bet_back">36sp</dimen>
+    <dimen name="text_sm_item_bet_size">32sp</dimen>
+    <dimen name="text_sm_item_bet_back_size">56dp</dimen>
+
+
 
     <!--margins-->
     <dimen name="margin_micro">2dp</dimen>

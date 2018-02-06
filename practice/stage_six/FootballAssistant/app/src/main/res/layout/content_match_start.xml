@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/text_sm_item_match_starts_in"
+        android:contentDescription="@string/text_sm_item_match_full_date"
         android:text="@string/text_test_sm_item_match_date_time"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/match_time_min_low"
@@ -152,11 +152,11 @@
 
 
     <ImageView
-        android:id="@+id/match_start_notification"
+        android:id="@+id/match_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:src="@drawable/ic_notifications"
+        android:src="@drawable/ic_notifications_none"
         app:layout_constraintBottom_toTopOf="@+id/match_time_min_low"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

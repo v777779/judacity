@@ -193,12 +193,30 @@
     <color name="match_time_back_light">#ededed</color>
     <color name="match_time_back_dark">#939393</color>
 
-    <color name="match_start_header">#bdbdbd</color>
+    <color name="match_start_header">#706f6f</color>
     <color name="match_start_date">#3a3a3a</color>
     <color name="match_start_time">#3a3a3a</color>
     <color name="match_start_letter">#3a3a3a</color>
-    <color name="match_start_subscript">#bdbdbd</color>
+    <color name="match_start_subscript">#989898</color>
 
+<!--betting-->
+
+    <color name="match_bet_text">#3a3a3a</color>
+
+    <color name="match_bet_back">#c1c1c1</color>
+    <color name="match_bet_back_light">#e9e9e9</color>
+    <color name="match_bet_back_dark">#8e8e8e</color>
+    <color name="match_bet_text_back">#e9e9e9</color>
+
+    <color name="match_bet_home_back_light">#d6e3db</color>
+    <color name="match_bet_home_back">#d4e4da</color>
+    <color name="match_bet_home_back_dark">#c5d4cb</color>
+    <color name="match_bet_home_text_back">#82ffffff</color>
+
+    <color name="match_bet_away_back_light">#eec7f5</color>
+    <color name="match_bet_away_back">#bd9dc3</color>
+    <color name="match_bet_away_back_dark">#957b9a</color>
+    <color name="match_bet_away_text_back">#eec7f5</color>
 
 
 </resources>

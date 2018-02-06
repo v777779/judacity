@@ -31,14 +31,30 @@
             <include layout="@layout/content_match_start" />
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/card_match_bet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_match_start">
+
+            <include layout="@layout/content_match_bet" />
+        </android.support.v7.widget.CardView>
+
         <TextView
             android:id="@+id/text_large"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/large_text"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_start" />
+            app:layout_constraintTop_toBottomOf="@+id/card_match_bet" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v1"
