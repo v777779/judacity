@@ -9,6 +9,20 @@
     android:background="@color/rm_view_border_back"
     >
 
+    <!--background transparent-->
+    <ImageView
+        android:id="@+id/image_viewpager_back"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.25"
+        android:scaleType="centerCrop"
+        android:src="@drawable/back_003"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/toolbar_sliding_tabs"
         android:layout_width="0dp"
@@ -25,8 +39,9 @@
         app:tabSelectedTextColor="@color/sliding_tab_text_selected"
         app:tabTextAppearance="@style/TextTab"
         app:tabTextColor="@color/sliding_tab_text"
-        android:elevation="8dp">
 
+        >
+        <!--android:elevation="8dp"-->
     </android.support.design.widget.TabLayout>
 
 
@@ -59,19 +74,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="1" />
 
-    <!--background transparent-->
-    <ImageView
-        android:id="@+id/image_viewpager_back"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.25"
-        android:scaleType="centerCrop"
-        android:src="@drawable/back_003"
-        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
     <!--background solid-->
     <!--<ImageView/> = null-->
