@@ -78,7 +78,7 @@
         android:contentDescription="@string/text_character_letter"
         android:text="@string/text_sm_item_match_letter_d"
 
-        android:gravity="center_horizontal|bottom"
+
         app:layout_constraintEnd_toStartOf="@+id/guide_v2"
         app:layout_constraintStart_toStartOf="@+id/guide_v2"
         app:layout_constraintTop_toBottomOf="@+id/match_bet_header" />
