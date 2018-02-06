@@ -34,7 +34,6 @@
         android:layout_width="@dimen/image_sm_item_size"
         android:layout_height="@dimen/image_sm_item_size"
         android:layout_marginBottom="@dimen/margin_normal"
-
         android:layout_marginEnd="@dimen/margin_normal"
         android:layout_marginStart="@dimen/margin_normal"
 
@@ -52,9 +51,9 @@
         style="@style/Country.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:contentDescription="@string/text_rm_item_match_country"
-        android:text="@string/text_test_rm_item_match_country"
+        android:layout_marginTop="@dimen/margin_icon_size"
+        android:contentDescription="@string/text_sm_item_match_country"
+        android:text="@string/text_test_sm_item_match_country"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toTopOf="parent" />
@@ -64,8 +63,8 @@
         style="@style/League.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/text_rm_item_match_league"
-        android:text="@string/text_test_rm_item_match_league"
+        android:contentDescription="@string/text_sm_item_match_league"
+        android:text="@string/text_test_sm_item_match_league"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_country" />
@@ -73,10 +72,10 @@
 
     <TextView
         android:id="@+id/text_sm_item_time"
-        style="@style/Large.Match.TextRecycler"
+        style="@style/Time.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/text_rm_item_match_time"
+        android:contentDescription="@string/text_sm_item_match_time"
         android:text="@string/text_test_rm_item_match_time"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintHorizontal_bias="0.46"
@@ -89,7 +88,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_normal"
         android:contentDescription="@string/text_rm_item_team_name"
         android:text="@string/text_test_rm_item_team_home"
         app:layout_constraintEnd_toStartOf="@+id/guide_v6"
@@ -102,7 +101,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_normal"
         android:contentDescription="@string/text_rm_item_team_name"
         android:text="@string/text_test_rm_item_team_away"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,14 +113,58 @@
         style="@style/Date.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:contentDescription="@string/text_rm_item_match_time"
+        android:contentDescription="@string/text_sm_item_match_date"
         android:text="@string/text_test_rm_item_match_date"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_time" />
+
+
+    <TextView
+        android:id="@+id/text_sm_item_score_home"
+        style="@style/Score.Match.TextRecycler"
+        android:layout_width="@dimen/text_sm_item_score_back"
+        android:layout_height="@dimen/text_sm_item_score_back"
+        android:layout_marginEnd="@dimen/margin_micro"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@drawable/match_score_red"
+        android:contentDescription="@string/text_sm_item_match_score_home"
+        android:text="@string/text_test_sm_item_match_number_1"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v1"
+        app:layout_constraintTop_toBottomOf="@+id/text_sm_item_date" />
+
+    <TextView
+        android:id="@+id/text_sm_item_score_away"
+        style="@style/Score.Match.TextRecycler"
+        android:layout_width="@dimen/text_sm_item_score_back"
+        android:layout_height="@dimen/text_sm_item_score_back"
+        android:layout_marginStart="@dimen/margin_micro"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@drawable/match_score_blue"
+        android:contentDescription="@string/text_sm_item_match_score_away"
+        android:text="@string/text_test_sm_item_match_number_0"
+        app:layout_constraintStart_toStartOf="@+id/guide_v1"
+        app:layout_constraintTop_toBottomOf="@+id/text_sm_item_date" />
+
+    <TextView
+        android:id="@+id/text_sm_item_status"
+        style="@style/Status.Match.TextRecycler"
+        android:layout_width="@dimen/text_sm_item_status_back"
+        android:layout_height="wrap_content"
+        android:background="@drawable/match_status_back"
+        android:text="@string/text_test_sm_item_match_finished"
+        android:contentDescription="@string/text_sm_item_match_status"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:paddingBottom="@dimen/margin_small"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_sm_item_score_away"
+        app:layout_constraintStart_toStartOf="@+id/text_sm_item_score_home"
+        app:layout_constraintTop_toBottomOf="@+id/text_sm_item_score_home" />
 
 
     <android.support.constraint.Guideline

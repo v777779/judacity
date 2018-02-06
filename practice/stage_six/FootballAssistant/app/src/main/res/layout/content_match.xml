@@ -5,20 +5,135 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ru.vpcb.footballassistant.MatchActivity"
-    tools:showIn="@layout/activity_match">
+    tools:context="ru.vpcb.footballassistant.MatchActivity">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/match_back"
         android:orientation="vertical">
 
-        <include layout="@layout/activity_match_toolbar" />
+        <TextView
+            android:id="@+id/match_start_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StartHeader.Match.TextRecycler"
+            android:contentDescription="@string/text_sm_item_match_starts_in"
+            android:text="@string/text_sm_item_match_start_header"
+            />
+
+
+        <TextView
+            android:id="@+id/match_start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/StartHeader.Match.TextRecycler"
+            android:contentDescription="@string/text_sm_item_match_starts_in"
+            android:text="@string/text_sm_item_match_start_header"
+            />
+
+        <TextView
+            android:id="@+id/match_time_day_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Time.Match.TextRecycler"
+            android:background="@drawable/match_time_back"
+            android:contentDescription="@string/text_sm_item_match_date_day"
+            android:text="@string/text_test_sm_item_match_number_1"
+
+            />
+
+        <TextView
+            android:id="@+id/match_time_day_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Time.Match.TextRecycler"
+            android:background="@drawable/match_time_back"
+            android:contentDescription="@string/text_sm_item_match_date_day"
+            android:text="@string/text_test_sm_item_match_number_0"
+
+            />
+        <TextView
+            android:id="@+id/match_time_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Country.Match.TextRecycler"
+            android:contentDescription="@string/text_character_letter"
+            android:text="@string/text_sm_item_match_letter_d"
+
+            />
+
+        <TextView
+            android:id="@+id/match_time_hour_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Time.Match.TextRecycler"
+            android:background="@drawable/match_time_back"
+            android:contentDescription="@string/text_sm_item_match_date_hour"
+            android:text="@string/text_test_sm_item_match_number_1"
+
+            />
+
+        <TextView
+            android:id="@+id/match_time_hour_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Time.Match.TextRecycler"
+            android:background="@drawable/match_time_back"
+            android:contentDescription="@string/text_sm_item_match_date_hour"
+            android:text="@string/text_test_sm_item_match_number_0"
+
+            />
+
+
+        <TextView
+            android:id="@+id/match_time_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Country.Match.TextRecycler"
+            android:contentDescription="@string/text_character_letter"
+            android:text="@string/text_sm_item_match_letter_h"
+
+            />
+
+        <TextView
+            android:id="@+id/match_time_min_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Time.Match.TextRecycler"
+            android:background="@drawable/match_time_back"
+            android:contentDescription="@string/text_sm_item_match_date_min"
+            android:text="@string/text_test_sm_item_match_number_1"
+
+            />
+
+        <TextView
+            android:id="@+id/match_time_min_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Time.Match.TextRecycler"
+            android:background="@drawable/match_time_back"
+            android:contentDescription="@string/text_sm_item_match_date_min"
+            android:text="@string/text_test_sm_item_match_number_0"
+
+            />
+
+        <TextView
+            android:id="@+id/match_time_mins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Country.Match.TextRecycler"
+            android:contentDescription="@string/text_character_letter"
+            android:text="@string/text_sm_item_match_letter_m"
+
+            />
+
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:text="@string/large_text" />
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

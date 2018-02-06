@@ -154,6 +154,45 @@
 
     <!--match-->
     <color name="match_toolbar_back">#00f8f8f8</color>
+    <color name="match_score_red">#fe0000</color>
+    <color name="match_score_red_light">#fe6969</color>
+    <color name="match_score_red_dark">#a21818</color>
+
+    <color name="match_score_blue">#0044ef</color>
+    <color name="match_score_blue_light">#5b89fb</color>
+    <color name="match_score_blue_dark">#1c3f96</color>
+
+    <color name="match_status_back">#8a8a8a</color>
+    <color name="match_status_back_light">#5a5a5a</color>
+    <color name="match_status_back_dark">#5a5a5a</color>
+
+    <!--bronze-->
+    <!--<color name="match_status_back">#ae997a</color>-->
+    <!--<color name="match_status_back_light">#675b48</color>-->
+    <!--<color name="match_status_back_dark">#675b48</color>-->
+
+<!--green-->
+    <!--<color name="match_status_back">#609383</color>-->
+    <!--<color name="match_status_back_light">#335047</color>-->
+    <!--<color name="match_status_back_dark">#335047</color>-->
+
+    <!--<color name="match_status_back">#6d9689</color>-->
+    <!--<color name="match_status_back_light">#546862</color>-->
+    <!--<color name="match_status_back_dark">#546862</color>-->
+
+    <!--silver-->
+    <!--<color name="match_status_back">#939393</color>-->
+    <!--<color name="match_status_back_light">#454545</color>-->
+    <!--<color name="match_status_back_dark">#454545</color>-->
+
+    <color name="match_back">#f8f8f8</color>
+
+    <color name="match_time_back">#bdbdbd</color>
+    <color name="match_time_back_light">#ededed</color>
+    <color name="match_time_back_dark">#939393</color>
+
+    <color name="match_start_header">#bdbdbd</color>
+    <color name="match_start_date">#bdbdbd</color>
 
 
 </resources>

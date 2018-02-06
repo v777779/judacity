@@ -78,6 +78,11 @@
         <item name="android:textColor">@color/sm_text_color_light</item>
         <item name="android:textSize">@dimen/text_sm_item_size</item>
         <item name="android:ellipsize">end</item>
+
+    </style>
+
+    <style name="Match.Light.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="Left.Match.TextRecycler" parent="Match.TextRecycler">
@@ -90,27 +95,51 @@
         <item name="android:maxLines">3</item>
     </style>
 
-    <style name="Large.Match.TextRecycler" parent="Match.TextRecycler">
+    <style name="Time.Match.TextRecycler" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_time_size</item>
         <item name="android:gravity">center</item>
-        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Date.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_date_size</item>
+
     </style>
 
 
     <style name="Country.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_country_size</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="League.Match.TextRecycler" parent="Match.TextRecycler">
+    <style name="League.Match.TextRecycler" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_league_size</item>
-        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">normal|bold</item>
+    </style>
+
+    <style name="Score.Match.TextRecycler" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_score_size</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="Status.Match.TextRecycler" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_status_size</item>
+        <item name="android:textStyle">normal|bold</item>
+    </style>
+
+
+    <style name="StartHeader.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_start_header_size</item>
+        <item name="android:textColor">@color/match_start_header</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="StartDate.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_start_date_size</item>
+        <item name="android:textColor">@color/match_start_date</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
 
     <!--recycler-->

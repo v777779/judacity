@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Football</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_match">MatchActivity</string>
+
+
 
     <!--menu-->
     <string name="action_settings">Settings</string>
@@ -51,6 +54,14 @@
     <string name="broadcast_no_network_empty">ru.vpcb.footballassistant.intent.action.NO_NETWORK_EMPTY</string>
     <string name="broadcast_update_progress">ru.vpcb.footballassistant.intent.action.UPDATE_PROGRESS</string>
 
+    <!--match-->
+    <string name="text_sm_item_match_long_dash">\u2014</string>
+    <string name="text_sm_item_match_letter_d">d</string>
+    <string name="text_sm_item_match_letter_h">h</string>
+    <string name="text_sm_item_match_letter_m">m</string>
+    <string name="text_sm_item_match_start_header">THE MATCH STARTS IN</string>
+
+
     <!--messages-->
     <!--exception-->
     <string name="update_content_error">Update content error: </string>
@@ -93,8 +104,30 @@
 
 
     <!--screen4-->
-    <string name="text_rm_item_match_country">The Name of Country</string>
-    <string name="text_rm_item_match_league">The Name of League</string>
+    <string name="text_sm_item_match_country">The Name of Country</string>
+    <string name="text_sm_item_match_league">The Name of League</string>
+    <string name="text_sm_item_match_score_home">The Score of Home Team</string>
+    <string name="text_sm_item_match_score_away">The Score of Away Team</string>
+    <string name="text_sm_item_match_status">The Match Status</string>
+
+
+
+    <string name="text_sm_item_match_date">The Match Date</string>
+    <string name="text_sm_item_match_time">The Match Time</string>
+
+    <string name="text_sm_item_match_starts_in">The Match Starts In</string>
+
+    <string name="text_sm_item_match_date_day">The Match Date Day</string>
+    <string name="text_sm_item_match_date_hour">The Match Date Hour</string>
+    <string name="text_sm_item_match_date_min">The Match Date Minute</string>
+
+
+    <string name="text_character_letter">The Letter</string>
+    <string name="text_character_dash">The Dash Line</string>
+
+    <string name="text_sm_item_match_full_date">The Match Start Full Date and Time</string>
+
+
 
     <!--titles-->
     <string name="screen_match">Matches</string>
@@ -115,7 +148,7 @@
     <string name="text_test_rm_item_team_home">Eintracht Braunschweig</string>
     <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
     <string name="text_test_rm_item_match_time">19:05</string>
-    <string name="text_test_rm_item_match_date">05/02/18</string>
+    <string name="text_test_rm_item_match_date">Sat, 20 Jan 2018</string>
     <string name="text_test_rm_item_league">Premier League 2017/18</string>
     <string name="text_test_rm_item_league2">Champions League 2017/18</string>
     <string name="text_test_rm_item_league3">League One 2017/18</string>
@@ -124,10 +157,19 @@
 
     <string name="text_test_calendar_line1">2017</string>
     <string name="text_test_calendar_line2">Thu, Apr 3</string>
-    <string name="title_activity_match">MatchActivity</string>
 
-    <string name="text_test_rm_item_match_country">England</string>
-    <string name="text_test_rm_item_match_league">Premier League</string>
+
+    <string name="text_test_sm_item_match_country">England</string>
+    <string name="text_test_sm_item_match_league">Premier League</string>
+    <string name="text_test_sm_item_match_number_1">1</string>
+    <string name="text_test_sm_item_match_number_0">0</string>
+    <string name="text_test_sm_item_match_number_1_0">1.0</string>
+
+    <string name="text_test_sm_item_match_finished">FINISHED</string>
+    <string name="text_test_sm_item_match_timed">TIMED</string>
+    <string name="text_test_sm_item_match_cancelled">CANCELLED</string>
+
+    <string name="text_test_sm_item_match_full_date">19 Jan 2018 17:00</string>
 
 
     <string name="large_text">
