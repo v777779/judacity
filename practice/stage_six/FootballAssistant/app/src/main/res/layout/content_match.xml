@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="top|center_horizontal"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ru.vpcb.footballassistant.MatchActivity">
 
@@ -13,127 +15,50 @@
         android:background="@color/match_back"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/match_start_header"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/card_match_start"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/StartHeader.Match.TextRecycler"
-            android:contentDescription="@string/text_sm_item_match_starts_in"
-            android:text="@string/text_sm_item_match_start_header"
-            />
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-        <TextView
-            android:id="@+id/match_start_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/StartHeader.Match.TextRecycler"
-            android:contentDescription="@string/text_sm_item_match_starts_in"
-            android:text="@string/text_sm_item_match_start_header"
-            />
+            <include layout="@layout/content_match_start" />
+        </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/match_time_day_high"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Time.Match.TextRecycler"
-            android:background="@drawable/match_time_back"
-            android:contentDescription="@string/text_sm_item_match_date_day"
-            android:text="@string/text_test_sm_item_match_number_1"
-
-            />
-
-        <TextView
-            android:id="@+id/match_time_day_low"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Time.Match.TextRecycler"
-            android:background="@drawable/match_time_back"
-            android:contentDescription="@string/text_sm_item_match_date_day"
-            android:text="@string/text_test_sm_item_match_number_0"
-
-            />
-        <TextView
-            android:id="@+id/match_time_days"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Country.Match.TextRecycler"
-            android:contentDescription="@string/text_character_letter"
-            android:text="@string/text_sm_item_match_letter_d"
-
-            />
-
-        <TextView
-            android:id="@+id/match_time_hour_high"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Time.Match.TextRecycler"
-            android:background="@drawable/match_time_back"
-            android:contentDescription="@string/text_sm_item_match_date_hour"
-            android:text="@string/text_test_sm_item_match_number_1"
-
-            />
-
-        <TextView
-            android:id="@+id/match_time_hour_low"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Time.Match.TextRecycler"
-            android:background="@drawable/match_time_back"
-            android:contentDescription="@string/text_sm_item_match_date_hour"
-            android:text="@string/text_test_sm_item_match_number_0"
-
-            />
-
-
-        <TextView
-            android:id="@+id/match_time_hours"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Country.Match.TextRecycler"
-            android:contentDescription="@string/text_character_letter"
-            android:text="@string/text_sm_item_match_letter_h"
-
-            />
-
-        <TextView
-            android:id="@+id/match_time_min_high"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Time.Match.TextRecycler"
-            android:background="@drawable/match_time_back"
-            android:contentDescription="@string/text_sm_item_match_date_min"
-            android:text="@string/text_test_sm_item_match_number_1"
-
-            />
-
-        <TextView
-            android:id="@+id/match_time_min_low"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Time.Match.TextRecycler"
-            android:background="@drawable/match_time_back"
-            android:contentDescription="@string/text_sm_item_match_date_min"
-            android:text="@string/text_test_sm_item_match_number_0"
-
-            />
-
-        <TextView
-            android:id="@+id/match_time_mins"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Country.Match.TextRecycler"
-            android:contentDescription="@string/text_character_letter"
-            android:text="@string/text_sm_item_match_letter_m"
-
-            />
-
-
-
-        <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/text_large"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:text="@string/large_text" />
+            android:layout_marginTop="16dp"
+            android:text="@string/large_text"
+            app:layout_constraintTop_toBottomOf="@+id/card_match_start" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_v1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.20" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_v2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_v3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.80" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

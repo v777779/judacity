@@ -10,7 +10,7 @@
     android:id="@+id/constraint_recycler_match_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/match_toolbar_back"
+
     android:paddingEnd="@dimen/margin_normal"
     android:paddingStart="@dimen/margin_normal">
 

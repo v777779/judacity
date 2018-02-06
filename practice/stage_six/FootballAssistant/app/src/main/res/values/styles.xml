@@ -95,10 +95,17 @@
         <item name="android:maxLines">3</item>
     </style>
 
-    <style name="Time.Match.TextRecycler" parent="Match.Light.TextRecycler">
+    <style name="Time.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_time_size</item>
         <item name="android:gravity">center</item>
-        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="Start.Time.Match.TextRecycler" parent="Time.Match.TextRecycler">
+        <item name="android:background">@drawable/match_time_back</item>
+        <item name="android:textColor">@color/match_start_time</item>
+        <item name="android:paddingStart">@dimen/margin_normal</item>
+        <item name="android:paddingEnd">@dimen/margin_normal</item>
     </style>
 
     <style name="Date.Match.TextRecycler" parent="Match.TextRecycler">
@@ -137,10 +144,26 @@
     <style name="StartDate.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_start_date_size</item>
         <item name="android:textColor">@color/match_start_date</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="Letter.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_start_letter_size</item>
 
+    </style>
+
+    <style name="Start.Letter.Match.TextRecycler" parent="Letter.Match.TextRecycler">
+        <item name="android:textColor">@color/match_start_letter</item>
+    </style>
+
+    <style name="Subscript.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_start_subscript_size</item>
+
+    </style>
+
+    <style name="Start.Subscript.Match.TextRecycler" parent="Subscript.Match.TextRecycler">
+        <item name="android:textColor">@color/match_start_subscript</item>
+    </style>
 
     <!--recycler-->
     <style name="Head.Item.TextRecycler" parent="Item.TextRecycler">

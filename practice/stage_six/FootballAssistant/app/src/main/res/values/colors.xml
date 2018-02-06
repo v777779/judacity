@@ -153,7 +153,9 @@
     <color name="color_calendar_accent">#009788</color>
 
     <!--match-->
-    <color name="match_toolbar_back">#00f8f8f8</color>
+    <color name="match_color_primary">#1e7e61</color>
+    <color name="match_toolbar_back">#1e7e61</color>
+
     <color name="match_score_red">#fe0000</color>
     <color name="match_score_red_light">#fe6969</color>
     <color name="match_score_red_dark">#a21818</color>
@@ -192,7 +194,11 @@
     <color name="match_time_back_dark">#939393</color>
 
     <color name="match_start_header">#bdbdbd</color>
-    <color name="match_start_date">#bdbdbd</color>
+    <color name="match_start_date">#3a3a3a</color>
+    <color name="match_start_time">#3a3a3a</color>
+    <color name="match_start_letter">#3a3a3a</color>
+    <color name="match_start_subscript">#bdbdbd</color>
+
 
 
 </resources>

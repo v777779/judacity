@@ -60,6 +60,9 @@
     <string name="text_sm_item_match_letter_h">h</string>
     <string name="text_sm_item_match_letter_m">m</string>
     <string name="text_sm_item_match_start_header">THE MATCH STARTS IN</string>
+    <string name="text_sm_item_match_subscript_days">days</string>
+    <string name="text_sm_item_match_subscript_hours">hours</string>
+    <string name="text_sm_item_match_subscript_mins">minutes</string>
 
 
     <!--messages-->
@@ -117,9 +120,13 @@
 
     <string name="text_sm_item_match_starts_in">The Match Starts In</string>
 
-    <string name="text_sm_item_match_date_day">The Match Date Day</string>
-    <string name="text_sm_item_match_date_hour">The Match Date Hour</string>
-    <string name="text_sm_item_match_date_min">The Match Date Minute</string>
+    <string name="text_sm_item_match_date_days">The Match Date Days</string>
+    <string name="text_sm_item_match_date_hours">The Match Date Hours</string>
+    <string name="text_sm_item_match_date_mins">The Match Date Minutes</string>
+
+    <string name="text_sm_item_match_day_subscript">The Match Date Day Subscript</string>
+    <string name="text_sm_item_match_hour_subscript">The Match Date Hour Subscript</string>
+    <string name="text_sm_item_match_min_subscript">The Match Date Minute Subscript</string>
 
 
     <string name="text_character_letter">The Letter</string>
@@ -169,7 +176,7 @@
     <string name="text_test_sm_item_match_timed">TIMED</string>
     <string name="text_test_sm_item_match_cancelled">CANCELLED</string>
 
-    <string name="text_test_sm_item_match_full_date">19 Jan 2018 17:00</string>
+    <string name="text_test_sm_item_match_date_time">19 Jan 2018 17:00</string>
 
 
     <string name="large_text">
