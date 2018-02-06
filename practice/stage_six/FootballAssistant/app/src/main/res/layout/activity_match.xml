@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_collapseMode="parallax">
-                <include layout="@layout/activity_match_toolbar" />
+                <include layout="@layout/content_match_toolbar" />
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar

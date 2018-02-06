@@ -70,6 +70,9 @@
     <string name="text_sm_item_match_bet_sub_draw">draw</string>
     <string name="text_sm_item_match_bet_sub_loss">loss</string>
 
+    <!--recycler-->
+    <string name="text_sm_item_prev_meeting">Previous Meetings</string>
+
 
     <!--messages-->
     <!--exception-->
@@ -119,12 +122,16 @@
     <string name="text_sm_item_match_score_home">The Score of Home Team</string>
     <string name="text_sm_item_match_score_away">The Score of Away Team</string>
     <string name="text_sm_item_match_status">The Match Status</string>
+    <string name="text_sm_item_match_icon_notification">Notification Icon</string>
+    <string name="text_sm_item_match_icon_notification_back">Notification Icon Circle</string>
+    <string name="text_sm_item_match_icon_favorite">Favorites Icon</string>
+    <string name="text_sm_item_match_icon_favorite_back">Favorite Icon Circle</string>
+
 
 
     <!--start-->
     <string name="text_sm_item_match_date">The Match Date</string>
     <string name="text_sm_item_match_time">The Match Time</string>
-
     <string name="text_sm_item_match_starts_in">The Match Starts In</string>
 
     <string name="text_sm_item_match_date_days">The Match Date Days</string>
@@ -143,6 +150,10 @@
     <string name="text_sm_item_match_bet_sub_wins">The Subscript Win</string>
     <string name="text_sm_item_match_bet_sub_draws">The Subscript Draw</string>
     <string name="text_sm_item_match_bet_sub_losses">The Subscript Loss</string>
+
+    <!--recycler-->
+    <string name="text_sm_item_prev_meetings">Previous Meetings Header</string>
+
 
     <!--titles-->
     <string name="screen_match">Matches</string>
@@ -163,7 +174,7 @@
     <string name="text_test_rm_item_team_home">Eintracht Braunschweig</string>
     <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
     <string name="text_test_rm_item_match_time">19:05</string>
-    <string name="text_test_rm_item_match_date">Sat, 20 Jan 2018</string>
+    <string name="text_test_rm_item_match_date">20/01/18</string>
     <string name="text_test_rm_item_league">Premier League 2017/18</string>
     <string name="text_test_rm_item_league2">Champions League 2017/18</string>
     <string name="text_test_rm_item_league3">League One 2017/18</string>
@@ -186,6 +197,7 @@
     <string name="text_test_sm_item_match_timed">TIMED</string>
     <string name="text_test_sm_item_match_cancelled">CANCELLED</string>
 
+    <string name="text_test_sm_item_match_date">Sat, 20 Jan 2018</string>
     <string name="text_test_sm_item_match_date_time">20 Jan 2018 19:05</string>
 
 

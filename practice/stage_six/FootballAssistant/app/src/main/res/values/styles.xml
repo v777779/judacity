@@ -107,6 +107,7 @@
         <item name="android:textColor">@color/match_start_time</item>
         <item name="android:paddingStart">@dimen/margin_normal</item>
         <item name="android:paddingEnd">@dimen/margin_normal</item>
+        <item name="android:textSize">@dimen/text_sm_item_start_time_size</item>
     </style>
 
     <style name="Date.Match.TextRecycler" parent="Match.TextRecycler">
@@ -193,9 +194,28 @@
         <item name="android:textSize">@dimen/text_sm_item_bet_size</item>
         <item name="android:textColor">@color/match_bet_text</item>
         <item name="android:gravity">center</item>
-
-
     </style>
+
+    <!--recycler-->
+    <style name="Head.Recycler.Match" parent="Match.TextRecycler">
+
+
+        <item name="android:textSize">@dimen/text_sm_recycler_head_size</item>
+        <item name="android:textColor">@color/match_recycler_head_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lines">2</item>
+    </style>
+    <style name="Score.Item.Recycler.Match" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_recycler_score_size</item>
+        <item name="android:textColor">@color/match_recycler_score_text</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="League.Item.Recycler.Match" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_recycler_league_size</item>
+        <item name="android:textColor">@color/match_recycler_league_text</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 
 
 

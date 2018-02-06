@@ -164,6 +164,10 @@
     <color name="match_score_blue_light">#5b89fb</color>
     <color name="match_score_blue_dark">#1c3f96</color>
 
+    <!--ring-->
+    <color name="match_icon_back">#ffffff</color>
+
+    <!--status-->
     <color name="match_status_back">#8a8a8a</color>
     <color name="match_status_back_light">#5a5a5a</color>
     <color name="match_status_back_dark">#5a5a5a</color>
@@ -217,6 +221,10 @@
     <color name="match_bet_away_back">#d4e4da</color>
     <color name="match_bet_away_back_dark">#c5d4cb</color>
     <color name="match_bet_away_text_back">#82ffffff</color>
-
+<!--recycler-->
+    <color name="match_recycler_head_back">#d5d5d5</color>
+    <color name="match_recycler_head_text">#3a3a3a</color>
+    <color name="match_recycler_score_text">#989898</color>
+    <color name="match_recycler_league_text">#989898</color>
 
 </resources>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <!--background solid-->
-    <!--android:backgroundTint=""/> = null-->
+<!--background solid--><!--android:backgroundTint=""/> = null-->
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -114,7 +113,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/text_sm_item_match_date"
-        android:text="@string/text_test_rm_item_match_date"
+        android:text="@string/text_test_sm_item_match_date"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
@@ -152,19 +151,71 @@
         style="@style/Status.Match.TextRecycler"
         android:layout_width="@dimen/text_sm_item_status_back"
         android:layout_height="wrap_content"
-        android:background="@drawable/match_status_back"
-        android:text="@string/text_test_sm_item_match_finished"
-        android:contentDescription="@string/text_sm_item_match_status"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_normal"
+        android:background="@drawable/match_status_back"
+        android:contentDescription="@string/text_sm_item_match_status"
         android:paddingBottom="@dimen/margin_small"
         android:paddingEnd="@dimen/margin_large"
         android:paddingStart="@dimen/margin_large"
         android:paddingTop="@dimen/margin_small"
+        android:text="@string/text_test_sm_item_match_finished"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/text_sm_item_score_away"
         app:layout_constraintStart_toStartOf="@+id/text_sm_item_score_home"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_score_home" />
+
+    <ImageView
+        android:id="@+id/match_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_notifications_none_white"
+        android:contentDescription="@string/text_sm_item_match_icon_notification"
+
+        app:layout_constraintBottom_toBottomOf="@+id/text_sm_item_status"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v5"
+        app:layout_constraintStart_toStartOf="@+id/guide_v5"
+        app:layout_constraintTop_toTopOf="@+id/text_sm_item_status" />
+
+    <ImageView
+        android:id="@+id/match_notification_back"
+        android:layout_width="@dimen/image_sm_item_icon_back"
+        android:layout_height="@dimen/image_sm_item_icon_back"
+        android:contentDescription="@string/text_sm_item_match_icon_notification_back"
+        android:src="@drawable/match_icon_back"
+        app:layout_constraintBottom_toBottomOf="@+id/match_notification"
+        app:layout_constraintEnd_toEndOf="@+id/match_notification"
+        app:layout_constraintStart_toStartOf="@+id/match_notification"
+        app:layout_constraintTop_toTopOf="@+id/match_notification" />
+
+
+    <ImageView
+        android:id="@+id/match_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_star_border_white"
+        android:contentDescription="@string/text_sm_item_match_icon_favorite"
+        app:layout_constraintBottom_toBottomOf="@+id/text_sm_item_status"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v4"
+        app:layout_constraintStart_toStartOf="@+id/guide_v4"
+        app:layout_constraintTop_toTopOf="@+id/text_sm_item_status" />
+
+    <ImageView
+        android:id="@+id/match_favorite_back"
+        android:layout_width="@dimen/image_sm_item_icon_back"
+        android:layout_height="@dimen/image_sm_item_icon_back"
+        android:contentDescription="@string/text_sm_item_match_icon_favorite_back"
+        android:src="@drawable/match_icon_back"
+        app:layout_constraintBottom_toBottomOf="@+id/match_favorite"
+        app:layout_constraintEnd_toEndOf="@+id/match_favorite"
+        app:layout_constraintStart_toStartOf="@+id/match_favorite"
+        app:layout_constraintTop_toTopOf="@+id/match_favorite" />
+
 
 
     <android.support.constraint.Guideline
