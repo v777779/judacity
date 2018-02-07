@@ -5,7 +5,7 @@
     android:id="@+id/constraint_recycler_match_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/match_recycler_card_back_light"
+    android:background="@color/match_recycler_card_back_dark"
     android:paddingEnd="@dimen/margin_normal"
     android:paddingStart="@dimen/margin_normal">
 
@@ -57,7 +57,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginStart="8dp"
         android:contentDescription="@string/text_sm_item_match_league"
-        android:text="@string/text_test_rm_item_league"
+        android:text="@string/text_test_rm_item_league2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -71,12 +71,10 @@
         android:layout_height="wrap_content"
 
         android:layout_marginBottom="2dp"
-        android:layout_marginEnd="8dp"
         android:contentDescription="@string/text_rm_item_match_time"
         android:text="@string/text_test_sm_match_recycler_date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/text_sm_item_league"
-        app:layout_constraintStart_toStartOf="@+id/guide_v5"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_league" />
 
 

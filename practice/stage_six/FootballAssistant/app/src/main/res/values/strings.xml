@@ -128,7 +128,6 @@
     <string name="text_sm_item_match_icon_favorite_back">Favorite Icon Circle</string>
 
 
-
     <!--start-->
     <string name="text_sm_item_match_date">The Match Date</string>
     <string name="text_sm_item_match_time">The Match Time</string>
@@ -153,7 +152,7 @@
 
     <!--recycler-->
     <string name="text_sm_item_prev_meetings">Previous Meetings Header</string>
-
+    <string name="text_sm_item_match_score">The Score of Match</string>
 
     <!--titles-->
     <string name="screen_match">Matches</string>
@@ -186,9 +185,9 @@
 
 
     <string name="text_test_sm_item_match_country">England</string>
-    <string name="text_test_sm_item_match_league">Premier League</string>
     <string name="text_test_sm_item_match_number_1">1</string>
     <string name="text_test_sm_item_match_number_0">0</string>
+
     <string name="text_test_sm_item_match_number_1_9">1.9</string>
     <string name="text_test_sm_item_match_number_3_5">3.5</string>
     <string name="text_test_sm_item_match_number_4_0">4.0</string>
@@ -199,6 +198,8 @@
 
     <string name="text_test_sm_item_match_date">Sat, 20 Jan 2018</string>
     <string name="text_test_sm_item_match_date_time">20 Jan 2018 19:05</string>
+    <string name="text_test_sm_match_recycler_date">20 Jan 2018</string>
+    <string name="text_test_sm_match_recycler_score">1 : 0</string>
 
 
     <string name="large_text">

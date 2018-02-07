@@ -61,9 +61,11 @@
     <dimen name="text_sm_item_bet_back_width">56dp</dimen>
     <dimen name="text_sm_item_bet_back_height">48dp</dimen>
 <!--recycler-->
-    <dimen name="text_sm_recycler_head_size">18sp</dimen>
+    <dimen name="text_sm_recycler_head_size">20sp</dimen>
     <dimen name="text_sm_recycler_score_size">16sp</dimen>
-    <dimen name="text_sm_recycler_league_size">16sp</dimen>
+    <dimen name="text_sm_recycler_league_size">14sp</dimen>
+    <dimen name="text_sm_recycler_date_size">10sp</dimen>
+
 
 
     <!--margins-->

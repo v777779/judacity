@@ -112,8 +112,7 @@
 
     <style name="Date.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_date_size</item>
-
-    </style>
+   </style>
 
 
     <style name="Country.Match.TextRecycler" parent="Match.TextRecycler">
@@ -128,7 +127,6 @@
 
     <style name="Score.Match.TextRecycler" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_score_size</item>
-
     </style>
 
     <style name="Status.Match.TextRecycler" parent="Match.Light.TextRecycler">
@@ -198,8 +196,6 @@
 
     <!--recycler-->
     <style name="Head.Recycler.Match" parent="Match.TextRecycler">
-
-
         <item name="android:textSize">@dimen/text_sm_recycler_head_size</item>
         <item name="android:textColor">@color/match_recycler_head_text</item>
         <item name="android:gravity">center</item>
@@ -209,12 +205,20 @@
         <item name="android:textSize">@dimen/text_sm_recycler_score_size</item>
         <item name="android:textColor">@color/match_recycler_score_text</item>
         <item name="android:gravity">center</item>
+
     </style>
     <style name="League.Item.Recycler.Match" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_recycler_league_size</item>
         <item name="android:textColor">@color/match_recycler_league_text</item>
         <item name="android:gravity">center</item>
+        <item name="android:lines">2</item>
     </style>
+    <style name="Date.Item.Recycler.Match" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_recycler_date_size</item>
+        <item name="android:textColor">@color/match_recycler_date_text</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 
 
 

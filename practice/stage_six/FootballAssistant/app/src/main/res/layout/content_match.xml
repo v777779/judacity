@@ -84,6 +84,26 @@
             <include layout="@layout/content_match_recycler_item" />
         </android.support.v7.widget.CardView>
 
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/card_match_recycler_item2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_match_recycler_item">
+
+            <include layout="@layout/content_match_recycler_item2" />
+        </android.support.v7.widget.CardView>
+
+
         <TextView
             android:id="@+id/text_large"
             android:layout_width="0dp"
@@ -91,7 +111,8 @@
             android:layout_margin="@dimen/text_margin"
             android:layout_marginTop="8dp"
             android:text="@string/large_text"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_recycler_item" />
+            app:layout_constraintTop_toBottomOf="@+id/card_match_recycler_item2"
+            tools:layout_editor_absoluteX="0dp" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v1"

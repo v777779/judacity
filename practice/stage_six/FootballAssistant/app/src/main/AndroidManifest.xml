@@ -36,7 +36,7 @@
         <provider
             android:name=".dbase.FDProvider"
             android:authorities="ru.vpcb.footballassistant"
-            android:exported="false"></provider>
+            android:exported="false"/>
 
         <activity
             android:name=".MatchActivity"
