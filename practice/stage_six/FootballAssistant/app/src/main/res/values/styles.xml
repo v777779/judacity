@@ -86,12 +86,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Left.Match.TextRecycler" parent="Match.TextRecycler">
+    <style name="TeamHome.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:gravity">center</item>
         <item name="android:maxLines">3</item>
     </style>
 
-    <style name="Right.Match.TextRecycler" parent="Match.TextRecycler">
+    <style name="TeamAway.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:gravity">center</item>
         <item name="android:maxLines">3</item>
     </style>

@@ -60,8 +60,10 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
+import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
@@ -92,6 +94,7 @@ public class DetailActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private ImageView mViewPagerBack;
     private TabLayout mTabLayout;
+
 
 
     private BottomNavigationView mBottomNavigation;
@@ -144,30 +147,23 @@ public class DetailActivity extends AppCompatActivity
         mViewPagerBack = findViewById(R.id.image_viewpager_back);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
+
+
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
 
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-            }
-        });
 
-        mFab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
+
 
 // progress
         setupActionBar();
         setupBottomNavigation();
         setupProgress();
         setupReceiver();
+        setupListeners();
+
         if (savedInstanceState == null && mViewPagerData == null) {
             setupViewPager();
         } else {
@@ -334,6 +330,44 @@ public class DetailActivity extends AppCompatActivity
 
 
     // methods
+
+    private void startFragmentLeague() {
+
+    }
+
+    private void startFragmentTeam() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = TeamFragment.newInstance();
+
+        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG,POP_BACK_STACK_INCLUSIVE);
+        fm.beginTransaction()
+                .replace(R.id.container_detail,fragment)
+                .addToBackStack(FRAGMENT_TEAM_TAG)
+                .commit();
+
+    }
+
+    private void setupListeners() {
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+            }
+        });
+
+        mFab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+
+    }
+
+
     private void startMatchActivity() {
         Intent intent = new Intent(this, MatchActivity.class);
         startActivity(intent);

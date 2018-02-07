@@ -61,7 +61,7 @@ public class Config {
     public static final int MAIN_ACTIVITY_INDEFINITE = -1;
 
 
-    public static final int [] IMAGE_IDS = {
+    public static final int[] IMAGE_IDS = {
             R.drawable.back_001,
             R.drawable.back_002,
             R.drawable.back_003,
@@ -87,7 +87,6 @@ public class Config {
     public static final int VIEWPAGER_OFF_SCREEN_PAGE_NUMBER = 3;
 
 
-
     // competitions
     public static final String EMPTY_TEAM_NAME = "-";
     public static final String EMPTY_MATCH_TIME = "-- : --";
@@ -97,11 +96,11 @@ public class Config {
     public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
     public static final int CALENDAR_DIALOG_ACTION_CANCEL = 1;
 
+    // fragment_team
+    public static final String FRAGMENT_TEAM_TAG = "fragment_team";
 
-
-
-
-
+    // fragment_league
+    public static final String FRAGMENT_LEAGUE_TAG = "fragment_league";
 
 
 
