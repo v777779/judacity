@@ -149,20 +149,19 @@
     <TextView
         android:id="@+id/text_sm_item_status"
         style="@style/Status.Match.TextRecycler"
-        android:layout_width="@dimen/text_sm_item_status_back"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_normal"
         android:background="@drawable/match_status_back"
         android:contentDescription="@string/text_sm_item_match_status"
+        android:minEms="@integer/text_sm_item_status_min"
         android:paddingBottom="@dimen/margin_small"
-        android:paddingEnd="@dimen/margin_large"
-        android:paddingStart="@dimen/margin_large"
         android:paddingTop="@dimen/margin_small"
-        android:text="@string/text_test_sm_item_match_finished"
+        android:text="@string/text_test_sm_item_match_timed"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/text_sm_item_score_away"
-        app:layout_constraintStart_toStartOf="@+id/text_sm_item_score_home"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v1"
+        app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_score_home" />
 
     <ImageView

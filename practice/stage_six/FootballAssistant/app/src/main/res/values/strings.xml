@@ -195,6 +195,7 @@
     <string name="text_test_sm_item_match_finished">FINISHED</string>
     <string name="text_test_sm_item_match_timed">TIMED</string>
     <string name="text_test_sm_item_match_cancelled">CANCELLED</string>
+    <string name="text_test_sm_item_match_scheduled">SCHEDULED</string>
 
     <string name="text_test_sm_item_match_date">Sat, 20 Jan 2018</string>
     <string name="text_test_sm_item_match_date_time">20 Jan 2018 19:05</string>

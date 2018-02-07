@@ -43,7 +43,8 @@
     <dimen name="text_sm_item_score_back">36dp</dimen>
     <dimen name="text_sm_item_score_size">20sp</dimen>
     <dimen name="text_sm_item_status_size">14sp</dimen>
-    <dimen name="text_sm_item_status_back">100dp</dimen>
+
+    <dimen name="text_sm_item_status_back">120dp</dimen>
 
     <dimen name="image_sm_item_icon_back">56dp</dimen>
     <dimen name="image_sm_item_icon_inner">20dp</dimen>
