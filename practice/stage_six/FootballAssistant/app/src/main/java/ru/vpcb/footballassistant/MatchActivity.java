@@ -24,10 +24,7 @@ import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 public class MatchActivity extends AppCompatActivity {
 
     private View mViewTeamHome;
-    private View mViewTeamAway;
     private TextView mViewLeague;
-    private View mViewFavorite;
-    private View mViewNotification;
 
 
     @Override
@@ -114,10 +111,7 @@ public class MatchActivity extends AppCompatActivity {
 
     private void setupListeners() {
         mViewTeamHome = findViewById(R.id.image_sm_team_home);
-        mViewTeamAway = findViewById(R.id.image_sm_team_away);
         mViewLeague = findViewById(R.id.text_sm_item_league);
-        mViewFavorite = findViewById(R.id.match_favorite);
-        mViewNotification = findViewById(R.id.match_notification);
 
 
         mViewLeague.setPaintFlags(mViewLeague.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
@@ -134,28 +128,6 @@ public class MatchActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                startFragmentTeam();
                 startActivity(TeamActivity.class);
-            }
-        });
-
-        mViewTeamAway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                startFragmentTeam();
-                startActivity(TeamActivity.class);
-            }
-        });
-
-        mViewFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "Action favorites", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-
-        mViewNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "Action notification", Snackbar.LENGTH_SHORT).show();
             }
         });
 

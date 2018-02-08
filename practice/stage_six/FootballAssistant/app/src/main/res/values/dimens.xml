@@ -50,23 +50,27 @@
     <dimen name="image_sm_item_icon_inner">20dp</dimen>
     <dimen name="image_sm_item_icon_thickness">1dp</dimen>
 
-<!--start-->
+    <!--start-->
     <dimen name="text_sm_item_start_header_size">14sp</dimen>
     <dimen name="text_sm_item_start_date_size">14sp</dimen>
     <dimen name="text_sm_item_start_time_size">32sp</dimen>
     <dimen name="text_sm_item_start_letter_size">18sp</dimen>
     <dimen name="text_sm_item_start_subscript_size">14sp</dimen>
-<!--bet-->
+    <!--bet-->
     <dimen name="text_sm_item_bet_back">36sp</dimen>
     <dimen name="text_sm_item_bet_size">32sp</dimen>
     <dimen name="text_sm_item_bet_back_width">56dp</dimen>
     <dimen name="text_sm_item_bet_back_height">48dp</dimen>
-<!--recycler-->
+    <!--recycler-->
     <dimen name="text_sm_recycler_head_size">20sp</dimen>
     <dimen name="text_sm_recycler_score_size">16sp</dimen>
     <dimen name="text_sm_recycler_league_size">14sp</dimen>
     <dimen name="text_sm_recycler_date_size">10sp</dimen>
 
+    <!--screen team-->
+    <dimen name="image_tm_item_size">64dp</dimen>
+    <dimen name="text_tm_item_team_size">18sp</dimen>
+    <dimen name="margin_bottom_navigation_height">56dp</dimen>
 
 
     <!--margins-->
@@ -95,5 +99,6 @@
     <dimen name="calendar_head_large_text_size">22sp</dimen>
     <dimen name="app_bar_height">280dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
 
 </resources>

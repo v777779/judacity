@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
+    // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
+
+
     private static boolean sIsTimber;
     private static Handler mHandler;
 
