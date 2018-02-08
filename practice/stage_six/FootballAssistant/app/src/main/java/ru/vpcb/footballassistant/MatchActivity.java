@@ -1,6 +1,7 @@
 package ru.vpcb.footballassistant;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -23,7 +25,7 @@ public class MatchActivity extends AppCompatActivity {
 
     private View mViewTeamHome;
     private View mViewTeamAway;
-    private View mViewLeague;
+    private TextView mViewLeague;
     private View mViewFavorite;
     private View mViewNotification;
 
@@ -87,6 +89,13 @@ public class MatchActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void startActivityTeam() {
+        Intent intent = new Intent(this, TeamActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+        startActivity(intent);
+    }
+
+
     private void startFragmentLeague() {
 
     }
@@ -111,10 +120,11 @@ public class MatchActivity extends AppCompatActivity {
         mViewNotification = findViewById(R.id.match_notification);
 
 
+        mViewLeague.setPaintFlags(mViewLeague.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         mViewLeague.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startFragmentLeague();
+//                startFragmentLeague();
                 startActivity(LeagueActivity.class);
             }
         });
@@ -122,7 +132,7 @@ public class MatchActivity extends AppCompatActivity {
         mViewTeamHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startFragmentTeam();
+//                startFragmentTeam();
                 startActivity(TeamActivity.class);
             }
         });
@@ -130,7 +140,7 @@ public class MatchActivity extends AppCompatActivity {
         mViewTeamAway.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startFragmentTeam();
+//                startFragmentTeam();
                 startActivity(TeamActivity.class);
             }
         });

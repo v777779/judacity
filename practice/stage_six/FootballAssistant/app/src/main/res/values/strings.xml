@@ -63,6 +63,9 @@
     <string name="text_sm_item_match_subscript_days">days</string>
     <string name="text_sm_item_match_subscript_hours">hours</string>
     <string name="text_sm_item_match_subscript_mins">minutes</string>
+
+    <string name="text_sm_item_match_league_underline"><u>%1$s</u></string>
+
     <!--bet-->
     <string name="text_sm_item_match_letter_w">W</string>
     <string name="text_sm_item_match_letter_d">D</string>
@@ -159,6 +162,8 @@
 
     <!--titles-->
     <string name="screen_match">Matches</string>
+    <string name="screen_team">Team</string>
+
 
 
     <!--competition-->

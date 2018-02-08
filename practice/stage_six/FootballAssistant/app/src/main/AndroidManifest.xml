@@ -51,8 +51,12 @@
 <!--temp-->
         <activity
             android:name=".TeamActivity"
+            android:parentActivityName=".MatchActivity"
             android:label="@string/title_activity_team"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.vpcb.footballassistant.MatchActivity" />
         </activity>
 
         <activity

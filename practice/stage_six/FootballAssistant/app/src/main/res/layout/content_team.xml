@@ -1,138 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="top|center_horizontal"
 
+    android:background="@color/rm_view_border_back"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ru.vpcb.footballassistant.MatchActivity">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+    >
+
+    <!--background transparent-->
+    <ImageView
+        android:id="@+id/image_viewpager_back"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.25"
+        android:scaleType="centerCrop"
+        android:src="@drawable/back_003"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/toolbar_sliding_tabs"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/sliding_tabs_height"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabBackground="@drawable/sliding_tabs_back"
+        app:tabContentStart="@dimen/sliding_tabs_start"
+        app:tabGravity="center"
+        app:tabIndicatorColor="@color/sliding_tab_slider"
+        app:tabIndicatorHeight="@dimen/sliding_tabs_slider"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/sliding_tab_text_selected"
+        app:tabTextAppearance="@style/TextTab"
+        app:tabTextColor="@color/sliding_tab_text"
+
+        >
+        <!--android:elevation="8dp"-->
+    </android.support.design.widget.TabLayout>
+
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_h1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/match_back"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.0" />
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/card_match_start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_h2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.89" />
 
-            <include layout="@layout/content_match_start" />
-        </android.support.v7.widget.CardView>
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0" />
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/card_match_bet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="8dp"
-            app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_start">
-
-            <include layout="@layout/content_match_bet" />
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/card_match_recycler_head"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="8dp"
-            app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_bet">
-
-            <include layout="@layout/content_match_recycler_head" />
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/card_match_recycler_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_recycler_head">
-
-            <include layout="@layout/content_match_recycler_item" />
-        </android.support.v7.widget.CardView>
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="1" />
 
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/card_match_recycler_item2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_recycler_item">
+    <!--background solid-->
+    <!--<ImageView/> = null-->
 
-            <include layout="@layout/content_match_recycler_item2" />
-        </android.support.v7.widget.CardView>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_main"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="@dimen/margin_small"
+
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_sliding_tabs">
+
+    </android.support.v4.view.ViewPager>
+
+    <ProgressBar
+        android:id="@+id/progress_value"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_height="@dimen/progress_bar_size"
+        android:indeterminate="false"
+        android:indeterminateDrawable="@drawable/progress_ring"
+        android:indeterminateOnly="false"
+        android:progress="@string/progress_constant"
+        android:progressDrawable="@drawable/progress_round"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
 
-        <TextView
-            android:id="@+id/text_large"
-            android:layout_width="0dp"
-            android:layout_height="1791dp"
-            android:layout_margin="@dimen/text_margin"
-            android:layout_marginTop="8dp"
-            android:text="@string/large_text"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_recycler_item2"
-            tools:layout_editor_absoluteX="0dp" />
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:background="@color/rm_navigation_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation"
+        />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_v1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.20" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_v2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.50" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_v3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.80" />
-    </android.support.constraint.ConstraintLayout>
-</android.support.v4.widget.NestedScrollView>
+</android.support.constraint.ConstraintLayout>

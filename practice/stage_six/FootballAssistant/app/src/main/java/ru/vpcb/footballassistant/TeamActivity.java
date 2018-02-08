@@ -70,7 +70,7 @@ public class TeamActivity extends AppCompatActivity
     private static Handler mHandler;
 
     private FloatingActionButton mFab;
-    private FloatingActionButton mFab2;
+
 
     private ProgressBar mProgressBar;
     private ProgressBar mProgressValue;
@@ -81,7 +81,6 @@ public class TeamActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private ImageView mViewPagerBack;
     private TabLayout mTabLayout;
-
 
 
     private BottomNavigationView mBottomNavigation;
@@ -112,7 +111,7 @@ public class TeamActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_team);
 
         // log
         if (!sIsTimber) {
@@ -126,7 +125,6 @@ public class TeamActivity extends AppCompatActivity
 
 // bind
         mFab = findViewById(R.id.fab);
-        mFab2 = findViewById(R.id.fab2);
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
         mBottomNavigation = findViewById(R.id.bottom_navigation);
@@ -135,13 +133,9 @@ public class TeamActivity extends AppCompatActivity
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
 
-
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
-
-
-
 
 
 // progress
@@ -161,8 +155,7 @@ public class TeamActivity extends AppCompatActivity
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
 
-
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
@@ -176,7 +169,7 @@ public class TeamActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_match, menu);
         return true;
     }
 
@@ -184,12 +177,14 @@ public class TeamActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
+        if (id == android.R.id.home) {
+            onBackPressed();
+
             return true;
         }
-        if (id == R.id.action_calendar) {
-            startCalendar();
+        if (id == R.id.action_share) {
+            Snackbar.make(getWindow().getDecorView(), "Action Share",
+                    Snackbar.LENGTH_SHORT).show();
             return true;
         }
 
@@ -326,9 +321,9 @@ public class TeamActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = TeamFragment.newInstance();
 
-        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG,POP_BACK_STACK_INCLUSIVE);
+        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
-                .replace(R.id.container_detail,fragment)
+                .replace(R.id.container_detail, fragment)
                 .addToBackStack(FRAGMENT_TEAM_TAG)
                 .commit();
 
@@ -342,15 +337,6 @@ public class TeamActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
             }
         });
-
-        mFab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
 
     }
 
@@ -702,13 +688,15 @@ public class TeamActivity extends AppCompatActivity
 
     private void setupActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.screen_match));
+        toolbar.setTitle(getString(R.string.screen_team));
         setSupportActionBar(toolbar);
-
-        mToolbarLogo.setVisibility(View.INVISIBLE);
+        if (mToolbarLogo != null) {
+            mToolbarLogo.setVisibility(View.INVISIBLE);
+        }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("");
+            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.show();
         }
 
