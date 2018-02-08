@@ -416,7 +416,7 @@ public class TeamActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_team, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_team_container);
 
-        RecyclerTeamAdapter adapter = new RecyclerTeamAdapter(this, list, mMap);
+        RecyclerTeamAdapter adapter = new RecyclerTeamAdapter(this, list, mMap, mMapTeams);
         adapter.setHasStableIds(true); // optimization, bindView() not called for the same position
         recyclerView.setAdapter(adapter);
 
@@ -777,7 +777,7 @@ public class TeamActivity extends AppCompatActivity
             try {
                 mMap = FDUtils.readCompetitions(cursors[0][0]);
 //                mMapTeamKeys = FDUtils.readCompetitionTeams(cursors[0][1]);
-//                mMapTeams = FDUtils.readTeams(cursors[0][2]);
+                mMapTeams = FDUtils.readTeams(cursors[0][2]);
 //                mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
 //                mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
                 return null;

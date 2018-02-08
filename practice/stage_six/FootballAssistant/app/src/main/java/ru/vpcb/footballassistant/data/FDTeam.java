@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
 
 
@@ -91,6 +92,7 @@ public class FDTeam {
     }
 
     public String getName() {
+        if(name == null || name.isEmpty())return EMPTY_TEAM_NAME;
         return name;
     }
 

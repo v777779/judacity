@@ -227,6 +227,7 @@
     <color name="match_recycler_score_text">#3a3a3a</color>
     <color name="match_recycler_league_text">#3a3a3a</color>
     <color name="match_recycler_date_text">#989898</color>
+    <color name="match_recycler_team_text">#3a3a3a</color>
 
     <color name="match_recycler_head_back">#efeeee</color>
     <color name="match_recycler_head_back_light">#efeeee</color>

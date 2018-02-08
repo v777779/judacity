@@ -1102,7 +1102,7 @@ public class FDUtils {
         for (FDFixture fixture : fixtures.getFixtures()) {
             try {
                 fixture.setId();
-                fixture.setCompetitionId();
+
                 fixture.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;
@@ -1152,7 +1152,6 @@ public class FDUtils {
         for (FDFixture fixture : fixtures.getFixtures()) {
             try {
                 fixture.setId();
-                fixture.setCompetitionId();
                 fixture.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;

@@ -101,6 +101,7 @@
     <string name="calendar_set_date_exception">Calendar set date exception: %1$s</string>
     <string name="viewpager_tab_exception">Tab Layout Titles exception: %1$s</string>
 
+    <string name="recycler_team_image_exception">RecyclerView Team Image and Name set exception: %1$s</string>
 
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>

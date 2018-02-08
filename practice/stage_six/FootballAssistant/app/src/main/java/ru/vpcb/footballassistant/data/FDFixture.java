@@ -61,6 +61,8 @@ public class FDFixture {
     private int id;
     private Date lastRefresh;
     private int competitionId;
+    private int homeTeamId;
+    private int awayTeamId;
 
 
     public FDFixture() {
@@ -164,19 +166,24 @@ public class FDFixture {
 
 
     public void setId() throws NullPointerException, NumberFormatException {
+// id fixture
         String href = links.self.getHref();
-        id = Integer.valueOf(href.replaceAll(FD_REGEX_FIXTURES, ""));
+        id = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
         if (id == -1) throw new NumberFormatException();
+// id competition
+        href = links.competition.getHref();
+        competitionId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+// id teamHome
+        href = links.homeTeam.getHref();
+        homeTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+// id teamAway
+        href = links.awayTeam.getHref();
+        awayTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+
     }
 
     public void setLastRefresh(long lastRefresh) {
         this.lastRefresh = new Date(lastRefresh);
-    }
-
-    public void setCompetitionId() throws NullPointerException, NumberFormatException {
-        String href = links.competition.getHref();
-        competitionId = Integer.valueOf(href.replaceAll(FD_REGEX_COMPETITIONS, ""));
-        if (competitionId == -1) throw new NumberFormatException();
     }
 
     public void setCompetitionId(int competitionId) {
@@ -219,6 +226,14 @@ public class FDFixture {
             return EMPTY_TEAM_NAME;
         }
         return awayTeamName;
+    }
+
+    public int getHomeTeamId() {
+        return homeTeamId;
+    }
+
+    public int getAwayTeamId() {
+        return awayTeamId;
     }
 
     public FDResult getResult() {

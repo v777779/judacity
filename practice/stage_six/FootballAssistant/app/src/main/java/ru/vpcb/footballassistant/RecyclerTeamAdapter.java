@@ -4,6 +4,12 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +18,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.StreamEncoder;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
+import com.caverock.androidsvg.SVG;
+import com.squareup.picasso.Picasso;
+
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +36,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.utils.Config;
-import ru.vpcb.footballassistant.utils.Utils;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
 
@@ -58,9 +73,12 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
      * Resources of activity
      */
     private Resources mRes;
+// test!!!
+    private int counter = 0;
 
     private List<FDFixture> mList;
     private Map<Integer, FDCompetition> mMap;
+    private Map<Integer, FDTeam> mMapTeam;
 
 
     /**
@@ -68,11 +86,13 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
      *
      * @param context Context of calling activity
      */
-    public RecyclerTeamAdapter(Context context, List<FDFixture> list, Map<Integer, FDCompetition> map) {
+    public RecyclerTeamAdapter(Context context, List<FDFixture> list,
+                               Map<Integer, FDCompetition> map, Map<Integer, FDTeam> mapTeam) {
         mContext = context;
         mRes = context.getResources();
         mList = list;
         mMap = map;
+        mMapTeam = mapTeam;
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
@@ -173,14 +193,21 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
         @BindView(R.id.text_tm_item_score)
         TextView mTextScore;
 
-        @BindView(R.id.text_tm_item_league)
-        TextView mTextLeague;
 
         @BindView(R.id.image_tm_team_home)
         ImageView mImageHome;
 
         @BindView(R.id.image_tm_team_away)
         ImageView mImageAway;
+
+        @BindView(R.id.text_tm_item_home)
+        TextView mTextHome;
+
+        @BindView(R.id.text_tm_item_away)
+        TextView mTextAway;
+
+        @BindView(R.id.text_tm_item_league)
+        TextView mTextLeague;
 
         @BindView(R.id.text_tm_item_date)
         TextView mTextDate;
@@ -225,42 +252,88 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
             }
 
             String score = fixture.getMatchScore();
-            int homeTeamImageId = Utils.getTeamIconId(position);
-            int awayTeamImageId = Utils.getTeamIconId(position);
             String dateTime = fixture.getMatchDate();
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {
                 layout.setBackgroundColor(mColorDark);
             }
 
-            mImageHome.setImageResource(homeTeamImageId);
-            mImageAway.setImageResource(awayTeamImageId);
+//            mImageHome.setImageResource(homeTeamImageId);
+//            mImageAway.setImageResource(awayTeamImageId);
+
             mTextScore.setText(score);
             mTextLeague.setText(league);
             mTextDate.setText(dateTime.substring(6));
             mTextStatus.setText(fixture.getStatus());
+            mTextHome.setText(fixture.getHomeTeamName());
+            mTextAway.setText(fixture.getAwayTeamName());
 
-//            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
-//
-//            Glide.with(mContext)
-//                    .load(imageURL)
-//                    .listener(new RequestListener<Drawable>() {
-//                        @Override
-//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                            mProgressBarImage.setVisibility(View.INVISIBLE);
-//                            return false;
-//                        }
-//                    })
-//                    .into(mItemImage);
-//            mItemImage.setTransitionName(mRes.getString(R.string.transition_image, getItemId()));
-//            mItemTitle.setTransitionName(mRes.getString(R.string.transition_title, getItemId()));
+            setTeamImage(fixture.getHomeTeamId(), mImageHome);
+            setTeamImage(fixture.getAwayTeamId(), mImageAway);
+
+
         }
 
+        private void setTeamImage(int id, ImageView imageView) {
+            if (mMapTeam == null) return;
+            FDTeam team = mMapTeam.get(id);
+            if (team == null) return;
+
+            String imageURL = team.getCrestURL();
+            if (imageURL == null || imageURL.isEmpty()) return;
+//        Glide.with(mContext)
+//                .load(imageURL)
+//                .apply(new RequestOptions()
+//                        .placeholder(R.drawable.flag_001)
+//                        .error(R.drawable.flag_002)
+//                )
+//                .into(imageView);
+
+//        Picasso.with(mContext).load(imageURL)
+//                .error(R.drawable.flag_001)
+//                .placeholder(R.drawable.flag_002)
+//                .into(imageView);
+
+            getBuilder(imageURL);
+        }
+
+
+        private void getBuilder(String imageURL) {
+            counter++;
+            if(counter > 1) return;
+            Glide.with(mContext)
+                    .load(imageURL)
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.flag_001)
+                            .error(R.drawable.flag_002))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e,
+                                                    Object model,
+                                                    Target<Drawable> target,
+                                                    boolean isFirstResource) {
+
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource,
+                                                       Object model,
+                                                       Target<Drawable> target,
+                                                       DataSource dataSource,
+                                                       boolean isFirstResource) {
+
+
+
+
+                            return false;
+                        }
+                    })
+                    .transition(withCrossFade())
+                    .into(mImageHome);
+
+
+        }
 
     }
 

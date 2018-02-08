@@ -65,8 +65,9 @@
     <!--recycler-->
     <dimen name="text_sm_recycler_head_size">20sp</dimen>
     <dimen name="text_sm_recycler_score_size">16sp</dimen>
-    <dimen name="text_sm_recycler_league_size">16sp</dimen>
+    <dimen name="text_sm_recycler_league_size">14sp</dimen>
     <dimen name="text_sm_recycler_date_size">10sp</dimen>
+    <dimen name="text_sm_recycler_team_size">10sp</dimen>
 
     <!--screen team-->
     <dimen name="image_tm_item_size">64dp</dimen>
