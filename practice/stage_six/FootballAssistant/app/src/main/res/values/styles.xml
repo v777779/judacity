@@ -42,22 +42,30 @@
         <item name="android:textStyle">normal</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/rm_text_color_dark</item>
-        <item name="android:textSize">@dimen/text_rm_item_size</item>
+
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="Date.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_date_size</item>
+    </style>
+
+
     <style name="Left.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_team_size</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLines">2</item>
+
     </style>
 
     <style name="Right.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_team_size</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLines">2</item>
     </style>
 
-    <style name="Large.Item.TextRecycler" parent="Item.TextRecycler">
-        <item name="android:textSize">@dimen/text_rm_item_large_size</item>
+    <style name="Time.Item.TextRecycler" parent="Item.TextRecycler">
+        <item name="android:textSize">@dimen/text_rm_item_time_size</item>
         <item name="android:gravity">center</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">bold</item>

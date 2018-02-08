@@ -15,8 +15,9 @@
 
     <!--recycler_match-->
     <dimen name="image_rm_item_size">28dp</dimen>
-    <dimen name="text_rm_item_size">12sp</dimen>
-    <dimen name="text_rm_item_large_size">24sp</dimen>
+    <dimen name="text_rm_item_date_size">10sp</dimen>
+    <dimen name="text_rm_item_team_size">12sp</dimen>
+    <dimen name="text_rm_item_time_size">24sp</dimen>
     <dimen name="text_rm_item_country_size">14sp</dimen>
     <dimen name="text_rm_item_league_size">16sp</dimen>
     <dimen name="icon_rm_item_size">24dp</dimen>

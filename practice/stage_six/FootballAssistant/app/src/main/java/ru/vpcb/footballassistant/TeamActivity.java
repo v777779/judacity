@@ -480,15 +480,16 @@ public class TeamActivity extends AppCompatActivity
             if (next == current) current = list.size();  // index of current day records
         }
 
-
         List<View> recyclers = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
-
-        for (List<FDFixture> listFixtures : list) {
-            recyclers.add(getRecycler(listFixtures));
-            titles.add(getRecyclerTitle(listFixtures));
+        recyclers.add(getRecycler(list.get(current)));
+        if (current < list.size() - 1) {
+            current++;
         }
+        recyclers.add(getRecycler(list.get(current + 1)));
+        titles.add("Matches");
+        titles.add("Players");
 
         ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, list, map);
         return viewPagerData;
@@ -570,98 +571,20 @@ public class TeamActivity extends AppCompatActivity
 // test!!!  update mTabLayout workaround
 // TODO Check workaround of TabLayout update for better solution
 
-    private void updateTabLayout(ViewPagerData data, ViewPagerData last) {
-        try {
-
-            List<String> titles = data.getTitles();
-            int lastSize = last.getTitles().size();
-
-            int size = data.getTitles().size();
-            if (size < lastSize) {
-                for (int i = size; i < lastSize; i++) {
-                    mTabLayout.removeTabAt(size);
-                }
-            } else {
-                for (int i = lastSize; i < size; i++) {
-                    mTabLayout.addTab(mTabLayout.newTab());
-                }
-            }
-            for (int i = 0; i < size; i++) {
-                mTabLayout.getTabAt(i).setText(titles.get(i));
-            }
-        } catch (NullPointerException e) {
-            Timber.d(getString(R.string.viewpager_tab_exception, e.getMessage()));
-        }
-    }
 
     private void updateViewPager(final ViewPagerData data) {
         if (mViewPager == null || data == null) return;
         int pos = mViewPager.getCurrentItem();
 
-
+// test!!!
         if (pos == 0) {
             pos = data.mPos;                    // current day
-        } else {
-
-// test!!!
-// TODO CHECK MAP  AFTER deletion  all works but Map
-//            data.getList().remove(210);
-//            data.getList().remove(211);
-//            data.getList().remove(212);
-//            data.getRecyclers().remove(210);
-//            data.getRecyclers().remove(211);
-//            data.getRecyclers().remove(212);
-//            data.getTitles().remove(210);
-//            data.getTitles().remove(211);
-//            data.getTitles().remove(212);
-//            List<Long> keys = new ArrayList<>(data.getMap().keySet());
-//            data.getMap().remove(keys.get(210));
-//            data.getMap().remove(keys.get(212));
-//            data.getMap().remove(keys.get(214));
-// end test!!!
-
-            updateTabLayout(data, mViewPagerData);
-            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
         }
         mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(pos);
 
     }
-
-//    private void setupViewPager2() {
-//        if (mViewPagerList == null) return;
-//
-//        List<View> recyclers = new ArrayList<>();
-//        List<String> titles = new ArrayList<>();
-//
-//
-//        for (List<FDFixture> list : mViewPagerList) {
-//            recyclers.add(getRecycler(list));
-//            titles.add(getRecyclerTitle(list));
-//        }
-//
-//        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers, titles);
-//        mViewPager.setAdapter(listPagerAdapter);
-//        mViewPager.setCurrentItem(mViewPagerPos, true);
-//        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//        mTabLayout.setupWithViewPager(mViewPager);
-//    }
 
 
     private int checkProgress() {

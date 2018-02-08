@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Calendar auto select Date и выбор по dismiss, double click или OK
 
 
-
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
 
 
