@@ -248,16 +248,22 @@
     <color name="player_recycler_card_back_dark">#f8fbed</color>
 
     <color name="player_recycler_text">#3a3a3a</color>
-    <color name="player_recycler_position_text">#989898</color>
+    <color name="player_recycler_position_text">#5a5a5a</color>
     <color name="player_recycler_sub_text">#989898</color>
+    <color name="player_recycler_national_text">#838282</color>
 
-    <color name="player_position_back">#a0edecec</color>
-    <color name="player_position_back_light">#a0d3d2d2</color>
-    <color name="player_position_back_dark">#a0d3d2d2</color>
+    <color name="player_position_back">#80f2f2f2</color>
+    <color name="player_position_back_light">#80dbdbdb</color>
+    <color name="player_position_back_dark">#80dbdbdb</color>
 
-    <color name="player_number_back">#a0ffffff</color>
-    <color name="player_number_back_light">#a0f2f2f2</color>
-    <color name="player_number_back_dark">#a0f2f2f2</color>
+    <!--<color name="player_number_back">#ffffffff</color>-->
+    <!--<color name="player_number_back_light">#d0c0af</color>-->
+    <!--<color name="player_number_back_dark">#a7a386</color>-->
+
+    <color name="player_number_back">#ffffffff</color>
+    <color name="player_number_back_light">#afc2d0</color>
+    <color name="player_number_back_dark">#80bbc7</color>
+
 
 
 </resources>

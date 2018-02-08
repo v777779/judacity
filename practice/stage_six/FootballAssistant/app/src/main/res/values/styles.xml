@@ -251,15 +251,22 @@
 
     <style name="Name.Item.Player" parent="Player.TextRecycler">
         <item name="android:textSize">@dimen/text_tm_item_player_name_size</item>
-        <!--<item name="android:fontFamily">sans-serif-light</item>-->
-        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+        <!--<item name="android:lines">2</item>-->
+
     </style>
 
     <style name="Position.Item.Player" parent="Player.TextRecycler">
         <item name="android:textSize">@dimen/text_tm_item_player_position_size</item>
         <item name="android:textColor">@color/player_recycler_position_text</item>
         <item name="android:background">@drawable/player_position_back</item>
-        <item name="android:minEms">@integer/text_sm_item_status_min</item>
+        <item name="android:minEms">@integer/text_tm_item_position_min</item>
+        <item name="android:paddingTop">@dimen/margin_micro</item>
+        <item name="android:paddingBottom">@dimen/margin_micro</item>
+        <!--<item name="android:fontFamily">sans-serif-light</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
+
     </style>
 
     <style name="Number.Item.Player" parent="Player.TextRecycler">
@@ -272,13 +279,23 @@
 
     <style name="Date.Item.Player" parent="Player.TextRecycler">
         <item name="android:textSize">@dimen/text_tm_item_player_date_size</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+
     </style>
 
-    <style name="Sub.Item.Player" parent="Player.TextRecycler">
+       <style name="Sub.Item.Player" parent="Player.TextRecycler">
         <item name="android:textSize">@dimen/text_tm_item_player_sub_size</item>
         <item name="android:textColor">@color/player_recycler_sub_text</item>
     </style>
 
+    <style name="National.Item.Player" parent="Player.TextRecycler">
+        <item name="android:textSize">@dimen/text_tm_item_player_national_size</item>
+        <item name="android:textColor">@color/player_recycler_national_text</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
 
 
 

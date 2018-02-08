@@ -94,9 +94,11 @@ public class Config {
 
     // competitions
     public static final String EMPTY_TEAM_NAME = "-";
+    public static final String EMPTY_TWO_DASH = "--";
     public static final String EMPTY_LONG_DASH = "\u2014";
     public static final String EMPTY_MATCH_TIME = "-- : --";
     public static final String EMPTY_FIXTURE_DATE = "--/--/--";
+    public static final String EMPTY_PLAYER_DATE = "--.--.--";
     public static final String EMPTY_MATCH_SCORE = "- : -";
 
     //detail activity

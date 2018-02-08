@@ -3,7 +3,17 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import ru.vpcb.footballassistant.utils.FootballUtils;
+
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_PLAYER_DATE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_TWO_DASH;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -41,30 +51,37 @@ public class FDPlayer {
     private String marketValue;
 
     public String getName() {
+        if (name == null || name.isEmpty()) return EMPTY_LONG_DASH;
         return name;
     }
 
     public String getPosition() {
+        if (position == null || position.isEmpty()) return EMPTY_LONG_DASH;
         return position;
     }
 
-    public int getJerseyNumber() {
-        return jerseyNumber;
+    public String getJerseyNumber() {
+        if (jerseyNumber <= 0) return EMPTY_TWO_DASH;
+        return String.format(Locale.ENGLISH, "%02d", jerseyNumber);
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getDateOfBirth() {
+        if (dateOfBirth == null) return EMPTY_PLAYER_DATE;
+        return FootballUtils.formatStringDate(dateOfBirth,".");
     }
 
     public String getNationality() {
+        if (nationality == null || nationality.isEmpty()) return EMPTY_LONG_DASH;
         return nationality;
     }
 
-    public Date getContractUntil() {
-        return contractUntil;
+    public String getContractUntil() {
+        if (contractUntil == null) return EMPTY_PLAYER_DATE;
+        return FootballUtils.formatStringDate(contractUntil,".");
     }
 
     public String getMarketValue() {
+        if(marketValue == null || marketValue.isEmpty()) return EMPTY_LONG_DASH;
         return marketValue;
     }
 }

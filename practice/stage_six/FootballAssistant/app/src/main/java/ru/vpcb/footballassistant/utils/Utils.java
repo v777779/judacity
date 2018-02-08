@@ -48,7 +48,6 @@ public class Utils {
     }
 
     public static int getFlagIconId(int position) {
-
         return flagIds[position % flagIds.length];
     }
 

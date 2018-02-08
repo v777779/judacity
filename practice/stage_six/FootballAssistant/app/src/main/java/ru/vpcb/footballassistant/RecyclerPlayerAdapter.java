@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,10 +110,10 @@ public class RecyclerPlayerAdapter extends RecyclerView.Adapter<RecyclerPlayerAd
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layoutId = R.layout.recycler_team_item;
+        int layoutId = R.layout.recycler_player_item;
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
                 .inflate(layoutId, parent, false);
-//        view.getLayoutParams().height = mSpan.getHeight();
+
         return new ViewHolder(view);
     }
 
@@ -166,23 +167,27 @@ public class RecyclerPlayerAdapter extends RecyclerView.Adapter<RecyclerPlayerAd
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.text_tm_item_score)
-        TextView mTextScore;
+//      @BindView(R.id.image_tm_player_country)
+//      ImageView mImageCountry;
+        @BindView(R.id.text_tm_item_national)
+        TextView mTextNational;
 
-        @BindView(R.id.text_tm_item_league)
-        TextView mTextLeague;
+        @BindView(R.id.text_tm_item_name)
+        TextView mTextName;
 
-        @BindView(R.id.image_tm_team_home)
-        ImageView mImageHome;
 
-        @BindView(R.id.image_tm_team_away)
-        ImageView mImageAway;
+        @BindView(R.id.text_tm_item_position)
+        TextView mTextPosition;
 
-        @BindView(R.id.text_tm_item_date)
-        TextView mTextDate;
+        @BindView(R.id.text_tm_item_number)
+        TextView mTextNumber;
 
-        @BindView(R.id.text_tm_item_status)
-        TextView mTextStatus;
+        @BindView(R.id.text_tm_item_bitrhday)
+        TextView mTextBirthday;
+
+        @BindView(R.id.text_tm_item_contract)
+        TextView mTextContract;
+
 
         @BindView(R.id.constraint_recycler_match_item)
         View layout;
@@ -199,7 +204,7 @@ public class RecyclerPlayerAdapter extends RecyclerView.Adapter<RecyclerPlayerAd
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            mColorDark = ContextCompat.getColor(mContext, R.color.match_recycler_card_back_dark);
+            mColorDark = ContextCompat.getColor(mContext, R.color.player_recycler_card_back_dark);
         }
 
         /**
@@ -210,24 +215,22 @@ public class RecyclerPlayerAdapter extends RecyclerView.Adapter<RecyclerPlayerAd
          */
         private void fill(int position) {
             if (mList == null || mList.get(position) == null) return;
-
             FDPlayer player = mList.get(position);
-// test!!!
-            String league = mContext.getString(Utils.getLeagueId(position));
 
-            int homeTeamImageId = Utils.getTeamIconId(position);
-            int awayTeamImageId = Utils.getTeamIconId(position);
-            String dateTime = player.getDateOfBirth().toString();
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {
                 layout.setBackgroundColor(mColorDark);
             }
 
-            mImageHome.setImageResource(homeTeamImageId);
-            mImageAway.setImageResource(awayTeamImageId);
+            String national = String.format(Locale.ENGLISH,"[ %s ]",
+                    player.getNationality().toUpperCase());
 
-            mTextLeague.setText(league);
-            mTextDate.setText(dateTime.substring(6));
+            mTextName.setText(player.getName());
+            mTextPosition.setText(player.getPosition());
+            mTextNational.setText(national);
+            mTextNumber.setText(player.getJerseyNumber());
+            mTextBirthday.setText(player.getDateOfBirth());
+            mTextContract.setText(player.getContractUntil());
 
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 //

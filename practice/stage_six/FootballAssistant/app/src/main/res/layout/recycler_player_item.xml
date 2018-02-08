@@ -21,20 +21,6 @@
         android:paddingEnd="@dimen/margin_normal"
         android:paddingStart="@dimen/margin_normal">
 
-        <ImageView
-            android:id="@+id/image_tm_player_country"
-            android:layout_width="@dimen/image_rm_item_size"
-            android:layout_height="@dimen/image_rm_item_size"
-            android:layout_marginBottom="16dp"
-
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:contentDescription="@string/image_tm_item_player_flag_dsc"
-            android:src="@drawable/flag_001"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/text_tm_item_name"
             style="@style/Name.Item.Player"
@@ -45,9 +31,8 @@
             android:layout_marginTop="8dp"
             android:contentDescription="@string/text_tm_item_player_name_dsc"
             android:text="@string/text_test_tm_item_player_name"
-            app:layout_constraintBottom_toTopOf="@+id/text_tm_item_position"
-            app:layout_constraintEnd_toStartOf="@+id/guide_v4"
-            app:layout_constraintStart_toEndOf="@+id/image_tm_player_country"
+            app:layout_constraintEnd_toEndOf="@+id/text_tm_item_position"
+            app:layout_constraintStart_toStartOf="@+id/guide_v2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -55,38 +40,38 @@
             style="@style/Position.Item.Player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@string/text_tm_item_player_position_dsc"
             android:text="@string/text_test_tm_item_player_position"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/text_tm_item_name"
-            app:layout_constraintStart_toStartOf="@+id/text_tm_item_name" />
+            app:layout_constraintStart_toStartOf="@+id/guide_v2" />
 
         <TextView
             android:id="@+id/text_tm_item_number"
             style="@style/Number.Item.Player"
             android:layout_width="@dimen/text_tm_item_player_number_width"
             android:layout_height="@dimen/text_tm_item_player_number_width"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/text_tm_item_player_number_dsc"
             android:text="@string/text_test_tm_item_player_number"
-            app:layout_constraintBottom_toBottomOf="@+id/text_tm_item_name"
-            app:layout_constraintEnd_toStartOf="@+id/guide_v5"
-            app:layout_constraintStart_toStartOf="@+id/guide_v4"
-            app:layout_constraintTop_toTopOf="@+id/text_tm_item_name" />
+            app:layout_constraintBottom_toBottomOf="@+id/text_tm_item_sub_position"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_tm_item_bitrhday"
             style="@style/Date.Item.Player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
             android:contentDescription="@string/text_tm_item_player_birthday_dsc"
             android:text="@string/text_test_tm_item_player_birthday"
-            app:layout_constraintBottom_toBottomOf="@+id/text_tm_item_number"
-            app:layout_constraintEnd_toStartOf="@+id/guide_v1"
-            app:layout_constraintStart_toStartOf="@+id/guide_v5"
-            app:layout_constraintTop_toTopOf="@+id/text_tm_item_number" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guide_v1"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_tm_item_contract"
@@ -95,10 +80,25 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/text_tm_item_player_contract_dsc"
             android:text="@string/text_test_tm_item_player_contract"
-            app:layout_constraintBottom_toBottomOf="@+id/text_tm_item_bitrhday"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guide_v1"
-            app:layout_constraintTop_toTopOf="@+id/text_tm_item_bitrhday" />
+            app:layout_constraintTop_toTopOf="@+id/guide_h1" />
+
+        <TextView
+            android:id="@+id/text_tm_item_national"
+            style="@style/National.Item.Player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:contentDescription="@string/text_tm_item_player_sub_position_dsc"
+            android:text="(North Ireland)"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/text_tm_item_name"
+            app:layout_constraintStart_toStartOf="@+id/text_tm_item_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_tm_item_name" />
 
         <TextView
             android:id="@+id/text_tm_item_sub_position"
@@ -110,8 +110,8 @@
             android:text="@string/text_tm_item_player_sub_number"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guide_v5"
-            app:layout_constraintStart_toStartOf="@+id/guide_v4" />
+            app:layout_constraintEnd_toEndOf="@+id/text_tm_item_number"
+            app:layout_constraintStart_toStartOf="@+id/text_tm_item_number" />
 
         <TextView
             android:id="@+id/text_tm_item_sub_birthday"
@@ -119,11 +119,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@string/text_tm_item_player_sub_birthday_dsc"
             android:text="@string/text_tm_item_player_sub_birthday"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guide_v1"
-            app:layout_constraintStart_toStartOf="@+id/guide_v5" />
+            app:layout_constraintBottom_toTopOf="@+id/guide_h1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guide_v1" />
 
         <TextView
             android:id="@+id/text_tm_item_sub_contract"
@@ -135,7 +137,8 @@
             android:text="@string/text_tm_item_player_sub_contract"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guide_v1" />
+            app:layout_constraintStart_toStartOf="@+id/guide_v1"
+            app:layout_constraintTop_toBottomOf="@+id/text_tm_item_contract" />
 
 
         <android.support.constraint.Guideline
@@ -143,7 +146,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.79" />
+            app:layout_constraintGuide_percent="0.8" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_v2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.15" />
+
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v5"
@@ -153,13 +164,11 @@
             app:layout_constraintGuide_percent="0.6" />
 
         <android.support.constraint.Guideline
-            android:id="@+id/guide_v4"
+            android:id="@+id/guide_h1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5"
-
-            />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"/>
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

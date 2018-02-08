@@ -65,7 +65,7 @@
     <!--recycler-->
     <dimen name="text_sm_recycler_head_size">20sp</dimen>
     <dimen name="text_sm_recycler_score_size">16sp</dimen>
-    <dimen name="text_sm_recycler_league_size">14sp</dimen>
+    <dimen name="text_sm_recycler_league_size">16sp</dimen>
     <dimen name="text_sm_recycler_date_size">10sp</dimen>
 
     <!--screen team-->
@@ -79,12 +79,10 @@
     <dimen name="text_tm_item_player_name_size">16sp</dimen>
     <dimen name="text_tm_item_player_position_size">14sp</dimen>
     <dimen name="text_tm_item_player_number_size">16sp</dimen>
-    <dimen name="text_tm_item_player_number_width">32dp</dimen>
+    <dimen name="text_tm_item_player_number_width">40dp</dimen>
     <dimen name="text_tm_item_player_date_size">14sp</dimen>
-
-
-    <dimen name="text_tm_item_player_sub_size">12sp</dimen>
-
+    <dimen name="text_tm_item_player_sub_size">10sp</dimen>
+    <dimen name="text_tm_item_player_national_size">10sp</dimen>
 
     <!--margins-->
     <dimen name="margin_micro">2dp</dimen>
