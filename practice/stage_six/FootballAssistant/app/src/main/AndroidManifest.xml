@@ -47,6 +47,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.vpcb.footballassistant.DetailActivity" />
         </activity>
+
+<!--temp-->
+        <activity
+            android:name=".TeamActivity"
+            android:label="@string/title_activity_team"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".LeagueActivity"
+            android:label="@string/title_activity_league"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+
     </application>
 
 </manifest>

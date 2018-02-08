@@ -2,7 +2,6 @@ package ru.vpcb.footballassistant;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -12,14 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
-public class MatchActivity extends AppCompatActivity {
+public class LeagueActivity extends AppCompatActivity {
 
     private View mViewTeamHome;
     private View mViewTeamAway;
@@ -83,8 +80,7 @@ public class MatchActivity extends AppCompatActivity {
 
     // methods
     private void startActivity(Class destination) {
-        Intent intent = new Intent(this, destination);
-        startActivity(intent);
+
     }
 
     private void startFragmentLeague() {
@@ -115,7 +111,7 @@ public class MatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startFragmentLeague();
-                startActivity(LeagueActivity.class);
+
             }
         });
 
@@ -123,7 +119,6 @@ public class MatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startFragmentTeam();
-                startActivity(TeamActivity.class);
             }
         });
 
@@ -131,7 +126,6 @@ public class MatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startFragmentTeam();
-                startActivity(TeamActivity.class);
             }
         });
 

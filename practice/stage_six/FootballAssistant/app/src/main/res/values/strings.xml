@@ -2,6 +2,9 @@
     <string name="app_name">Football</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_match">MatchActivity</string>
+<!--temp-->
+    <string name="title_activity_team">TeamActivity</string>
+    <string name="title_activity_league">LeagueActivity</string>
 
 
 
