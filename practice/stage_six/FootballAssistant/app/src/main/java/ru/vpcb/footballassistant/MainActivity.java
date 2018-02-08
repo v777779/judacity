@@ -71,6 +71,16 @@ import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_N
 
 public class MainActivity extends AppCompatActivity  {
 
+    // TODO использовать ViewPagerFragment_003
+    // TODO  MainActivity остальные Fragments FrameLayout индивидуальные toolbar и replacement
+    // TODO CalendarView and API 17
+    // TODO Database Loading Date сделать String и убрать конвертацию при сохранении и чтении Db
+    // TODO ViewPager Detail сделать один источник данных, RecyclerView перенести внутрь ViewPager
+    // TODO ViewPager Rotation загружать ViewPager в onCreate() то есть Activity и все Fragments
+    // TODO Calendar auto select Date и выбор по dismiss, double click или OK
+
+
+
     private static boolean sIsTimber;
     private static Handler mHandler;
 
