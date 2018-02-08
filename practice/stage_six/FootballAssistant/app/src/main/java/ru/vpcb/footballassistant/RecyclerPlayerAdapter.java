@@ -18,10 +18,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.utils.Config;
-import ru.vpcb.footballassistant.utils.TestUtils;
+import ru.vpcb.footballassistant.utils.Utils;
 
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
@@ -214,10 +213,10 @@ public class RecyclerPlayerAdapter extends RecyclerView.Adapter<RecyclerPlayerAd
 
             FDPlayer player = mList.get(position);
 // test!!!
-            String league = mContext.getString(TestUtils.getLeagueId(position));
+            String league = mContext.getString(Utils.getLeagueId(position));
 
-            int homeTeamImageId = TestUtils.getTeamIconId(position);
-            int awayTeamImageId = TestUtils.getTeamIconId(position);
+            int homeTeamImageId = Utils.getTeamIconId(position);
+            int awayTeamImageId = Utils.getTeamIconId(position);
             String dateTime = player.getDateOfBirth().toString();
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {

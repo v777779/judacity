@@ -94,6 +94,7 @@ public class Config {
 
     // competitions
     public static final String EMPTY_TEAM_NAME = "-";
+    public static final String EMPTY_LONG_DASH = "\u2014";
     public static final String EMPTY_MATCH_TIME = "-- : --";
     public static final String EMPTY_FIXTURE_DATE = "--/--/--";
     public static final String EMPTY_MATCH_SCORE = "- : -";
@@ -102,9 +103,15 @@ public class Config {
     public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
     public static final int CALENDAR_DIALOG_ACTION_CANCEL = 1;
 
+    // team activity
+    public static final String BUNDLE_INTENT_TEAM_ID = "bundle_intent_team_id";
+    public static final String BUNDLE_TEAM_ID = "bundle_team_id";
+    public static final int EMPTY_TEAM_ID = -1;
+
     // fragment_team
     public static final String FRAGMENT_TEAM_TAG = "fragment_team";
-    public static final String FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
+    public static final String BUNDLE_TEAM_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
+
     public static final int FRAGMENT_TEAM_VIEWPAGER_TEAM_POS = 0;
     public static final int FRAGMENT_TEAM_VIEWPAGER_PLAYERS_POS = 1;
 

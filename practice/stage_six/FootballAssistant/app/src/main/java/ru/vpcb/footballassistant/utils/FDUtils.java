@@ -29,6 +29,7 @@ import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDFixtures;
+import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDPlayers;
 import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
@@ -677,7 +678,7 @@ public class FDUtils {
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_ID, fixture.getId());                          // int
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_DATE, fixtureDate);                            // int
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_STATUS, fixture.getStatus());                  // string
-        values.put(FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY, fixture.getMatchday());              // string
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY, fixture.getMatchDay());              // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_TEAM_HOME, fixture.getHomeTeamName());         // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_TEAM_AWAY, fixture.getAwayTeamName());         // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_GOALS_HOME, fixture.getGoalsHome());           // int
@@ -804,6 +805,22 @@ public class FDUtils {
         IRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getTeamPlayers(team).execute().body();
     }
+
+    private static FDFixtures loadListTeamFixtures(String team)
+            throws NullPointerException, IOException {
+
+        IRetrofitAPI retrofitAPI = setupRetrofit();
+        return retrofitAPI.getTeamFixtures(team).execute().body();
+    }
+
+    private static FDPlayers loadListTeamPlayers(String team)
+            throws NullPointerException, IOException {
+
+        IRetrofitAPI retrofitAPI = setupRetrofit();
+        return retrofitAPI.getTeamPlayers(team).execute().body();
+    }
+
+
 
     // data
     private static boolean isRefreshed(Context context, Date lastRefresh) {
@@ -1072,7 +1089,8 @@ public class FDUtils {
             throws NumberFormatException, NullPointerException, IOException, InterruptedException {
         if (competition == null || competition.getId() <= 0) return null;
 
-        String id = formatString(competition.getId());
+        int competitionId = competition.getId();
+        String id = formatString(competitionId);
         long lastRefresh = Calendar.getInstance().getTimeInMillis();
         FDFixtures fixtures = loadListFixtures(id);      // NullPointerException
         if (fixtures == null) {
@@ -1084,6 +1102,7 @@ public class FDUtils {
         for (FDFixture fixture : fixtures.getFixtures()) {
             try {
                 fixture.setId();
+                fixture.setCompetitionId();
                 fixture.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;
@@ -1119,6 +1138,70 @@ public class FDUtils {
         }
         return true;
     }
+
+
+    // load fixtures from team
+    private static List<FDFixture> loadListTeamFixtures(int teamId)
+            throws NumberFormatException, NullPointerException, IOException, InterruptedException {
+        if (teamId <= 0) return null;
+
+        String id = formatString(teamId);
+        long lastRefresh = Calendar.getInstance().getTimeInMillis();
+        FDFixtures fixtures = loadListTeamFixtures(id);      // NullPointerException
+        List<FDFixture> list = new ArrayList<>();
+        for (FDFixture fixture : fixtures.getFixtures()) {
+            try {
+                fixture.setId();
+                fixture.setCompetitionId();
+                fixture.setLastRefresh(lastRefresh);
+            } catch (NullPointerException | NumberFormatException e) {
+                continue;
+            }
+            list.add(fixture);
+        }
+        return list;
+    }
+
+    public static List<FDFixture> loadListTeamFixtures(Context context, int id) {
+        try {
+            return loadListTeamFixtures(id);
+        }catch (NumberFormatException|NullPointerException |IOException |InterruptedException e) {
+            Timber.d(context.getString(R.string.retrofit_response_empty), e.getMessage());
+            return null;
+        }
+    }
+
+    // load players from team
+    private static List<FDPlayer> loadListTeamPlayers(int teamId)
+            throws NumberFormatException, NullPointerException, IOException, InterruptedException {
+        if (teamId <= 0) return null;
+
+        String id = formatString(teamId);
+
+        FDPlayers players = loadListTeamPlayers(id);      // NullPointerException
+        List<FDPlayer> list = new ArrayList<>();
+        for (FDPlayer player : players.getPlayers()) {
+            if(player == null) continue;
+            list.add(player);
+        }
+        return list;
+    }
+
+    public static List<FDPlayer> loadListTeamPlayers(Context context,int teamId) {
+        try {
+            return loadListTeamPlayers(teamId);
+        }catch (NumberFormatException|NullPointerException |IOException |InterruptedException e) {
+            Timber.d(context.getString(R.string.retrofit_response_empty), e.getMessage());
+            return null;
+        }
+    }
+
+
+
+
+
+
+
 
     public static void sendProgress(Context context, int value) {
         if (value < 0) return;

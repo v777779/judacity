@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
@@ -55,9 +56,12 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
-import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_TEAM_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_VIEWPAGER_TEAM_POS;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
@@ -113,6 +117,7 @@ public class TeamActivity extends AppCompatActivity
     private Cursor[] mCursors;
     private boolean mIsRotated;
     private int mViewPagerPos;
+    private int mTeamId;
 
 
     @Override
@@ -162,6 +167,12 @@ public class TeamActivity extends AppCompatActivity
 
 
         if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            mTeamId = EMPTY_TEAM_ID;
+            if (intent != null && intent.hasExtra(BUNDLE_INTENT_TEAM_ID)) {
+                mTeamId = intent.getIntExtra(BUNDLE_INTENT_TEAM_ID, -1);
+            }
+
             refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
@@ -170,7 +181,8 @@ public class TeamActivity extends AppCompatActivity
             getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
         } else {
             mIsRotated = true;
-            mViewPagerPos = savedInstanceState.getInt(FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS, FRAGMENT_TEAM_VIEWPAGER_TEAM_POS);
+            mViewPagerPos = savedInstanceState.getInt(BUNDLE_TEAM_VIEWPAGER_POS, FRAGMENT_TEAM_VIEWPAGER_TEAM_POS);
+            mTeamId = savedInstanceState.getInt(BUNDLE_TEAM_ID, EMPTY_TEAM_ID);
         }
 
 
@@ -179,7 +191,8 @@ public class TeamActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS, mViewPagerPos);
+        outState.putInt(BUNDLE_TEAM_VIEWPAGER_POS, mViewPagerPos);
+        outState.putInt(BUNDLE_TEAM_ID, mTeamId);
     }
 
     @Override
@@ -277,7 +290,9 @@ public class TeamActivity extends AppCompatActivity
 //            setupViewPagerSource();
 //            setupViewPager();
 //            stopProgress();
+
             new DataLoader().execute(mCursors);
+            new DataDownLoader().execute(mTeamId);
 
             mUpdateCounter = 0;
         }
@@ -395,13 +410,28 @@ public class TeamActivity extends AppCompatActivity
 
     }
 
-    private RecyclerView getRecycler(List<FDFixture> list) {
+    private RecyclerView getRecyclerTeam(List<FDFixture> list) {
         Config.Span sp = Config.getDisplayMetrics(this);
 
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_team, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_team_container);
 
-        RecyclerTeamAdapter adapter = new RecyclerTeamAdapter(this, sp, list);
+        RecyclerTeamAdapter adapter = new RecyclerTeamAdapter(this, list, mMap);
+        adapter.setHasStableIds(true); // optimization, bindView() not called for the same position
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        return recyclerView;
+    }
+
+    private RecyclerView getRecyclerPlayer(List<FDPlayer> list) {
+        Config.Span sp = Config.getDisplayMetrics(this);
+
+        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_team, null);
+        RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_team_container);
+
+        RecyclerPlayerAdapter adapter = new RecyclerPlayerAdapter(this, sp, list);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -441,43 +471,25 @@ public class TeamActivity extends AppCompatActivity
         return index;
     }
 
-    private ViewPagerData getViewPagerData() {
-        int last = 0;
-        int next = 0;
-        int current = 0;
-        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
-        Map<Long, Integer> map = new HashMap<>();
-
-        Collections.sort(fixtures, cFx);
-        List<List<FDFixture>> list = new ArrayList<>();
-
-        Calendar c = Calendar.getInstance();
-        setZeroTime(c);
-        current = getIndex(fixtures, c);  // index of current day
-
-        while (next < fixtures.size()) {
-            setDay(c, fixtures.get(next).getDate());
-            map.put(c.getTimeInMillis(), list.size());
-            c.add(Calendar.DATE, 1);  // next day
-            next = getIndex(fixtures, c);
-            list.add(new ArrayList<>(fixtures.subList(last, next)));
-            last = next;
-            if (next == current) current = list.size();  // index of current day records
-        }
+    private ViewPagerData getViewPagerData(List<FDFixture> fixtures, List<FDPlayer> players) {
+// fixtures
+// players of any team
 
         List<View> recyclers = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
-// test!!!
-        if (current > 0)  current--;
-        recyclers.add(getRecycler(list.get(current)));
-        current++;
-        recyclers.add(getRecycler(list.get(current)));
+        if (fixtures != null && fixtures.size() > 0) {
+            recyclers.add(getRecyclerTeam(fixtures));
+        }
+
+        if (players != null && players.size() > 0) {
+            recyclers.add(getRecyclerPlayer(players));
+        }
 
         titles.add("Matches");
         titles.add("Players");
 
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, list, map);
+        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, 0, null, null);
         return viewPagerData;
     }
 
@@ -559,6 +571,7 @@ public class TeamActivity extends AppCompatActivity
 // TODO Check workaround of TabLayout update for better solution
 
     private void updateViewPager(final ViewPagerData data) {
+        stopProgress();
         if (mViewPager == null || data == null) return;
 
 
@@ -755,22 +768,52 @@ public class TeamActivity extends AppCompatActivity
         }
     }
 
-    // TODO Make encapsulation data and maps to ViewPager and other Activities
+    // test!!!
+// TODO  Replace AsyncTask with Static or move code to standard Loader
+// TODO Make encapsulation data and maps to ViewPager and other Activities
     private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {
-
-
         @Override
         protected ViewPagerData doInBackground(Cursor[]... cursors) {
             try {
-
                 mMap = FDUtils.readCompetitions(cursors[0][0]);
-                mMapTeamKeys = FDUtils.readCompetitionTeams(cursors[0][1]);
-                mMapTeams = FDUtils.readTeams(cursors[0][2]);
-                mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
-                mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
-                return getViewPagerData();
+//                mMapTeamKeys = FDUtils.readCompetitionTeams(cursors[0][1]);
+//                mMapTeams = FDUtils.readTeams(cursors[0][2]);
+//                mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
+//                mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
+                return null;
+            } catch (NullPointerException e) {
+                return null;
+            }
+        }
 
+        @Override
+        protected void onPostExecute(ViewPagerData viewPagerData) {
 
+        }
+    }
+
+    // test!!!
+// TODO  Replace AsyncTask with Static or move code to standard Loader
+    private class DataDownLoader extends AsyncTask<Integer, Void, ViewPagerData> {
+        private Context mContext;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mContext = TeamActivity.this;
+        }
+
+        @Override
+        protected ViewPagerData doInBackground(Integer... integers) {
+            try {
+
+                if (integers[0] <= 0) return null;
+                int teamId = integers[0];
+
+                List<FDFixture> fixtures = FDUtils.loadListTeamFixtures(mContext, teamId);
+                List<FDPlayer> players = FDUtils.loadListTeamPlayers(mContext, teamId);
+                return getViewPagerData(fixtures, players);
             } catch (NullPointerException e) {
                 return null;
 
@@ -779,10 +822,6 @@ public class TeamActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(ViewPagerData viewPagerData) {
-            stopProgress();
-            if (viewPagerData == null) return;
-
-            mViewPagerData = viewPagerData;
             updateViewPager(viewPagerData);
 
 

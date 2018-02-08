@@ -19,12 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
 public class MatchActivity extends AppCompatActivity {
 
-    private View mViewTeamHome;
     private TextView mViewLeague;
+    private View mViewTeamHome;
+    private View mViewTeamAway;
 
 
     @Override
@@ -86,9 +89,9 @@ public class MatchActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startActivityTeam() {
+    private void startActivityTeam(int id) {
         Intent intent = new Intent(this, TeamActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+        intent.putExtra(BUNDLE_INTENT_TEAM_ID, id);
         startActivity(intent);
     }
 
@@ -110,11 +113,12 @@ public class MatchActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        mViewTeamHome = findViewById(R.id.image_sm_team_home);
         mViewLeague = findViewById(R.id.text_sm_item_league);
+        mViewTeamHome = findViewById(R.id.image_sm_team_home);
+        mViewTeamAway = findViewById(R.id.image_sm_team_away);
 
 
-        mViewLeague.setPaintFlags(mViewLeague.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        mViewLeague.setPaintFlags(mViewLeague.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mViewLeague.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,10 +131,17 @@ public class MatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                startFragmentTeam();
-                startActivity(TeamActivity.class);
+                startActivityTeam(548);
             }
         });
-
+        mViewTeamAway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                startFragmentTeam();
+                startActivityTeam( 535);
+//                startActivityTeam(530);
+            }
+        });
 
     }
 

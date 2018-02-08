@@ -79,6 +79,14 @@
     <!--recycler-->
     <string name="text_sm_item_prev_meeting">Previous Meetings</string>
 
+    <!--player-->
+    <string name="text_tm_item_player_sub_birthday">birthday</string>
+    <string name="text_tm_item_player_sub_contract">contract end</string>
+    <string name="text_tm_item_player_sub_number">number</string>
+
+
+
+    <!--other-->
 
     <!--messages-->
     <!--exception-->
@@ -133,7 +141,6 @@
     <string name="text_sm_item_match_icon_favorite">Favorites Icon</string>
     <string name="text_sm_item_match_icon_favorite_back">Favorite Icon Circle</string>
 
-
     <!--start-->
     <string name="text_sm_item_match_date">The Match Date</string>
     <string name="text_sm_item_match_time">The Match Time</string>
@@ -166,6 +173,24 @@
 
 
 
+    <!--screen7-->
+    <!--player-->
+    <string name="image_tm_item_player_flag_dsc">The Country Flag of Player</string>
+    <string name="text_tm_item_player_name_dsc">The Player Name and Second Name</string>
+    <string name="text_tm_item_player_number_dsc">The Player Number</string>
+    <string name="text_tm_item_player_position_dsc">The Player Position in a Team</string>
+    <string name="text_tm_item_player_birthday_dsc">The Player Birthday Date</string>
+    <string name="text_tm_item_player_contract_dsc">The Player Contract End Date</string>
+
+    <string name="text_tm_item_player_sub_position_dsc">The Player Subscript Position</string>
+    <string name="text_tm_item_player_sub_birthday_dsc">The Player Subscript Birthday Date</string>
+    <string name="text_tm_item_player_sub_contract_dsc">The Player Subscript Contract End Date</string>
+    <string name="text_tm_item_player_sub_number_dsc">The Player Subscript Number</string>
+
+
+
+
+<!--other-->
     <!--competition-->
 
     <!--dialog-->
@@ -209,6 +234,18 @@
     <string name="text_test_sm_item_match_date_time">20 Jan 2018 19:05</string>
     <string name="text_test_sm_match_recycler_date">20 Jan 2018</string>
     <string name="text_test_sm_match_recycler_score">1 : 0</string>
+
+    <string name="text_test_tm_item_player_name">Michael Dawson</string>
+    <string name="text_test_tm_item_player_number">21</string>
+    <string name="text_test_tm_item_player_position">Centre-Back</string>
+    <string name="text_test_tm_item_player_birthday">18.11.83</string>
+    <string name="text_test_tm_item_player_contract">30.06.18</string>
+
+    <string name="text_test_tm_item_player_name2">Paul McShane</string>
+    <string name="text_test_tm_item_player_number2">15</string>
+    <string name="text_test_tm_item_player_position2">Centre-Back</string>
+    <string name="text_test_tm_item_player_birthday2">06.01.86</string>
+    <string name="text_test_tm_item_player_contract2">30.06.18</string>
 
 
     <string name="large_text">

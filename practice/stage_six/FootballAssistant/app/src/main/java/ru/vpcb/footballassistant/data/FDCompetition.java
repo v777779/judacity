@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -112,6 +114,7 @@ public class FDCompetition {
     }
 
     public String getCaption() {
+        if (caption == null || caption.isEmpty()) return EMPTY_LONG_DASH;
         return caption;
     }
 
@@ -133,6 +136,7 @@ public class FDCompetition {
 
 
     public String getLeague() {
+        if (league == null || league.isEmpty()) return EMPTY_LONG_DASH;
         return league;
     }
 

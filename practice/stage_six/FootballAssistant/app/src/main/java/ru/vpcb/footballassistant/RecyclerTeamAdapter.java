@@ -4,8 +4,6 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -14,20 +12,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import junit.framework.Test;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.utils.Config;
-import ru.vpcb.footballassistant.utils.TestUtils;
+import ru.vpcb.footballassistant.utils.Utils;
 
-import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
-import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
 
@@ -62,23 +60,23 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
     private Resources mRes;
 
     private List<FDFixture> mList;
-    private DateFormat mDateFormat;
+    private Map<Integer, FDCompetition> mMap;
+
 
     /**
      * Constructor of RecyclerAdapter
      *
      * @param context Context of calling activity
-     * @param sp      Span  object used for RecyclerView as storage of display item parameters
      */
-    public RecyclerTeamAdapter(Context context, Config.Span sp, List<FDFixture> list) {
+    public RecyclerTeamAdapter(Context context, List<FDFixture> list, Map<Integer, FDCompetition> map) {
         mContext = context;
-        mSpan = sp;
         mRes = context.getResources();
         mList = list;
+        mMap = map;
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
-        mDateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
+
     }
 
     /**
@@ -219,10 +217,16 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
 
             FDFixture fixture = mList.get(position);
 // test!!!
-            String league = mContext.getString(TestUtils.getLeagueId(position));
+            String league = EMPTY_LONG_DASH;
+            int competitionId = fixture.getCompetitionId();
+            if (mMap != null && competitionId > 0) {
+                FDCompetition competition = mMap.get(fixture.getCompetitionId());
+                if (competition != null) league = competition.getCaption();
+            }
+
             String score = fixture.getMatchScore();
-            int homeTeamImageId = TestUtils.getTeamIconId(position);
-            int awayTeamImageId = TestUtils.getTeamIconId(position);
+            int homeTeamImageId = Utils.getTeamIconId(position);
+            int awayTeamImageId = Utils.getTeamIconId(position);
             String dateTime = fixture.getMatchDate();
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {

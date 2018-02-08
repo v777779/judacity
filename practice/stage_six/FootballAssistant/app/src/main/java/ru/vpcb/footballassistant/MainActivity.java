@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity  {
     // TODO ViewPager Detail сделать один источник данных, RecyclerView перенести внутрь ViewPager
     // TODO ViewPager Rotation загружать ViewPager в onCreate() то есть Activity и все Fragments
     // TODO Calendar auto select Date и выбор по dismiss, double click или OK
-
+    // TODO проставить FDFixture competition при загрузке
 
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
 

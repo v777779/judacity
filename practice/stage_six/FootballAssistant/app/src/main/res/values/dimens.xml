@@ -74,7 +74,16 @@
     <dimen name="margin_bottom_navigation_height">56dp</dimen>
     <dimen name="text_tm_item_status_size">10sp</dimen>
 
+    <!--player-->
+    <dimen name="text_tm_item_player_size">14sp</dimen>
+    <dimen name="text_tm_item_player_name_size">16sp</dimen>
+    <dimen name="text_tm_item_player_position_size">14sp</dimen>
+    <dimen name="text_tm_item_player_number_size">16sp</dimen>
+    <dimen name="text_tm_item_player_number_width">32dp</dimen>
+    <dimen name="text_tm_item_player_date_size">14sp</dimen>
 
+
+    <dimen name="text_tm_item_player_sub_size">12sp</dimen>
 
 
     <!--margins-->

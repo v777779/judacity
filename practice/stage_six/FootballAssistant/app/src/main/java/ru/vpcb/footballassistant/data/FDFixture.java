@@ -15,6 +15,7 @@ import java.util.Random;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
+import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_COMPETITIONS;
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_FIXTURES;
 
 
@@ -59,6 +60,7 @@ public class FDFixture {
 
     private int id;
     private Date lastRefresh;
+    private int competitionId;
 
 
     public FDFixture() {
@@ -160,13 +162,9 @@ public class FDFixture {
         }
     }
 
-    public String getLinkSelf() {
-        return links.self.getHref();
-    }
-
 
     public void setId() throws NullPointerException, NumberFormatException {
-        String href = getLinkSelf();
+        String href = links.self.getHref();
         id = Integer.valueOf(href.replaceAll(FD_REGEX_FIXTURES, ""));
         if (id == -1) throw new NumberFormatException();
     }
@@ -175,8 +173,24 @@ public class FDFixture {
         this.lastRefresh = new Date(lastRefresh);
     }
 
+    public void setCompetitionId() throws NullPointerException, NumberFormatException {
+        String href = links.competition.getHref();
+        competitionId = Integer.valueOf(href.replaceAll(FD_REGEX_COMPETITIONS, ""));
+        if (competitionId == -1) throw new NumberFormatException();
+    }
+
+    public void setCompetitionId(int competitionId) {
+
+        this.competitionId = competitionId;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public int getCompetitionId() {
+
+        return competitionId;
     }
 
     public Date getDate() {
@@ -184,11 +198,11 @@ public class FDFixture {
     }
 
     public String getStatus() {
-        if(status == null || status.isEmpty())return EMPTY_TEAM_NAME;
+        if (status == null || status.isEmpty()) return EMPTY_TEAM_NAME;
         return status.toUpperCase();
     }
 
-    public int getMatchday() {
+    public int getMatchDay() {
         return matchday;
     }
 

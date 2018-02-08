@@ -11,7 +11,7 @@ import ru.vpcb.footballassistant.R;
  * Created by V1 on 08-Feb-18.
  */
 
-public class TestUtils {
+public class Utils {
     private static int prevTeamPos = -1;
     private static int prevLeaguePos = -1;
 
@@ -27,6 +27,12 @@ public class TestUtils {
             R.drawable.logo_stoke_city
     };
 
+    public static int[] flagIds = new int[]{
+            R.drawable.flag_001,
+            R.drawable.flag_002,
+            R.drawable.flag_003,
+    };
+
 
     public static int getLeagueId(int position) {
         return leagueIds[position % leagueIds.length];
@@ -40,5 +46,11 @@ public class TestUtils {
         prevTeamPos = pos;
         return teamIds[pos];
     }
+
+    public static int getFlagIconId(int position) {
+
+        return flagIds[position % flagIds.length];
+    }
+
 
 }

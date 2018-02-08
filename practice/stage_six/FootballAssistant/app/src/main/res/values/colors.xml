@@ -243,6 +243,21 @@
 
     <color name="team_recycler_status_text">#3a3a3a</color>
 
+    <!--player-->
+    <color name="player_recycler_card_back_light">#f2f0e9</color>
+    <color name="player_recycler_card_back_dark">#f8fbed</color>
+
+    <color name="player_recycler_text">#3a3a3a</color>
+    <color name="player_recycler_position_text">#989898</color>
+    <color name="player_recycler_sub_text">#989898</color>
+
+    <color name="player_position_back">#a0edecec</color>
+    <color name="player_position_back_light">#a0d3d2d2</color>
+    <color name="player_position_back_dark">#a0d3d2d2</color>
+
+    <color name="player_number_back">#a0ffffff</color>
+    <color name="player_number_back_light">#a0f2f2f2</color>
+    <color name="player_number_back_dark">#a0f2f2f2</color>
 
 
 </resources>
