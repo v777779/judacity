@@ -82,6 +82,8 @@ public class Config {
 
     public static final int RM_ITEM_VIEW_TYPE = 0;
     public static final int RM_HEAD_VIEW_TYPE = 1;
+    public static final int RT_ITEM_VIEW_TYPE_LIGHT = 0;
+    public static final int RT_ITEM_VIEW_TYPE_DARK = 1;
 
     // viewpager
     public static final int VIEWPAGER_OFF_SCREEN_PAGE_NUMBER = 3;
@@ -91,6 +93,7 @@ public class Config {
     public static final String EMPTY_TEAM_NAME = "-";
     public static final String EMPTY_MATCH_TIME = "-- : --";
     public static final String EMPTY_FIXTURE_DATE = "--/--/--";
+    public static final String EMPTY_MATCH_SCORE = "- : -";
 
     //detail activity
     public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
@@ -98,6 +101,9 @@ public class Config {
 
     // fragment_team
     public static final String FRAGMENT_TEAM_TAG = "fragment_team";
+    public static final String FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
+    public static final int FRAGMENT_TEAM_VIEWPAGER_TEAM_POS = 0;
+    public static final int FRAGMENT_TEAM_VIEWPAGER_PLAYERS_POS = 1;
 
     // fragment_league
     public static final String FRAGMENT_LEAGUE_TAG = "fragment_league";

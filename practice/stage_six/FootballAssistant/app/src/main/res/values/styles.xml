@@ -231,6 +231,20 @@
     </style>
 
 
+    <style name="Status.Team.TextRecycler" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">@dimen/text_tm_item_status_size</item>
+        <item name="android:textColor">@color/team_recycler_status_text</item>
+        <item name="android:background">@drawable/team_status_back</item>
+        <item name="android:minEms">@integer/text_sm_item_status_min</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+    </style>
+
+
+
+
+
+    <!--other-->
     <!--recycler-->
     <style name="Head.Item.TextRecycler" parent="Item.TextRecycler">
         <item name="android:textSize">@dimen/text_rm_head_size</item>

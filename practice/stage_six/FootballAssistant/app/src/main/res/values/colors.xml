@@ -235,4 +235,14 @@
     <color name="match_recycler_card_back_light">#ecf2e9</color>
     <color name="match_recycler_card_back_dark">#edf8fb</color>
 
+    <!--team-->
+    <!--status-->
+    <color name="team_status_back">#a0edecec</color>
+    <color name="team_status_back_light">#a0d3d2d2</color>
+    <color name="team_status_back_dark">#a0d3d2d2</color>
+
+    <color name="team_recycler_status_text">#3a3a3a</color>
+
+
+
 </resources>

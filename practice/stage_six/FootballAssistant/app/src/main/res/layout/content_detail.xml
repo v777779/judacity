@@ -23,6 +23,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
+    <ImageView
+        android:id="@+id/toolbar_sliding_back"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/sliding_tabs_height"
+        android:src="@drawable/sliding_tabs_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/toolbar_sliding_tabs"
         android:layout_width="0dp"
@@ -30,7 +40,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabBackground="@drawable/sliding_tabs_back"
         app:tabContentStart="@dimen/sliding_tabs_start"
         app:tabGravity="center"
         app:tabIndicatorColor="@color/sliding_tab_slider"

@@ -57,7 +57,9 @@ import timber.log.Timber;
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
+import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
+import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_VIEWPAGER_TEAM_POS;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
@@ -68,6 +70,11 @@ public class TeamActivity extends AppCompatActivity
 
     private static boolean sIsTimber;
     private static Handler mHandler;
+
+    // test!!!
+// TODO  make parcelable for ViewPager and rotation
+    private static ViewPagerData mViewPagerData;
+
 
     private FloatingActionButton mFab;
 
@@ -104,9 +111,9 @@ public class TeamActivity extends AppCompatActivity
 
 
     private Cursor[] mCursors;
-    // test!!!
-// TODO  make parcelable for ViewPager and rotation
-    private static ViewPagerData mViewPagerData;
+    private boolean mIsRotated;
+    private int mViewPagerPos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +144,6 @@ public class TeamActivity extends AppCompatActivity
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
 
-
 // progress
         setupActionBar();
         setupBottomNavigation();
@@ -145,10 +151,10 @@ public class TeamActivity extends AppCompatActivity
         setupReceiver();
         setupListeners();
 
-        if (savedInstanceState == null && mViewPagerData == null) {
+// test!!!  check data
+        if (mViewPagerData == null) {
             setupViewPager();
         } else {
-// test!!!  check data
             setupViewPager(mViewPagerData);
         }
 
@@ -162,9 +168,18 @@ public class TeamActivity extends AppCompatActivity
             getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+        } else {
+            mIsRotated = true;
+            mViewPagerPos = savedInstanceState.getInt(FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS, FRAGMENT_TEAM_VIEWPAGER_TEAM_POS);
         }
 
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS, mViewPagerPos);
     }
 
     @Override
@@ -383,10 +398,10 @@ public class TeamActivity extends AppCompatActivity
     private RecyclerView getRecycler(List<FDFixture> list) {
         Config.Span sp = Config.getDisplayMetrics(this);
 
-        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
-        RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
+        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_team, null);
+        RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_team_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this, sp, list);
+        RecyclerTeamAdapter adapter = new RecyclerTeamAdapter(this, sp, list);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -424,37 +439,7 @@ public class TeamActivity extends AppCompatActivity
         if (index < 0) index = -index - 1;
         if (index > list.size()) index = list.size() - 1;
         return index;
-
     }
-
-//    private void setupViewPagerSource() {
-//        int last = 0;
-//        int next = 0;
-//        int current = 0;
-//        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
-//        Map<Long, Integer> map = new HashMap<>();
-//
-//        Collections.sort(fixtures, cFx);
-//        List<List<FDFixture>> list = new ArrayList<>();
-//
-//        Calendar c = Calendar.getInstance();
-//        setZeroTime(c);
-//        current = getIndex(fixtures, c);  // index of current day
-//
-//        while (next < fixtures.size()) {
-//            setDay(c, fixtures.get(next).getDate());
-//            map.put(c.getTimeInMillis(), list.size());
-//            c.add(Calendar.DATE, 1);  // next day
-//            next = getIndex(fixtures, c);
-//            list.add(new ArrayList<>(fixtures.subList(last, next)));
-//            last = next;
-//            if (next == current) current = list.size();  // index of current day records
-//        }
-//
-//        mViewPagerPos = current;
-//        mViewPagerList = list;
-//        mViewPagerMap = map;
-//    }
 
     private ViewPagerData getViewPagerData() {
         int last = 0;
@@ -483,11 +468,12 @@ public class TeamActivity extends AppCompatActivity
         List<View> recyclers = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
+// test!!!
+        if (current > 0)  current--;
         recyclers.add(getRecycler(list.get(current)));
-        if (current < list.size() - 1) {
-            current++;
-        }
-        recyclers.add(getRecycler(list.get(current + 1)));
+        current++;
+        recyclers.add(getRecycler(list.get(current)));
+
         titles.add("Matches");
         titles.add("Players");
 
@@ -527,7 +513,7 @@ public class TeamActivity extends AppCompatActivity
     private void setupViewPager(ViewPagerData viewPagerData) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this, viewPagerData.getRecyclers(), viewPagerData.getTitles());
         mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(mViewPagerData.getPos());
+        mViewPager.setCurrentItem(mViewPagerPos);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -536,6 +522,7 @@ public class TeamActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
+                mViewPagerPos = position;
             }
 
             @Override
@@ -571,18 +558,13 @@ public class TeamActivity extends AppCompatActivity
 // test!!!  update mTabLayout workaround
 // TODO Check workaround of TabLayout update for better solution
 
-
     private void updateViewPager(final ViewPagerData data) {
         if (mViewPager == null || data == null) return;
-        int pos = mViewPager.getCurrentItem();
 
-// test!!!
-        if (pos == 0) {
-            pos = data.mPos;                    // current day
-        }
+
         mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
-        mViewPager.setCurrentItem(pos);
+        mViewPager.setCurrentItem(mViewPagerPos);
 
     }
 

@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_FIXTURES;
@@ -183,7 +184,8 @@ public class FDFixture {
     }
 
     public String getStatus() {
-        return status;
+        if(status == null || status.isEmpty())return EMPTY_TEAM_NAME;
+        return status.toUpperCase();
     }
 
     public int getMatchday() {
@@ -254,8 +256,14 @@ public class FDFixture {
         return String.format(Locale.ENGLISH,
                 "%02d:%02d,%02d/%02d/%04d",
                 c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
-                c.get(Calendar.DAY_OF_MONTH),c.get(Calendar.MONTH)+1,
+                c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1,
                 c.get(Calendar.YEAR));
+    }
+
+    public String getMatchScore() {
+        if (result == null) return EMPTY_MATCH_SCORE;
+        return String.format(Locale.ENGLISH, "%d : %d",
+                result.goalsHomeTeam, result.goalsAwayTeam);
     }
 
 

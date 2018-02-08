@@ -72,6 +72,9 @@
     <dimen name="image_tm_item_size">64dp</dimen>
     <dimen name="text_tm_item_team_size">18sp</dimen>
     <dimen name="margin_bottom_navigation_height">56dp</dimen>
+    <dimen name="text_tm_item_status_size">10sp</dimen>
+
+
 
 
     <!--margins-->

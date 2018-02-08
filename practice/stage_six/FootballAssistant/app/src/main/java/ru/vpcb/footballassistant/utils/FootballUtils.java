@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import ru.vpcb.footballassistant.R;
+import ru.vpcb.footballassistant.data.FDFixture;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
@@ -48,6 +49,7 @@ public class FootballUtils {
         String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
         return ""+day + "/" + month + "/" + year.substring(2, year.length())+"";
     }
+
 
     // images
 
