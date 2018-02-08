@@ -85,6 +85,9 @@ public class Config {
     public static final int RT_ITEM_VIEW_TYPE_LIGHT = 0;
     public static final int RT_ITEM_VIEW_TYPE_DARK = 1;
 
+
+
+
     // viewpager
     public static final int VIEWPAGER_OFF_SCREEN_PAGE_NUMBER = 3;
 
@@ -104,6 +107,8 @@ public class Config {
     public static final String FRAGMENT_TEAM_BUNDLE_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
     public static final int FRAGMENT_TEAM_VIEWPAGER_TEAM_POS = 0;
     public static final int FRAGMENT_TEAM_VIEWPAGER_PLAYERS_POS = 1;
+
+
 
     // fragment_league
     public static final String FRAGMENT_LEAGUE_TAG = "fragment_league";

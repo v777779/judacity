@@ -4,8 +4,6 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import junit.framework.Test;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -23,11 +19,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.TestUtils;
 
-import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
-import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
 
@@ -35,7 +30,7 @@ import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
  * RecyclerView Adapter class
  * Used to create and show Item objects of RecyclerView
  */
-public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapter.ViewHolder> {
+public class RecyclerPlayerAdapter extends RecyclerView.Adapter<RecyclerPlayerAdapter.ViewHolder> {
     /**
      * Cursor object source of data
      */
@@ -61,7 +56,7 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
      */
     private Resources mRes;
 
-    private List<FDFixture> mList;
+    private List<FDPlayer> mList;
     private DateFormat mDateFormat;
 
     /**
@@ -70,7 +65,7 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
      * @param context Context of calling activity
      * @param sp      Span  object used for RecyclerView as storage of display item parameters
      */
-    public RecyclerTeamAdapter(Context context, Config.Span sp, List<FDFixture> list) {
+    public RecyclerPlayerAdapter(Context context, Config.Span sp, List<FDPlayer> list) {
         mContext = context;
         mSpan = sp;
         mRes = context.getResources();
@@ -160,7 +155,7 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
      *
      * @param list List<FDFixture> parameter.
      */
-    public void swap(List<FDFixture> list) {
+    public void swap(List<FDPlayer> list) {
         if (list == null) return;
         mList = list;
         notifyDataSetChanged();
@@ -217,13 +212,13 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
         private void fill(int position) {
             if (mList == null || mList.get(position) == null) return;
 
-            FDFixture fixture = mList.get(position);
+            FDPlayer player = mList.get(position);
 // test!!!
             String league = mContext.getString(TestUtils.getLeagueId(position));
-            String score = fixture.getMatchScore();
+
             int homeTeamImageId = TestUtils.getTeamIconId(position);
             int awayTeamImageId = TestUtils.getTeamIconId(position);
-            String dateTime = fixture.getMatchDate();
+            String dateTime = player.getDateOfBirth().toString();
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {
                 layout.setBackgroundColor(mColorDark);
@@ -231,10 +226,9 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
 
             mImageHome.setImageResource(homeTeamImageId);
             mImageAway.setImageResource(awayTeamImageId);
-            mTextScore.setText(score);
+
             mTextLeague.setText(league);
             mTextDate.setText(dateTime.substring(6));
-            mTextStatus.setText(fixture.getStatus());
 
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 //

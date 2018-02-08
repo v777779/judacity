@@ -40,6 +40,31 @@ public class FDPlayer {
     @Expose
     private String marketValue;
 
+    public String getName() {
+        return name;
+    }
 
+    public String getPosition() {
+        return position;
+    }
 
+    public int getJerseyNumber() {
+        return jerseyNumber;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public Date getContractUntil() {
+        return contractUntil;
+    }
+
+    public String getMarketValue() {
+        return marketValue;
+    }
 }
