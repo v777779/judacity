@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="player_number_back">#ffffffff</color>
+    <color name="player_number_back_light">#afc2d0</color>
+    <color name="player_number_back_dark">#80bbc7</color>
+    <color name="player_icon_back">#3f3f3f</color>
+
 </resources>

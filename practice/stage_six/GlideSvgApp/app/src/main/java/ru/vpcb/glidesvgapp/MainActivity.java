@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.Preconditions;
 
 import java.io.File;
@@ -54,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
         requestBuilder = GlideApp.with(this)
                 .as(PictureDrawable.class)
-                .placeholder(R.drawable.image_loading)
+                .placeholder(R.drawable.back_copy2)
                 .error(R.drawable.image_error)
-                .transition(withCrossFade())
+//                .transition(withCrossFade())
                 .listener(new SvgSoftwareLayerSetter());
     }
 
@@ -128,6 +129,18 @@ public class MainActivity extends AppCompatActivity {
         Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() +
                 "/" + R.raw.android_toy_h);
         requestBuilder.load(uri).into(mImageRes);
+    }
+
+    private void loadNetStandard(View view) {
+        String imageURL = "http://upload.wikimedia.org/wikipedia/de/3/3c/AS_Monaco.svg";
+                Glide.with(this)
+                .load(imageURL)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.empty_loading)
+                        .error(R.drawable.error_loading)
+                )
+                .into(mImageNet);
+
     }
 
     private void loadNet() {
