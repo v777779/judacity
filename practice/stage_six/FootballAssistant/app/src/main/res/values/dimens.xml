@@ -88,7 +88,17 @@
     <dimen name="text_tm_item_player_national_size">10sp</dimen>
     <dimen name="player_icon_inner_size">14dp</dimen>
 
-
+    <!--league-->
+    <dimen name = "image_lg_item_team_logo_size">24dp</dimen>
+    <dimen name="text_lg_item_size">14sp</dimen>
+    <dimen name="text_lg_item_head_team_size">14sp</dimen>
+    <dimen name="text_lg_item_head_team_pos_size">14sp</dimen>
+    <dimen name="text_lg_item_head_team_name_size">14sp</dimen>
+    <dimen name="text_lg_item_head_team_value_size">14sp</dimen>
+    <dimen name="text_lg_item_team_size">14sp</dimen>
+    <dimen name="text_lg_item_team_pos_size">14sp</dimen>
+    <dimen name="text_lg_item_team_name_size">14sp</dimen>
+    <dimen name="text_lg_item_team_value_size">14sp</dimen>
 
 
     <!--margins-->

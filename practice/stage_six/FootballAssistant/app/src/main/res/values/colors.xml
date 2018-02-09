@@ -266,9 +266,18 @@
     <color name="player_number_back_dark">#80bbc7</color>
     <color name="player_icon_stroke">#3f3f3f</color>
 
-
     <color name="team_icon_back">#a0eff0ef</color>
     <color name="team_icon_stroke">#3f3f3f</color>
+
+    <!--league-->
+    <color name="league_item_text">#3a3a3a</color>
+    <color name="league_lg_item_head_team_pos">#3a3a3a</color>
+    <color name="league_lg_item_head_team_name">#3a3a3a</color>
+    <color name="league_lg_item_head_team_value">#3a3a3a</color>
+    <color name="league_lg_item_team_pos">#3a3a3a</color>
+    <color name="league_lg_item_team_name">#3a3a3a</color>
+    <color name="league_lg_item_team_value">#3a3a3a</color>
+    <color name="league_lg_item_separator">#989898</color>
 
 
 </resources>

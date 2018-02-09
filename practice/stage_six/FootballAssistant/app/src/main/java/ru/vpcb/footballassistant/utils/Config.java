@@ -119,8 +119,15 @@ public class Config {
 
 
 
+    // league activity
+    public static final String BUNDLE_INTENT_LEAGUE_ID = "bundle_intent_league_id";
+    public static final String BUNDLE_LEAGUE_ID = "bundle_league_id";
+    public static final int EMPTY_LEAGUE_ID = -1;
+
     // fragment_league
     public static final String FRAGMENT_LEAGUE_TAG = "fragment_league";
+    public static final String BUNDLE_LEAGUE_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
+    public static final int FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS = 0;
 
 
 

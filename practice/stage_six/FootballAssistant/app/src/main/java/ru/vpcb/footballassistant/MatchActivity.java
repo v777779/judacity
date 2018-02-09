@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
@@ -84,8 +85,9 @@ public class MatchActivity extends AppCompatActivity {
     }
 
     // methods
-    private void startActivity(Class destination) {
-        Intent intent = new Intent(this, destination);
+    private void startActivityLeague(int id) {
+        Intent intent = new Intent(this, LeagueActivity.class);
+        intent.putExtra(BUNDLE_INTENT_LEAGUE_ID, id);
         startActivity(intent);
     }
 
@@ -123,7 +125,7 @@ public class MatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                startFragmentLeague();
-                startActivity(LeagueActivity.class);
+                startActivityLeague(548);
             }
         });
 

@@ -190,6 +190,18 @@
     <string name="text_tm_item_player_sub_number_dsc">The Player Subscript Number</string>
     <string name="text_tm_item_player_nationality_dsc">The nationality of Player</string>
 
+    <!--screen8-->
+    <!--league-->
+    <string name="image_lg_item_team_logo_dsc">The Team Logo in League Table</string>
+    <string name="image_lg_item_team_pos_dsc">The Team Position Number in League Table</string>
+    <string name="text_lg_team_name_dsc">The Team Name in League Table</string>
+    <string name="text_lg_team_matches_dsc">The Number of Team Matches in League Table</string>
+    <string name="text_lg_team_points_dsc">The Number of Team Points in League Table</string>
+    <string name="text_lg_team_goals_dsc">The Number of Team Goals in League Table</string>
+    <string name="text_lg_team_wins_dsc">The Number of Team Wins in League Table</string>
+    <string name="text_lg_team_draws_dsc">The Number of Team Draws in League Table</string>
+    <string name="text_lg_team_losses_dsc">The Number of Team Losses in League Table</string>
+
 
 
 <!--other-->
@@ -248,6 +260,38 @@
     <string name="text_test_tm_item_player_position2">Centre-Back</string>
     <string name="text_test_tm_item_player_birthday2">06.01.86</string>
     <string name="text_test_tm_item_player_contract2">30.06.18</string>
+
+    <string name="text_test_lg_item_team_pos_1">1</string>
+    <string name="text_test_lg_item_team_pos_2">2</string>
+    <string name="text_test_lg_item_team_pos_3">3</string>
+    <string name="text_test_lg_item_team_pos_4">4</string>
+    <string name="text_test_lg_item_team_pos_5">5</string>
+
+    <string name="text_test_lg_item_team_pos_22">22</string>
+    <string name="text_test_lg_item_team_pos_65">65</string>
+    <string name="text_test_lg_item_team_pos_12">12</string>
+    <string name="text_test_lg_item_team_pos_77">77</string>
+    <string name="text_test_lg_item_team_pos_82">82</string>
+    <string name="text_test_lg_item_team_pos_34">34</string>
+
+    <string name="text_test_lg_item_team_pos_122">122</string>
+    <string name="text_test_lg_item_team_pos_165">165</string>
+    <string name="text_test_lg_item_team_pos_112">112</string>
+    <string name="text_test_lg_item_team_pos_177">177</string>
+    <string name="text_test_lg_item_team_pos_182">182</string>
+    <string name="text_test_lg_item_team_pos_134">134</string>
+
+    <string name="text_test_lg_item_team_pos_7">7</string>
+    <string name="text_test_lg_item_team_pos_8">8</string>
+
+
+    <string name="text_test_lg_item_team_name_1">Team Name 1</string>
+    <string name="text_test_lg_item_team_name_2">Team Name 2</string>
+    <string name="text_test_lg_item_team_name_3">Team Name 3</string>
+    <string name="text_test_lg_item_team_name_4">Team Name 4</string>
+    <string name="text_test_lg_item_team_name_5">Team Name 5</string>
+
+
 
 
 

@@ -170,7 +170,7 @@ public class TeamActivity extends AppCompatActivity
             Intent intent = getIntent();
             mTeamId = EMPTY_TEAM_ID;
             if (intent != null && intent.hasExtra(BUNDLE_INTENT_TEAM_ID)) {
-                mTeamId = intent.getIntExtra(BUNDLE_INTENT_TEAM_ID, -1);
+                mTeamId = intent.getIntExtra(BUNDLE_INTENT_TEAM_ID, EMPTY_TEAM_ID);
             }
 
             refresh(getString(R.string.action_update));
