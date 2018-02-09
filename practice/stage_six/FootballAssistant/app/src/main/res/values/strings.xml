@@ -83,6 +83,7 @@
     <string name="text_tm_item_player_sub_birthday">birthday</string>
     <string name="text_tm_item_player_sub_contract">contract end</string>
     <string name="text_tm_item_player_sub_number">number</string>
+    <string name="text_tm_item_player_nationality">[ \u2014 ]</string>
 
 
 
@@ -187,7 +188,7 @@
     <string name="text_tm_item_player_sub_birthday_dsc">The Player Subscript Birthday Date</string>
     <string name="text_tm_item_player_sub_contract_dsc">The Player Subscript Contract End Date</string>
     <string name="text_tm_item_player_sub_number_dsc">The Player Subscript Number</string>
-
+    <string name="text_tm_item_player_nationality_dsc">The nationality of Player</string>
 
 
 
@@ -247,6 +248,9 @@
     <string name="text_test_tm_item_player_position2">Centre-Back</string>
     <string name="text_test_tm_item_player_birthday2">06.01.86</string>
     <string name="text_test_tm_item_player_contract2">30.06.18</string>
+
+
+
 
 
     <string name="large_text">

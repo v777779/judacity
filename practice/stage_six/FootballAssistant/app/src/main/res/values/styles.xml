@@ -226,7 +226,7 @@
     <style name="Team.Item.Recycler.Match" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_recycler_team_size</item>
         <item name="android:textColor">@color/match_recycler_team_text</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">top|center</item>
         <item name="android:lines">3</item>
     </style>
 
@@ -242,8 +242,8 @@
         <item name="android:textColor">@color/team_recycler_status_text</item>
         <item name="android:background">@drawable/team_status_back</item>
         <item name="android:minEms">@integer/text_sm_item_status_min</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">@dimen/margin_micro</item>
+        <item name="android:paddingTop">@dimen/margin_micro</item>
     </style>
 
 <!--player-->
@@ -277,7 +277,7 @@
 
     <style name="Number.Item.Player" parent="Player.TextRecycler">
         <item name="android:textSize">@dimen/text_tm_item_player_number_size</item>
-        <item name="android:background">@drawable/player_number_back</item>
+        <item name="android:background">@drawable/player_icon_back</item>
         <!--<item name="android:fontFamily">sans-serif-light</item>-->
         <!--<item name="android:textStyle">bold</item>-->
 
