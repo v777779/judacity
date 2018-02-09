@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 .as(PictureDrawable.class)
                 .placeholder(R.drawable.back_copy2)
                 .error(R.drawable.image_error)
-//                .transition(withCrossFade())
+//                .transition(withCrossFade())  // switched off to show image only
                 .listener(new SvgSoftwareLayerSetter());
     }
 
