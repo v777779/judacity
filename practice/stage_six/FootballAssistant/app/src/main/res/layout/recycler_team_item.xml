@@ -22,24 +22,23 @@
             android:id="@+id/image_tm_team_home"
             android:layout_width="@dimen/image_rm_item_size"
             android:layout_height="@dimen/image_rm_item_size"
-
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/image_rm_item_team_logo"
-            android:src="@drawable/logo_chelsea"
+            android:src="@drawable/fc_logo"
+            app:layout_constraintBottom_toBottomOf="@+id/text_tm_item_score"
             app:layout_constraintEnd_toStartOf="@+id/guide_v4"
             app:layout_constraintStart_toStartOf="@+id/guide_v4"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/text_tm_item_score" />
+
 
         <ImageView
             android:id="@+id/image_tm_team_away"
             android:layout_width="@dimen/image_rm_item_size"
             android:layout_height="@dimen/image_rm_item_size"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/image_rm_item_team_logo"
-            android:src="@drawable/logo_stoke_city"
+            android:src="@drawable/fc_logo"
             app:layout_constraintEnd_toStartOf="@+id/guide_v1"
             app:layout_constraintStart_toStartOf="@+id/guide_v1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/text_tm_item_score" />
 
         <TextView
             android:id="@+id/text_tm_item_home"
@@ -76,12 +75,14 @@
             style="@style/Score.Item.Recycler.Match"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
             android:contentDescription="@string/text_sm_item_match_score"
             android:text="@string/text_test_sm_match_recycler_score"
-            app:layout_constraintBottom_toTopOf="@+id/text_tm_item_status"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guide_v1"
             app:layout_constraintStart_toStartOf="@+id/guide_v4"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.493" />
 
         <TextView
             android:id="@+id/text_tm_item_league"

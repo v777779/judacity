@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.StreamEncoder;
@@ -37,7 +38,10 @@ import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
+import ru.vpcb.footballassistant.glide.GlideApp;
+import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.utils.Config;
+
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
@@ -73,12 +77,13 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
      * Resources of activity
      */
     private Resources mRes;
-// test!!!
-    private int counter = 0;
+    // test!!!
+    private static int counter = 0;
 
     private List<FDFixture> mList;
     private Map<Integer, FDCompetition> mMap;
     private Map<Integer, FDTeam> mMapTeam;
+    private RequestBuilder<PictureDrawable> mRequestBuilder;
 
 
     /**
@@ -96,6 +101,8 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
+
+        setupRequestBuilder();
 
     }
 
@@ -274,6 +281,7 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
 
         }
 
+
         private void setTeamImage(int id, ImageView imageView) {
             if (mMapTeam == null) return;
             FDTeam team = mMapTeam.get(id);
@@ -281,26 +289,14 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
 
             String imageURL = team.getCrestURL();
             if (imageURL == null || imageURL.isEmpty()) return;
-//        Glide.with(mContext)
-//                .load(imageURL)
-//                .apply(new RequestOptions()
-//                        .placeholder(R.drawable.flag_001)
-//                        .error(R.drawable.flag_002)
-//                )
-//                .into(imageView);
+            mRequestBuilder.load(imageURL).into(imageView);
 
-//        Picasso.with(mContext).load(imageURL)
-//                .error(R.drawable.flag_001)
-//                .placeholder(R.drawable.flag_002)
-//                .into(imageView);
-
-            getBuilder(imageURL);
         }
 
 
-        private void getBuilder(String imageURL) {
+        private void loadWithCallback(String imageURL) {
             counter++;
-            if(counter > 1) return;
+            if (counter > 1) return;
             Glide.with(mContext)
                     .load(imageURL)
                     .apply(new RequestOptions()
@@ -324,8 +320,6 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
                                                        boolean isFirstResource) {
 
 
-
-
                             return false;
                         }
                     })
@@ -335,6 +329,31 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
 
         }
 
+    }
+
+    private void loadStandard(int id, ImageView imageView) {
+        if (mMapTeam == null) return;
+        FDTeam team = mMapTeam.get(id);
+        if (team == null) return;
+        String imageURL = team.getCrestURL();
+        if (imageURL == null || imageURL.isEmpty()) return;
+
+        Glide.with(mContext)
+                .load(imageURL)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.fc_logo_loading)
+                        .error(R.drawable.fc_logo)
+                )
+                .into(imageView);
+    }
+
+    private void setupRequestBuilder() {
+        mRequestBuilder = GlideApp.with(mContext)
+                .as(PictureDrawable.class)
+                .placeholder(R.drawable.fc_logo_loading)
+                .error(R.drawable.fc_logo)
+//                .transition(withCrossFade())
+                .listener(new SvgSoftwareLayerSetter());
     }
 
 

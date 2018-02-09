@@ -74,6 +74,8 @@
     <dimen name="text_tm_item_team_size">18sp</dimen>
     <dimen name="margin_bottom_navigation_height">56dp</dimen>
     <dimen name="text_tm_item_status_size">10sp</dimen>
+    <dimen name="team_icon_inner_size">14dp</dimen>
+
 
     <!--player-->
     <dimen name="text_tm_item_player_size">14sp</dimen>
@@ -84,6 +86,10 @@
     <dimen name="text_tm_item_player_date_size">14sp</dimen>
     <dimen name="text_tm_item_player_sub_size">10sp</dimen>
     <dimen name="text_tm_item_player_national_size">10sp</dimen>
+    <dimen name="player_icon_inner_size">14dp</dimen>
+
+
+
 
     <!--margins-->
     <dimen name="margin_micro">2dp</dimen>
