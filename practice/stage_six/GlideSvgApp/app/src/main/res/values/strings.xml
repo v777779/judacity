@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GlideSvgApp</string>
+    <string name="action_settings">Change ScaleType</string>
+</resources>
