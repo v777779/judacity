@@ -13,49 +13,35 @@
     android:paddingEnd="@dimen/margin_normal"
     android:paddingStart="@dimen/margin_normal">
 
-    <ImageView
-        android:id="@+id/image_sm_team_home"
-        android:layout_width="@dimen/image_tm_item_size"
-        android:layout_height="@dimen/image_tm_item_size"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:contentDescription="@string/image_rm_item_team_logo"
-        android:src="@drawable/logo_chelsea"
-        app:layout_constraintEnd_toStartOf="@+id/guide_v1"
-        app:layout_constraintStart_toStartOf="@+id/guide_v1"
-        app:layout_constraintTop_toBottomOf="@+id/text_sm_item_country" />
-
 
     <TextView
-        android:id="@+id/text_sm_item_country"
-        style="@style/Country.Match.TextRecycler"
+        android:id="@+id/text_lg_toolbar_country"
+        style="@style/Country.League.Toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_icon_size"
         android:contentDescription="@string/text_sm_item_match_country"
-        android:text="@string/text_test_sm_item_match_country"
+        tools:text="@string/text_test_sm_item_match_country"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_sm_team_home"
-        style="@style/Home.Team.TextRecycler"
+        android:id="@+id/text_lg_toolbar_league"
+        style="@style/Name.League.Toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/text_rm_item_team_name"
-        android:text="@string/text_test_rm_item_team_home"
+        android:contentDescription="@string/text_rm_item_league_name"
+        tools:text="@string/text_test_rm_item_league2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_sm_team_home"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/text_lg_toolbar_country" />
 
 
     <android.support.constraint.Guideline

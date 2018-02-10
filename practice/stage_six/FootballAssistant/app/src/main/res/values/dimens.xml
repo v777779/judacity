@@ -96,12 +96,15 @@
     <dimen name="text_lg_item_head_team_name_size">12sp</dimen>
     <dimen name="text_lg_item_head_team_value_size">12sp</dimen>
     <dimen name="text_lg_item_team_size">12sp</dimen>
-    <dimen name="text_lg_item_team_pos_size">10sp</dimen>
-    <dimen name="text_lg_item_team_name_size">10sp</dimen>
-    <dimen name="text_lg_item_team_value_size">10sp</dimen>
-
+    <dimen name="text_lg_item_team_pos_size">12sp</dimen>
+    <dimen name="text_lg_item_team_name_size">12sp</dimen>
+    <dimen name="text_lg_item_team_value_size">12sp</dimen>
+    <!--toolbar-->
+    <dimen name="text_lg_toolbar_country_size">14sp</dimen>
+    <dimen name="text_lg_toolbar_league_size">18sp</dimen>
 
     <!--margins-->
+    <dimen name="margin_tiny">1dp</dimen>
     <dimen name="margin_micro">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_normal">8dp</dimen>

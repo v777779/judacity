@@ -4,6 +4,7 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 import java.util.Map;
@@ -68,7 +71,7 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
     private List<FDFixture> mList;
     private Map<Integer, FDCompetition> mMap;
     private Map<Integer, FDTeam> mMapTeam;
-    private RequestBuilder<PictureDrawable> mRequestBuilder;
+    private RequestBuilder<Drawable> mRequestBuilder;
 
 
     /**
@@ -278,20 +281,45 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
 
             String imageURL = team.getCrestURL();
             if (imageURL == null || imageURL.isEmpty()) return;
+
+            imageURL = Config.imageCheck(imageURL);  // address replacement for known addresses
+
+
+//            Glide.with(mContext)
+//                    .load(imageURL)
+//                    .apply(new RequestOptions()
+//                            .placeholder(R.drawable.fc_logo_loading)
+//                            .error(R.drawable.fc_logo)
+//                    )
+//                    .into(imageView);
+
             mRequestBuilder.load(imageURL).into(imageView);
 
         }
     }
 
+    private void loadStandard(String imageURL, ImageView imageView) {
+        if (imageURL == null || imageURL.isEmpty()) return;
+
+        Glide.with(mContext)
+                .load(imageURL)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.fc_logo_loading)
+                        .error(R.drawable.fc_logo)
+                )
+                .into(imageView);
+    }
 
     private void setupRequestBuilder() {
         mRequestBuilder = GlideApp.with(mContext)
-                .as(PictureDrawable.class)
+                .as(Drawable.class)
                 .placeholder(R.drawable.fc_logo_loading)
                 .error(R.drawable.fc_logo)
 //                .transition(withCrossFade())
                 .listener(new SvgSoftwareLayerSetter());
     }
+
+
 
 
 }

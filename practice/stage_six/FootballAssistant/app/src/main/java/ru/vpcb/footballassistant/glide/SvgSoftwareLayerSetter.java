@@ -1,5 +1,6 @@
 package ru.vpcb.footballassistant.glide;
 
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.widget.ImageView;
 
@@ -14,10 +15,10 @@ import com.bumptech.glide.request.target.Target;
  * {@link com.caverock.androidsvg.SVG SVG}/{@link android.graphics.Picture Picture} can't render on
  * a hardware backed {@link android.graphics.Canvas Canvas}.
  */
-public class SvgSoftwareLayerSetter implements RequestListener<PictureDrawable> {
+public class SvgSoftwareLayerSetter implements RequestListener<Drawable> {
 
   @Override
-  public boolean onLoadFailed(GlideException e, Object model, Target<PictureDrawable> target,
+  public boolean onLoadFailed(GlideException e, Object model, Target<Drawable> target,
       boolean isFirstResource) {
     ImageView view = ((ImageViewTarget<?>) target).getView();
     view.setLayerType(ImageView.LAYER_TYPE_NONE, null);
@@ -25,8 +26,8 @@ public class SvgSoftwareLayerSetter implements RequestListener<PictureDrawable> 
   }
 
   @Override
-  public boolean onResourceReady(PictureDrawable resource, Object model,
-      Target<PictureDrawable> target, DataSource dataSource, boolean isFirstResource) {
+  public boolean onResourceReady(Drawable resource, Object model,
+      Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
     ImageView view = ((ImageViewTarget<?>) target).getView();
     view.setLayerType(ImageView.LAYER_TYPE_SOFTWARE, null);
     return false;

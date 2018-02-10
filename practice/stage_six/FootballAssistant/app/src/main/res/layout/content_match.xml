@@ -103,17 +103,6 @@
             <include layout="@layout/content_match_recycler_item2" />
         </android.support.v7.widget.CardView>
 
-
-        <TextView
-            android:id="@+id/text_large"
-            android:layout_width="0dp"
-            android:layout_height="1791dp"
-            android:layout_margin="@dimen/text_margin"
-            android:layout_marginTop="8dp"
-            android:text="@string/large_text"
-            app:layout_constraintTop_toBottomOf="@+id/card_match_recycler_item2"
-            tools:layout_editor_absoluteX="0dp" />
-
         <android.support.constraint.Guideline
             android:id="@+id/guide_v1"
             android:layout_width="wrap_content"

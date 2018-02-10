@@ -87,7 +87,6 @@ public class Config {
     public static final int RT_HEAD_VIEW_TYPE = 2;
 
 
-
     // viewpager
     public static final int VIEWPAGER_OFF_SCREEN_PAGE_NUMBER = 3;
 
@@ -118,7 +117,6 @@ public class Config {
     public static final int FRAGMENT_TEAM_VIEWPAGER_PLAYERS_POS = 1;
 
 
-
     // league activity
     public static final String BUNDLE_INTENT_LEAGUE_ID = "bundle_intent_league_id";
     public static final String BUNDLE_LEAGUE_ID = "bundle_league_id";
@@ -129,8 +127,45 @@ public class Config {
     public static final String BUNDLE_LEAGUE_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
     public static final int FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS = 0;
 
+    public static final String[] LEAGUE_CODES = new String[]{
+            "BL1", "Germany", "1. Bundesliga",
+            "BL2", "Germany", "2. Bundesliga",
+            "BL3", "Germany", "3. Bundesliga",
+            "DFB", "Germany", "Dfb-Cup",
+            "PL", "England", "Premiere League",
+            "EL1", "England", "League One",
+            "ELC", "England", "Championship",
+            "FAC", "England", "FA-Cup",
+            "SA", "Italy", "Serie A",
+            "SB", "Italy", "Serie B",
+            "PD", "Spain", "Primera Division",
+            "SD", "Spain", "Segunda Division",
+            "CDR", "Spain", "Copa del Rey",
+            "FL1", "France", "Ligue 1",
+            "FL2", "France", "Ligue 2",
+            "DED", "Netherlands", "Eredivisie",
+            "PPL", "Portugal", "Primeira Liga",
+            "GSL", "Greece", "Super League",
+            "CL", "Europe", "Champions-League",
+            "EL", "Europe", "UEFA-Cup",
+            "EC", "Europe", "European-Cup of Nations",
+            "WC", "World", "World-Cup"
+    };
+
+    private static final String[] TEAM_LOGOS = new String[] {
+
+            "Logo_of_Beşiktaş_JK.svg",
+            "https://upload.wikimedia.org/wikipedia/en/4/47/Besiktas_JK%27s_official_logo.png"
+    };
 
 
+    public static String imageCheck(String imageURL) {
+        for (int i = 0; i <TEAM_LOGOS.length ; i+=2) {
+            if(imageURL.contains(TEAM_LOGOS[i])) return TEAM_LOGOS[i+1];
+
+        }
+        return imageURL;
+    }
 
     /**
      * Span class used for RecyclerView as storage of display item parameters

@@ -24,8 +24,6 @@
             style="@style/Pos.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/text_lg_head_team_pos_dsc"
             android:text="@string/text_lg_head_team_pos"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -38,8 +36,6 @@
             style="@style/Name.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:contentDescription="@string/text_lg_head_team_name_dsc"
             android:text="@string/text_lg_head_team_name"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,8 +49,6 @@
             style="@style/Value.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/text_lg_head_team_matches_dsc"
             android:text="@string/text_lg_head_team_matches"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -67,8 +61,6 @@
             style="@style/Value.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/text_lg_head_team_points_dsc"
             android:text="@string/text_lg_head_team_points"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -81,8 +73,6 @@
             style="@style/Value.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/text_lg_head_team_goals_dsc"
             android:text="@string/text_lg_head_team_goals"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -96,8 +86,6 @@
             style="@style/Value.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/text_lg_head_team_wins_dsc"
             android:text="@string/text_lg_head_team_wins"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -110,8 +98,6 @@
             style="@style/Value.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/text_lg_head_team_draws_dsc"
             android:text="@string/text_lg_head_team_draws"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -124,21 +110,18 @@
             style="@style/Value.Head.League"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/text_lg_head_team_losses_dsc"
             android:text="@string/text_lg_head_team_losses"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guide_v9"
+            app:layout_constraintEnd_toStartOf="@+id/separator_v9"
             app:layout_constraintStart_toEndOf="@+id/separator_v8"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
             android:id="@+id/separator_v1"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
-            android:layout_marginStart="2dp"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -147,7 +130,7 @@
 
         <ImageView
             android:id="@+id/separator_v2"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
@@ -157,11 +140,9 @@
 
         <ImageView
             android:id="@+id/separator_v3"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/league_lg_item_separator"
+             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guide_v3"
@@ -170,10 +151,8 @@
 
         <ImageView
             android:id="@+id/separator_v4"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -183,10 +162,8 @@
 
         <ImageView
             android:id="@+id/separator_v5"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -196,10 +173,8 @@
 
         <ImageView
             android:id="@+id/separator_v6"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -208,10 +183,8 @@
 
         <ImageView
             android:id="@+id/separator_v7"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -220,10 +193,8 @@
 
         <ImageView
             android:id="@+id/separator_v8"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -232,19 +203,19 @@
 
         <ImageView
             android:id="@+id/separator_v9"
-            android:layout_width="@dimen/margin_micro"
+            android:layout_width="@dimen/margin_tiny"
             android:layout_height="match_parent"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_vertical_dsc"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guide_v9"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/separator_h1"
             android:layout_width="0dp"
-            android:layout_height="2dp"
+            android:layout_height="@dimen/margin_tiny"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_horizontal_dsc"
             android:visibility="visible"
@@ -255,7 +226,7 @@
         <ImageView
             android:id="@+id/separator_h2"
             android:layout_width="0dp"
-            android:layout_height="@dimen/margin_micro"
+            android:layout_height="@dimen/margin_tiny"
             android:background="@color/league_lg_item_separator"
             android:contentDescription="@string/text_lg_team_separator_horizontal_dsc"
             android:visibility="visible"
@@ -284,21 +255,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.50" />
+            app:layout_constraintGuide_percent="0.46" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.58" />
+            app:layout_constraintGuide_percent="0.55" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.66" />
+            app:layout_constraintGuide_percent="0.64" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v6"
@@ -306,7 +277,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible"
-            app:layout_constraintGuide_percent="0.74" />
+            app:layout_constraintGuide_percent="0.73" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v7"
@@ -322,7 +293,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible"
-            app:layout_constraintGuide_percent="0.9" />
+            app:layout_constraintGuide_percent="0.91" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v9"
@@ -330,7 +301,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible"
-            app:layout_constraintGuide_percent="0.98" />
+            app:layout_constraintGuide_percent="1.0" />
 
 
     </android.support.constraint.ConstraintLayout>

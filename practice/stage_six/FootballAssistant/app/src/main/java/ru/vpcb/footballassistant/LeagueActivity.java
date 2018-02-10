@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +57,7 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_VIEWPAGER_POS;
@@ -66,6 +68,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
+import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
@@ -95,6 +98,9 @@ public class LeagueActivity extends AppCompatActivity
     private ImageView mViewPagerBack;
     private TabLayout mTabLayout;
 
+    private TextView mToolbarCountry;
+    private TextView mToolbarLeague;
+
 
     private BottomNavigationView mBottomNavigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigationListener;
@@ -121,11 +127,13 @@ public class LeagueActivity extends AppCompatActivity
     private int mViewPagerPos;
     private int mLeagueId;
 
+    private Map<String, String[]> mMapLeagueName;
+    private ViewPager.OnPageChangeListener mViewPagerListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.team_activity);
+        setContentView(R.layout.league_activity);
 
         // log
         if (!sIsTimber) {
@@ -145,7 +153,21 @@ public class LeagueActivity extends AppCompatActivity
         mViewPager = findViewById(R.id.viewpager_main);
         mViewPagerBack = findViewById(R.id.image_viewpager_back);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
+        mToolbarCountry = findViewById(R.id.text_lg_toolbar_country);
+        mToolbarLeague = findViewById(R.id.text_lg_toolbar_league);
 
+// bundle
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            mLeagueId = EMPTY_LEAGUE_ID;
+            if (intent != null && intent.hasExtra(BUNDLE_INTENT_LEAGUE_ID)) {
+                mLeagueId = intent.getIntExtra(BUNDLE_INTENT_LEAGUE_ID, EMPTY_LEAGUE_ID);
+            }
+        } else {
+            mIsRotated = true;
+            mViewPagerPos = savedInstanceState.getInt(BUNDLE_LEAGUE_VIEWPAGER_POS, FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS);
+            mLeagueId = savedInstanceState.getInt(BUNDLE_LEAGUE_ID, EMPTY_LEAGUE_ID);
+        }
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
@@ -157,6 +179,8 @@ public class LeagueActivity extends AppCompatActivity
         setupProgress();
         setupReceiver();
         setupListeners();
+        setupMapLeagueName();
+        setupViewPagerListener();
 
 // test!!!  check data
         if (mViewPagerData == null) {
@@ -169,22 +193,12 @@ public class LeagueActivity extends AppCompatActivity
 
 
         if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            mLeagueId = EMPTY_LEAGUE_ID;
-            if (intent != null && intent.hasExtra(BUNDLE_INTENT_LEAGUE_ID)) {
-                mLeagueId = intent.getIntExtra(BUNDLE_INTENT_LEAGUE_ID, EMPTY_LEAGUE_ID);
-            }
-
             refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
-        } else {
-            mIsRotated = true;
-            mViewPagerPos = savedInstanceState.getInt(BUNDLE_LEAGUE_VIEWPAGER_POS, FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS);
-            mLeagueId = savedInstanceState.getInt(BUNDLE_LEAGUE_ID, EMPTY_LEAGUE_ID);
         }
 
 
@@ -345,6 +359,15 @@ public class LeagueActivity extends AppCompatActivity
 
     // methods
 
+    private void setupMapLeagueName() {
+        mMapLeagueName = new HashMap<>();
+
+        for (int i = 0; i < LEAGUE_CODES.length; i += 3) {
+            mMapLeagueName.put(LEAGUE_CODES[i], new String[]{LEAGUE_CODES[i + 1], LEAGUE_CODES[i + 2]});
+        }
+
+    }
+
     private void startFragmentLeague() {
 
     }
@@ -480,18 +503,17 @@ public class LeagueActivity extends AppCompatActivity
         List<View> recyclers = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
-        if (fixtures != null && fixtures.size() > 0) {
-            recyclers.add(getRecyclerTeam(fixtures));
+// test!!!
+
+        for (int i = 0; i < 10; i++) {
+            if (fixtures != null && fixtures.size() > 0) {
+                recyclers.add(getRecyclerTeam(fixtures));
+                titles.add(LEAGUE_CODES[(i * 3) % LEAGUE_CODES.length]);
+            }
         }
 
-        if (players != null && players.size() > 0) {
-            recyclers.add(getRecyclerPlayer(players));
-        }
-
-        titles.add("Matches");
-        titles.add("Players");
-
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, 0, null, null);
+        int current = recyclers.size() / 2;
+        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, null, null);
         return viewPagerData;
     }
 
@@ -503,23 +525,36 @@ public class LeagueActivity extends AppCompatActivity
         }
     }
 
-    private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    private void setupViewPagerListener() {
+        mViewPagerListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
             public void onPageSelected(int position) {
+                mViewPagerPos = position;
+                TabLayout.Tab tab = mTabLayout.getTabAt(position);
+                if(tab == null || tab.getText() == null) return;
+
+                String[] names = mMapLeagueName.get(tab.getText().toString());
+                if(names == null) return;
+                mToolbarCountry.setText(names[0]);
+                mToolbarLeague.setText(names[1]);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
             }
-        });
+        };
+    }
+
+    private void setupViewPager() {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
+        mViewPager.setAdapter(adapter);
+        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
+        mViewPager.addOnPageChangeListener(mViewPagerListener);
 
         mTabLayout.setupWithViewPager(mViewPager);
     }
@@ -529,20 +564,7 @@ public class LeagueActivity extends AppCompatActivity
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(mViewPagerPos);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mViewPagerPos = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+        mViewPager.addOnPageChangeListener(mViewPagerListener);
 
         mTabLayout.setupWithViewPager(mViewPager, false);
     }
@@ -572,14 +594,48 @@ public class LeagueActivity extends AppCompatActivity
 // test!!!  update mTabLayout workaround
 // TODO Check workaround of TabLayout update for better solution
 
+    private void updateTabLayout(ViewPagerData data, ViewPagerData last) {
+        try {
+
+            List<String> titles = data.getTitles();
+            int lastSize = last.getTitles().size();
+
+            int size = data.getTitles().size();
+            if (size < lastSize) {
+                for (int i = size; i < lastSize; i++) {
+                    mTabLayout.removeTabAt(size);
+                }
+            } else {
+                for (int i = lastSize; i < size; i++) {
+                    mTabLayout.addTab(mTabLayout.newTab());
+                }
+            }
+            for (int i = 0; i < size; i++) {
+                mTabLayout.getTabAt(i).setText(titles.get(i));
+            }
+        } catch (NullPointerException e) {
+            Timber.d(getString(R.string.viewpager_tab_exception, e.getMessage()));
+        }
+    }
+
+    //TODO  ViewPagerPos проверить
     private void updateViewPager(final ViewPagerData data) {
         stopProgress();
         if (mViewPager == null || data == null) return;
+//        int pos = mViewPager.getCurrentItem();
+//
+//        if (pos == 0) {
+//            pos = data.mPos;                    // current day
+//        } else {
+//
+//            updateTabLayout(data, mViewPagerData);
+//            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
+//        }
 
-
+        int pos = data.getPos();
         mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
-        mViewPager.setCurrentItem(mViewPagerPos);
+        mViewPager.setCurrentItem(pos);
 
     }
 

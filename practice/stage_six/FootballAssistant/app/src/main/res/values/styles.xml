@@ -352,6 +352,23 @@
         <item name="android:textColor">@color/league_lg_item_team_value</item>
     </style>
 
+    <!--toolbar-->
+
+
+    <style name="Country.League.Toolbar" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_lg_toolbar_country_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Name.League.Toolbar" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">@dimen/text_lg_toolbar_league_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+
+
+
 
     <!--other-->
     <!--recycler-->

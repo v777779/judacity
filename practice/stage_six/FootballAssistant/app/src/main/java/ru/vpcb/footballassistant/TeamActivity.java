@@ -145,9 +145,22 @@ public class TeamActivity extends AppCompatActivity
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
 
+// bundle
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            mTeamId = EMPTY_TEAM_ID;
+            if (intent != null && intent.hasExtra(BUNDLE_INTENT_TEAM_ID)) {
+                mTeamId = intent.getIntExtra(BUNDLE_INTENT_TEAM_ID, EMPTY_TEAM_ID);
+            }
+        } else {
+            mIsRotated = true;
+            mViewPagerPos = savedInstanceState.getInt(BUNDLE_TEAM_VIEWPAGER_POS, FRAGMENT_TEAM_VIEWPAGER_TEAM_POS);
+            mTeamId = savedInstanceState.getInt(BUNDLE_TEAM_ID, EMPTY_TEAM_ID);
+        }
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
+
 
 // progress
         setupActionBar();
