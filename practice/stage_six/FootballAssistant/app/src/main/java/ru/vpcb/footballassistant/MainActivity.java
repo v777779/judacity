@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity  {
     // TODO проставить FDFixture competition при загрузке
     // TODO Player Date Content Provider remove conversion
     // TODO Сделать управление через  DPad по Accessibility
+    // TODO Database Dates и Links добавить и сделать полностью текстовыми
 
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
 

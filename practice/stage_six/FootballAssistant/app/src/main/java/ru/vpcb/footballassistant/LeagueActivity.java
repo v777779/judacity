@@ -419,7 +419,7 @@ public class LeagueActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_team, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_team_container);
 
-        RecyclerTeamAdapter adapter = new RecyclerTeamAdapter(this, list, mMap, mMapTeams);
+        RecyclerLeagueAdapter adapter = new RecyclerLeagueAdapter(this, list, mMap, mMapTeams);
         adapter.setHasStableIds(true); // optimization, bindView() not called for the same position
         recyclerView.setAdapter(adapter);
 
