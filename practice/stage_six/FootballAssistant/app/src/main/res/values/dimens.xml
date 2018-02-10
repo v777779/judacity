@@ -96,9 +96,9 @@
     <dimen name="text_lg_item_head_team_name_size">14sp</dimen>
     <dimen name="text_lg_item_head_team_value_size">14sp</dimen>
     <dimen name="text_lg_item_team_size">14sp</dimen>
-    <dimen name="text_lg_item_team_pos_size">14sp</dimen>
+    <dimen name="text_lg_item_team_pos_size">12sp</dimen>
     <dimen name="text_lg_item_team_name_size">14sp</dimen>
-    <dimen name="text_lg_item_team_value_size">14sp</dimen>
+    <dimen name="text_lg_item_team_value_size">12sp</dimen>
 
 
     <!--margins-->

@@ -279,5 +279,8 @@
     <color name="league_lg_item_team_value">#3a3a3a</color>
     <color name="league_lg_item_separator">#989898</color>
 
+    <color name="league_lg_head_back">#d8d8d8</color>
+    <color name="league_lg_item_back_light">#ecf2e9</color>
+    <color name="league_lg_item_back_dark">#edf8fb</color>
 
 </resources>

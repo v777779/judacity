@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Calendar auto select Date и выбор по dismiss, double click или OK
     // TODO проставить FDFixture competition при загрузке
     // TODO Player Date Content Provider remove conversion
+    // TODO Сделать управление через  DPad по Accessibility
 
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
 

@@ -313,17 +313,24 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="Pos.Head.League" parent="League.TextRecycler">
+    <style name="Head.League.TextRecycler" parent="League.TextRecycler">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Pos.Head.League" parent="Head.League.TextRecycler">
         <item name="android:textSize">@dimen/text_lg_item_head_team_pos_size</item>
         <item name="android:textColor">@color/league_lg_item_head_team_pos</item>
     </style>
 
-    <style name="Name.Head.League" parent="League.TextRecycler">
+    <style name="Name.Head.League" parent="Head.League.TextRecycler">
         <item name="android:textSize">@dimen/text_lg_item_head_team_name_size</item>
         <item name="android:textColor">@color/league_lg_item_head_team_name</item>
+        <item name="android:lines">3</item>
+
     </style>
 
-    <style name="Value.Head.League" parent="League.TextRecycler">
+    <style name="Value.Head.League" parent="Head.League.TextRecycler">
         <item name="android:textSize">@dimen/text_lg_item_head_team_value_size</item>
         <item name="android:textColor">@color/league_lg_item_head_team_value</item>
     </style>
@@ -337,6 +344,7 @@
     <style name="Name.Item.League" parent="League.TextRecycler">
         <item name="android:textSize">@dimen/text_lg_item_team_name_size</item>
         <item name="android:textColor">@color/league_lg_item_team_name</item>
+        <item name="android:lines">3</item>
     </style>
 
     <style name="Value.Item.League" parent="League.TextRecycler">

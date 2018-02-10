@@ -85,6 +85,16 @@
     <string name="text_tm_item_player_sub_number">number</string>
     <string name="text_tm_item_player_nationality">[ \u2014 ]</string>
 
+    <!--league-->
+    <!--head-->
+    <string name="text_lg_head_team_pos">№</string>
+    <string name="text_lg_head_team_name">Club Name</string>
+    <string name="text_lg_head_team_matches">M</string>
+    <string name="text_lg_head_team_points">P</string>
+    <string name="text_lg_head_team_goals">G</string>
+    <string name="text_lg_head_team_wins">W</string>
+    <string name="text_lg_head_team_draws">D</string>
+    <string name="text_lg_head_team_losses">L</string>
 
 
     <!--other-->
@@ -192,8 +202,9 @@
 
     <!--screen8-->
     <!--league-->
-    <string name="image_lg_item_team_logo_dsc">The Team Logo in League Table</string>
-    <string name="image_lg_item_team_pos_dsc">The Team Position Number in League Table</string>
+    <!--item-->
+    <string name="text_lg_team_pos_dsc">The Team Position Number in League Table</string>
+    <string name="image_lg_team_logo_dsc">The Team Logo in League Table</string>
     <string name="text_lg_team_name_dsc">The Team Name in League Table</string>
     <string name="text_lg_team_matches_dsc">The Number of Team Matches in League Table</string>
     <string name="text_lg_team_points_dsc">The Number of Team Points in League Table</string>
@@ -201,7 +212,17 @@
     <string name="text_lg_team_wins_dsc">The Number of Team Wins in League Table</string>
     <string name="text_lg_team_draws_dsc">The Number of Team Draws in League Table</string>
     <string name="text_lg_team_losses_dsc">The Number of Team Losses in League Table</string>
-
+    <string name="text_lg_team_separator_vertical_dsc">The Vertical Separator in League Table</string>
+    <string name="text_lg_team_separator_horizontal_dsc">The Horizontal Separator in League Table</string>
+<!--head-->
+    <string name="text_lg_head_team_pos_dsc">The Header  Team Position Number in League Table</string>
+    <string name="text_lg_head_team_name_dsc">The Header Team Logo and Name in League Table</string>
+    <string name="text_lg_head_team_matches_dsc">The Header  Number of Team Matches in League Table</string>
+    <string name="text_lg_head_team_points_dsc">The Header  Number of Team Points in League Table</string>
+    <string name="text_lg_head_team_goals_dsc">The Header  Number of Team Goals in League Table</string>
+    <string name="text_lg_head_team_wins_dsc">The Header  Number of Team Wins in League Table</string>
+    <string name="text_lg_head_team_draws_dsc">The Header  Number of Team Draws in League Table</string>
+    <string name="text_lg_head_team_losses_dsc">The Header  Number of Team Losses in League Table</string>
 
 
 <!--other-->
@@ -285,8 +306,8 @@
     <string name="text_test_lg_item_team_pos_8">8</string>
 
 
-    <string name="text_test_lg_item_team_name_1">Team Name 1</string>
-    <string name="text_test_lg_item_team_name_2">Team Name 2</string>
+    <string name="text_test_lg_item_team_name_1">Eintracht Braunschweig FC Junior League sdfd sdfd sdfdsf</string>
+    <string name="text_test_lg_item_team_name_2">Manchester United Junior League FC</string>
     <string name="text_test_lg_item_team_name_3">Team Name 3</string>
     <string name="text_test_lg_item_team_name_4">Team Name 4</string>
     <string name="text_test_lg_item_team_name_5">Team Name 5</string>
