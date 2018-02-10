@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -77,8 +76,8 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
     private List<FDFixture> mList;
     private Map<Integer, FDCompetition> mMap;
     private Map<Integer, FDTeam> mMapTeam;
-    private RequestBuilder<Drawable> mRequestBuilder;
-
+    private RequestBuilder<PictureDrawable> mRequestBuilder;
+    private RequestBuilder<Drawable> mRequestBuilderCommon;
 
 
     /**
@@ -284,9 +283,13 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
 
             String imageURL = team.getCrestURL();
             if (imageURL == null || imageURL.isEmpty()) return;
-            imageURL = Config.imageCheck(imageURL);  // address replacement for known addresses
-            mRequestBuilder.load(imageURL).into(imageView);
+            imageURL = Config.imageCheckReplaceURL(imageURL);  // address replacement for known addresses
 
+            if(imageURL.toLowerCase().endsWith("svg")) {
+                mRequestBuilder.load(imageURL).into(imageView);
+            }else {
+                mRequestBuilderCommon.load(imageURL).into(imageView);
+            }
 //            Glide.with(mContext)
 //                    .load(imageURL)
 //                    .apply(new RequestOptions()
@@ -351,14 +354,31 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
                 .into(imageView);
     }
 
-       private void setupRequestBuilder() {
+    private void setupRequestBuilder() {
         mRequestBuilder = GlideApp.with(mContext)
-                .as(Drawable.class)
+                .as(PictureDrawable.class)
                 .placeholder(R.drawable.fc_logo_loading)
                 .error(R.drawable.fc_logo)
 //                .transition(withCrossFade())
                 .listener(new SvgSoftwareLayerSetter());
+        mRequestBuilderCommon = GlideApp.with(mContext)
+                .as(Drawable.class)
+                .placeholder(R.drawable.fc_logo_loading)
+                .error(R.drawable.fc_logo)
+//                .transition(withCrossFade())
+                .listener(new CommonRequestListener());
     }
 
+    private class CommonRequestListener implements RequestListener<Drawable> {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            return false;
+        }
+    }
 
 }

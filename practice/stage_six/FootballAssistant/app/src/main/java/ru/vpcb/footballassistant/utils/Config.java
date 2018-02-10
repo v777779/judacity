@@ -159,7 +159,7 @@ public class Config {
     };
 
 
-    public static String imageCheck(String imageURL) {
+    public static String imageCheckReplaceURL(String imageURL) {
         for (int i = 0; i <TEAM_LOGOS.length ; i+=2) {
             if(imageURL.contains(TEAM_LOGOS[i])) return TEAM_LOGOS[i+1];
 

@@ -17,7 +17,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 import java.util.Map;
@@ -71,7 +75,8 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
     private List<FDFixture> mList;
     private Map<Integer, FDCompetition> mMap;
     private Map<Integer, FDTeam> mMapTeam;
-    private RequestBuilder<Drawable> mRequestBuilder;
+    private RequestBuilder<PictureDrawable> mRequestBuilder;
+    private RequestBuilder<Drawable> mRequestBuilderCommon;
 
 
     /**
@@ -270,7 +275,6 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
             mTextTeamPos.setText(String.valueOf(position));
             mTextTeamName.setText(fixture.getHomeTeamName());
             setTeamImage(fixture.getHomeTeamId(), mImageTeamLogo);
-
         }
 
 
@@ -282,19 +286,13 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
             String imageURL = team.getCrestURL();
             if (imageURL == null || imageURL.isEmpty()) return;
 
-            imageURL = Config.imageCheck(imageURL);  // address replacement for known addresses
+            imageURL = Config.imageCheckReplaceURL(imageURL);  // address replacement for known addresses
+            if (imageURL.toLowerCase().endsWith("svg")) {
+                mRequestBuilder.load(imageURL).into(imageView);
 
-
-//            Glide.with(mContext)
-//                    .load(imageURL)
-//                    .apply(new RequestOptions()
-//                            .placeholder(R.drawable.fc_logo_loading)
-//                            .error(R.drawable.fc_logo)
-//                    )
-//                    .into(imageView);
-
-            mRequestBuilder.load(imageURL).into(imageView);
-
+            } else {
+                mRequestBuilderCommon.load(imageURL).into(imageView);
+            }
         }
     }
 
@@ -312,14 +310,32 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
 
     private void setupRequestBuilder() {
         mRequestBuilder = GlideApp.with(mContext)
-                .as(Drawable.class)
+                .as(PictureDrawable.class)
                 .placeholder(R.drawable.fc_logo_loading)
                 .error(R.drawable.fc_logo)
 //                .transition(withCrossFade())
                 .listener(new SvgSoftwareLayerSetter());
+
+        mRequestBuilderCommon = GlideApp.with(mContext)
+                .as(Drawable.class)
+                .placeholder(R.drawable.fc_logo_loading)
+                .error(R.drawable.fc_logo)
+//                .transition(withCrossFade())
+                .listener(new CommonRequestListener());
+
     }
 
 
+    private class CommonRequestListener implements RequestListener<Drawable> {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            return false;
+        }
 
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            return false;
+        }
+    }
 
 }
