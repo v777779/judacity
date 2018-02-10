@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements IFragment {
 
 
     private ViewPager mViewPager;
-    private ViewPager mViewPager2;
+    private ViewPagerFrozen mViewPager2;
     private List<List<String>> mViewPagerList;
     private int mViewPagerPos;
     private TabLayout mTabLayout;
@@ -60,10 +60,9 @@ public class MainActivity extends AppCompatActivity implements IFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                if (mMotionEvent != null)
-                    mViewPager.onTouchEvent(mMotionEvent);
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
             }
         });
 
@@ -249,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements IFragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
             }
         });
 
@@ -261,4 +261,6 @@ public class MainActivity extends AppCompatActivity implements IFragment {
         String s = (value == 0 ? "Action_OK" : "Action_Cancel");
         Snackbar.make(getWindow().getDecorView(), s, Snackbar.LENGTH_SHORT).show();
     }
+
+
 }

@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_lg_toolbar_country" />
 
-    <android.support.v4.view.ViewPager
+    <ru.vpcb.viewpagertab.ViewPagerFrozen
         android:id="@+id/viewpager_toolbar"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -54,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_lg_toolbar_league">
 
-    </android.support.v4.view.ViewPager>
+    </ru.vpcb.viewpagertab.ViewPagerFrozen>
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_v1"
