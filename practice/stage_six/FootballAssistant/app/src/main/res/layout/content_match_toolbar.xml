@@ -23,6 +23,10 @@
         android:layout_marginStart="@dimen/margin_normal"
         android:contentDescription="@string/image_rm_item_team_logo"
         android:src="@drawable/logo_chelsea"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+
         app:layout_constraintBottom_toBottomOf="@+id/text_sm_item_time"
         app:layout_constraintEnd_toStartOf="@+id/guide_v4"
         app:layout_constraintStart_toStartOf="@+id/guide_v4"
@@ -38,6 +42,10 @@
 
         android:layout_marginTop="@dimen/margin_normal"
         android:contentDescription="@string/image_rm_item_team_logo"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+
         android:src="@drawable/logo_stoke_city"
         app:layout_constraintBottom_toBottomOf="@+id/text_sm_item_time"
         app:layout_constraintEnd_toStartOf="@+id/guide_v5"
@@ -64,10 +72,13 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/text_sm_item_match_league"
         android:text="@string/text_test_rm_item_league"
-
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_country" />
+
 
 
     <TextView
@@ -169,13 +180,10 @@
         android:id="@+id/match_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_notifications_none_white"
         android:contentDescription="@string/text_sm_item_match_icon_notification"
-
         app:layout_constraintBottom_toBottomOf="@+id/text_sm_item_status"
         app:layout_constraintEnd_toStartOf="@+id/guide_v5"
         app:layout_constraintStart_toStartOf="@+id/guide_v5"
@@ -187,6 +195,10 @@
         android:layout_height="@dimen/image_sm_item_icon_back"
         android:contentDescription="@string/text_sm_item_match_icon_notification_back"
         android:src="@drawable/match_icon_back"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+
         app:layout_constraintBottom_toBottomOf="@+id/match_notification"
         app:layout_constraintEnd_toEndOf="@+id/match_notification"
         app:layout_constraintStart_toStartOf="@+id/match_notification"
@@ -211,6 +223,10 @@
         android:layout_height="@dimen/image_sm_item_icon_back"
         android:contentDescription="@string/text_sm_item_match_icon_favorite_back"
         android:src="@drawable/match_icon_back"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+
         app:layout_constraintBottom_toBottomOf="@+id/match_favorite"
         app:layout_constraintEnd_toEndOf="@+id/match_favorite"
         app:layout_constraintStart_toStartOf="@+id/match_favorite"

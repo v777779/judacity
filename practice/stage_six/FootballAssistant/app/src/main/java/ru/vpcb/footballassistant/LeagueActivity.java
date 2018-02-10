@@ -95,8 +95,10 @@ public class LeagueActivity extends AppCompatActivity
 
     private RecyclerView mRecyclerView;
     private ViewPager mViewPager;
+    private ViewPagerFrozen mViewPagerTitle;
     private ImageView mViewPagerBack;
     private TabLayout mTabLayout;
+    private int mViewPagerState;
 
     private TextView mToolbarCountry;
     private TextView mToolbarLeague;
@@ -151,6 +153,7 @@ public class LeagueActivity extends AppCompatActivity
         mToolbarLogo = findViewById(R.id.toolbar_logo);
         mBottomNavigation = findViewById(R.id.bottom_navigation);
         mViewPager = findViewById(R.id.viewpager_main);
+        mViewPagerTitle = findViewById(R.id.viewpager_title);
         mViewPagerBack = findViewById(R.id.image_viewpager_back);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
         mToolbarCountry = findViewById(R.id.text_lg_toolbar_country);
@@ -163,6 +166,9 @@ public class LeagueActivity extends AppCompatActivity
             if (intent != null && intent.hasExtra(BUNDLE_INTENT_LEAGUE_ID)) {
                 mLeagueId = intent.getIntExtra(BUNDLE_INTENT_LEAGUE_ID, EMPTY_LEAGUE_ID);
             }
+            if (mViewPagerData != null) mViewPagerPos = mViewPagerData.getPos();
+
+
         } else {
             mIsRotated = true;
             mViewPagerPos = savedInstanceState.getInt(BUNDLE_LEAGUE_VIEWPAGER_POS, FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS);
@@ -185,8 +191,11 @@ public class LeagueActivity extends AppCompatActivity
 // test!!!  check data
         if (mViewPagerData == null) {
             setupViewPager();
+            setupViewPagerTitle();
         } else {
             setupViewPager(mViewPagerData);
+            setupViewPagerTitle(mViewPagerData);
+
         }
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
@@ -435,6 +444,18 @@ public class LeagueActivity extends AppCompatActivity
 
     }
 
+    private View getTitlePage(String code) {
+        View titlePageView = getLayoutInflater().inflate(R.layout.league_viewpager_item, null);
+        String[] names = mMapLeagueName.get(code);
+        if (names == null || names[0] == null || names[1] == null) return titlePageView;
+
+        ((TextView) titlePageView.findViewById(R.id.text_lg_toolbar_country)).setText(names[0]);
+        ((TextView) titlePageView.findViewById(R.id.text_lg_toolbar_league)).setText(names[1]);
+
+        return titlePageView;
+    }
+
+
     private RecyclerView getRecyclerTeam(List<FDFixture> list) {
         Config.Span sp = Config.getDisplayMetrics(this);
 
@@ -499,21 +520,22 @@ public class LeagueActivity extends AppCompatActivity
     private ViewPagerData getViewPagerData(List<FDFixture> fixtures, List<FDPlayer> players) {
 // fixtures
 // players of any team
-
         List<View> recyclers = new ArrayList<>();
+        List<View> titlePages = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
 // test!!!
-
         for (int i = 0; i < 10; i++) {
             if (fixtures != null && fixtures.size() > 0) {
+                String leagueCode = LEAGUE_CODES[(i * 3) % LEAGUE_CODES.length];
                 recyclers.add(getRecyclerTeam(fixtures));
-                titles.add(LEAGUE_CODES[(i * 3) % LEAGUE_CODES.length]);
+                titlePages.add(getTitlePage(leagueCode));
+                titles.add(leagueCode);
             }
         }
 
         int current = recyclers.size() / 2;
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, null, null);
+        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titlePages, titles, current, null, null);
         return viewPagerData;
     }
 
@@ -529,25 +551,40 @@ public class LeagueActivity extends AppCompatActivity
         mViewPagerListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (mViewPagerState == ViewPager.SCROLL_STATE_IDLE) return;
+                mViewPagerTitle.scrollTo(mViewPager.getScrollX(), mViewPagerTitle.getScrollY());
+
             }
+
 
             @Override
             public void onPageSelected(int position) {
                 mViewPagerPos = position;
-                TabLayout.Tab tab = mTabLayout.getTabAt(position);
-                if(tab == null || tab.getText() == null) return;
+                mViewPagerData.mPos = position;
 
-                String[] names = mMapLeagueName.get(tab.getText().toString());
-                if(names == null) return;
-                mToolbarCountry.setText(names[0]);
-                mToolbarLeague.setText(names[1]);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                mViewPagerState = state;
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    mViewPagerTitle.setCurrentItem(mViewPager.getCurrentItem(), false);
+                }
             }
         };
+    }
+
+    private void setupViewPagerTitle() {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
+        mViewPagerTitle.setAdapter(adapter);
+        mViewPagerTitle.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
+    }
+
+    private void setupViewPagerTitle(ViewPagerData viewPagerData) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, viewPagerData.getTitlePages(), viewPagerData.getTitles());
+        mViewPagerTitle.setAdapter(adapter);
+        mViewPagerTitle.setCurrentItem(mViewPagerPos);
+        mViewPagerTitle.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
     }
 
     private void setupViewPager() {
@@ -621,21 +658,14 @@ public class LeagueActivity extends AppCompatActivity
     //TODO  ViewPagerPos проверить
     private void updateViewPager(final ViewPagerData data) {
         stopProgress();
-        if (mViewPager == null || data == null) return;
-//        int pos = mViewPager.getCurrentItem();
-//
-//        if (pos == 0) {
-//            pos = data.mPos;                    // current day
-//        } else {
-//
-//            updateTabLayout(data, mViewPagerData);
-//            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
-//        }
+        if (mViewPager == null || mViewPagerTitle == null || data == null) return;
 
-        int pos = data.getPos();
+        if (mViewPagerData == null) mViewPagerPos = data.getPos();
+
         mViewPagerData = data;
-        ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
-        mViewPager.setCurrentItem(pos);
+        ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.getRecyclers(), data.getTitles());
+        ((ViewPagerAdapter) mViewPagerTitle.getAdapter()).swap(data.getTitlePages(), data.getTitles());
+        mViewPager.setCurrentItem(mViewPagerPos);
 
     }
 
@@ -788,20 +818,22 @@ public class LeagueActivity extends AppCompatActivity
 
     private class ViewPagerData {
         private List<View> mRecyclers;
+        private List<View> mTitlePages;
         private List<String> mTitles;
         private int mPos;
         private List<List<FDFixture>> mList;
         private Map<Long, Integer> mMap;
 
 
-        public ViewPagerData(List<View> recyclers, List<String> titles, int pos,
-                             List<List<FDFixture>> list,
-                             Map<Long, Integer> map) {
+        public ViewPagerData(List<View> recyclers, List<View> titlePages,
+                             List<String> titles, int pos,
+                             List<List<FDFixture>> list, Map<Long, Integer> map) {
             this.mRecyclers = recyclers;
             this.mTitles = titles;
             this.mPos = pos;
             this.mList = list;
             this.mMap = map;
+            this.mTitlePages = titlePages;
 
         }
 
@@ -823,6 +855,10 @@ public class LeagueActivity extends AppCompatActivity
 
         public Map<Long, Integer> getMap() {
             return mMap;
+        }
+
+        public List<View> getTitlePages() {
+            return mTitlePages;
         }
     }
 
