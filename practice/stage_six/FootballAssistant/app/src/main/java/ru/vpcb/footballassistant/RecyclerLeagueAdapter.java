@@ -4,7 +4,6 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -15,13 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +29,7 @@ import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.utils.Config;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.RT_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
 
@@ -118,7 +111,7 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
 
     @Override
     public int getItemViewType(int position) {
-
+        if (position == 0) return RT_HEAD_VIEW_TYPE;
         return position % 2 == 0 ? RT_ITEM_VIEW_TYPE_LIGHT : RT_ITEM_VIEW_TYPE_DARK;
     }
 
@@ -132,7 +125,10 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layoutId = R.layout.recycler_league_item;
+        int layoutId;
+        if (viewType == RT_HEAD_VIEW_TYPE) layoutId = R.layout.league_recycler_head;
+        else layoutId = R.layout.league_recycler_item;
+
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
                 .inflate(layoutId, parent, false);
 //        view.getLayoutParams().height = mSpan.getHeight();
@@ -149,7 +145,7 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        holder.fill(position);
+        holder.fill(position);
         final int pos = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,33 +184,30 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
      * Used to hold text and image resources of Item of RecyclerView
      */
     class ViewHolder extends RecyclerView.ViewHolder {
+        @Nullable
+        @BindView(R.id.text_lg_team_pos)
+        TextView mTextTeamPos;
 
-        @BindView(R.id.text_tm_item_score)
-        TextView mTextScore;
-
-
-        @BindView(R.id.image_tm_team_home)
-        ImageView mImageHome;
-
-        @BindView(R.id.image_tm_team_away)
-        ImageView mImageAway;
-
-        @BindView(R.id.text_tm_item_home)
-        TextView mTextHome;
-
-        @BindView(R.id.text_tm_item_away)
-        TextView mTextAway;
-
+        @Nullable
+        @BindView(R.id.image_lg_team_logo)
+        ImageView mImageTeamLogo;
+        @Nullable
+        @BindView(R.id.text_lg_team_name)
+        TextView mTextTeamName;
+        @Nullable
+        @BindView(R.id.text_lg_matches)
+        TextView mTextTeamMatches;
+        @Nullable
         @BindView(R.id.text_tm_item_league)
         TextView mTextLeague;
-
+        @Nullable
         @BindView(R.id.text_tm_item_date)
         TextView mTextDate;
-
+        @Nullable
         @BindView(R.id.text_tm_item_status)
         TextView mTextStatus;
-
-        @BindView(R.id.constraint_recycler_match_item)
+        @Nullable
+        @BindView(R.id.constraint_recycler_league_item)
         View layout;
 
         private int mColorDark;
@@ -229,7 +222,7 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            mColorDark = ContextCompat.getColor(mContext, R.color.match_recycler_card_back_dark);
+            mColorDark = ContextCompat.getColor(mContext, R.color.league_lg_item_back_dark);
         }
 
         /**
@@ -241,35 +234,39 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
         private void fill(int position) {
             if (mList == null || mList.get(position) == null) return;
 
-            FDFixture fixture = mList.get(position);
-// test!!!
-            String league = EMPTY_LONG_DASH;
-            int competitionId = fixture.getCompetitionId();
-            if (mMap != null && competitionId > 0) {
-                FDCompetition competition = mMap.get(fixture.getCompetitionId());
-                if (competition != null) league = competition.getCaption();
-            }
-
-            String score = fixture.getMatchScore();
-            String dateTime = fixture.getMatchDate();
+            if (getItemViewType() == RT_HEAD_VIEW_TYPE) return;
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {
                 layout.setBackgroundColor(mColorDark);
             }
 
-//            mImageHome.setImageResource(homeTeamImageId);
-//            mImageAway.setImageResource(awayTeamImageId);
 
-            mTextScore.setText(score);
-            mTextLeague.setText(league);
-            mTextDate.setText(dateTime.substring(6));
-            mTextStatus.setText(fixture.getStatus());
-            mTextHome.setText(fixture.getHomeTeamName());
-            mTextAway.setText(fixture.getAwayTeamName());
-
-            setTeamImage(fixture.getHomeTeamId(), mImageHome);
-            setTeamImage(fixture.getAwayTeamId(), mImageAway);
-
+            FDFixture fixture = mList.get(position);
+//// test!!!
+//            String league = EMPTY_LONG_DASH;
+//            int competitionId = fixture.getCompetitionId();
+//            if (mMap != null && competitionId > 0) {
+//                FDCompetition competition = mMap.get(fixture.getCompetitionId());
+//                if (competition != null) league = competition.getCaption();
+//            }
+//
+//            String score = fixture.getMatchScore();
+//            String dateTime = fixture.getMatchDate();
+//
+//            if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {
+//                layout.setBackgroundColor(mColorDark);
+//            }
+//
+////            mImageHome.setImageResource(homeTeamImageId);
+////            mImageAway.setImageResource(awayTeamImageId);
+//
+//            mTextScore.setText(score);
+//            mTextLeague.setText(league);
+//            mTextDate.setText(dateTime.substring(6));
+//            mTextStatus.setText(fixture.getStatus());
+            mTextTeamPos.setText(String.valueOf(position));
+            mTextTeamName.setText(fixture.getHomeTeamName());
+            setTeamImage(fixture.getHomeTeamId(), mImageTeamLogo);
 
         }
 
@@ -284,60 +281,8 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
             mRequestBuilder.load(imageURL).into(imageView);
 
         }
-
-
-        private void loadWithCallback(String imageURL) {
-            counter++;
-            if (counter > 1) return;
-            Glide.with(mContext)
-                    .load(imageURL)
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.flag_001)
-                            .error(R.drawable.flag_002))
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e,
-                                                    Object model,
-                                                    Target<Drawable> target,
-                                                    boolean isFirstResource) {
-
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource,
-                                                       Object model,
-                                                       Target<Drawable> target,
-                                                       DataSource dataSource,
-                                                       boolean isFirstResource) {
-
-
-                            return false;
-                        }
-                    })
-                    .transition(withCrossFade())
-                    .into(mImageHome);
-
-
-        }
-
     }
 
-    private void loadStandard(int id, ImageView imageView) {
-        if (mMapTeam == null) return;
-        FDTeam team = mMapTeam.get(id);
-        if (team == null) return;
-        String imageURL = team.getCrestURL();
-        if (imageURL == null || imageURL.isEmpty()) return;
-
-        Glide.with(mContext)
-                .load(imageURL)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.fc_logo_loading)
-                        .error(R.drawable.fc_logo)
-                )
-                .into(imageView);
-    }
 
     private void setupRequestBuilder() {
         mRequestBuilder = GlideApp.with(mContext)

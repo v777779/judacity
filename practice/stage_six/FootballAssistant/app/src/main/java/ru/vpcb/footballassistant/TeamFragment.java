@@ -47,7 +47,7 @@ public class TeamFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_team, container, false);
+        mRootView = inflater.inflate(R.layout.team_fragment, container, false);
 
         if (savedInstanceState == null) {
         }

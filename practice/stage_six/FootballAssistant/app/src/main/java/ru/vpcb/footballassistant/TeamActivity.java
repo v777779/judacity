@@ -123,7 +123,7 @@ public class TeamActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_team);
+        setContentView(R.layout.team_activity);
 
         // log
         if (!sIsTimber) {

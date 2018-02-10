@@ -84,7 +84,7 @@ public class Config {
     public static final int RM_HEAD_VIEW_TYPE = 1;
     public static final int RT_ITEM_VIEW_TYPE_LIGHT = 0;
     public static final int RT_ITEM_VIEW_TYPE_DARK = 1;
-
+    public static final int RT_HEAD_VIEW_TYPE = 2;
 
 
 

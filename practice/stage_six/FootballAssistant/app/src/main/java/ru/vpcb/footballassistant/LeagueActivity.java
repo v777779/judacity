@@ -57,7 +57,6 @@ import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
@@ -126,7 +125,7 @@ public class LeagueActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_team);
+        setContentView(R.layout.team_activity);
 
         // log
         if (!sIsTimber) {

@@ -4,12 +4,9 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -22,14 +19,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.model.StreamEncoder;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.caverock.androidsvg.SVG;
-import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -140,7 +133,7 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layoutId = R.layout.recycler_team_item;
+        int layoutId = R.layout.team_recycler_item;
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
                 .inflate(layoutId, parent, false);
 //        view.getLayoutParams().height = mSpan.getHeight();

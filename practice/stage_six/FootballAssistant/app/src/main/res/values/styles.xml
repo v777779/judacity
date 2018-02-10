@@ -326,7 +326,7 @@
     <style name="Name.Head.League" parent="Head.League.TextRecycler">
         <item name="android:textSize">@dimen/text_lg_item_head_team_name_size</item>
         <item name="android:textColor">@color/league_lg_item_head_team_name</item>
-        <item name="android:lines">3</item>
+        <item name="android:lines">2</item>
 
     </style>
 
