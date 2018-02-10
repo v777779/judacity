@@ -8,10 +8,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,32 +37,40 @@ public class MainActivity extends AppCompatActivity implements IFragment {
 
 
     private ViewPager mViewPager;
+    private ViewPager mViewPager2;
     private List<List<String>> mViewPagerList;
     private int mViewPagerPos;
     private TabLayout mTabLayout;
+
+    private MotionEvent mMotionEvent;
+    private int mScrollState = ViewPager.SCROLL_STATE_IDLE;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         mViewPager = findViewById(R.id.viewpager_main);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
+        mViewPager2 = findViewById(R.id.viewpager_toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                if (mMotionEvent != null)
+                    mViewPager.onTouchEvent(mMotionEvent);
             }
         });
 
+        setupActionBar();
         setupViewPagerList();
         setupViewPager();
+        setupViewPager2();
 
         mTabLayout.setupWithViewPager(mViewPager);
 
@@ -85,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements IFragment {
         if (id == R.id.action_settings) {
             return true;
         }
-        if(id==R.id.action_calendar) {
+        if (id == R.id.action_calendar) {
             startFragment();
             return true;
         }
@@ -95,10 +105,10 @@ public class MainActivity extends AppCompatActivity implements IFragment {
 
     private void startFragment() {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = FragmentDialog.newInstance(this,R.layout.fragment_calendar);
+        Fragment fragment = FragmentDialog.newInstance(this, R.layout.fragment_calendar);
 
         fm.beginTransaction()
-                .add(fragment,"fragment")
+                .add(fragment, "fragment")
                 .commit();
 
     }
@@ -120,6 +130,19 @@ public class MainActivity extends AppCompatActivity implements IFragment {
 
     }
 
+
+    private void setupActionBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Title");
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("");
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.show();
+        }
+
+    }
 
     private RecyclerView getRecycler(List<String> list) {
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
@@ -171,6 +194,52 @@ public class MainActivity extends AppCompatActivity implements IFragment {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(mScrollState == ViewPager.SCROLL_STATE_IDLE) return;
+                mViewPager2.scrollTo(mViewPager.getScrollX(),mViewPager2.getScrollY());
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+//                mViewPager2.setCurrentItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                mScrollState = state;
+                if(state == ViewPager.SCROLL_STATE_IDLE) {
+                    mViewPager2.setCurrentItem(mViewPager.getCurrentItem(),false);
+                }
+            }
+        });
+
+
+
+
+    }
+
+    private void setupViewPager2() {
+
+        if (mViewPagerList == null) return;
+
+        List<View> listRecyclers = new ArrayList<>();
+        List<String> listRecyclerTitles = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -mViewPagerList.size() / 2);
+
+        for (List<String> list : mViewPagerList) {
+            listRecyclers.add(getRecycler(list));
+            listRecyclerTitles.add(getDate(c));
+            c.add(Calendar.DATE, 1);
+        }
+
+        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(listRecyclers, listRecyclerTitles);
+        mViewPager2.setAdapter(listPagerAdapter);
+        mViewPager2.setCurrentItem(mViewPagerPos);
+        mViewPager2.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
+        mViewPager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
@@ -182,6 +251,8 @@ public class MainActivity extends AppCompatActivity implements IFragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+
 
     }
 

@@ -82,5 +82,29 @@
     </style>
 
 
+    <style name="Match.TextRecycler" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#f8f8f8</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Match.Light.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Country.League.Toolbar" parent="Match.TextRecycler">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Name.League.Toolbar" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
 
 </resources>

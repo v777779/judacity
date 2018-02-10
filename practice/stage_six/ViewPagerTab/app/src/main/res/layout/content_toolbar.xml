@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--background solid--><!--android:backgroundTint=""/> = null-->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_recycler_match_item"
+    android:layout_width="match_parent"
+    android:layout_height="260dp"
+
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp">
+
+
+    <TextView
+        android:id="@+id/text_lg_toolbar_country"
+        style="@style/Country.League.Toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+
+
+        android:text="England"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v1"
+        app:layout_constraintStart_toStartOf="@+id/guide_v1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_lg_toolbar_league"
+        style="@style/Name.League.Toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+
+        android:text="Premier League 2017/18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_lg_toolbar_country" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_lg_toolbar_league">
+
+    </android.support.v4.view.ViewPager>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15"
+
+        />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.30"
+
+        />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_v7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7"
+
+        />
+</android.support.constraint.ConstraintLayout>
