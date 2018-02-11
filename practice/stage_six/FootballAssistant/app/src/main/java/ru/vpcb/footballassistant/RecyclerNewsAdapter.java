@@ -9,6 +9,8 @@ import android.graphics.drawable.PictureDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -230,7 +232,9 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
             String imageURL = article.getUrlToImage();
             loadImage(imageURL, mImagePoster);
 
-
+//            SpannableString content = new SpannableString(article.getTitle());
+//            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+//            mTextHead.setText(content);
             mTextHead.setText(article.getTitle());
             mTextBody.setText(article.getDescription());
             mTextSource.setText(article.getAuthor());

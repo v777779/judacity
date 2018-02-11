@@ -378,12 +378,14 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/news_item_head_text</item>
         <item name="android:textSize">@dimen/text_news_item_head_size</item>
-        <item name="android:gravity">top|center</item>
-        <item name="android:lines">2</item>
+        <item name="android:gravity">top|start</item>
+        <item name="android:maxLines">2</item>
     </style>
     <style name="Body.News.TextRecycler" parent="News.TextRecycler">
         <item name="android:textColor">@color/news_item_body_text</item>
         <item name="android:textSize">@dimen/text_news_item_body_size</item>
+        <item name="android:gravity">top|start</item>
+        <item name="android:maxLines">7</item>
     </style>
     <style name="Source.News.TextRecycler" parent="News.TextRecycler">
         <item name="android:textColor">@color/news_item_source_text</item>

@@ -125,6 +125,7 @@
     <string name="text_lg_head_team_losses">L</string>
 
     <!--news-->
+    <string name="text_news_item_head_underlined"> <u> %1$s </u> </string>
     <string name="text_news_item_time_min">%1$dm | </string>
     <string name="text_news_item_time_hour">%1$dh | </string>
     <string name="text_news_item_time_empty">\u2014 | </string>
