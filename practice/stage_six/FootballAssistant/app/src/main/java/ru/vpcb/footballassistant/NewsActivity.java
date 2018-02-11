@@ -113,6 +113,7 @@ public class NewsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.news_activity);
 
         // log
@@ -312,19 +313,18 @@ public class NewsActivity extends AppCompatActivity
 //    private void startActivityMatches() {
 //        Intent intent = new Intent(this, NewsActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
+////        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear top stack parent remained
 //        startActivity(intent);
 //        overridePendingTransition(R.anim.slide_in_main, R.anim.slide_out_main);  // standard transition
 //    }
 
     private void startActivityMatches() {
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // replace all stack
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);  // parent is remained
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 R.anim.slide_in_main, R.anim.slide_out_main)
                 .toBundle();
         startActivity(intent, bundle);
-
+        finish();
     }
 
     private void startFragmentLeague() {

@@ -321,18 +321,18 @@ public class DetailActivity extends AppCompatActivity
 //    private void startActivityNews() {
 //        Intent intent = new Intent(this, NewsActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
+////        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
 //        startActivity(intent);
 //        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);  // standard transition
 //    }
 
     private void startActivityNews() {
         Intent intent = new Intent(this, NewsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);   // replace all stack
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);    // parent is remained
-        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+       Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 R.anim.slide_in, R.anim.slide_out)
                 .toBundle();
         startActivity(intent, bundle);
+        finish();
     }
 
     private void startFragmentLeague() {
