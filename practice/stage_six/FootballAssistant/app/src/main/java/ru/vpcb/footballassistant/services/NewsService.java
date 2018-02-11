@@ -19,7 +19,7 @@ import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
-import ru.vpcb.footballassistant.data.IRetrofitAPI;
+import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
@@ -40,7 +40,7 @@ public class NewsService extends IntentService {
     private boolean isSmartUpdate;
 
     private Retrofit mRetrofit;
-    private IRetrofitAPI mRetrofitAPI;
+    private IFDRetrofitAPI mRetrofitAPI;
     private OkHttpClient mOkHttpClient;
 
     private Map<Integer, FDCompetition> mMapCompetitions;

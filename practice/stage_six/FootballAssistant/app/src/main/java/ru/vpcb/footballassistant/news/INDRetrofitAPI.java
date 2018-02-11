@@ -1,29 +1,17 @@
 package ru.vpcb.footballassistant.news;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.vpcb.footballassistant.data.FDCompetition;
-import ru.vpcb.footballassistant.data.FDFixtures;
-import ru.vpcb.footballassistant.data.FDPlayers;
-import ru.vpcb.footballassistant.data.FDTable;
-import ru.vpcb.footballassistant.data.FDTeam;
-import ru.vpcb.footballassistant.data.FDTeams;
 
-import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_FIXTURES_GET;
-import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_GET;
-import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_TABLE_GET;
-import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_TEAMS_GET;
-import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_ID;
-import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_MATCHDAY;
-import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_SEASON;
-import static ru.vpcb.footballassistant.utils.Config.FD_QUERY_TIMEFRAME;
-import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_FIXTURES_GET;
-import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_GET;
-import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_PLAYERS_GET;
+import static ru.vpcb.footballassistant.utils.Config.ND_EVERYTHING_GET;
+import static ru.vpcb.footballassistant.utils.Config.ND_HEADLINES_GET;
+import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_API_KEY;
+import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_CATEGORY;
+import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_LANGUAGE;
+import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_PAGE;
+import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_SOURCE;
+import static ru.vpcb.footballassistant.utils.Config.ND_SOURCES_GET;
 
 
 /**
@@ -37,59 +25,34 @@ import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_PLAYERS_GET;
  * Retrofit API Interface
  */
 public interface INDRetrofitAPI {
-
     /**
-     * Returns parsed List<RecipeItem>  after JSON data have been downloaded
+     * Returns parsed News object after JSON data have been downloaded
      *
-     * @param s String empry parameter
-     * @return List<RecipeItem>  list of recipes downloaded from the server
+     * @param source  String    the  name of news company that provided news data
+     * @param page    String    the number of page
+     * @param key     String    the API key for request
+     * @return News  object downloaded from the news server
      */
 
-    // request with query   "baseURL/competitions/?seasons=2015"
-    @GET(FD_COMPETITIONS_GET)
-    Call<List<FDCompetition>> getCompetitions(@Query(FD_QUERY_SEASON) String s);
-
-    // request with query   "baseURL/competitions"
-    @GET(FD_COMPETITIONS_GET)
-    Call<List<FDCompetition>> getCompetitions();
-
-
-    @GET(FD_COMPETITIONS_TEAMS_GET)
-    Call<FDTeams> getTeams(@Path(value = FD_QUERY_ID, encoded = true) String id);
-
-    @GET(FD_COMPETITIONS_FIXTURES_GET)
-    Call<FDFixtures> getFixtures(@Path(value = FD_QUERY_ID, encoded = true) String s);
-
-
-    @GET(FD_COMPETITIONS_FIXTURES_GET)
-    Call<FDFixtures> getFixturesMatch(@Path(value = FD_QUERY_ID, encoded = true) String s,
-                                      @Query(FD_QUERY_MATCHDAY) int day);
-
-
-    @GET(FD_COMPETITIONS_FIXTURES_GET)
-    Call<FDFixtures> getFixturesTime(@Path(value = FD_QUERY_ID, encoded = true) String s,
-                                     @Query(FD_QUERY_TIMEFRAME) String time);
-
-    @GET(FD_COMPETITIONS_TABLE_GET)
-    Call<FDTable> getTable(@Path(value = FD_QUERY_ID, encoded = true) String s);
-
-    @GET(FD_TEAM_GET)
-    Call<FDTeam> getTeam(@Path(value = FD_QUERY_ID, encoded = true) String id);
-
-    @GET(FD_TEAM_FIXTURES_GET)
-    Call<FDFixtures> getTeamFixtures(@Path(value = FD_QUERY_ID, encoded = true) String s);
-
-
-    @GET(FD_TEAM_FIXTURES_GET)
-    Call<FDFixtures> getTeamFixtures(@Path(value = FD_QUERY_ID, encoded = true) String s,
-                                     @Query(FD_QUERY_TIMEFRAME) String time,
-                                     @Query(FD_QUERY_SEASON) String season
+    // request with queries   "baseURL/everything?source=name&page=1&apiKey=key_string"
+    @GET(ND_EVERYTHING_GET)
+    Call<NDNews> getEverything(@Query(ND_QUERY_SOURCE) String source,
+                               @Query(ND_QUERY_PAGE) String page,
+                               @Query(ND_QUERY_API_KEY) String key
     );
 
+    // request with queries   "baseURL/top-headlines?source=name&page=1&apiKey=key_string"
+    @GET(ND_HEADLINES_GET)
+    Call<NDNews> getHeadlines(@Query(ND_QUERY_SOURCE) String source,
+                              @Query(ND_QUERY_PAGE) String page,
+                              @Query(ND_QUERY_API_KEY) String key
+    );
 
-    @GET(FD_TEAM_PLAYERS_GET)
-    Call<FDPlayers> getTeamPlayers(@Path(value = "id", encoded = true) String s);
-
+    // request with queries   "baseURL/sources?language=en&category=sports&apiKey=key_string"
+    @GET(ND_SOURCES_GET)
+    Call<NDNews> getSources(@Query(ND_QUERY_LANGUAGE) String language,
+                              @Query(ND_QUERY_CATEGORY) String category
+    );
 }
 
 

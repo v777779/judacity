@@ -33,13 +33,13 @@ import ru.vpcb.footballassistant.data.FDPlayers;
 import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.data.FDTeams;
-import ru.vpcb.footballassistant.data.IRetrofitAPI;
+import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.FD_BASE_URI;
-import static ru.vpcb.footballassistant.utils.Config.FOOTBALL_API_KEY;
+import static ru.vpcb.footballassistant.utils.Config.FD_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
 import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefBool;
@@ -739,13 +739,13 @@ public class FDUtils {
 
 
     // network
-    private static IRetrofitAPI setupRetrofit() {
+    private static IFDRetrofitAPI setupRetrofit() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
                     public okhttp3.Response intercept(Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
-                                .addHeader("X-Auth-Token", FOOTBALL_API_KEY)//BuildConfig.FD_API_KEY)
+                                .addHeader("X-Auth-Token", FD_API_KEY)//BuildConfig.FD_API_KEY)
                                 .build();
                         return chain.proceed(request);
                     }
@@ -756,13 +756,13 @@ public class FDUtils {
                 .baseUrl(FD_BASE_URI)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        return retrofit.create(IRetrofitAPI.class);
+        return retrofit.create(IFDRetrofitAPI.class);
     }
 
     private static List<FDCompetition> loadListCompetitions()
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getCompetitions().execute().body();
     }
 
@@ -770,7 +770,7 @@ public class FDUtils {
     private List<FDCompetition> loadListCompetitions(String season)
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getCompetitions(season).execute().body();
     }
 
@@ -778,7 +778,7 @@ public class FDUtils {
     private static FDTeams loadListTeams(String competition)
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getTeams(competition).execute().body();
     }
 
@@ -786,7 +786,7 @@ public class FDUtils {
     private static FDFixtures loadListFixtures(String competition)
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getFixtures(competition).execute().body();
     }
 
@@ -794,7 +794,7 @@ public class FDUtils {
     private FDTable loadTable(String competition)
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getTable(competition).execute().body();
     }
 
@@ -802,21 +802,21 @@ public class FDUtils {
     private FDPlayers loadListPlayers(String team)
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getTeamPlayers(team).execute().body();
     }
 
     private static FDFixtures loadListTeamFixtures(String team)
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getTeamFixtures(team).execute().body();
     }
 
     private static FDPlayers loadListTeamPlayers(String team)
             throws NullPointerException, IOException {
 
-        IRetrofitAPI retrofitAPI = setupRetrofit();
+        IFDRetrofitAPI retrofitAPI = setupRetrofit();
         return retrofitAPI.getTeamPlayers(team).execute().body();
     }
 

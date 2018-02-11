@@ -30,7 +30,7 @@ import static ru.vpcb.footballassistant.utils.Config.FD_TEAM_PLAYERS_GET;
 /**
  * Retrofit API Interface
  */
-public interface IRetrofitAPI {
+public interface IFDRetrofitAPI {
 
     /**
      * Returns parsed List<RecipeItem>  after JSON data have been downloaded

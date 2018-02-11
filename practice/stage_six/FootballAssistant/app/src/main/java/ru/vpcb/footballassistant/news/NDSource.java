@@ -22,6 +22,25 @@ public class NDSource {
     @Expose
     private String name;
 
+    @SerializedName("description")
+    @Expose
+    private String description;
+
+    @SerializedName("url")
+    @Expose
+    private String url;
+
+    @SerializedName("category")
+    @Expose
+    private String category;
+
+    @SerializedName("language")
+    @Expose
+    private String language;
+
+    @SerializedName("country")
+    @Expose
+    private String country;
 
 
     public NDSource(String id, String name) {
