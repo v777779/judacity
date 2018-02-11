@@ -40,6 +40,7 @@ import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.FD_BASE_URI;
+import static ru.vpcb.footballassistant.utils.Config.FOOTBALL_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
 import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefBool;
@@ -745,7 +746,7 @@ public class FDUtils {
                     @Override
                     public okhttp3.Response intercept(Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
-                                .addHeader("X-Auth-Token", BuildConfig.FD_API_KEY)
+                                .addHeader("X-Auth-Token", FOOTBALL_API_KEY)//BuildConfig.FD_API_KEY)
                                 .build();
                         return chain.proceed(request);
                     }

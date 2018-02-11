@@ -14,6 +14,9 @@ import ru.vpcb.footballassistant.R;
  */
 
 public class Config {
+// api
+    public static final String FOOTBALL_API_KEY = "70e68c465fd24d2e84c17aa8d71ca9b3";
+    public static final String NEWS_API_KEY = "3dbbb32e16f747e582119f20967996bc";
 
     // data
     public static final String FD_BASE_URI = "http://api.football-data.org/v1/";

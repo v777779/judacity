@@ -82,6 +82,12 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Player Date Content Provider remove conversion
     // TODO Сделать управление через  DPad по Accessibility
     // TODO Database Dates и Links добавить и сделать полностью текстовыми
+    // TODO Football-data
+    //                1. Key 3dbbb32e16f747e582119f20967996bc
+    // TODO NewsAPI
+    //1. Add link or similar  "powered by NewsAPI.org"
+    //                2. Key 3dbbb32e16f747e582119f20967996bc
+
 
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
 

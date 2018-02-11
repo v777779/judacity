@@ -9,7 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField 'String', 'FD_API_KEY', FB_DATA_API_KEY
+//        buildConfigField 'String', 'FD_API_KEY', FB_DATA_API_KEY
 
     }
     buildTypes {

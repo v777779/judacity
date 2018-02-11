@@ -317,7 +317,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-    // methods
+    // methods-
 //    private void startActivityNews() {
 //        Intent intent = new Intent(this, NewsActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
