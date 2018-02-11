@@ -25,13 +25,15 @@
 
         <ImageView
             android:id="@+id/image_news_item_poster"
-            android:layout_width="@dimen/image_news_item_poster_size"
-            android:layout_height="@dimen/image_news_item_poster_size"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
 
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="2dp"
             android:contentDescription="@string/image_news_item_poster_dsc"
             android:scaleType="centerCrop"
             android:src="@drawable/empty_loading"
+            app:layout_constraintBottom_toTopOf="@+id/text_news_item_time"
             app:layout_constraintEnd_toStartOf="@+id/guide_v1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,12 +56,10 @@
             android:id="@+id/text_news_body"
             style="@style/Body.News.TextRecycler"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:contentDescription="@string/text_news_item_body_dsc"
             android:text="@string/text_test_news_item_body"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/guide_v1"
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25" />
+            app:layout_constraintGuide_percent="0.35" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_h1"
