@@ -69,7 +69,6 @@ public class NewsService extends IntentService {
         }
     }
 
-
     private void onActionUpdate() {
         if (FootballUtils.isNewsDataRefreshed(this)) {
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
@@ -82,42 +81,26 @@ public class NewsService extends IntentService {
         }
         sendBroadcast(new Intent(getString(R.string.broadcast_data_update_started)));
 
-        try {
-// loader imitation
-            Map<Integer, FDCompetition> map = new HashMap<>();
-            Map<Integer, List<Integer>> mapTeamKeys = new HashMap<>();
-            Map<Integer, FDTeam> mapTeams = new HashMap<>();
-            Map<Integer, List<Integer>> mapFixtureKeys = new HashMap<>();
-            Map<Integer, FDFixture> mapFixtures = new HashMap<>();
-            FDUtils.readDatabase(this, map, mapTeamKeys, mapTeams,
-                    mapFixtureKeys, mapFixtures);
-//0%
-            FDUtils.sendProgress(this, 0);
-// load database
-            boolean isUpdated = FDUtils.loadDatabase(this, map, mapTeamKeys, mapTeams,
-                    mapFixtureKeys, mapFixtures);
-// 50%
-            FDUtils.sendProgress(this, (int) (UPDATE_SERVICE_PROGRESS * 0.8));
-// save database
-            if (isUpdated) {
-                FDUtils.writeDatabase(this, map, false);
-            }
-            FootballUtils.setRefreshTime(this);
+//        try {
+// loader body
 
-        } catch (IOException e) {
-// test !!!  catch errors
-            Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-            return;
-        } catch (NullPointerException | NumberFormatException e) {
-            Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-            return;
-        } catch (OperationApplicationException | RemoteException e) {
-            Timber.d(getString(R.string.update_content_error) + e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-            return;
-        }
+
+
+
+//        } catch (IOException e) {
+//// test !!!  catch errors
+//            Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
+//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+//            return;
+//        } catch (NullPointerException | NumberFormatException e) {
+//            Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
+//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+//            return;
+//        } catch (OperationApplicationException | RemoteException e) {
+//            Timber.d(getString(R.string.update_content_error) + e.getMessage());
+//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+//            return;
+//        }
 //60%
         sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
     }

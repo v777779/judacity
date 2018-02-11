@@ -33,6 +33,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -43,11 +45,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import ru.vpcb.footballassistant.add.TempUtils;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
+import ru.vpcb.footballassistant.news.NDArticle;
+import ru.vpcb.footballassistant.news.NDNews;
+import ru.vpcb.footballassistant.news.NDSource;
+import ru.vpcb.footballassistant.news.NDSources;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
@@ -57,6 +64,7 @@ import timber.log.Timber;
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
@@ -83,7 +91,6 @@ public class NewsActivity extends AppCompatActivity
     private TabLayout mTabLayout;
 
 
-
     private BottomNavigationView mBottomNavigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigationListener;
 
@@ -98,9 +105,6 @@ public class NewsActivity extends AppCompatActivity
 
     // mMap
     private Map<Integer, FDCompetition> mMap = new HashMap<>();
-    private Map<Integer, List<Integer>> mMapTeamKeys = new HashMap<>();
-    private Map<Integer, FDTeam> mMapTeams = new HashMap<>();
-    private Map<Integer, List<Integer>> mMapFixtureKeys = new HashMap<>();
     private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
 
 
@@ -154,12 +158,9 @@ public class NewsActivity extends AppCompatActivity
         }
 
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-            getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
-            getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
-            getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
         }
 
@@ -219,35 +220,10 @@ public class NewsActivity extends AppCompatActivity
 //                mMap = FDUtils.readCompetitions(cursor);
                 mUpdateCounter++;
                 break;
-
-            case FDContract.CpTmEntry.LOADER_ID:
-                mCursors[1] = cursor;
-//                mMapTeamKeys = FDUtils.readCompetitionTeams(cursor);
-                mUpdateCounter++;
-                break;
-
-            case FDContract.TmEntry.LOADER_ID:
-                mCursors[2] = cursor;
-//                mMapTeams = FDUtils.readTeams(cursor);
-                mUpdateCounter++;
-                break;
-
-            case FDContract.CpFxEntry.LOADER_ID:
-                mCursors[3] = cursor;
-//                mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursor);
-                mUpdateCounter++;
-                break;
-
             case FDContract.FxEntry.LOADER_ID:
                 mCursors[4] = cursor;
 //                mMapFixtures = FDUtils.readFixtures(cursor);
                 mUpdateCounter++;
-                break;
-
-            case FDContract.TbEntry.LOADER_ID:
-                break;
-
-            case FDContract.PlEntry.LOADER_ID:
                 break;
 
             default:
@@ -255,7 +231,7 @@ public class NewsActivity extends AppCompatActivity
         }
 
 
-        if (mUpdateCounter == LOADERS_UPDATE_COUNTER) {
+        if (mUpdateCounter == 2) {
 //            setupViewPagerSource();
 //            setupViewPager();
 //            stopProgress();
@@ -334,9 +310,9 @@ public class NewsActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = TeamFragment.newInstance();
 
-        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG,POP_BACK_STACK_INCLUSIVE);
+        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
-                .replace(R.id.container_detail,fragment)
+                .replace(R.id.container_detail, fragment)
                 .addToBackStack(FRAGMENT_TEAM_TAG)
                 .commit();
 
@@ -357,7 +333,6 @@ public class NewsActivity extends AppCompatActivity
 
             }
         });
-
 
 
     }
@@ -393,7 +368,6 @@ public class NewsActivity extends AppCompatActivity
     }
 
     private void startCalendar() {
-
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = CalendarDialog.newInstance(this, getViewPagerDate());
         fm.beginTransaction()
@@ -402,13 +376,11 @@ public class NewsActivity extends AppCompatActivity
 
     }
 
-    private RecyclerView getRecycler(List<FDFixture> list) {
-        Config.Span sp = Config.getDisplayMetrics(this);
-
-        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
+    private RecyclerView getRecycler(List<NDArticle> list) {
+          View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this, sp, list);
+        RecyclerNewsAdapter adapter = new RecyclerNewsAdapter(this, list);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -479,48 +451,34 @@ public class NewsActivity extends AppCompatActivity
 //    }
 
     private ViewPagerData getViewPagerData() {
-        int last = 0;
-        int next = 0;
-        int current = 0;
-        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
-        Map<Long, Integer> map = new HashMap<>();
+// news
+        String json = TempUtils.readFileAssets(this,"everything.json");
+        NDNews news = new Gson().fromJson(json,NDNews.class);
+        List<NDArticle> list = news.getArticles();
+// sources
+        json = TempUtils.readFileAssets(this,"sources.json");
 
-        Collections.sort(fixtures, cFx);
-        List<List<FDFixture>> list = new ArrayList<>();
-
-        Calendar c = Calendar.getInstance();
-        setZeroTime(c);
-        current = getIndex(fixtures, c);  // index of current day
-
-        while (next < fixtures.size()) {
-            setDay(c, fixtures.get(next).getDate());
-            map.put(c.getTimeInMillis(), list.size());
-            c.add(Calendar.DATE, 1);  // next day
-            next = getIndex(fixtures, c);
-            list.add(new ArrayList<>(fixtures.subList(last, next)));
-            last = next;
-            if (next == current) current = list.size();  // index of current day records
-        }
+        NDSources sources = new Gson().fromJson(json, NDSources.class);
+        List<NDSource> listSources = sources.getSources();
 
 
         List<View> recyclers = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
-
-        for (List<FDFixture> listFixtures : list) {
-            recyclers.add(getRecycler(listFixtures));
-            titles.add(getRecyclerTitle(listFixtures));
+        for (int i = 0; i < 7; i++) {
+            recyclers.add(getRecycler(list));
+            titles.add(getRecyclerTitle(listSources,i));
         }
-
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, list, map);
+        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, 3, null, null);
         return viewPagerData;
     }
 
-    private String getRecyclerTitle(List<FDFixture> list) {
+    private String getRecyclerTitle(List<NDSource> list, int pos) {
+        NDSource source = list.get(pos);
         try {
-            return FootballUtils.formatStringDate(list.get(0).getDate());
+            return source.getName();
         } catch (NullPointerException e) {
-            return EMPTY_FIXTURE_DATE;
+            return EMPTY_LONG_DASH;
         }
     }
 
@@ -687,17 +645,6 @@ public class NewsActivity extends AppCompatActivity
 //    }
 
 
-    private int checkProgress() {
-        int count = 0;
-        int step = MAIN_ACTIVITY_PROGRESS / 5;
-        if (!mMap.isEmpty()) count += step;
-        if (!mMapTeamKeys.isEmpty()) count += step;
-        if (!mMapTeams.isEmpty()) count += step;
-        if (!mMapFixtureKeys.isEmpty()) count += step;
-        if (!mMapFixtures.isEmpty()) count += step;
-        return count;
-    }
-
     private void stopProgress() {
         mProgressValue.setVisibility(View.INVISIBLE);
     }
@@ -781,10 +728,10 @@ public class NewsActivity extends AppCompatActivity
                         Context context = NewsActivity.this;
                         switch (item.getItemId()) {
                             case R.id.navigation_matches:
-                               startActivityMatches();
+                                startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
-                                Toast.makeText(context,getString(R.string.activity_same_message),
+                                Toast.makeText(context, getString(R.string.activity_same_message),
                                         Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_favorites:
@@ -879,9 +826,6 @@ public class NewsActivity extends AppCompatActivity
             try {
 
                 mMap = FDUtils.readCompetitions(cursors[0][0]);
-                mMapTeamKeys = FDUtils.readCompetitionTeams(cursors[0][1]);
-                mMapTeams = FDUtils.readTeams(cursors[0][2]);
-                mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
                 mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
                 return getViewPagerData();
 

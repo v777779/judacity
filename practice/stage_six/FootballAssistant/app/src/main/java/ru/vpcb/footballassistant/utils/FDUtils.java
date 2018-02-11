@@ -84,7 +84,7 @@ public class FDUtils {
         return (int) TimeUnit.MILLISECONDS.toMinutes(date.getTime());
     }
 
-    private static Date minutesToDate(int time) {
+    public static Date minutesToDate(int time) {
         return new Date(TimeUnit.MINUTES.toMillis(time));
     }
 

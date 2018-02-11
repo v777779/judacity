@@ -18,6 +18,13 @@ public class NDSources {
 
     @SerializedName("sources")
     @Expose
-    private List<NDSources> sources;
+    private List<NDSource> sources;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public List<NDSource> getSources() {
+        return sources;
+    }
 }
