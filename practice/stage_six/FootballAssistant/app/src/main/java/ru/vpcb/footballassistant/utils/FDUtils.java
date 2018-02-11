@@ -24,7 +24,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.vpcb.footballassistant.BuildConfig;
 import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -832,7 +831,7 @@ public class FDUtils {
         }
 
         long delay = TimeUnit.MINUTES.toMillis(
-                getPrefInt(context, R.string.pref_delay_time_key, R.integer.pref_delay_time_default));
+                getPrefInt(context, R.string.pref_data_delay_time_key, R.integer.pref_data_delay_time_default));
         long currentTime = Calendar.getInstance().getTimeInMillis();
         long refreshTime = lastRefresh.getTime();
 
@@ -1207,7 +1206,7 @@ public class FDUtils {
         if (value < 0) return;
         if (value > UPDATE_SERVICE_PROGRESS) value = UPDATE_SERVICE_PROGRESS;
 
-        context.sendBroadcast(new Intent(context.getString(R.string.broadcast_update_progress))
+        context.sendBroadcast(new Intent(context.getString(R.string.broadcast_data_update_progress))
                 .putExtra(context.getString(R.string.extra_progress_counter), value));
 
     }

@@ -5,69 +5,26 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Scene;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.transition.TransitionManager;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-
-import ru.vpcb.footballassistant.data.FDCompetition;
-import ru.vpcb.footballassistant.data.FDFixture;
-import ru.vpcb.footballassistant.data.FDTeam;
-import ru.vpcb.footballassistant.dbase.FDContract;
-import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.services.UpdateService;
-import ru.vpcb.footballassistant.utils.Config;
-import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
-import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_0;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_1;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_2;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_3;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_4;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_STATE_5;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
-import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -293,10 +250,10 @@ public class MainActivity extends AppCompatActivity  {
 
     private void registerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getString(R.string.broadcast_update_started));
-        intentFilter.addAction(getString(R.string.broadcast_update_finished));
-        intentFilter.addAction(getString(R.string.broadcast_no_network));
-        intentFilter.addAction(getString(R.string.broadcast_update_progress));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_started));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_finished));
+        intentFilter.addAction(getString(R.string.broadcast_data_no_network));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_progress));
         registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -313,21 +270,21 @@ public class MainActivity extends AppCompatActivity  {
             // an Intent broadcast.
             if (intent != null) {
                 String action = intent.getAction();
-                if (action.equals(context.getString(R.string.broadcast_update_started))) {
+                if (action.equals(context.getString(R.string.broadcast_data_update_started))) {
                     setProgressValue(true); // indeterminate
 
-                } else if (action.equals(context.getString(R.string.broadcast_update_finished))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_update_finished))) {
                     mServiceProgress = UPDATE_SERVICE_PROGRESS;
                     setProgressValue();
                     startTransition();
 
-                } else if (action.equals(context.getString(R.string.broadcast_update_progress))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_update_progress))) {
                     int value = intent.getIntExtra(getString(R.string.extra_progress_counter), -1);
                     if (value >= 0) {
                         mServiceProgress = value;
                         setProgressValue();
                     }
-                } else if (action.equals(context.getString(R.string.broadcast_no_network))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
                     Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");

@@ -71,16 +71,16 @@ public class NewsService extends IntentService {
 
 
     private void onActionUpdate() {
-        if (FootballUtils.isRefreshTime(this)) {
-            sendBroadcast(new Intent(getString(R.string.broadcast_update_finished)));
+        if (FootballUtils.isNewsDataRefreshed(this)) {
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
             return;  // data updated
         }
 
         if (!isOnline(this)) {                                     // no network
-            sendBroadcast(new Intent(getString(R.string.broadcast_no_network)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_no_network)));
             return;
         }
-        sendBroadcast(new Intent(getString(R.string.broadcast_update_started)));
+        sendBroadcast(new Intent(getString(R.string.broadcast_data_update_started)));
 
         try {
 // loader imitation
@@ -107,19 +107,19 @@ public class NewsService extends IntentService {
         } catch (IOException e) {
 // test !!!  catch errors
             Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_update_error)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
             return;
         } catch (NullPointerException | NumberFormatException e) {
             Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_update_error)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
             return;
         } catch (OperationApplicationException | RemoteException e) {
             Timber.d(getString(R.string.update_content_error) + e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_update_error)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
             return;
         }
 //60%
-        sendBroadcast(new Intent(getString(R.string.broadcast_update_finished)));
+        sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
     }
 
 

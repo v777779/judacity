@@ -743,10 +743,10 @@ public class DetailActivity extends AppCompatActivity
 
     private void registerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getString(R.string.broadcast_update_started));
-        intentFilter.addAction(getString(R.string.broadcast_update_finished));
-        intentFilter.addAction(getString(R.string.broadcast_no_network));
-        intentFilter.addAction(getString(R.string.broadcast_update_progress));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_started));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_finished));
+        intentFilter.addAction(getString(R.string.broadcast_data_no_network));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_progress));
         registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -763,13 +763,13 @@ public class DetailActivity extends AppCompatActivity
             // an Intent broadcast.
             if (intent != null) {
                 String action = intent.getAction();
-                if (action.equals(context.getString(R.string.broadcast_update_started))) {
+                if (action.equals(context.getString(R.string.broadcast_data_update_started))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_update_finished))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_update_finished))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_update_progress))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_update_progress))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_no_network))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
                     Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");

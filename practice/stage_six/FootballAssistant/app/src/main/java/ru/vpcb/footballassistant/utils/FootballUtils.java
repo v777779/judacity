@@ -13,9 +13,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import ru.vpcb.footballassistant.R;
-import ru.vpcb.footballassistant.data.FDFixture;
 
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
 
 /**
@@ -117,20 +115,30 @@ public class FootballUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(res.getString(R.string.pref_update_time_key), FDUtils.currentTimeMinutes());
+        editor.putInt(res.getString(R.string.pref_data_update_time_key), FDUtils.currentTimeMinutes());
         editor.apply();
     }
 
-    public static boolean isRefreshTime(Context context) {
+    public static boolean isFootballDataRefreshed(Context context) {
         int time = getPrefInt(context,
-                R.string.pref_update_time_key,
-                R.integer.pref_update_time_default);
+                R.string.pref_data_update_time_key,
+                R.integer.pref_data_update_time_default);
         int delay = getPrefInt(context,
-                R.string.pref_delay_time_key,
-                R.integer.pref_delay_time_default);
+                R.string.pref_data_delay_time_key,
+                R.integer.pref_data_delay_time_default);
 
         return FDUtils.currentTimeMinutes() - time < delay;
     }
 
+    public static boolean isNewsDataRefreshed(Context context) {
+        int time = getPrefInt(context,
+                R.string.pref_news_update_time_key,
+                R.integer.pref_news_update_time_default);
+        int delay = getPrefInt(context,
+                R.string.pref_news_delay_time_key,
+                R.integer.pref_news_delay_time_default);
+
+        return FDUtils.currentTimeMinutes() - time < delay;
+    }
 
 }

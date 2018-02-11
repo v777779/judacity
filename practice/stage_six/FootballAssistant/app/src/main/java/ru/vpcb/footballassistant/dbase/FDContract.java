@@ -19,6 +19,7 @@ public class FDContract {
     public static final String TABLE_FIXTURES = "fixtures";
     public static final String TABLE_TABLES = "tables";
     public static final String TABLE_PLAYERS = "players";
+    public static final String TABLE_NEWS = "news";
 
     public static final String DATABASE_NAME = "footballDb.db";
     public static final int DATABASE_VERSION = 1;
@@ -162,6 +163,24 @@ public class FDContract {
         public static final int LOADER_ID = 1226;                                       // int
     }
 
+    public static final class NewsEntry implements BaseColumns {
+        public static final String TABLE_NAME = TABLE_NEWS;
+        public static final int TABLE_MATCHER = 600;
+        public static final int TABLE_ID_MATCHER = 601;
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
+        public static final String COLUMN_COMPETITION_CAPTION = "competition_caption";  // string
+        public static final String COLUMN_COMPETITION_LEAGUE = "competition_league";    // string
+        public static final String COLUMN_COMPETITION_YEAR = "competition_year";        // string
+        public static final String COLUMN_CURRENT_MATCHDAY = "current_matchday";        // int
+        public static final String COLUMN_NUMBER_MATCHDAYS = "number_matchdays";        // int
+        public static final String COLUMN_NUMBER_TEAMS = "number_teams";                // int
+        public static final String COLUMN_NUMBER_GAMES = "number_games";                // int
+        public static final String COLUMN_LAST_UPDATE = "last_update";                  // int from date
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                // int from date
+
+        public static final int LOADER_ID = 1220;                                       // int
+    }
 
     public static final FDParams[] MATCH_PARAMETERS = new FDParams[]{
             new FDParams(CpEntry.LOADER_ID,

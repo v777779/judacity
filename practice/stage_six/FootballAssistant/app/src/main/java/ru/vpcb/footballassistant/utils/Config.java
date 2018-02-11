@@ -14,7 +14,7 @@ import ru.vpcb.footballassistant.R;
  */
 
 public class Config {
-// api
+    // api_keys
     public static final String FOOTBALL_API_KEY = "70e68c465fd24d2e84c17aa8d71ca9b3";
     public static final String NEWS_API_KEY = "3dbbb32e16f747e582119f20967996bc";
 
@@ -43,12 +43,34 @@ public class Config {
     public static final String FD_REGEX_FIXTURES = ".*fixtures/";
     public static final String FD_REGEX_COMPETITIONS = ".*competitions/";
 
+    // news
+    public static final String ND_BASE_URI = "https://newsapi.org/v2/";
+    public static final String ND_HEADLINES = "top-headlines/";
+    public static final String ND_EVERYTHING = "everything/";
+    public static final String ND_QUERY_SOURCE = "sources";
+    public static final String ND_QUERY_PAGE = "page";
+    public static final String ND_QUERY_API_KEY = "apiKey";
+
+    // retrofit
+    // competitions
+    public static final String EMPTY_TEAM_NAME = "-";
+    public static final String EMPTY_TWO_DASH = "--";
+    public static final String EMPTY_MATCH_TIME = "-- : --";
+    public static final String EMPTY_FIXTURE_DATE = "--/--/--";
+    public static final String EMPTY_PLAYER_DATE = "--.--.--";
+    public static final String EMPTY_MATCH_SCORE = "- : -";
+
+    // news
+    public static final String EMPTY_DASH = "-";
+    public static final String EMPTY_LONG_DASH = "\u2014";
+    public static final String EMPTY_DATE = "--/--/--";
+
+
     // update service
     public static final String UPDATE_SERVICE_TAG = "UpdaterService";
     public static final int UPDATE_SERVICE_PROGRESS = 100;
     public static final int MAIN_ACTIVITY_PROGRESS = 100;
 
-    // retrofit
 
     // loaders
     public static final int LOADERS_UPDATE_COUNTER = 5;
@@ -93,15 +115,6 @@ public class Config {
     // viewpager
     public static final int VIEWPAGER_OFF_SCREEN_PAGE_NUMBER = 3;
 
-
-    // competitions
-    public static final String EMPTY_TEAM_NAME = "-";
-    public static final String EMPTY_TWO_DASH = "--";
-    public static final String EMPTY_LONG_DASH = "\u2014";
-    public static final String EMPTY_MATCH_TIME = "-- : --";
-    public static final String EMPTY_FIXTURE_DATE = "--/--/--";
-    public static final String EMPTY_PLAYER_DATE = "--.--.--";
-    public static final String EMPTY_MATCH_SCORE = "- : -";
 
     //detail activity
     public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
@@ -155,7 +168,7 @@ public class Config {
             "WC", "World", "World-Cup"
     };
 
-    private static final String[] TEAM_LOGOS = new String[] {
+    private static final String[] TEAM_LOGOS = new String[]{
 
             "Logo_of_Beşiktaş_JK.svg",
             "https://upload.wikimedia.org/wikipedia/en/4/47/Besiktas_JK%27s_official_logo.png"
@@ -163,8 +176,8 @@ public class Config {
 
 
     public static String imageCheckReplaceURL(String imageURL) {
-        for (int i = 0; i <TEAM_LOGOS.length ; i+=2) {
-            if(imageURL.contains(TEAM_LOGOS[i])) return TEAM_LOGOS[i+1];
+        for (int i = 0; i < TEAM_LOGOS.length; i += 2) {
+            if (imageURL.contains(TEAM_LOGOS[i])) return TEAM_LOGOS[i + 1];
 
         }
         return imageURL;

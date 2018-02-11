@@ -30,15 +30,28 @@
     <string name="pref_smart_update_on">Smart Update Enabled</string>
     <string name="pref_smart_update_label">Smart Update Mode</string>
 
-    <string name="pref_update_time_key">pref_update_time_key</string>
-    <string name="pref_update_time_off">Update Time Disabled</string>
-    <string name="pref_update_time_on">Update Time Enabled</string>
-    <string name="pref_update_time_label">Update Time Delay(min)</string>
+    <!--football data-->
+    <string name="pref_data_update_time_key">pref_data_update_time_key</string>
+    <string name="pref_data_update_time_off">Football Data Update Time Value</string>
+    <string name="pref_data_update_time_on">Football Data Update Time Value</string>
+    <string name="pref_data_update_time_label">Football Update Time Delay(min)</string>
 
-    <string name="pref_delay_time_key">pref_delay_time_key</string>
-    <string name="pref_delay_time_off">Delay Time Value</string>
-    <string name="pref_delay_time_on">Delay Time Value</string>
-    <string name="pref_delay_time_label">Delay Time Value(min)</string>
+    <string name="pref_data_delay_time_key">pref_data_delay_time_key</string>
+    <string name="pref_data_delay_time_off">Football Data Delay Time Value</string>
+    <string name="pref_data_delay_time_on">Football Data Delay Time Value</string>
+    <string name="pref_data_delay_time_label">Football Data Delay Time Value(min)</string>
+
+    <!--news-->
+    <string name="pref_news_update_time_key">pref_news_update_time_key</string>
+    <string name="pref_news_update_time_off">News Data Update Time Value</string>
+    <string name="pref_news_update_time_on">News Data Update Time Value</string>
+    <string name="pref_news_update_time_label">News Data Update Time Delay(min)</string>
+
+    <string name="pref_news_delay_time_key">pref_news_delay_time_key</string>
+    <string name="pref_news_delay_time_off">News Data Delay Time Value</string>
+    <string name="pref_news_delay_time_on">News Data Delay Time Value</string>
+    <string name="pref_news_delay_time_label">News Data Delay Time Value(min)</string>
+
 
 
     <!--retrofit-->
@@ -55,12 +68,22 @@
 
 
     <!--broadcast-->
-    <string name="broadcast_update_started">ru.vpcb.footballassistant.intent.action.UPDATE_STARTED</string>
-    <string name="broadcast_update_finished">ru.vpcb.footballassistant.intent.action.UPDATE_FINISHED</string>
-    <string name="broadcast_no_network">ru.vpcb.footballassistant.intent.action.NO_NETWORK</string>
-    <string name="broadcast_update_error">ru.vpcb.footballassistant.intent.action.UPDATE_ERROR</string>
-    <string name="broadcast_no_network_empty">ru.vpcb.footballassistant.intent.action.NO_NETWORK_EMPTY</string>
-    <string name="broadcast_update_progress">ru.vpcb.footballassistant.intent.action.UPDATE_PROGRESS</string>
+
+    <string name="broadcast_data_update_started">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_STARTED</string>
+    <string name="broadcast_data_update_finished">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_FINISHED</string>
+    <string name="broadcast_data_no_network">ru.vpcb.footballassistant.intent.action.DATA_NO_NETWORK</string>
+    <string name="broadcast_data_update_error">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_ERROR</string>
+    <string name="broadcast_data_no_network_empty">ru.vpcb.footballassistant.intent.action.DATA_NO_NETWORK_EMPTY</string>
+    <string name="broadcast_data_update_progress">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_PROGRESS</string>
+
+    <string name="broadcast_news_update_started">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_STARTED</string>
+    <string name="broadcast_news_update_finished">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_FINISHED</string>
+    <string name="broadcast_news_no_network">ru.vpcb.footballassistant.intent.action.NEWS_NO_NETWORK</string>
+    <string name="broadcast_news_update_error">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_ERROR</string>
+    <string name="broadcast_news_no_network_empty">ru.vpcb.footballassistant.intent.action.NEWS_NO_NETWORK_EMPTY</string>
+    <string name="broadcast_news_update_progress">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_PROGRESS</string>
+
+
 
     <!--match-->
     <string name="text_sm_item_match_long_dash">\u2014</string>

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,7 +56,6 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_VIEWPAGER_POS;
@@ -720,10 +718,10 @@ public class LeagueActivity extends AppCompatActivity
 
     private void registerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getString(R.string.broadcast_update_started));
-        intentFilter.addAction(getString(R.string.broadcast_update_finished));
-        intentFilter.addAction(getString(R.string.broadcast_no_network));
-        intentFilter.addAction(getString(R.string.broadcast_update_progress));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_started));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_finished));
+        intentFilter.addAction(getString(R.string.broadcast_data_no_network));
+        intentFilter.addAction(getString(R.string.broadcast_data_update_progress));
         registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -740,13 +738,13 @@ public class LeagueActivity extends AppCompatActivity
             // an Intent broadcast.
             if (intent != null) {
                 String action = intent.getAction();
-                if (action.equals(context.getString(R.string.broadcast_update_started))) {
+                if (action.equals(context.getString(R.string.broadcast_data_update_started))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_update_finished))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_update_finished))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_update_progress))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_update_progress))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_no_network))) {
+                } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
                     Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");
