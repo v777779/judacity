@@ -73,19 +73,18 @@ public class MainActivity extends AppCompatActivity  {
 
     // TODO использовать ViewPagerFragment_003
     // TODO  MainActivity остальные Fragments FrameLayout индивидуальные toolbar и replacement
+    // TODO MainActivity  NewsAPI 1. Add link or similar  "powered by NewsAPI.org"
     // TODO CalendarView and API 17
-    // TODO Database Loading Date сделать String и убрать конвертацию при сохранении и чтении Db
     // TODO ViewPager Detail сделать один источник данных, RecyclerView перенести внутрь ViewPager
     // TODO ViewPager Rotation загружать ViewPager в onCreate() то есть Activity и все Fragments
     // TODO Calendar auto select Date и выбор по dismiss, double click или OK
     // TODO проставить FDFixture competition при загрузке
     // TODO Player Date Content Provider remove conversion
     // TODO Сделать управление через  DPad по Accessibility
+    // TODO Database Loading Date сделать String и убрать конвертацию при сохранении и чтении Db
     // TODO Database Dates и Links добавить и сделать полностью текстовыми
-    // TODO Football-data
-    //                1. Key 3dbbb32e16f747e582119f20967996bc
-    // TODO NewsAPI
-    //1. Add link or similar  "powered by NewsAPI.org"
+
+    // _TODO Football-data  1. Key 70e68c465fd24d2e84c17aa8d71ca9b3
     //                2. Key 3dbbb32e16f747e582119f20967996bc
 
 
