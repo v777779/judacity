@@ -64,7 +64,7 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 
-public class DetailActivity extends AppCompatActivity
+public class NewsActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private static boolean sIsTimber;
@@ -76,11 +76,11 @@ public class DetailActivity extends AppCompatActivity
     private ProgressBar mProgressBar;
     private ProgressBar mProgressValue;
     private TextView mProgressText;
-    private ImageView mToolbarLogo;
+
 
     private RecyclerView mRecyclerView;
     private ViewPager mViewPager;
-    private ImageView mViewPagerBack;
+
     private TabLayout mTabLayout;
 
 
@@ -113,7 +113,7 @@ public class DetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.news_activity);
 
         // log
         if (!sIsTimber) {
@@ -129,20 +129,14 @@ public class DetailActivity extends AppCompatActivity
         mFab = findViewById(R.id.fab);
         mFab2 = findViewById(R.id.fab2);
         mProgressValue = findViewById(R.id.progress_value);
-        mToolbarLogo = findViewById(R.id.toolbar_logo);
+
         mBottomNavigation = findViewById(R.id.bottom_navigation);
         mViewPager = findViewById(R.id.viewpager_main);
-        mViewPagerBack = findViewById(R.id.image_viewpager_back);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
-
-
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
-
-
-
 
 
 // progress
@@ -158,9 +152,6 @@ public class DetailActivity extends AppCompatActivity
 // test!!!  check data
             setupViewPager(mViewPagerData);
         }
-
-        mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
-
 
 
         if(savedInstanceState == null) {
@@ -285,7 +276,7 @@ public class DetailActivity extends AppCompatActivity
     public void onComplete(View view, int pos) {
         Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-        startActivityMatch();
+        startMatchActivity();
     }
 
     @Override
@@ -318,21 +309,22 @@ public class DetailActivity extends AppCompatActivity
 
 
     // methods
-//    private void startActivityNews() {
+//    private void startActivityMatches() {
 //        Intent intent = new Intent(this, NewsActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
 //        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);  // standard transition
+//        overridePendingTransition(R.anim.slide_in_main, R.anim.slide_out_main);  // standard transition
 //    }
 
-    private void startActivityNews() {
-        Intent intent = new Intent(this, NewsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);   // replace all stack
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);    // parent is remained
+    private void startActivityMatches() {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // replace all stack
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);  // parent is remained
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
-                R.anim.slide_in, R.anim.slide_out)
+                R.anim.slide_in_main, R.anim.slide_out_main)
                 .toBundle();
         startActivity(intent, bundle);
+
     }
 
     private void startFragmentLeague() {
@@ -372,7 +364,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-    private void startActivityMatch() {
+    private void startMatchActivity() {
         Intent intent = new Intent(this, MatchActivity.class);
         startActivity(intent);
     }
@@ -626,6 +618,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void updateViewPager(final ViewPagerData data) {
+        stopProgress();
         if (mViewPager == null || data == null) return;
         int pos = mViewPager.getCurrentItem();
 
@@ -713,7 +706,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void setupProgress() {
         mProgressValue.setIndeterminate(true);
-        mProgressValue.setVisibility(View.INVISIBLE);
+        mProgressValue.setVisibility(View.VISIBLE);
     }
 
 
@@ -722,7 +715,6 @@ public class DetailActivity extends AppCompatActivity
         toolbar.setTitle(getString(R.string.screen_match));
         setSupportActionBar(toolbar);
 
-        mToolbarLogo.setVisibility(View.INVISIBLE);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("");
@@ -735,7 +727,6 @@ public class DetailActivity extends AppCompatActivity
         Intent intent = new Intent(action, null, this, UpdateService.class);
         startService(intent);
     }
-
 
     private void setupReceiver() {
         mMessageReceiver = new MessageReceiver();
@@ -788,15 +779,14 @@ public class DetailActivity extends AppCompatActivity
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         View rootView = getWindow().getDecorView();
 
-                        Context context = DetailActivity.this;
+                        Context context = NewsActivity.this;
                         switch (item.getItemId()) {
                             case R.id.navigation_matches:
-                                Toast.makeText(context, getString(R.string.activity_same_message),
-                                        Toast.LENGTH_SHORT).show();
+                               startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
-                                startActivityNews();
-
+                                Toast.makeText(context,getString(R.string.activity_same_message),
+                                        Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_favorites:
                                 Toast.makeText(context, "Action favorites", Toast.LENGTH_SHORT).show();
@@ -905,10 +895,7 @@ public class DetailActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(ViewPagerData viewPagerData) {
-            stopProgress();
-            if (viewPagerData == null) return;
 
-            mViewPagerData = viewPagerData;
             updateViewPager(viewPagerData);
 
 

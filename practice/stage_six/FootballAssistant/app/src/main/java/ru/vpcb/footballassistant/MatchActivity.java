@@ -71,10 +71,10 @@ public class MatchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
+//        if (id == android.R.id.home) {
+//            onBackPressed();
+//            return true;
+//        }
 
         if (id == R.id.action_share) {
             Snackbar.make(getWindow().getDecorView(), "Action Share", Snackbar.LENGTH_SHORT).show();

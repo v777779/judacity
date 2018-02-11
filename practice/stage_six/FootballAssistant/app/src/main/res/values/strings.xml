@@ -2,11 +2,16 @@
     <string name="app_name">Football</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_match">MatchActivity</string>
-<!--temp-->
+
     <string name="title_activity_team">TeamActivity</string>
     <string name="title_activity_league">LeagueActivity</string>
+    <string name="title_activity_news">NewsActivity</string>
 
-
+    <!--titles-->
+    <string name="screen_match">Matches</string>
+    <string name="screen_team">Team</string>
+    <string name="screen_league">Leaue</string>
+    <string name="screen_news">News</string>
 
     <!--menu-->
     <string name="action_settings">Settings</string>
@@ -99,7 +104,10 @@
 
     <!--other-->
 
+
     <!--messages-->
+    <string name="activity_same_message">You are already here</string>
+
     <!--exception-->
     <string name="update_content_error">Update content error: </string>
     <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
@@ -178,11 +186,6 @@
     <!--recycler-->
     <string name="text_sm_item_prev_meetings">Previous Meetings Header</string>
     <string name="text_sm_item_match_score">The Score of Match</string>
-
-    <!--titles-->
-    <string name="screen_match">Matches</string>
-    <string name="screen_team">Team</string>
-
 
 
     <!--screen7-->

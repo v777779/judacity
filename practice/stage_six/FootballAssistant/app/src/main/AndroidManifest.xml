@@ -48,7 +48,6 @@
                 android:value="ru.vpcb.footballassistant.DetailActivity" />
         </activity>
 
-<!--temp-->
         <activity
             android:name=".TeamActivity"
             android:parentActivityName=".MatchActivity"
@@ -64,6 +63,13 @@
             android:label="@string/title_activity_league"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity
+            android:name=".NewsActivity"
+            android:label="@string/title_activity_league"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
 
 
     </application>
