@@ -353,8 +353,6 @@
     </style>
 
     <!--toolbar-->
-
-
     <style name="Country.League.Toolbar" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_lg_toolbar_country_size</item>
         <item name="android:textStyle">normal</item>
@@ -362,10 +360,41 @@
 
     <style name="Name.League.Toolbar" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_lg_toolbar_league_size</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:gravity">top|center</item>
+        <item name="android:lines">2</item>
     </style>
 
+    <!--news-->
+    <style name="News.TextRecycler" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/news_item_card_back</item>
+        <item name="android:textSize">@dimen/text_news_item_size</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Head.News.TextRecycler" parent="News.TextRecycler">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/news_item_head_text</item>
+        <item name="android:textSize">@dimen/text_news_item_head_size</item>
+        <item name="android:gravity">top|center</item>
+        <item name="android:lines">2</item>
+    </style>
+    <style name="Body.News.TextRecycler" parent="News.TextRecycler">
+        <item name="android:textColor">@color/news_item_body_text</item>
+        <item name="android:textSize">@dimen/text_news_item_body_size</item>
+    </style>
+    <style name="Source.News.TextRecycler" parent="News.TextRecycler">
+        <item name="android:textColor">@color/news_item_source_text</item>
+        <item name="android:textSize">@dimen/text_news_item_source_size</item>
+    </style>
+    <style name="Time.News.TextRecycler" parent="News.TextRecycler">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/news_item_time_text</item>
+        <item name="android:textSize">@dimen/text_news_item_time_size</item>
+    </style>
 
 
 

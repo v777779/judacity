@@ -70,6 +70,7 @@ public class Config {
     public static final String EMPTY_DASH = "-";
     public static final String EMPTY_LONG_DASH = "\u2014";
     public static final String EMPTY_DATE = "--/--/--";
+    public static final String EMPTY_DASH_AGO = "- ago";
 
 
     // update service
@@ -180,6 +181,9 @@ public class Config {
             "https://upload.wikimedia.org/wikipedia/en/4/47/Besiktas_JK%27s_official_logo.png"
     };
 
+//news
+    public static final String DATE_FULL_SSS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String DATE_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     public static String imageCheckReplaceURL(String imageURL) {
         for (int i = 0; i < TEAM_LOGOS.length; i += 2) {

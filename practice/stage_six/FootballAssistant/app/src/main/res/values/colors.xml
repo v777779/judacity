@@ -283,4 +283,12 @@
     <color name="league_lg_item_back_light">#ecf2e9</color>
     <color name="league_lg_item_back_dark">#edf8fb</color>
 
+    <!--news-->
+    <color name="news_item_card_back">#bdf8f8f8</color>
+    <color name="news_item_text">#3a3a3a</color>
+    <color name="news_item_head_text">#3a3a3a</color>
+    <color name="news_item_body_text">#3a3a3a</color>
+    <color name="news_item_source_text">#1e7e61</color>
+    <color name="news_item_time_text">#989898</color>
+
 </resources>

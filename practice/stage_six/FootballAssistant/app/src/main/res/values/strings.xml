@@ -124,6 +124,10 @@
     <string name="text_lg_head_team_draws">D</string>
     <string name="text_lg_head_team_losses">L</string>
 
+    <!--news-->
+    <string name="text_news_item_time_min">%1$dm | </string>
+    <string name="text_news_item_time_hour">%1$dh | </string>
+    <string name="text_news_item_time_empty">\u2014 | </string>
 
     <!--other-->
 
@@ -250,8 +254,15 @@
     <string name="text_lg_head_team_draws_dsc">The Header  Number of Team Draws in League Table</string>
     <string name="text_lg_head_team_losses_dsc">The Header  Number of Team Losses in League Table</string>
 
+<!--screen 9-->
+    <string name="image_news_item_poster_dsc">The News Poster image</string>
+    <string name="text_news_item_header_dsc">The News Header Text</string>
+    <string name="text_news_item_body_dsc">The News Body Text</string>
+    <string name="text_news_item_source_dsc">The News Source Name</string>
+    <string name="text_news_item_time_dsc">The News Time in Hours Past</string>
 
-<!--other-->
+
+    <!--other-->
     <!--competition-->
 
     <!--dialog-->
@@ -339,6 +350,13 @@
     <string name="text_test_lg_item_team_name_5">Team Name 5</string>
 
 
+    <string name="text_test_news_item_head">Scotland fights back to beat France 32-26</string>
+    <string name="text_test_news_item_body">EDINBURGH, Scotland (AP)  Scotland rebounded from its
+        mauling in Wales by fighting back to beat France 32-26 in Six Nations rugby at
+        Murrayfield, with a string of successful penalty kicks by recalled scrumhalf
+        Greig Laidlaw completing the turnaround on Sunday.</string>
+    <string name="text_test_news_item_time">15 hr ago</string>
+    <string name="text_test_news_item_source">Fox Sports</string>
 
 
 

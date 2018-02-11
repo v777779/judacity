@@ -103,6 +103,22 @@
     <dimen name="text_lg_toolbar_country_size">14sp</dimen>
     <dimen name="text_lg_toolbar_league_size">18sp</dimen>
 
+    <!--news-->
+    <dimen name="image_news_item_poster_size">80dp</dimen>
+    <dimen name="image_news_item_size">160dp</dimen>
+    <dimen name="text_news_item_size">14sp</dimen>
+    <dimen name="text_news_item_head_size">14sp</dimen>
+    <dimen name="text_news_item_body_size">12sp</dimen>
+    <dimen name="text_news_item_source_size">10sp</dimen>
+    <dimen name="text_news_item_time_size">10sp</dimen>
+
+
+
+
+
+
+
+
     <!--margins-->
     <dimen name="margin_tiny">1dp</dimen>
     <dimen name="margin_micro">2dp</dimen>
