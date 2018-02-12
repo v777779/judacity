@@ -14,6 +14,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
@@ -365,6 +366,48 @@ public class LeagueActivity extends AppCompatActivity
 
 
     // methods
+    private void startActivitySettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent,bundle);
+        finish();
+    }
+
+    private void startActivityFavorites() {
+        Intent intent = new Intent(this, FavoritesActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent, bundle);
+        finish();
+    }
+    private void startActivityNews() {
+        Intent intent = new Intent(this, NewsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent, bundle);
+        finish();
+    }
+
+    private void startActivityMatches() {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent, bundle);
+        finish();
+    }
+
+
+
+
 
     private void setupMapLeagueName() {
         mMapLeagueName = new HashMap<>();
@@ -766,16 +809,16 @@ public class LeagueActivity extends AppCompatActivity
                         Context context = LeagueActivity.this;
                         switch (item.getItemId()) {
                             case R.id.navigation_matches:
-                                Toast.makeText(context, "Action matches", Toast.LENGTH_SHORT).show();
+                               startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
                                 Toast.makeText(context, "Action news", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_favorites:
-                                Toast.makeText(context, "Action favorites", Toast.LENGTH_SHORT).show();
+                                startActivityFavorites();
                                 return true;
                             case R.id.navigation_settings:
-                                Toast.makeText(context, "Action settings", Toast.LENGTH_SHORT).show();
+                                startActivitySettings();
                                 return true;
                         }
                         return false;

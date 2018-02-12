@@ -16,6 +16,7 @@
     <string name="screen_league">Leaue</string>
     <string name="screen_news">News</string>
     <string name="screen_favorites">Favorites</string>
+    <string name="screen_settings">Settings</string>
 
     <!--menu-->
     <string name="action_settings">Settings</string>
@@ -31,20 +32,23 @@
     <!--preferences-->
 <!--switch    -->
     <string name="pref_notifications_key">pref_notifications_key</string>
-    <string name="pref_notifications_off">Notifications Disabled</string>
-    <string name="pref_notifications_on">Notifications Enabled</string>
-    <string name="pref_notifications_title">Notifications Mode</string>
+    <string name="pref_notifications_off">Disabled</string>
+    <string name="pref_notifications_on">Enabled</string>
+    <string name="pref_notifications_title">Notifications</string>
     <!--switch    -->
     <string name="pref_snackbar_key">pref_snackbar_key</string>
-    <string name="pref_snackbar_off">Toast popup message style</string>
-    <string name="pref_snackbar_on">Snackbar popup message style</string>
-    <string name="pref_snackbar_title">Popup messages style</string>
+    <string name="pref_snackbar_off">Toast</string>
+    <string name="pref_snackbar_on">Snackbar</string>
+    <string name="pref_snackbar_title">Messages style</string>
 <!--list-->
     <string name="pref_data_delay_time_key">pref_data_delay_time_key</string>
-    <string name="pref_data_delay_time_title">Football Update Time Delay</string>
+    <string name="pref_data_delay_time_title">Update Matches</string>
 <!--list-->
     <string name="pref_news_delay_time_key">pref_news_delay_time_key</string>
-    <string name="pref_news_delay_time_title">News Data Update Time Delay</string>
+    <string name="pref_news_delay_time_title">Update News</string>
+
+    <string name="pref_delay_time_high">"-1"</string>
+    <string name="pref_delay_time_high_message">Data never will be updated</string>
 
     <string-array name="pref_delay_time_titles">
         <item>Always</item>

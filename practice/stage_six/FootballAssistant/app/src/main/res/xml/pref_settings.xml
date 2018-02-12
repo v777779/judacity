@@ -14,6 +14,16 @@
         android:summaryOff="@string/pref_snackbar_off"
         android:title="@string/pref_snackbar_title" />
 
+
+    <ListPreference
+        android:defaultValue="30"
+        android:entries="@array/pref_delay_time_titles"
+        android:entryValues="@array/pref_delay_time_values"
+        android:key="@string/pref_news_delay_time_key"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_news_delay_time_title" />
+
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to      dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <ListPreference
@@ -25,13 +35,5 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_data_delay_time_title" />
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/pref_delay_time_titles"
-        android:entryValues="@array/pref_delay_time_values"
-        android:key="@string/pref_news_delay_time_key"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_news_delay_time_title" />
 
 </android.support.v7.preference.PreferenceScreen>

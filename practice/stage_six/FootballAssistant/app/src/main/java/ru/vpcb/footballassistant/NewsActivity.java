@@ -275,8 +275,19 @@ public class NewsActivity extends AppCompatActivity
 
 
     // methods
+    private void startActivitySettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent,bundle);
+        finish();
+    }
+
     private void startActivityFavorites() {
         Intent intent = new Intent(this, FavoritesActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
@@ -284,16 +295,9 @@ public class NewsActivity extends AppCompatActivity
         finish();
     }
 
-//    private void startActivityMatches() {
-//        Intent intent = new Intent(this, NewsActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
-////        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear top stack parent remained
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_in_main, R.anim.slide_out_main);  // standard transition
-//    }
-
     private void startActivityMatches() {
         Intent intent = new Intent(this, DetailActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
@@ -738,7 +742,7 @@ public class NewsActivity extends AppCompatActivity
                                 startActivityFavorites();
                                 return true;
                             case R.id.navigation_settings:
-                                Toast.makeText(context, "Action settings", Toast.LENGTH_SHORT).show();
+                               startActivitySettings();
                                 return true;
                         }
                         return false;

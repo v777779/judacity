@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity  {
     // TODO News Retrofit2 Utils
     // TODO Database Favorites Contract and Table
     // TODO Database Favorites Read and Write Cursor Utils
+    // TODO Match Screen add BottomNavigation Menu
+    // TODO Check Activity to Activity Stack
 
 
 

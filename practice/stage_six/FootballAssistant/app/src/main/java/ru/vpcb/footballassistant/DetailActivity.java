@@ -320,11 +320,19 @@ public class DetailActivity extends AppCompatActivity
 // methods
 
     private void startActivitySettings() {
-        startActivity(new Intent(this,SettingsActivity.class));
+        Intent intent = new Intent(this, SettingsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent,bundle);
+        finish();
     }
+
 
     private void startActivityFavorites() {
         Intent intent = new Intent(this, FavoritesActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
@@ -343,6 +351,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void startActivityNews() {
         Intent intent = new Intent(this, NewsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
@@ -812,7 +821,6 @@ public class DetailActivity extends AppCompatActivity
                                 return true;
                             case R.id.navigation_news:
                                 startActivityNews();
-
                                 return true;
                             case R.id.navigation_favorites:
                                 startActivityFavorites();
