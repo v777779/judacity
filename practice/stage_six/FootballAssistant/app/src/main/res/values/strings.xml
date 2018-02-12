@@ -126,10 +126,10 @@
 
     <!--news-->
     <string name="text_news_item_head_underlined"> <u> %1$s </u> </string>
-    <string name="text_news_item_time_min">%1$dm | </string>
-    <string name="text_news_item_time_hour">%1$dh | </string>
-    <string name="text_news_item_time_empty">\u2014 | </string>
-
+    <string name="text_news_item_time_min">%1$dm</string>
+    <string name="text_news_item_time_hour">%1$dh</string>
+    <string name="text_news_item_time_empty">\u2014</string>
+    <string name="text_news_item_separator">|</string>
     <!--other-->
 
 
@@ -261,6 +261,7 @@
     <string name="text_news_item_body_dsc">The News Body Text</string>
     <string name="text_news_item_source_dsc">The News Source Name</string>
     <string name="text_news_item_time_dsc">The News Time in Hours Past</string>
+    <string name="text_news_item_separator_dsc">The Separator Character</string>
 
 
     <!--other-->
@@ -280,6 +281,7 @@
     <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
     <string name="text_test_rm_item_match_time">19:05</string>
     <string name="text_test_rm_item_match_date">20/01/18</string>
+    <string name="text_test_rm_item_league_code">FAC</string>
     <string name="text_test_rm_item_league">Premier League 2017/18</string>
     <string name="text_test_rm_item_league2">Champions League 2017/18</string>
     <string name="text_test_rm_item_league3">League One 2017/18</string>

@@ -109,8 +109,8 @@
     <dimen name="text_news_item_size">14sp</dimen>
     <dimen name="text_news_item_head_size">14sp</dimen>
     <dimen name="text_news_item_body_size">12sp</dimen>
-    <dimen name="text_news_item_source_size">10sp</dimen>
-    <dimen name="text_news_item_time_size">10sp</dimen>
+    <dimen name="text_news_item_source_size">12sp</dimen>
+    <dimen name="text_news_item_time_size">12sp</dimen>
 
 
 

@@ -390,6 +390,8 @@
     <style name="Source.News.TextRecycler" parent="News.TextRecycler">
         <item name="android:textColor">@color/news_item_source_text</item>
         <item name="android:textSize">@dimen/text_news_item_source_size</item>
+        <item name="android:gravity">start</item>
+        <item name="android:lines">1</item>
     </style>
     <style name="Time.News.TextRecycler" parent="News.TextRecycler">
         <item name="android:fontFamily">sans-serif-light</item>
