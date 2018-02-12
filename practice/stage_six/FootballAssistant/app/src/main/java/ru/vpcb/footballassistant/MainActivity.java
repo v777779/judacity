@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Database News Contract and Table
     // TODO Database News Read and Write Cursor Utils
     // TODO News Retrofit2 Utils
+    // TODO Database Favorites Contract and Table
+    // TODO Database Favorites Read and Write Cursor Utils
+
 
 
 
