@@ -782,6 +782,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void setupBottomNavigation() {
         mBottomNavigation = findViewById(R.id.bottom_navigation);
+        mBottomNavigation.setSelectedItemId(R.id.navigation_matches);
         mBottomNavigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override

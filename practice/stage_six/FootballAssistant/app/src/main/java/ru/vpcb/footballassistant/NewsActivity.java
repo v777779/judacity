@@ -719,6 +719,7 @@ public class NewsActivity extends AppCompatActivity
 
     private void setupBottomNavigation() {
         mBottomNavigation = findViewById(R.id.bottom_navigation);
+        mBottomNavigation.setSelectedItemId(R.id.navigation_news);
         mBottomNavigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
