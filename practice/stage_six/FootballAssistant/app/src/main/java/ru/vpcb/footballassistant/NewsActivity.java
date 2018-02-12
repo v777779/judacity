@@ -296,7 +296,7 @@ public class NewsActivity extends AppCompatActivity
     private void startActivityMatches() {
         Intent intent = new Intent(this, DetailActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
-                R.anim.slide_in_main, R.anim.slide_out_main)
+                android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
         startActivity(intent, bundle);
         finish();

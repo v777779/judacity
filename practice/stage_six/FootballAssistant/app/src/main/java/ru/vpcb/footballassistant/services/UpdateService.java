@@ -24,6 +24,7 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_TAG;
 import static ru.vpcb.footballassistant.utils.FootballUtils.isOnline;
@@ -71,18 +72,8 @@ public class UpdateService extends IntentService {
 
 
     private void onActionUpdate() {
-        if (FootballUtils.isFootballDataRefreshed(this)) {
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
-            return;  // data updated
-        }
-
-        if (!isOnline(this)) {                                     // no network
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_no_network)));
-            return;
-        }
-        sendBroadcast(new Intent(getString(R.string.broadcast_data_update_started)));
-
         try {
+
 // loader imitation
             Map<Integer, FDCompetition> map = new HashMap<>();
             Map<Integer, List<Integer>> mapTeamKeys = new HashMap<>();
@@ -91,8 +82,20 @@ public class UpdateService extends IntentService {
             Map<Integer, FDFixture> mapFixtures = new HashMap<>();
             FDUtils.readDatabase(this, map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures);
+
+            if (checkEmpty(map, mapTeamKeys, mapTeams,
+                    mapFixtureKeys, mapFixtures)) {
+                sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+                return;
+            }
+            if (!isOnline(this)) {                                     // no network
+                sendBroadcast(new Intent(getString(R.string.broadcast_data_no_network)));
+                return;
+            }
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_started)));
 //0%
             FDUtils.sendProgress(this, 0);
+
 // load database
             boolean isUpdated = FDUtils.loadDatabase(this, map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures);
@@ -122,5 +125,18 @@ public class UpdateService extends IntentService {
         sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
     }
 
+    private boolean checkEmpty(Map<Integer, FDCompetition> map,
+                               Map<Integer, List<Integer>> mapTeamKeys,
+                               Map<Integer, FDTeam> mapTeams,
+                               Map<Integer, List<Integer>> mapFixtureKeys,
+                               Map<Integer, FDFixture> mapFixtures) {
+
+        if (map.isEmpty() || mapTeamKeys.isEmpty() || mapTeams.isEmpty() ||
+                mapFixtureKeys.isEmpty() || mapFixtures.isEmpty()) {
+            return false;
+        }
+        return true;
+
+    }
 
 }

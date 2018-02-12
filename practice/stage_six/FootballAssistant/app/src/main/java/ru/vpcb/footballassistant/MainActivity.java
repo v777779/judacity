@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity  {
         mProgressBar.setProgress(value);
         mProgressText.setText(String.valueOf(value));
         mProgressValue.setProgress(value);
+        mProgressText.setVisibility(View.VISIBLE);
 
         if (value >= max) {
             mProgressValue.setIndeterminate(false);
