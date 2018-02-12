@@ -43,6 +43,10 @@ public class MainActivity extends AppCompatActivity  {
 
     // _TODO Football-data  1. Key 70e68c465fd24d2e84c17aa8d71ca9b3
     //                2. Key 3dbbb32e16f747e582119f20967996bc
+    // TODO Database News Contract and Table
+    // TODO Database News Read and Write Cursor Utils
+    // TODO News Retrofit2 Utils
+
 
 
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
