@@ -6,12 +6,15 @@
     <string name="title_activity_team">TeamActivity</string>
     <string name="title_activity_league">LeagueActivity</string>
     <string name="title_activity_news">NewsActivity</string>
+    <string name="title_activity_favorites">FavoritesActivity</string>
+
 
     <!--titles-->
     <string name="screen_match">Matches</string>
     <string name="screen_team">Team</string>
     <string name="screen_league">Leaue</string>
     <string name="screen_news">News</string>
+    <string name="screen_favorites">Favorites</string>
 
     <!--menu-->
     <string name="action_settings">Settings</string>

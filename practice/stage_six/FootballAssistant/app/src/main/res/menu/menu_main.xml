@@ -7,11 +7,6 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_calendar"
-        android:orderInCategory="200"
-        android:title="@string/action_calendar"
-        android:icon="@drawable/ic_event_note_white"
-        app:showAsAction="ifRoom" />
+
 
 </menu>

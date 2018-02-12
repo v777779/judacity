@@ -48,7 +48,6 @@ import java.util.concurrent.TimeUnit;
 import ru.vpcb.footballassistant.add.TempUtils;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
-import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.news.NDArticle;
@@ -56,19 +55,14 @@ import ru.vpcb.footballassistant.news.NDNews;
 import ru.vpcb.footballassistant.news.NDSource;
 import ru.vpcb.footballassistant.news.NDSources;
 import ru.vpcb.footballassistant.services.UpdateService;
-import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
-import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 
 public class NewsActivity extends AppCompatActivity
@@ -181,10 +175,6 @@ public class NewsActivity extends AppCompatActivity
             Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
             return true;
         }
-        if (id == R.id.action_calendar) {
-            startCalendar();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -285,6 +275,15 @@ public class NewsActivity extends AppCompatActivity
 
 
     // methods
+    private void startActivityFavorites() {
+        Intent intent = new Intent(this, FavoritesActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent, bundle);
+        finish();
+    }
+
 //    private void startActivityMatches() {
 //        Intent intent = new Intent(this, NewsActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
@@ -377,7 +376,7 @@ public class NewsActivity extends AppCompatActivity
     }
 
     private RecyclerView getRecycler(List<NDArticle> list) {
-          View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
+        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
         RecyclerNewsAdapter adapter = new RecyclerNewsAdapter(this, list);
@@ -452,11 +451,11 @@ public class NewsActivity extends AppCompatActivity
 
     private ViewPagerData getViewPagerData() {
 // news
-        String json = TempUtils.readFileAssets(this,"everything.json");
-        NDNews news = new Gson().fromJson(json,NDNews.class);
+        String json = TempUtils.readFileAssets(this, "everything.json");
+        NDNews news = new Gson().fromJson(json, NDNews.class);
         List<NDArticle> list = news.getArticles();
 // sources
-        json = TempUtils.readFileAssets(this,"sources.json");
+        json = TempUtils.readFileAssets(this, "sources.json");
 
         NDSources sources = new Gson().fromJson(json, NDSources.class);
         List<NDSource> listSources = sources.getSources();
@@ -467,7 +466,7 @@ public class NewsActivity extends AppCompatActivity
 
         for (int i = 0; i < 7; i++) {
             recyclers.add(getRecycler(list));
-            titles.add(getRecyclerTitle(listSources,i));
+            titles.add(getRecyclerTitle(listSources, i));
         }
         ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, 3, null, null);
         return viewPagerData;
@@ -658,7 +657,7 @@ public class NewsActivity extends AppCompatActivity
 
     private void setupActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.screen_match));
+//        toolbar.setTitle(getString(R.string.screen_news));
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -736,7 +735,7 @@ public class NewsActivity extends AppCompatActivity
                                         Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_favorites:
-                                Toast.makeText(context, "Action favorites", Toast.LENGTH_SHORT).show();
+                                startActivityFavorites();
                                 return true;
                             case R.id.navigation_settings:
                                 Toast.makeText(context, "Action settings", Toast.LENGTH_SHORT).show();

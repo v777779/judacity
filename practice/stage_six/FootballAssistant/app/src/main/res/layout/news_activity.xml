@@ -20,19 +20,15 @@
             android:layout_height="?attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/toolbar_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/TextToolbar"
-                    android:text="@string/screen_news"
-                    android:contentDescription="@string/text_application_name"
-                    />
-            </FrameLayout>
+            <TextView
+                android:id="@+id/toolbar_text"
+                style="@style/TextToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/text_application_name"
+                android:text="@string/screen_news" />
+
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

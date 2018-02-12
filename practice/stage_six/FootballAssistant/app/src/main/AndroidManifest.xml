@@ -66,10 +66,15 @@
 
         <activity
             android:name=".NewsActivity"
-            android:label="@string/title_activity_league"
+            android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name=".FavoritesActivity"
+            android:label="@string/title_activity_favorites"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
 
     </application>

@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,8 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -44,17 +41,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
-import ru.vpcb.footballassistant.add.TempUtils;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
-import ru.vpcb.footballassistant.news.NDArticle;
-import ru.vpcb.footballassistant.news.NDNews;
-import ru.vpcb.footballassistant.news.NDSource;
-import ru.vpcb.footballassistant.news.NDSources;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
@@ -62,11 +53,8 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
-import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 
 public class FavoritesActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -82,7 +70,7 @@ public class FavoritesActivity extends AppCompatActivity
     private TextView mProgressText;
 
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecycler;
 
 
     private TabLayout mTabLayout;
@@ -132,7 +120,7 @@ public class FavoritesActivity extends AppCompatActivity
         mProgressValue = findViewById(R.id.progress_value);
 
         mBottomNavigation = findViewById(R.id.bottom_navigation);
-        mRecyclerView = findViewById(R.id.recyclerview_main);
+        mRecycler = findViewById(R.id.recyclerview_main);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
 // params
@@ -152,10 +140,9 @@ public class FavoritesActivity extends AppCompatActivity
         } else {
 // test!!!  check data
             Random rnd = new Random();
-            List<FDFixture> list = mViewPagerData.getList();
-
-
-            setupRecycler(recyclers.get(FootballUtils.rnd.nextInt(recyclers.size())));
+            List<List<FDFixture>> list = mViewPagerData.getList();
+            List<FDFixture> listFixtures = list.get(rnd.nextInt(list.size()));
+            setupRecycler(listFixtures);
         }
 
 
@@ -182,10 +169,7 @@ public class FavoritesActivity extends AppCompatActivity
             Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
             return true;
         }
-        if (id == R.id.action_calendar) {
-            startCalendar();
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -263,6 +247,15 @@ public class FavoritesActivity extends AppCompatActivity
 
 
     // methods
+    private void startActivityNews() {
+        Intent intent = new Intent(this, NewsActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent, bundle);
+        finish();
+    }
+
 //    private void startActivityMatches() {
 //        Intent intent = new Intent(this, NewsActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
@@ -453,18 +446,18 @@ public class FavoritesActivity extends AppCompatActivity
     private void setupRecycler() {
         RecyclerAdapter adapter = new RecyclerAdapter(this, null);
         adapter.setHasStableIds(true);
-        mRecyclerView.setAdapter(adapter);
+        mRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecycler.setLayoutManager(layoutManager);
 
     }
 
     private void setupRecycler(List<FDFixture> list) {
         RecyclerAdapter adapter = new RecyclerAdapter(this, list);
         adapter.setHasStableIds(true);
-        mRecyclerView.setAdapter(adapter);
+        mRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecycler.setLayoutManager(layoutManager);
 
     }
 
@@ -521,37 +514,10 @@ public class FavoritesActivity extends AppCompatActivity
 
     private void updateViewPager(final ViewPagerData data) {
         stopProgress();
-        if (mViewPager == null || data == null) return;
-        int pos = mViewPager.getCurrentItem();
-
-
-        if (pos == 0) {
-            pos = data.mPos;                    // current day
-        } else {
-
-// test!!!
-// TODO CHECK MAP  AFTER deletion  all works but Map
-//            data.getList().remove(210);
-//            data.getList().remove(211);
-//            data.getList().remove(212);
-//            data.getRecyclers().remove(210);
-//            data.getRecyclers().remove(211);
-//            data.getRecyclers().remove(212);
-//            data.getTitles().remove(210);
-//            data.getTitles().remove(211);
-//            data.getTitles().remove(212);
-//            List<Long> keys = new ArrayList<>(data.getMap().keySet());
-//            data.getMap().remove(keys.get(210));
-//            data.getMap().remove(keys.get(212));
-//            data.getMap().remove(keys.get(214));
-// end test!!!
-
-            updateTabLayout(data, mViewPagerData);
-            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
-        }
         mViewPagerData = data;
-        ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
-        mViewPager.setCurrentItem(pos);
+// test!!!
+        List<FDFixture> list = data.getList().get(FootballUtils.rnd.nextInt(data.getList().size()));
+        ((RecyclerAdapter)mRecycler.getAdapter()).swap(list);
 
     }
 
@@ -603,7 +569,7 @@ public class FavoritesActivity extends AppCompatActivity
 
     private void setupActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.screen_match));
+//        toolbar.setTitle(getString(R.string.screen_match));
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -664,7 +630,7 @@ public class FavoritesActivity extends AppCompatActivity
 
     private void setupBottomNavigation() {
         mBottomNavigation = findViewById(R.id.bottom_navigation);
-        mBottomNavigation.setSelectedItemId(R.id.navigation_news);
+        mBottomNavigation.setSelectedItemId(R.id.navigation_favorites);
         mBottomNavigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -677,11 +643,11 @@ public class FavoritesActivity extends AppCompatActivity
                                 startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
-                                Toast.makeText(context, getString(R.string.activity_same_message),
-                                        Toast.LENGTH_SHORT).show();
+                                startActivityNews();
                                 return true;
                             case R.id.navigation_favorites:
-                                Toast.makeText(context, "Action favorites", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, getString(R.string.activity_same_message),
+                                        Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_settings:
                                 Toast.makeText(context, "Action settings", Toast.LENGTH_SHORT).show();

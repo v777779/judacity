@@ -177,7 +177,7 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_match, menu);
         return true;
     }
 
@@ -317,7 +317,18 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-    // methods-
+// methods
+
+    private void startActivityFavorites() {
+        Intent intent = new Intent(this, FavoritesActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                android.R.anim.fade_in, android.R.anim.fade_out)
+                .toBundle();
+        startActivity(intent, bundle);
+        finish();
+    }
+
+
 //    private void startActivityNews() {
 //        Intent intent = new Intent(this, NewsActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
@@ -800,7 +811,7 @@ public class DetailActivity extends AppCompatActivity
 
                                 return true;
                             case R.id.navigation_favorites:
-                                Toast.makeText(context, "Action favorites", Toast.LENGTH_SHORT).show();
+                                startActivityFavorites();
                                 return true;
                             case R.id.navigation_settings:
                                 Toast.makeText(context, "Action settings", Toast.LENGTH_SHORT).show();

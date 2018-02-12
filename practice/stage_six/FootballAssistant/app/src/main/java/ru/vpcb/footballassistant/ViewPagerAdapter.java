@@ -91,7 +91,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         View recyclerLayout = mActivity.getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(mActivity, sp, list);
+        RecyclerAdapter adapter = new RecyclerAdapter(mActivity,  list);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
