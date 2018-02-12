@@ -63,11 +63,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      * Constructor of RecyclerAdapter
      *
      * @param context Context of calling activity
-     * @param sp      Span  object used for RecyclerView as storage of display item parameters
      */
-    public RecyclerAdapter(Context context, Config.Span sp, List<FDFixture> list) {
+    public RecyclerAdapter(Context context,  List<FDFixture> list) {
         mContext = context;
-        mSpan = sp;
+
         mRes = context.getResources();
         mList = list;
 

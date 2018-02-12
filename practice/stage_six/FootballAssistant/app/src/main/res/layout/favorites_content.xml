@@ -10,35 +10,6 @@
     >
 
     <!--background transparent-->
-    <ImageView
-        android:id="@+id/toolbar_sliding_back"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/sliding_tabs_height"
-        android:src="@drawable/sliding_tabs_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/toolbar_sliding_tabs"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/sliding_tabs_height"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabContentStart="@dimen/sliding_tabs_start"
-        app:tabGravity="center"
-        app:tabIndicatorColor="@color/sliding_tab_slider"
-        app:tabIndicatorHeight="@dimen/sliding_tabs_slider"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/sliding_tab_text_selected"
-        app:tabTextAppearance="@style/TextTab"
-        app:tabTextColor="@color/sliding_tab_text"    >
-        <!--android:elevation="8dp"-->
-    </android.support.design.widget.TabLayout>
-
-
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_h1"
@@ -72,21 +43,18 @@
     <!--background solid-->
     <!--<ImageView/> = null-->
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager_main"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="@dimen/margin_small"
 
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_sliding_tabs">
+        app:layout_constraintTop_toTopOf="parent">
 
-    </android.support.v4.view.ViewPager>
+    </android.support.v7.widget.RecyclerView>
 
     <ProgressBar
         android:id="@+id/progress_value"

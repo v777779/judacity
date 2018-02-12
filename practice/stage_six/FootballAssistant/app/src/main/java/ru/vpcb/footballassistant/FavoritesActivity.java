@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import ru.vpcb.footballassistant.add.TempUtils;
@@ -55,7 +56,9 @@ import ru.vpcb.footballassistant.news.NDNews;
 import ru.vpcb.footballassistant.news.NDSource;
 import ru.vpcb.footballassistant.news.NDSources;
 import ru.vpcb.footballassistant.services.UpdateService;
+import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -80,7 +83,7 @@ public class FavoritesActivity extends AppCompatActivity
 
 
     private RecyclerView mRecyclerView;
-    private ViewPager mViewPager;
+
 
     private TabLayout mTabLayout;
 
@@ -129,7 +132,7 @@ public class FavoritesActivity extends AppCompatActivity
         mProgressValue = findViewById(R.id.progress_value);
 
         mBottomNavigation = findViewById(R.id.bottom_navigation);
-        mViewPager = findViewById(R.id.viewpager_main);
+        mRecyclerView = findViewById(R.id.recyclerview_main);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
 // params
@@ -145,10 +148,14 @@ public class FavoritesActivity extends AppCompatActivity
         setupListeners();
 
         if (savedInstanceState == null && mViewPagerData == null) {
-            setupViewPager();
+            setupRecycler();
         } else {
 // test!!!  check data
-            setupViewPager(mViewPagerData);
+            Random rnd = new Random();
+            List<FDFixture> list = mViewPagerData.getList();
+
+
+            setupRecycler(recyclers.get(FootballUtils.rnd.nextInt(recyclers.size())));
         }
 
 
@@ -252,29 +259,6 @@ public class FavoritesActivity extends AppCompatActivity
     @Override
     public void onComplete(int mode, Calendar calendar) {
 
-        try {
-            if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
-                setZeroTime(calendar);
-                long time = calendar.getTimeInMillis();
-                long first = getViewPagerDate(0);
-                long last = getViewPagerDate(mViewPagerData.getList().size() - 1);
-                if (first > 0 && time < first) time = first;
-                if (last > 0 && time > last) time = last;
-
-
-                Integer pos = mViewPagerData.getMap().get(time);
-
-                while (pos == null && time < last) {
-                    time += TimeUnit.DAYS.toMillis(1);
-                    pos = mViewPagerData.getMap().get(time);
-                }
-                if (pos != null) mViewPager.setCurrentItem(pos, true);
-            }
-
-        } catch (NullPointerException e) {
-            Timber.d(getString(R.string.calendar_set_date_exception, e.getMessage()));
-        }
-
     }
 
 
@@ -350,31 +334,13 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
     // test!!!
-    private Calendar getViewPagerDate() {
-        Calendar calendar = Calendar.getInstance();
-        try {
-            calendar.setTime(mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate());
-            setZeroTime(calendar);
-            return calendar;
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
+    private RecyclerView getRecycler(List<FDFixture> list) {
+        Config.Span sp = Config.getDisplayMetrics(this);
 
-    private void startCalendar() {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = CalendarDialog.newInstance(this, getViewPagerDate());
-        fm.beginTransaction()
-                .add(fragment, getString(R.string.calendar_title))
-                .commit();
-
-    }
-
-    private RecyclerView getRecycler(List<NDArticle> list) {
-          View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
+        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerNewsAdapter adapter = new RecyclerNewsAdapter(this, list);
+        RecyclerAdapter adapter = new RecyclerAdapter(this,list);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -445,79 +411,64 @@ public class FavoritesActivity extends AppCompatActivity
 //    }
 
     private ViewPagerData getViewPagerData() {
-// news
-        String json = TempUtils.readFileAssets(this,"everything.json");
-        NDNews news = new Gson().fromJson(json,NDNews.class);
-        List<NDArticle> list = news.getArticles();
-// sources
-        json = TempUtils.readFileAssets(this,"sources.json");
+        int last = 0;
+        int next = 0;
+        int current = 0;
+        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
+        Map<Long, Integer> map = new HashMap<>();
 
-        NDSources sources = new Gson().fromJson(json, NDSources.class);
-        List<NDSource> listSources = sources.getSources();
+        Collections.sort(fixtures, cFx);
+        List<List<FDFixture>> list = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();
+        setZeroTime(c);
+        current = getIndex(fixtures, c);  // index of current day
+
+        while (next < fixtures.size()) {
+            setDay(c, fixtures.get(next).getDate());
+            map.put(c.getTimeInMillis(), list.size());
+            c.add(Calendar.DATE, 1);  // next day
+            next = getIndex(fixtures, c);
+            list.add(new ArrayList<>(fixtures.subList(last, next)));
+            last = next;
+            if (next == current) current = list.size();  // index of current day records
+        }
 
 
         List<View> recyclers = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
-        for (int i = 0; i < 7; i++) {
-            recyclers.add(getRecycler(list));
-            titles.add(getRecyclerTitle(listSources,i));
+
+        for (List<FDFixture> listFixtures : list) {
+            recyclers.add(getRecycler(listFixtures));
+
         }
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, 3, null, null);
+
+        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, list, map);
         return viewPagerData;
     }
 
-    private String getRecyclerTitle(List<NDSource> list, int pos) {
-        NDSource source = list.get(pos);
-        try {
-            return source.getName();
-        } catch (NullPointerException e) {
-            return EMPTY_LONG_DASH;
-        }
+
+
+    private void setupRecycler() {
+        RecyclerAdapter adapter = new RecyclerAdapter(this, null);
+        adapter.setHasStableIds(true);
+        mRecyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+
     }
 
-    private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+    private void setupRecycler(List<FDFixture> list) {
+        RecyclerAdapter adapter = new RecyclerAdapter(this, list);
+        adapter.setHasStableIds(true);
+        mRecyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
 
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-        mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    private void setupViewPager(ViewPagerData viewPagerData) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, viewPagerData.getRecyclers(), viewPagerData.getTitles());
-        mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(mViewPagerData.getPos());
-        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
 
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-        mTabLayout.setupWithViewPager(mViewPager, false);
-    }
 
 //    private void setupViewPager(ViewPagerDataExt data) {
 //        ViewPagerAdapter adapter = new ViewPagerAdapter(data.mRecyclers, data.mTitles);

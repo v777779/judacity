@@ -23,7 +23,7 @@ import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
  * Email: vadim.v.voronov@gmail.com
  */
 public class FootballUtils {
-    private static Random rnd = new Random();
+    public static Random rnd = new Random();
 
     // strings
     public static String formatString(int value) {
