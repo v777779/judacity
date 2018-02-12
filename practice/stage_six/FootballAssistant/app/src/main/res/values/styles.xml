@@ -9,6 +9,7 @@
 
 
         <item name="android:windowTranslucentStatus">false</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
 
     </style>

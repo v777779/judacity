@@ -186,7 +186,7 @@ public class DetailActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
+            startActivitySettings();
             return true;
         }
         if (id == R.id.action_calendar) {
@@ -318,6 +318,10 @@ public class DetailActivity extends AppCompatActivity
 
 
 // methods
+
+    private void startActivitySettings() {
+        startActivity(new Intent(this,SettingsActivity.class));
+    }
 
     private void startActivityFavorites() {
         Intent intent = new Intent(this, FavoritesActivity.class);
@@ -814,7 +818,7 @@ public class DetailActivity extends AppCompatActivity
                                 startActivityFavorites();
                                 return true;
                             case R.id.navigation_settings:
-                                Toast.makeText(context, "Action settings", Toast.LENGTH_SHORT).show();
+                                startActivitySettings();
                                 return true;
                         }
                         return false;

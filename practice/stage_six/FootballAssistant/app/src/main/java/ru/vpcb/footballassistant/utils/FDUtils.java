@@ -826,10 +826,6 @@ public class FDUtils {
     private static boolean isRefreshed(Context context, Date lastRefresh) {
         if (lastRefresh == null) return false;
 
-        if (!getPrefBool(context, R.string.pref_smart_update_key, R.bool.pref_smart_update_default)) {
-            return false; // update always
-        }
-
         long delay = TimeUnit.MINUTES.toMillis(
                 getPrefInt(context, R.string.pref_data_delay_time_key, R.integer.pref_data_delay_time_default));
         long currentTime = Calendar.getInstance().getTimeInMillis();
