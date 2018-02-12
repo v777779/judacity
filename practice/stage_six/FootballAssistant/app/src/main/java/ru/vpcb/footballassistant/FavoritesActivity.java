@@ -139,9 +139,8 @@ public class FavoritesActivity extends AppCompatActivity
             setupRecycler();
         } else {
 // test!!!  check data
-            Random rnd = new Random();
             List<List<FDFixture>> list = mViewPagerData.getList();
-            List<FDFixture> listFixtures = list.get(rnd.nextInt(list.size()));
+            List<FDFixture> listFixtures = list.get(list.size()/2);
             setupRecycler(listFixtures);
         }
 
@@ -516,7 +515,7 @@ public class FavoritesActivity extends AppCompatActivity
         stopProgress();
         mViewPagerData = data;
 // test!!!
-        List<FDFixture> list = data.getList().get(FootballUtils.rnd.nextInt(data.getList().size()));
+        List<FDFixture> list = data.getList().get(data.getList().size()/2);
         ((RecyclerAdapter)mRecycler.getAdapter()).swap(list);
 
     }
