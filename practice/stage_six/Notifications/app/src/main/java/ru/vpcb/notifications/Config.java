@@ -14,8 +14,8 @@ public class Config {
     public static final String NT_FB_JOB_DISPATCHER_ID = "nt_fb_job_dispatcher_id";
     public static final String NT_FB_JOB_CHANNEL_ID = "nt_fb_job_channel_id";
     public static final int NT_NOTIFICATION_ID = 1240;
-    public static final int NT_FLEXTIME_SECONDS = 5; // seconds
-    public static final int NT_DELAY_TIME_MINIMUM = 5; // seconds
+    public static final int NT_FLEXTIME_SECONDS = 30; // seconds
+    public static final int NT_DELAY_TIME_MINIMUM = 30; // seconds
 
     //    actions
     public static final String NT_ACTION_CANCEL = "ru.vpcb.footballassistant.ACTION_NOTIFICATION_CANCEL";

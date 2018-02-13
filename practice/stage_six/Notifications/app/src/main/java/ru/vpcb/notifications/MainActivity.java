@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(MainActivity.this, "Replace with your own action", Toast.LENGTH_LONG).show();
 
                 Calendar c = Calendar.getInstance();
-                c.add(Calendar.SECOND, 30);
+                c.add(Calendar.SECOND, 60);
                 String date = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(c.getTime());
                 FDFixture fixture = new FDFixture(date, "Chelsea FC", "StockCity FC");
                 NotificationUtils.scheduleReminder(MainActivity.this,fixture);
