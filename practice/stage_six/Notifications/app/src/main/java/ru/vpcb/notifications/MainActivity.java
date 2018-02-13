@@ -19,6 +19,11 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import static ru.vpcb.notifications.Config.DATE_FORMAT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,8 +38,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Replace with your own action", Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "Replace with your own action", Toast.LENGTH_LONG).show();
 
+                Calendar c = Calendar.getInstance();
+                c.add(Calendar.SECOND, 30);
+                String date = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(c.getTime());
+                FDFixture fixture = new FDFixture(date, "Chelsea FC", "StockCity FC");
+                NotificationUtils.scheduleReminder(MainActivity.this,fixture);
 
             }
         });
@@ -44,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 WebView webView = findViewById(R.id.webview);
-                webView.setWebViewClient(new WebViewClient(){   // blocks errors
+                webView.setWebViewClient(new WebViewClient() {   // blocks errors
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                         return false;
@@ -52,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 String URL = "https://www.foxsports.com/arizona/video/1158836803834";
-//                openWebPage(URL);
-                webView.loadUrl(URL);
+                openWebPage(URL);
+//                webView.loadUrl(URL);
 
             }
         });
@@ -98,11 +108,11 @@ public class MainActivity extends AppCompatActivity {
         int value;
         try {
             value = raw.read();
-            while(value != -1) {
+            while (value != -1) {
                 out.write(value);
                 value = raw.read();
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
 
         }
         return out.toString();

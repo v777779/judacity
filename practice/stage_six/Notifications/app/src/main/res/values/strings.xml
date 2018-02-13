@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Notifications</string>
     <string name="action_settings">Settings</string>
+
+<!--notifications-->
+    <string name="notification_delay_time_min">Match already started</string>
+    <string name="notification_title">Match Reminder</string>
+    <string name="notification_body">%1$s vs %2$s\nDate: %3$s </string>
+    <string name="notification_time">%1$02d/%2$02d/%3$04d %4$02d:%5$02d</string>
+
 </resources>
