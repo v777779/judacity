@@ -5,6 +5,51 @@
     <color name="colorAccent">#FF4081</color>
 
     <!--text colors-->
-    <color name="colorText">#3A3A3A</color>
+    <color name="colorText">#f8f8f8</color>
+
+
+    <!--match-->
+    <!--<color name="sm_text_color_dark">#3a3a3a</color>-->
+    <color name="sm_text_color_light">#f8f8f8</color>
+    <!--<color name="sm_text_color_light_back">#c3c3c3</color>-->
+
+    <!--<color name="sm_view_border_back">#e0e0e0</color>-->
+    <!--<color name="sm_item_card_back">#bdf8f8f8</color>-->
+    <!--<color name="sm_head_card_back">#d5d5d5</color>-->
+
+
+
+    <!--match-->
+    <color name="match_color_primary">#1e7e61</color>
+    <color name="match_toolbar_back">#1e7e61</color>
+
+    <color name="match_score_red">#fe0000</color>
+    <color name="match_score_red_light">#fe6969</color>
+    <color name="match_score_red_dark">#a21818</color>
+
+    <color name="match_score_blue">#0044ef</color>
+    <color name="match_score_blue_light">#5b89fb</color>
+    <color name="match_score_blue_dark">#1c3f96</color>
+
+    <!--&lt;!&ndash;ring&ndash;&gt;-->
+    <color name="match_icon_back">#ffffff</color>
+
+    <!--status-->
+    <color name="match_status_back">#8a8a8a</color>
+    <color name="match_status_back_light">#5a5a5a</color>
+    <color name="match_status_back_dark">#5a5a5a</color>
+
+    <!--<color name="match_back">#f8f8f8</color>-->
+
+    <color name="match_time_back">#bdbdbd</color>
+    <color name="match_time_back_light">#ededed</color>
+    <color name="match_time_back_dark">#939393</color>
+
+    <color name="match_start_header">#706f6f</color>
+    <!--<color name="match_start_date">#3a3a3a</color>-->
+    <color name="match_start_time">#3a3a3a</color>
+    <!--<color name="match_start_letter">#3a3a3a</color>-->
+    <!--<color name="match_start_subscript">#989898</color>-->
+
 
 </resources>

@@ -36,4 +36,67 @@
         <item name="android:textSize">@dimen/head_text_size</item>
     </style>
 
+    <!--match-->
+    <style name="Match.TextRecycler" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/sm_text_color_light</item>
+        <item name="android:textSize">@dimen/text_sm_item_size</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Match.Light.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TeamHome.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="TeamAway.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="Time.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_time_size</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!--<style name="Start.Time.Match.TextRecycler" parent="Time.Match.TextRecycler">-->
+        <!--<item name="android:background">@drawable/match_time_back</item>-->
+        <!--<item name="android:textColor">@color/match_start_time</item>-->
+        <!--<item name="android:paddingStart">@dimen/margin_normal</item>-->
+        <!--<item name="android:paddingEnd">@dimen/margin_normal</item>-->
+        <!--<item name="android:textSize">@dimen/text_sm_item_start_time_size</item>-->
+    <!--</style>-->
+
+    <style name="Date.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_date_size</item>
+    </style>
+
+
+    <style name="Country.Match.TextRecycler" parent="Match.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_country_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="League.Match.TextRecycler" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_league_size</item>
+    </style>
+
+    <style name="Score.Match.TextRecycler" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_score_size</item>
+    </style>
+
+    <style name="Status.Match.TextRecycler" parent="Match.Light.TextRecycler">
+        <item name="android:textSize">@dimen/text_sm_item_status_size</item>
+
+    </style>
+
+
+
+
 </resources>

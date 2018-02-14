@@ -21,4 +21,50 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="widget_resize_height">40dp</dimen>
     <dimen name="widget_resize_width">110dp</dimen>
 
+
+    <!--screen_match-->
+    <dimen name="image_sm_item_size">40dp</dimen>
+    <dimen name="text_sm_item_size">14sp</dimen>
+    <dimen name="text_sm_item_time_size">36sp</dimen>
+    <dimen name="text_sm_item_date_size">14sp</dimen>
+    <dimen name="text_sm_item_country_size">14sp</dimen>
+    <dimen name="text_sm_item_league_size">18sp</dimen>
+    <!--<dimen name="icon_sm_item_size">24dp</dimen>-->
+    <!--<dimen name="image_sm_head_size">50dp</dimen>-->
+    <!--<dimen name="text_sm_head_size">18sp</dimen>-->
+    <!--<dimen name="image_sm_head_icon_size">24dp</dimen>-->
+    <!--<dimen name="border_sm_item_size">2dp</dimen>-->
+    <!--<dimen name="card_corner_sm_item_radius">4dp</dimen>-->
+    <!--<dimen name="text_sm_item_score_radius">4dp</dimen>-->
+    <dimen name="text_sm_item_score_back">36dp</dimen>
+    <dimen name="text_sm_item_score_size">20sp</dimen>
+    <dimen name="text_sm_item_status_size">14sp</dimen>
+
+    <!--<dimen name="text_sm_item_status_back">120dp</dimen>-->
+
+    <dimen name="image_sm_item_icon_back">56dp</dimen>
+    <dimen name="image_sm_item_icon_inner">20dp</dimen>
+    <dimen name="image_sm_item_icon_thickness">1dp</dimen>
+
+    <!--start-->
+    <dimen name="text_sm_item_start_header_size">14sp</dimen>
+    <!--<dimen name="text_sm_item_start_date_size">14sp</dimen>-->
+    <dimen name="text_sm_item_start_time_size">32sp</dimen>
+    <!--<dimen name="text_sm_item_start_letter_size">18sp</dimen>-->
+    <!--<dimen name="text_sm_item_start_subscript_size">14sp</dimen>-->
+
+
+
+    <!--margins-->
+    <!--<dimen name="margin_tiny">1dp</dimen>-->
+    <dimen name="margin_micro">2dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_normal">8dp</dimen>
+    <!--<dimen name="margin_medium">12dp</dimen>-->
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_icon_size">24dp</dimen>
+    <!--<dimen name="margin_extend">28dp</dimen>-->
+    <!--<dimen name="margin_super">32dp</dimen>-->
+    <!--<dimen name="margin_extra">64dp</dimen>-->
+
 </resources>

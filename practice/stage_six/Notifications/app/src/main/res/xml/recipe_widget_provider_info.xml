@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialKeyguardLayout="@layout/recipe_widget_provider"
-    android:initialLayout="@layout/recipe_widget_provider"
+    android:initialKeyguardLayout="@layout/recipe_widget_provider2"
+    android:initialLayout="@layout/recipe_widget_provider2"
     android:minHeight="@dimen/widget_height"
     android:minWidth="@dimen/widget_width"
     android:minResizeHeight="@dimen/widget_resize_height"
