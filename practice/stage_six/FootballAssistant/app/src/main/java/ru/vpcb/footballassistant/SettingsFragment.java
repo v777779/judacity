@@ -11,6 +11,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import static ru.vpcb.footballassistant.utils.FootballUtils.showMessage;
+
 public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
 
@@ -60,7 +62,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         if (preference instanceof android.support.v7.preference.ListPreference) {
             String s = (String) newValue;
             if (s.equals(getString(R.string.pref_delay_time_high))) {
-                showMessage(getString(R.string.pref_delay_time_high_message));
+                showMessage(getActivity(),getString(R.string.pref_delay_time_high_message));
             }
 
         }
@@ -96,19 +98,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    private boolean isSnackbarStyle() {
-        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
-        return sharedPreferences.getBoolean(getString(R.string.pref_snackbar_key), false);
-    }
 
-    private void showMessage(String s) {
-        if (s == null || s.isEmpty()) return;
 
-        if (isSnackbarStyle()) {
-            Snackbar.make(getActivity().getWindow().getDecorView(), s, Snackbar.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
-        }
-    }
 
 }

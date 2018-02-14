@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--<uses-permission android:name="android.permission.WAKE_LOCK"/>-->
 
     <application
         android:allowBackup="true"
@@ -36,7 +38,7 @@
         <provider
             android:name=".dbase.FDProvider"
             android:authorities="ru.vpcb.footballassistant"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".MatchActivity"
@@ -50,8 +52,8 @@
 
         <activity
             android:name=".TeamActivity"
-            android:parentActivityName=".MatchActivity"
             android:label="@string/title_activity_team"
+            android:parentActivityName=".MatchActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -61,26 +63,36 @@
         <activity
             android:name=".LeagueActivity"
             android:label="@string/title_activity_league"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".NewsActivity"
             android:label="@string/title_activity_news"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".FavoritesActivity"
             android:label="@string/title_activity_favorites"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".notifications.NotifyIntentService"
+            android:exported="false" />
+
+        <service
+            android:name=".notifications.NotificationJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+
+        </service>
+
 
     </application>
 

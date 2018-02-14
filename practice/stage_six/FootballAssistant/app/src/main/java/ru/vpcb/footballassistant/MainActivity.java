@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Database Favorites Read and Write Cursor Utils
     // TODO Match Screen add BottomNavigation Menu
     // TODO Check Activity to Activity Stack
+    // TODO Notifications set minimum delay and flex time
+    // TODO Notifications add flag for notification, database field for notification status, set and clear procedure
 
 
 

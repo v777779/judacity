@@ -15,6 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
+import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.notifications.NotificationUtils;
+
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
@@ -25,6 +30,8 @@ public class MatchActivity extends AppCompatActivity {
     private TextView mViewLeague;
     private View mViewTeamHome;
     private View mViewTeamAway;
+    private View mViewNotification;
+    private View mViewFavorite;
 
 
     @Override
@@ -114,6 +121,9 @@ public class MatchActivity extends AppCompatActivity {
         mViewLeague = findViewById(R.id.text_sm_item_league);
         mViewTeamHome = findViewById(R.id.image_sm_team_home);
         mViewTeamAway = findViewById(R.id.image_sm_team_away);
+        mViewNotification = findViewById(R.id.match_notification_back);
+        mViewFavorite = findViewById(R.id.match_favorite_back);
+
 
 
         mViewLeague.setPaintFlags(mViewLeague.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -138,6 +148,26 @@ public class MatchActivity extends AppCompatActivity {
 //                startFragmentTeam();
                 startActivityTeam( 535);
 //                startActivityTeam(530);
+            }
+        });
+
+        mViewNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+// test!!!
+                Calendar c= Calendar.getInstance();
+                c.add(Calendar.SECOND,30);
+                FDFixture fixture = new FDFixture(c.getTime());
+                NotificationUtils.scheduleReminder(MatchActivity.this,fixture);
+// test!!!
+// TODO add flag for notification, database field for notification status, set and clear procedure
+            }
+        });
+
+        mViewFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

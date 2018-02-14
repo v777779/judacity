@@ -1,11 +1,15 @@
 package ru.vpcb.footballassistant.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
+import android.support.v7.preference.PreferenceManager;
+import android.view.Window;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +18,7 @@ import java.util.Random;
 
 import ru.vpcb.footballassistant.R;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DATE;
 import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
 
 /**
@@ -57,7 +62,32 @@ public class FootballUtils {
         return ""+day + delim + month + delim + year.substring(2, year.length())+"";
     }
 
+    public static String formatStringDate(Context context, Calendar c) {
 
+        if (c == null) return EMPTY_LONG_DATE;
+
+        return context.getString(R.string.notification_time,
+                c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH),
+                c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+    }
+
+    private static boolean isSnackbarStyle(Context context) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_snackbar_key), false);
+    }
+
+
+    public static void showMessage(Context context, String s) {
+        if (s == null || s.isEmpty()) return;
+        Window window = ((Activity)context).getWindow();
+
+        if (isSnackbarStyle(context) && window != null) {
+            Snackbar.make(window.getDecorView(), s, Snackbar.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     // images

@@ -35,7 +35,7 @@ public class Config {
     public static final String EMPTY_LONG_DASH = "\u2014";
     public static final String EMPTY_LONG_DATE = "--/--/----  --:--";
     public static final String EMPTY_NOTIFICATION = " home vs away --/--/----  --:--";
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"; //"2015-11-03T19:45:00Z"
+    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //"2015-11-03T19:45:00Z"
     public static final int EMPTY_NOTIFICATION_ID = -1;
 
 
