@@ -7,5 +7,17 @@
     <string name="notification_title">Match Reminder</string>
     <string name="notification_body">%1$s vs %2$s\nDate: %3$s </string>
     <string name="notification_time">%1$02d/%2$02d/%3$04d %4$02d:%5$02d</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+    <!--widgets-->
+    <!--widget-->
+    <string name="empty_widget_head">Click to choose recipe</string>
+    <string name="empty_widget_body"> </string>
+    <string name="widget_head_text">Recipe Name</string>
+    <string name="widget_body_text">Ingredients List</string>
+    <string name="widget_button">Tap to fill widget</string>
+    <string name="widget_add">Add widget</string>
+    <string name="widget_list_added">List of ingredients added to widget</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package ru.vpcb.notifications;
+package ru.vpcb.notifications.notifications;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -25,20 +25,24 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import static ru.vpcb.notifications.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.notifications.Config.NT_ACTION_ACTIVITY_PENDING_ID;
-import static ru.vpcb.notifications.Config.NT_ACTION_APPLY;
-import static ru.vpcb.notifications.Config.NT_ACTION_APPLY_PENDING_ID;
-import static ru.vpcb.notifications.Config.NT_ACTION_CANCEL;
-import static ru.vpcb.notifications.Config.NT_ACTION_CREATE;
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
-import static ru.vpcb.notifications.Config.NT_DELAY_TIME_MINIMUM;
-import static ru.vpcb.notifications.Config.NT_FB_JOB_CHANNEL_ID;
-import static ru.vpcb.notifications.Config.NT_FB_JOB_DISPATCHER_ID;
-import static ru.vpcb.notifications.Config.NT_FLEXTIME_SECONDS;
-import static ru.vpcb.notifications.Config.NT_RANDOM_RANGE;
-import static ru.vpcb.notifications.Config.showMessage;
+import ru.vpcb.notifications.MainActivity;
+import ru.vpcb.notifications.R;
+import ru.vpcb.notifications.Utils.FootballUtils;
+import ru.vpcb.notifications.data.FDFixture;
+
+import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.notifications.Utils.Config.NT_ACTION_ACTIVITY_PENDING_ID;
+import static ru.vpcb.notifications.Utils.Config.NT_ACTION_APPLY;
+import static ru.vpcb.notifications.Utils.Config.NT_ACTION_CANCEL;
+import static ru.vpcb.notifications.Utils.Config.NT_ACTION_CREATE;
+import static ru.vpcb.notifications.Utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
+import static ru.vpcb.notifications.Utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
+import static ru.vpcb.notifications.Utils.Config.NT_DELAY_TIME_MINIMUM;
+import static ru.vpcb.notifications.Utils.Config.NT_FB_JOB_CHANNEL_ID;
+import static ru.vpcb.notifications.Utils.Config.NT_FB_JOB_DISPATCHER_ID;
+import static ru.vpcb.notifications.Utils.Config.NT_FLEXTIME_SECONDS;
+import static ru.vpcb.notifications.Utils.Config.NT_RANDOM_RANGE;
+import static ru.vpcb.notifications.Utils.Config.showMessage;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -56,7 +60,9 @@ public class NotificationUtils {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
         Calendar current = Calendar.getInstance();
-        Calendar next = fixture.getCalendar();
+
+        Calendar next = Calendar.getInstance();
+        next.setTime(fixture.getDate());
 
         long currentTime = TimeUnit.MILLISECONDS.toSeconds(current.getTimeInMillis());   // current time in seconds
         long matchTime = TimeUnit.MILLISECONDS.toSeconds(next.getTimeInMillis());                    // target time, clear seconds
@@ -69,8 +75,8 @@ public class NotificationUtils {
 // unique ID for every job based on it time and current time seconds
         String id = NT_FB_JOB_DISPATCHER_ID + (matchTime + rnd.nextInt(NT_RANDOM_RANGE));
 
-        String s = context.getString(R.string.notification_body, fixture.getHome(),
-                fixture.getAway(), fixture.getFullDate(context));
+        String s = context.getString(R.string.notification_body, fixture.getHomeTeamName(),
+                fixture.getAwayTeamName(), FootballUtils.formatStringDate(context,next));
 
         Bundle bundle = new Bundle();
         bundle.putString(NT_BUNDLE_INTENT_NOTIFICATION_BODY, s);

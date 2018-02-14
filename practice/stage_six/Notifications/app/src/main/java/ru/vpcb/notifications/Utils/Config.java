@@ -1,4 +1,4 @@
-package ru.vpcb.notifications;
+package ru.vpcb.notifications.Utils;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -39,10 +39,31 @@ public class Config {
     public static final int EMPTY_NOTIFICATION_ID = -1;
 
 
-    public static void showMessage(Context context, String message) {
-        // test!!!
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();   // change with shared preference
 
+    // widget
+    // widget data
+    public static final String BUNDLE_PACKAGE = Config.class.getPackage().toString();
+    public static final String BUNDLE_WIDGET_INTENT = BUNDLE_PACKAGE+".bundle_widget_intent";
+    public static final String WIDGET_SERVICE_FILL_ACTION = BUNDLE_PACKAGE+".widget_fill_action";
+    public static final String WIDGET_SERVICE_UPDATE_ACTION = BUNDLE_PACKAGE+".widget_update_action";
+    public static final String WIDGET_PREFERENCES = "ru.vpcb.bakingapp.widget.";
+    public static final String WIDGET_WIDGET_ID = "widget_id";
+    public static final String WIDGET_RECIPE_ID = "widget_recipe_position";
+    public static final String WIDGET_RECIPE_NAME = "widget_recipe_name";
+
+    // fragment detail data
+    public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";
+    public static final String BUNDLE_DETAIL_POSITION = "bundle_detail_position";
+    public static final String BUNDLE_DETAIL_INTENT = "bundle_detail_intent";
+    public static final String BUNDLE_DETAIL_WIDGET_FILLED = "bundle_detail_widget_filled";
+
+
+
+
+
+
+    public static void showMessage(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();   // change with shared preference
     }
 
 }

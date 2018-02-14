@@ -1,4 +1,4 @@
-package ru.vpcb.notifications;
+package ru.vpcb.notifications.notifications;
 
 import com.firebase.jobdispatcher.JobParameters;
 

@@ -1,11 +1,11 @@
-package ru.vpcb.notifications;
+package ru.vpcb.notifications.notifications;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
+import static ru.vpcb.notifications.Utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
+import static ru.vpcb.notifications.Utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
 
 /**
  * Exercise for course : Android Developer Nanodegree

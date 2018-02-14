@@ -1,4 +1,4 @@
-package ru.vpcb.notifications;
+package ru.vpcb.notifications.notifications;
 
 
 import android.content.Context;
@@ -10,10 +10,10 @@ import com.firebase.jobdispatcher.JobService;
 
 import java.lang.ref.WeakReference;
 
-import static ru.vpcb.notifications.Config.EMPTY_NOTIFICATION;
-import static ru.vpcb.notifications.Config.EMPTY_NOTIFICATION_ID;
-import static ru.vpcb.notifications.Config.NT_ACTION_CREATE;
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_NOTIFICATION;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_NOTIFICATION_ID;
+import static ru.vpcb.notifications.Utils.Config.NT_ACTION_CREATE;
+import static ru.vpcb.notifications.Utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
 
 
 /**

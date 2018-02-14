@@ -4,28 +4,44 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
+import java.util.List;
 
-import static ru.vpcb.notifications.Config.DATE_FORMAT;
+import ru.vpcb.notifications.Utils.TempUtils;
+import ru.vpcb.notifications.data.FDFixture;
+import ru.vpcb.notifications.data.FDFixtures;
+import ru.vpcb.notifications.notifications.NotificationUtils;
+import ru.vpcb.notifications.reciipe.RecipeItem;
+import ru.vpcb.notifications.widgets.RecipeWidgetProvider;
+import ru.vpcb.notifications.widgets.RecipeWidgetService;
+
+import static ru.vpcb.notifications.Utils.Config.BUNDLE_WIDGET_INTENT;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_WIDGET_ID;
+import static ru.vpcb.notifications.Utils.Config.showMessage;
+import static ru.vpcb.notifications.Utils.FootballUtils.getRandom;
+import static ru.vpcb.notifications.widgets.RecipeWidgetService.startFillWidgetAction;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private FloatingActionButton mFab;
+    private FloatingActionButton mFab2;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,39 +50,62 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+
+        mFab = findViewById(R.id.fab);
+        mFab2 = findViewById(R.id.fab2);
+        mProgressBar = findViewById(R.id.progressBar);
+
+
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Toast.makeText(MainActivity.this, "Replace with your own action", Toast.LENGTH_LONG).show();
 
                 Calendar c = Calendar.getInstance();
                 c.add(Calendar.SECOND, 2);
-                String date = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(c.getTime());
-                FDFixture fixture = new FDFixture(date, "Chelsea FC", "StockCity FC");
+                FDFixture fixture = getFixture();
+                fixture.setDate(c.getTime());
                 NotificationUtils.scheduleReminder(MainActivity.this,fixture);
 
             }
         });
 
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab2.setOnClickListener(new View.OnClickListener() {
+
+        mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WebView webView = findViewById(R.id.webview);
-                webView.setWebViewClient(new WebViewClient() {   // blocks errors
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                        return false;
-                    }
-                });
 
-                String URL = "https://www.foxsports.com/arizona/video/1158836803834";
-                openWebPage(URL);
-//                webView.loadUrl(URL);
+                if(getIntent().hasExtra(BUNDLE_WIDGET_INTENT) ) {
+                    String widgetId = getIntent().getBundleExtra(BUNDLE_WIDGET_INTENT).getString(WIDGET_WIDGET_ID);
+                    String recipeId = String.valueOf(getRandom().nextInt(4));
+
+                    startFillWidgetAction(MainActivity.this, recipeId, widgetId);
+                    showMessage(MainActivity.this, "Widget added");
+                }else {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    WebView webView = findViewById(R.id.webview);
+                    webView.setWebViewClient(new WebViewClient() {   // blocks errors
+                        @Override
+                        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                            return false;
+                        }
+
+                        @Override
+                        public void onPageFinished(WebView view, String url) {
+                            super.onPageFinished(view, url);
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
+                    String URL = "https://www.foxsports.com/arizona/video/1158836803834";
+//                openWebPage(URL);
+                    webView.loadUrl(URL);
+                }
 
             }
         });
+
 
     }
 
@@ -118,5 +157,13 @@ public class MainActivity extends AppCompatActivity {
         return out.toString();
     }
 
+    private FDFixture getFixture() {
+
+        String json = TempUtils.readFileAssets(MainActivity.this,"fixtures.json");
+        FDFixtures fixtures = new Gson().fromJson(json,FDFixtures.class);
+        List<FDFixture> list = fixtures.getFixtures();
+        return list.get(getRandom().nextInt(list.size()));
+
+    }
 
 }
