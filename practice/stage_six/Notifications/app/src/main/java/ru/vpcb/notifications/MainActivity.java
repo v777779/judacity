@@ -78,11 +78,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if(getIntent().hasExtra(BUNDLE_WIDGET_INTENT) ) {
+                    FDFixture fixture = getFixture();
                     String widgetId = getIntent().getBundleExtra(BUNDLE_WIDGET_INTENT).getString(WIDGET_WIDGET_ID);
-                    String recipeId = String.valueOf(getRandom().nextInt(4));
+                    String fixtureID = String.valueOf(fixture.getId());
 
-                    startFillWidgetAction(MainActivity.this, recipeId, widgetId);
+                    startFillWidgetAction(MainActivity.this,fixtureID, widgetId);
                     showMessage(MainActivity.this, "Widget added");
+
+
+
                 }else {
                     mProgressBar.setVisibility(View.VISIBLE);
                     WebView webView = findViewById(R.id.webview);

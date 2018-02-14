@@ -15,11 +15,13 @@ import ru.vpcb.notifications.R;
 import timber.log.Timber;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static ru.vpcb.notifications.Utils.Config.BUNDLE_DETAIL_INTENT;
-import static ru.vpcb.notifications.Utils.Config.BUNDLE_WIDGET_INTENT;
+
+import static ru.vpcb.notifications.Utils.Config.BUNDLE_DETAIL_INTENT_ARGS;
+
+import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
+
+import static ru.vpcb.notifications.Utils.Config.WIDGET_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_PREFERENCES;
-import static ru.vpcb.notifications.Utils.Config.WIDGET_RECIPE_ID;
-import static ru.vpcb.notifications.Utils.Config.WIDGET_RECIPE_NAME;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_WIDGET_ID;
 
 /**
@@ -60,60 +62,31 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    /**
-     *  Creates empty widget with valid WidgetId and PendingIntent with MainActivity as destination
-     *  Prepare Bundle with parameters  WidgetID and PendingIntent
-     *  WidgetID is string version of int widgetId, used to show when this parameter is empty
-     *  Detail Activity recognizes not empty widgetID and shows "fill widget" button in response
-     *  WidgetID used as address of widget in MainActivity and DetailActivity
-     *  Pending Intent to start MainActivity on click on widget
-     *
-     * @param context Context of calling activity
-     * @param appWidgetManager  AppWidgetManager widget manager
-     * @param widgetId String version of int WidgetID, string used to show the case when WidgetID is empty
-     */
     private static void createWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
-        // Construct the RemoteViews object
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
         String widgetHead = context.getString(R.string.text_test_rm_item_team_away);
-// test!!!
         String widgetBody = context.getString(R.string.text_test_rm_item_team_away);;
 
         Intent intent = new Intent(context, MainActivity.class); // call activity
         Bundle args = new Bundle();
         args.putString(WIDGET_WIDGET_ID, new Integer(widgetId).toString());
-        intent.putExtra(BUNDLE_WIDGET_INTENT, args);
+        intent.putExtra(BUNDLE_MAIN_INTENT_ARGS, args);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetId, intent, 0);
         views.setTextViewText(R.id.text_sm_team_home, widgetHead);
         views.setTextViewText(R.id.text_sm_team_away, widgetBody);
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
 
-        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
-    /**
-     * Fills widget with List of ingredients , WidgetId, RecipeId and PendingIntent with DetailActivity as destination
-     *  DetailActivity recognizes that widgetID is empty and does not show "fill widget" button
-     *  RecipeID used for database query
-     *  Pending Intent to start DetailActivity on click on widget
-     *
-     * @param context Context of calling activity
-     * @param appWidgetManager  AppWidgetManager widget manager
-     * @param recipeId String version of int RecipeID
-     * @param widgetId String version of int WidgetID, string used to show the case when WidgetID is empty
-     * @param recipeName String the name of Recipe
-     * @param recipeList String the list of ingredients
-     */
     public static void fillWidget(Context context, AppWidgetManager appWidgetManager,
                                    int recipeId, int widgetId,
                                    String recipeName, String recipeList) {
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(WIDGET_PREFERENCES + WIDGET_RECIPE_ID + widgetId, Integer.toString(recipeId));
-        editor.putString(WIDGET_PREFERENCES + WIDGET_RECIPE_NAME + widgetId, recipeName);
+        editor.putString(WIDGET_PREFERENCES + WIDGET_FIXTURE_ID + widgetId, Integer.toString(recipeId));
         editor.apply();
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
@@ -121,52 +94,35 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         Intent intent;
         intent = new Intent(context, MainActivity.class); // call activity
         Bundle args = new Bundle();
-//        args.putString(WIDGET_WIDGET_ID, new Integer(widgetId).toString());
-        args.putString(WIDGET_RECIPE_ID, new Integer(recipeId).toString());
-        intent.putExtra(BUNDLE_DETAIL_INTENT, args);
+        args.putString(WIDGET_FIXTURE_ID, new Integer(recipeId).toString());
+        intent.putExtra(BUNDLE_DETAIL_INTENT_ARGS, args);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetId, intent, FLAG_UPDATE_CURRENT);
 
         views.setTextViewText(R.id.text_sm_team_home, recipeName);
         views.setTextViewText(R.id.text_sm_team_away, recipeList);
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
 
-        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
-    /**
-     * Returns String of RecipeId from Preferences of widget
-     *
-     * @param context Context of calling activity
-     * @param widgetId int WidgetID that owner of RecipeID
-     * @return String RecipeID value
-     */
-    public static String getWidgetRecipeId(Context context, int widgetId) {
+
+    public static String getWidgetFixtureId(Context context, int widgetId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString(WIDGET_PREFERENCES + WIDGET_RECIPE_ID + widgetId, "");
+        return sharedPreferences.getString(WIDGET_PREFERENCES + WIDGET_FIXTURE_ID + widgetId, "");
     }
 
-    /**
-     * System method for updates all widgets of RecipeWidgetProvider
-     *
-     * @param context           Context of calling application
-     * @param appWidgetManager  AppWidgetManager widget manager object
-     * @param appWidgetIds      int[] WidgetID array to update
-     */
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         RecipeWidgetService.startWidgetUpdateAction(context);
     }
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
     }
 }
 

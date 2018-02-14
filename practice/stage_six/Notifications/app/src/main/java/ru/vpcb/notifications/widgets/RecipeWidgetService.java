@@ -5,9 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -21,8 +18,9 @@ import ru.vpcb.notifications.Utils.TempUtils;
 import ru.vpcb.notifications.reciipe.RecipeItem;
 import timber.log.Timber;
 
-import static ru.vpcb.notifications.Utils.Config.BUNDLE_WIDGET_INTENT;
-import static ru.vpcb.notifications.Utils.Config.WIDGET_RECIPE_ID;
+
+import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_FILL_ACTION;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_UPDATE_ACTION;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_WIDGET_ID;
@@ -37,57 +35,37 @@ public class RecipeWidgetService extends IntentService {
         super(RecipeWidgetService.class.getSimpleName());
     }
 
-    /**
-     * Starts service with Intent to fill widget with recipe data
-     * Uses bundle parameters added to Intent
-     * Bundle parameters are Recipe ID in local database and Widget ID
-     *
-     * @param context  context of activity that starts service
-     * @param recipeId string version of integer Recipe ID used to query recipe from local database
-     * @param widgetId string version of integer Widget Id assigned by system
-     */
-    public static void startFillWidgetAction(Context context, String recipeId, String widgetId) {
-        if (widgetId.isEmpty() || recipeId.isEmpty()) {
+
+    public static void startFillWidgetAction(Context context, String fixtureId, String widgetId) {
+        if (widgetId.isEmpty() || fixtureId.isEmpty()) {
             return;
         }
         Bundle args = new Bundle();
-        args.putString(WIDGET_RECIPE_ID, recipeId);
+        args.putString(WIDGET_FIXTURE_ID, fixtureId);
         args.putString(WIDGET_WIDGET_ID, widgetId);
         Intent intent = new Intent(context, RecipeWidgetService.class);
-        intent.putExtra(BUNDLE_WIDGET_INTENT, args);
+        intent.putExtra(BUNDLE_MAIN_INTENT_ARGS, args);
         intent.setAction(WIDGET_SERVICE_FILL_ACTION);
         context.startService(intent);
     }
 
-    /**
-     * Starts service with Intent to create new widget or update existed one
-     * The only valid parameter in new widget is Widget ID
-     * This method called by when user creates new widget
-     * This method called by system when WidgetService.onUpdate() method called
-     *
-     * @param context
-     */
     public static void startWidgetUpdateAction(Context context) {
         Intent intent = new Intent(context, RecipeWidgetService.class);
         intent.setAction(WIDGET_SERVICE_UPDATE_ACTION);
         context.startService(intent);
     }
 
-    /**
-     * Serves requests for actions to service
-     *
-     * @param intent Intent with action and bundle of parameters if exists
-     */
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
             String action = intent.getAction();
-            if (action.equals(WIDGET_SERVICE_FILL_ACTION) &&
-                    intent.hasExtra(BUNDLE_WIDGET_INTENT)) {
-                startFillWidgetAction(intent.getBundleExtra(BUNDLE_WIDGET_INTENT));
+            if (action == null) return;
+            if (action.equals(WIDGET_SERVICE_FILL_ACTION) && intent.hasExtra(BUNDLE_MAIN_INTENT_ARGS)) {
+                Bundle bundle = intent.getBundleExtra(BUNDLE_MAIN_INTENT_ARGS);
+                startFillWidgetAction(bundle);
             }
             if (action.equals(WIDGET_SERVICE_UPDATE_ACTION)) {
-
                 startWidgetUpdateAction();
             }
         }
@@ -103,16 +81,16 @@ public class RecipeWidgetService extends IntentService {
         int[] ids = appWidgetManager.getAppWidgetIds(componentName); // all widgets to update
         if (ids == null) return;
         for (int widgetId : ids) {
-            String recipeId = RecipeWidgetProvider.getWidgetRecipeId(this, widgetId);
+            String fixtureId = RecipeWidgetProvider.getWidgetFixtureId(this, widgetId);
             String recipeName = "";
             String recipeList = "";
 
-            RecipeItem recipeItem = getRecipeItem(recipeId);
+            RecipeItem recipeItem = getRecipeItem(fixtureId);
             if (recipeItem != null) {
                 recipeName = recipeItem.getName();
                 recipeList = getIngredientString(recipeItem.getIngredients());
             }
-            RecipeWidgetProvider.updateWidget(this, appWidgetManager, recipeId, widgetId, recipeName, recipeList);
+            RecipeWidgetProvider.updateWidget(this, appWidgetManager, fixtureId, widgetId, recipeName, recipeList);
         }
     }
 
@@ -167,7 +145,7 @@ public class RecipeWidgetService extends IntentService {
         int recipeId;
 
         try {
-            String sRecipeId = args.getString(WIDGET_RECIPE_ID, "");
+            String sRecipeId = args.getString(WIDGET_FIXTURE_ID, "");
             String sWidgetId = args.getString(WIDGET_WIDGET_ID, "");
 
             RecipeItem recipeItem = getRecipeItem(sRecipeId);

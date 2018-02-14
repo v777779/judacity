@@ -3,6 +3,8 @@ package ru.vpcb.notifications.Utils;
 import android.content.Context;
 import android.widget.Toast;
 
+import ru.vpcb.notifications.widgets.RecipeWidgetProvider;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -42,21 +44,35 @@ public class Config {
 
     // widget
     // widget data
-    public static final String BUNDLE_PACKAGE = Config.class.getPackage().toString();
-    public static final String BUNDLE_WIDGET_INTENT = BUNDLE_PACKAGE+".bundle_widget_intent";
-    public static final String WIDGET_SERVICE_FILL_ACTION = BUNDLE_PACKAGE+".widget_fill_action";
-    public static final String WIDGET_SERVICE_UPDATE_ACTION = BUNDLE_PACKAGE+".widget_update_action";
-    public static final String WIDGET_PREFERENCES = "ru.vpcb.bakingapp.widget.";
-    public static final String WIDGET_WIDGET_ID = "widget_id";
-    public static final String WIDGET_RECIPE_ID = "widget_recipe_position";
-    public static final String WIDGET_RECIPE_NAME = "widget_recipe_name";
 
-    // fragment detail data
-    public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";
-    public static final String BUNDLE_DETAIL_POSITION = "bundle_detail_position";
-    public static final String BUNDLE_DETAIL_INTENT = "bundle_detail_intent";
-    public static final String BUNDLE_DETAIL_WIDGET_FILLED = "bundle_detail_widget_filled";
 
+
+    // old
+//    public static final String WIDGET_PREFERENCES = "ru.vpcb.bakingapp.widget.";
+//
+//    public static final String WIDGET_RECIPE_ID = "widget_recipe_position";
+//    public static final String WIDGET_RECIPE_NAME = "widget_recipe_name";
+//
+//    // fragment detail data
+//    public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";
+//    public static final String BUNDLE_DETAIL_POSITION = "bundle_detail_position";
+//    public static final String BUNDLE_DETAIL_INTENT = "bundle_detail_intent";
+//    public static final String BUNDLE_DETAIL_WIDGET_FILLED = "bundle_detail_widget_filled";
+
+
+
+
+    // widgets
+    public static final String WIDGET_FIXTURE_ID = "widget_fixture_id";
+    public static final String WIDGET_WIDGET_ID = "widget_widget_id";
+    public static final String WIDGET_PACKAGE = RecipeWidgetProvider.class.getPackage().getName()+".";
+
+    public static final String WIDGET_SERVICE_FILL_ACTION = WIDGET_PACKAGE+"widget.ACTION_FILL";
+    public static final String WIDGET_SERVICE_UPDATE_ACTION = WIDGET_PACKAGE+"widget.ACTION_UPDATE";
+
+    public static final String BUNDLE_MAIN_INTENT_ARGS = WIDGET_PACKAGE+"widget.intent.BUNDLE_MAIN_ARGS";
+    public static final String BUNDLE_DETAIL_INTENT_ARGS = WIDGET_PACKAGE+"widget.intent.BUNDLE_DETAIL_ARGS";
+    public static final String WIDGET_PREFERENCES = WIDGET_PACKAGE+"widget.preferences.";
 
 
 
