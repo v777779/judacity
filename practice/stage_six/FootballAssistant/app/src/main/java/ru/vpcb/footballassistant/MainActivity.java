@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Check Activity to Activity Stack
     // TODO Notifications set minimum delay and flex time
     // TODO Notifications add flag for notification, database field for notification status, set and clear procedure
+    // TODO Notifications cut names of teams to 20 characters and add ... at the end
 
 
 
