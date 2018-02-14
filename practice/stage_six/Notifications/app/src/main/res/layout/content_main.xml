@@ -53,11 +53,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <include
-        layout="@layout/recipe_widget_provider2"
-        android:visibility="invisible"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+    <!--<include-->
+        <!--layout="@layout/recipe_widget_provider2"-->
+        <!--android:visibility="invisible"-->
+        <!--tools:layout_editor_absoluteX="0dp"-->
+        <!--tools:layout_editor_absoluteY="0dp" />-->
 
     <FrameLayout
         android:id="@+id/widget_container"
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
-        <include layout="@layout/match_widget_provider" />
+        <include layout="@layout/match_widget_provider_" />
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

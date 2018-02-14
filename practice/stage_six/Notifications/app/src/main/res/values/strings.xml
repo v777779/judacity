@@ -57,7 +57,7 @@
 
 
     <!--test-->
-    <string name="text_test_rm_item_team_home">Eintracht Braunschweig</string>
+    <string name="text_test_rm_item_team_home">Eintracht</string>
     <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
     <string name="text_test_rm_item_match_time">19:05</string>
     <!--<string name="text_test_rm_item_match_date">20/01/18</string>-->

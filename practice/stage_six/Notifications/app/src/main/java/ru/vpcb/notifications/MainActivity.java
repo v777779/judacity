@@ -13,6 +13,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -106,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if(getIntent().hasExtra("this_is_click_on_notification")) {
+            Toast.makeText(this,"Notifications clicked",Toast.LENGTH_SHORT).show();
+        }
 
     }
 

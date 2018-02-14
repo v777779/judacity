@@ -13,9 +13,9 @@
 
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="widget_height">110dp</dimen>
-    <dimen name="widget_width">110dp</dimen>
+    <dimen name="widget_width">160dp</dimen>
     <dimen name="widget_resize_height">40dp</dimen>
-    <dimen name="widget_resize_width">110dp</dimen>
+    <dimen name="widget_resize_width">160dp</dimen>
 
     <!--screen_match-->
     <dimen name="widget_image_team_size">32dp</dimen>

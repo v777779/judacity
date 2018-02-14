@@ -75,8 +75,9 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     private static void createWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
-        String widgetHead = context.getString(R.string.empty_widget_head);
-        String widgetBody = context.getString(R.string.empty_widget_body);
+        String widgetHead = context.getString(R.string.text_test_rm_item_team_away);
+// test!!!
+        String widgetBody = context.getString(R.string.text_test_rm_item_team_away);;
 
         Intent intent = new Intent(context, MainActivity.class); // call activity
         Bundle args = new Bundle();
