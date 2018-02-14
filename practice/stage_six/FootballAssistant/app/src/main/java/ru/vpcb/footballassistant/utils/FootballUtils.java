@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import ru.vpcb.footballassistant.R;
+import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DATE;
 import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
@@ -50,16 +51,17 @@ public class FootballUtils {
         String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
         String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
         String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
-        return ""+day + "/" + month + "/" + year.substring(2, year.length())+"";
+        return "" + day + "/" + month + "/" + year.substring(2, year.length()) + "";
     }
-    public static String formatStringDate(Date date,String delim) {
+
+    public static String formatStringDate(Date date, String delim) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
 
         String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
         String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
         String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
-        return ""+day + delim + month + delim + year.substring(2, year.length())+"";
+        return "" + day + delim + month + delim + year.substring(2, year.length()) + "";
     }
 
     public static String formatStringDate(Context context, Calendar c) {
@@ -79,13 +81,16 @@ public class FootballUtils {
 
 
     public static void showMessage(Context context, String s) {
-        if (s == null || s.isEmpty()) return;
-        Window window = ((Activity)context).getWindow();
+        if (!(context instanceof Activity) || s == null || s.isEmpty()) return;
 
-        if (isSnackbarStyle(context) && window != null) {
-            Snackbar.make(window.getDecorView(), s, Snackbar.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        try {
+            if (isSnackbarStyle(context) ) {
+                Snackbar.make(((Activity) context).getWindow().getDecorView(), s, Snackbar.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+            }
+        } catch (NullPointerException e) {
+            Timber.d(context.getString(R.string.notification_empty_activity_exception,e.getMessage()));
         }
     }
 

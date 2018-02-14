@@ -156,7 +156,7 @@ public class MatchActivity extends AppCompatActivity {
             public void onClick(View v) {
 // test!!!
                 Calendar c= Calendar.getInstance();
-                c.add(Calendar.SECOND,30);
+                c.add(Calendar.SECOND,60);
                 FDFixture fixture = new FDFixture(c.getTime());
                 NotificationUtils.scheduleReminder(MatchActivity.this,fixture);
 // test!!!
