@@ -21,9 +21,9 @@ import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static ru.vpcb.notifications.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.notifications.Config.NT_ACTION_ACTIVITY_PENDING_ID;
@@ -31,11 +31,13 @@ import static ru.vpcb.notifications.Config.NT_ACTION_APPLY;
 import static ru.vpcb.notifications.Config.NT_ACTION_APPLY_PENDING_ID;
 import static ru.vpcb.notifications.Config.NT_ACTION_CANCEL;
 import static ru.vpcb.notifications.Config.NT_ACTION_CREATE;
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_STRING;
+import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
+import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
 import static ru.vpcb.notifications.Config.NT_DELAY_TIME_MINIMUM;
 import static ru.vpcb.notifications.Config.NT_FB_JOB_CHANNEL_ID;
 import static ru.vpcb.notifications.Config.NT_FB_JOB_DISPATCHER_ID;
 import static ru.vpcb.notifications.Config.NT_FLEXTIME_SECONDS;
+import static ru.vpcb.notifications.Config.NT_RANDOM_RANGE;
 import static ru.vpcb.notifications.Config.showMessage;
 
 /**
@@ -56,8 +58,8 @@ public class NotificationUtils {
         Calendar current = Calendar.getInstance();
         Calendar next = fixture.getCalendar();
 
-        long currentTime = Calendar.getInstance().getTimeInMillis() / 1000;   // current time in seconds
-        long matchTime = (next.getTimeInMillis() / 1000);                    // target time, clear seconds
+        long currentTime = TimeUnit.MILLISECONDS.toSeconds(current.getTimeInMillis());   // current time in seconds
+        long matchTime = TimeUnit.MILLISECONDS.toSeconds(next.getTimeInMillis());                    // target time, clear seconds
         int scheduleTime = (int) (matchTime - currentTime);                    //
 
         if (scheduleTime <= NT_DELAY_TIME_MINIMUM) {
@@ -65,13 +67,13 @@ public class NotificationUtils {
             return;
         }
 // unique ID for every job based on it time and current time seconds
-        String id = NT_FB_JOB_DISPATCHER_ID + (matchTime+rnd.nextInt(1000) );
+        String id = NT_FB_JOB_DISPATCHER_ID + (matchTime + rnd.nextInt(NT_RANDOM_RANGE));
 
-        String s =  context.getString(R.string.notification_body,fixture.getHome(),
-                fixture.getAway(),fixture.getFullDate(context));
+        String s = context.getString(R.string.notification_body, fixture.getHome(),
+                fixture.getAway(), fixture.getFullDate(context));
 
         Bundle bundle = new Bundle();
-        bundle.putString(NT_BUNDLE_INTENT_STRING, s);
+        bundle.putString(NT_BUNDLE_INTENT_NOTIFICATION_BODY, s);
 
         Job constraintReminderJob = dispatcher.newJobBuilder()      // ВНИМАНИЕ. Работает если приложение запущено
                 /* The Service that will be used to write to preferences */
@@ -87,14 +89,16 @@ public class NotificationUtils {
         dispatcher.schedule(constraintReminderJob);
     }
 
-    private static String getParam(String [] params, int index) {
+    private static String getParam(String[] params, int index) {
         String s = params[index];
-        if(s == null || s.isEmpty()) return EMPTY_LONG_DASH;
+        if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
         return s;
     }
 
 
     public static void sendNotification(Context context, String sMatch) {
+
+        int id = (int) TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis()) + rnd.nextInt(NT_RANDOM_RANGE);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, NT_FB_JOB_CHANNEL_ID)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
@@ -105,8 +109,8 @@ public class NotificationUtils {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(sMatch))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
-                .addAction(applyAction(context))
-                .addAction(cancelAction(context))
+                .addAction(applyAction(context, id))
+                .addAction(cancelAction(context, id))
                 .setAutoCancel(true);
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -118,17 +122,19 @@ public class NotificationUtils {
 
         if (notificationManager == null) return;
 
-        int id = (int) (Calendar.getInstance().getTimeInMillis() / 60000)+rnd.nextInt(1000);
+
         notificationManager.notify(id, notificationBuilder.build());
 
     }
 
-    private static NotificationCompat.Action cancelAction(Context context) {
+    private static NotificationCompat.Action cancelAction(Context context, int id) {
         Intent intent = new Intent(context, NotifyIntentService.class);
         intent.setAction(NT_ACTION_CANCEL);
+        intent.putExtra(NT_BUNDLE_INTENT_NOTIFICATION_ID, id);
+        id = id + rnd.nextInt(NT_RANDOM_RANGE);
         PendingIntent cancelPendingIntent = PendingIntent.getService(
                 context,
-                NT_ACTION_ACTIVITY_PENDING_ID,
+                id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel,
@@ -137,15 +143,17 @@ public class NotificationUtils {
         return action;
     }
 
-    private static NotificationCompat.Action applyAction(Context context) {
+    private static NotificationCompat.Action applyAction(Context context, int id) {
         Intent intent = new Intent(context, NotifyIntentService.class);
         intent.setAction(NT_ACTION_APPLY);
+        intent.putExtra(NT_BUNDLE_INTENT_NOTIFICATION_ID, id);
+        id = id + rnd.nextInt(NT_RANDOM_RANGE);
         PendingIntent applyPendingIntent = PendingIntent.getService(
                 context,
-                NT_ACTION_APPLY_PENDING_ID,
+                id,
                 intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
-        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.notification_small,
+        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_check,
                 context.getString(android.R.string.ok),
                 applyPendingIntent);
         return action;
@@ -169,23 +177,27 @@ public class NotificationUtils {
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if(notificationManager == null) return;
+        if (notificationManager == null) return;
         notificationManager.cancelAll();
     }
 
-
-    public static void executeTask(Context context, String action, String s) {
-        if (NT_ACTION_APPLY.equals(action)) {
-            clearAllNotifications(context);
-        } else if (NT_ACTION_CANCEL.equals(action)) {
-            clearAllNotifications(context);
-        } else if (NT_ACTION_CREATE.equals(action)) {
-            sendNotification(context, s );
-        }
+    public static void clearNotifications(Context context, int id) {
+        if (id <= 0) return;
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager == null) return;
+        notificationManager.cancel(id);
     }
 
-
-
+    public static void executeTask(Context context, String action, String s, int id) {
+        if (NT_ACTION_APPLY.equals(action)) {
+            clearNotifications(context, id);
+        } else if (NT_ACTION_CANCEL.equals(action)) {
+            clearNotifications(context, id);
+        } else if (NT_ACTION_CREATE.equals(action)) {
+            sendNotification(context, s);
+        }
+    }
 
 
 }

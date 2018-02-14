@@ -4,7 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_STRING;
+import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
+import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -23,8 +24,9 @@ public class NotifyIntentService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         String action = intent.getAction();
-        String s = intent.getStringExtra(NT_BUNDLE_INTENT_STRING);
-        NotificationUtils.executeTask(this, action, s);
+        String s = intent.getStringExtra(NT_BUNDLE_INTENT_NOTIFICATION_BODY);
+        int id =  intent.getIntExtra(NT_BUNDLE_INTENT_NOTIFICATION_ID,-1);
+        NotificationUtils.executeTask(this, action, s,id);
 
     }
 }

@@ -10,10 +10,10 @@ import com.firebase.jobdispatcher.JobService;
 
 import java.lang.ref.WeakReference;
 
-import static ru.vpcb.notifications.Config.EMPTY_LONG_DATE;
 import static ru.vpcb.notifications.Config.EMPTY_NOTIFICATION;
+import static ru.vpcb.notifications.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.notifications.Config.NT_ACTION_CREATE;
-import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_STRING;
+import static ru.vpcb.notifications.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
 
 
 /**
@@ -30,7 +30,7 @@ public class NotificationJobService extends JobService implements INotification 
         Bundle bundle = job.getExtras();
         String s = EMPTY_NOTIFICATION;
         if (bundle != null) {
-            s = job.getExtras().getString(NT_BUNDLE_INTENT_STRING);
+            s = job.getExtras().getString(NT_BUNDLE_INTENT_NOTIFICATION_BODY);
 
         }
 
@@ -65,7 +65,7 @@ public class NotificationJobService extends JobService implements INotification 
         protected Void doInBackground(String... params) {
             Context context = weakContext.get();
             if (context != null) {
-                NotificationUtils.executeTask(context, NT_ACTION_CREATE, params[0]);
+                NotificationUtils.executeTask(context, NT_ACTION_CREATE, params[0], EMPTY_NOTIFICATION_ID);
             }
             return null;
         }
