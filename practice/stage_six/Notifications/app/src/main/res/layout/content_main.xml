@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ru.vpcb.notifications.MainActivity"
+    android:background="#db82a9"
     tools:showIn="@layout/activity_main">
 
     <WebView
@@ -16,6 +17,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +30,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
         android:text="Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -49,20 +52,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/frame_container"
-        android:layout_width="250dp"
-        android:layout_height="250dp">
 
-
-    </FrameLayout>
-    <!--<include layout="@layout/relative_layout" />-->
-    <!--<include layout="@layout/new_app_widget"/>-->
-    <!--<include layout="@layout/relative_layout"/>-->
     <include
         layout="@layout/recipe_widget_provider2"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
+    <FrameLayout
+        android:id="@+id/widget_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <include layout="@layout/match_widget_provider" />
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
 

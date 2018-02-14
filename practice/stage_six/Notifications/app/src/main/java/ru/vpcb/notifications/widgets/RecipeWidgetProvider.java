@@ -74,7 +74,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
      */
     private static void createWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider2);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
         String widgetHead = context.getString(R.string.empty_widget_head);
         String widgetBody = context.getString(R.string.empty_widget_body);
 
@@ -84,8 +84,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         intent.putExtra(BUNDLE_WIDGET_INTENT, args);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetId, intent, 0);
-        views.setTextViewText(R.id.appwidget_header, widgetHead);
-        views.setTextViewText(R.id.appwidget_body, widgetBody);
+        views.setTextViewText(R.id.text_sm_team_home, widgetHead);
+        views.setTextViewText(R.id.text_sm_team_away, widgetBody);
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
 
         // Instruct the widget manager to update the widget
@@ -115,7 +115,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         editor.putString(WIDGET_PREFERENCES + WIDGET_RECIPE_NAME + widgetId, recipeName);
         editor.apply();
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider2);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
 
         Intent intent;
         intent = new Intent(context, MainActivity.class); // call activity
@@ -125,8 +125,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         intent.putExtra(BUNDLE_DETAIL_INTENT, args);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetId, intent, FLAG_UPDATE_CURRENT);
 
-        views.setTextViewText(R.id.appwidget_header, recipeName);
-        views.setTextViewText(R.id.appwidget_body, recipeList);
+        views.setTextViewText(R.id.text_sm_team_home, recipeName);
+        views.setTextViewText(R.id.text_sm_team_away, recipeList);
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
 
         // Instruct the widget manager to update the widget
