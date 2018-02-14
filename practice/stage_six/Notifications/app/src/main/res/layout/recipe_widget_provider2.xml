@@ -1,0 +1,118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/recipe_widget"
+    android:padding="@dimen/widget_margin">
+
+    <ImageView
+        android:id="@+id/image3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_assignment" />
+
+    <TextView
+        android:id="@+id/appwidget_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image3"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/widget_head_text"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="@string/widget_head_text"
+        android:textAppearance="@style/TextHead"
+        android:textSize="@dimen/widget_head_size" />
+
+    <TextView
+        android:id="@+id/appwidget_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/appwidget_header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+
+        android:contentDescription="@string/widget_body_text"
+        android:fontFamily="sans-serif"
+        android:textAppearance="@style/TextNormal"
+        android:textSize="@dimen/widget_text_size"
+        tools:text="Test of Widget Body text" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appwidget_body"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        >
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+
+                android:text="Manchecter United FC "
+                android:textAppearance="@style/TextHead"
+                android:textSize="12sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+            <ImageView
+                android:id="@+id/image4"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/widget_body_text"
+                android:src="@drawable/ic_control_point" />
+
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="4"
+
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+
+                android:text="Chelsea United FC "
+                android:textAppearance="@style/TextHead"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:src="@drawable/ic_check" />
+
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:src="@drawable/ic_cancel" />
+
+    </LinearLayout>
+
+</RelativeLayout>
