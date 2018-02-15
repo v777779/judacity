@@ -307,7 +307,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
 
 // widgets
     public String getCompetitionName() {
-        if(competitionName == null || competitionName.isEmpty())return "Leag BundesLiga 2017/18";//EMPTY_LONG_DASH;
+        if(competitionName == null || competitionName.isEmpty())return EMPTY_LONG_DASH;
         return competitionName;
     }
 
