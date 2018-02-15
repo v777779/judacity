@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:orientation="horizontal">
 
                 <TextView
@@ -141,7 +141,7 @@
                 style="@style/Match.Light.Widget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:background="@drawable/match_status_back"
                 android:contentDescription="@string/text_sm_item_match_status"
                 android:minEms="@integer/text_sm_item_status_min"
