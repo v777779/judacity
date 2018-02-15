@@ -9,7 +9,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import ru.vpcb.notifications.R;
+
+import static ru.vpcb.notifications.Utils.Config.EMPTY_DASH;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_TIME;
 
 
 /**
@@ -161,17 +165,17 @@ public class FDFixture {
     public void setId() throws NullPointerException, NumberFormatException {
 // id fixture
         String href = links.self.getHref();
-        id = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
         if (id == -1) throw new NumberFormatException();
 // id competition
         href = links.competition.getHref();
-        competitionId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        competitionId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
 // id teamHome
         href = links.homeTeam.getHref();
-        homeTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        homeTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
 // id teamAway
         href = links.awayTeam.getHref();
-        awayTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        awayTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
 
     }
 
@@ -285,6 +289,24 @@ public class FDFixture {
                 c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1,
                 c.get(Calendar.YEAR));
     }
+
+    public String getMatchDateWidget() {
+
+        if (date == null) return EMPTY_TIME;
+        SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy");
+        return df.format(date);
+    }
+
+    public String getMatchScoreHome() {
+        if (result == null || result.goalsHomeTeam < 0) return EMPTY_DASH;
+        return String.valueOf(result.goalsHomeTeam);
+    }
+
+    public String getMatchScoreAway() {
+        if (result == null || result.goalsAwayTeam < 0) return EMPTY_DASH;
+        return String.valueOf(result.goalsAwayTeam);
+    }
+
 
     public String getMatchScore() {
         if (result == null) return EMPTY_LONG_DASH;

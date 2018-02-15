@@ -2,6 +2,7 @@ package ru.vpcb.notifications.Utils;
 
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -19,6 +20,10 @@ import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DATE;
 public class FootballUtils {
     private static Random rnd = new Random();
 
+    public static Random getRandom() {
+        if (rnd == null) rnd = new Random();
+        return rnd;
+    }
 
     public static String formatStringDate(Context context, Calendar c) {
 
@@ -29,9 +34,13 @@ public class FootballUtils {
                 c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
     }
 
-    public static Random getRandom() {
-        if (rnd == null) rnd = new Random();
-        return rnd;
+
+    public static String formatStringDateWidget(Context context, Calendar c) {
+
+        if (c == null) return context.getString(R.string.widget_empty_time);
+        SimpleDateFormat df  = new SimpleDateFormat("EEE, dd MMM yyyy");
+        return df.format(c.getTime());
     }
+
 
 }

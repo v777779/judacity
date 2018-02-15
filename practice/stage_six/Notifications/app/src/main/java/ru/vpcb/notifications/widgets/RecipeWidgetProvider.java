@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 
 import ru.vpcb.notifications.MainActivity;
 import ru.vpcb.notifications.R;
+import ru.vpcb.notifications.data.FDFixture;
 import timber.log.Timber;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
@@ -19,6 +20,11 @@ import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static ru.vpcb.notifications.Utils.Config.BUNDLE_DETAIL_INTENT_ARGS;
 
 import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
+
+import static ru.vpcb.notifications.Utils.Config.EMPTY_DASH;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_FIXTURE_ID;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DATE;
 
 import static ru.vpcb.notifications.Utils.Config.WIDGET_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_PREFERENCES;
@@ -33,84 +39,83 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
      * Updates widget with parameters or creates empty new one
      * createWidget() method used for new widget
      * fillWidget()   method used to fill widget
-     *
+     * <p>
      * This method called from WidgetService when user creates new widget
      * This method called by system when onUpdate() method called
-     *
-     * @param context  Context of calling activity
-     * @param appWidgetManager  AppWidgetManager
-     * @param sRecipeId String version of int RecipeID, string used to check if RecipeID is empty
-     * @param widgetId String version of int WidgetID, string used to check if WidgetID is empty
-     * @param recipeName String the name of recipe
-     * @param recipeList String the list of ingredients
      */
     static void updateWidget(Context context, AppWidgetManager appWidgetManager,
-                                String sRecipeId, int widgetId,
-                                String recipeName, String recipeList) {
+                             int widgetId, FDFixture fixture) {
 
-        int recipeId = 0;
-        try {
-            recipeId = Integer.valueOf(sRecipeId);
-        }catch (Exception e) {
-            Timber.d(e.getMessage());
-            sRecipeId = "";
-        }
-        if (sRecipeId.isEmpty()) {
+
+        if (fixture == null || fixture.getId() <= 0) {
             createWidget(context, appWidgetManager, widgetId);
         } else {
-            fillWidget(context, appWidgetManager, recipeId, widgetId, recipeName, recipeList);
+            fillWidget(context, appWidgetManager, widgetId, fixture);
         }
     }
 
     private static void createWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
+        if (widgetId <= 0) return;
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
-        String widgetHead = context.getString(R.string.text_test_rm_item_team_away);
-        String widgetBody = context.getString(R.string.text_test_rm_item_team_away);;
+        String widgetHead = context.getString(R.string.widget_head_text);
+
+
 
         Intent intent = new Intent(context, MainActivity.class); // call activity
         Bundle args = new Bundle();
-        args.putString(WIDGET_WIDGET_ID, new Integer(widgetId).toString());
+        args.putInt(WIDGET_WIDGET_ID, widgetId);
         intent.putExtra(BUNDLE_MAIN_INTENT_ARGS, args);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetId, intent, 0);
-        views.setTextViewText(R.id.text_sm_team_home, widgetHead);
-        views.setTextViewText(R.id.text_sm_team_away, widgetBody);
+        views.setTextViewText(R.id.text_sm_item_league, widgetHead);
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
 
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
     public static void fillWidget(Context context, AppWidgetManager appWidgetManager,
-                                   int recipeId, int widgetId,
-                                   String recipeName, String recipeList) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(WIDGET_PREFERENCES + WIDGET_FIXTURE_ID + widgetId, Integer.toString(recipeId));
-        editor.apply();
+                                  int widgetId, FDFixture fixture) {
+        if (widgetId <= 0 || fixture == null || fixture.getId() <= 0) return;
 
+        putWidgetFixtureId(context, widgetId, fixture.getId());
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
 
         Intent intent;
-        intent = new Intent(context, MainActivity.class); // call activity
+        intent = new Intent(context, MainActivity.class);       // call activity second time
         Bundle args = new Bundle();
-        args.putString(WIDGET_FIXTURE_ID, new Integer(recipeId).toString());
+        args.putInt(WIDGET_FIXTURE_ID, fixture.getId());
         intent.putExtra(BUNDLE_DETAIL_INTENT_ARGS, args);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetId, intent, FLAG_UPDATE_CURRENT);
 
-        views.setTextViewText(R.id.text_sm_team_home, recipeName);
-        views.setTextViewText(R.id.text_sm_team_away, recipeList);
+// test!!!
+        views.setTextViewText(R.id.text_sm_item_league, "League ID: "+fixture.getCompetitionId());
+
+
+        views.setTextViewText(R.id.text_sm_team_home, fixture.getHomeTeamName());
+        views.setTextViewText(R.id.text_sm_team_away, fixture.getAwayTeamName());
+        views.setTextViewText(R.id.text_sm_item_time, fixture.getMatchTime());
+        views.setTextViewText(R.id.text_sm_item_date, fixture.getMatchDateWidget());
+        views.setTextViewText(R.id.text_sm_item_score_home, ""+fixture.getMatchScoreHome());
+        views.setTextViewText(R.id.text_sm_item_score_away, ""+fixture.getMatchScoreAway());
+        views.setTextViewText(R.id.text_sm_item_status, ""+fixture.getStatus());
+
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
 
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
-
-    public static String getWidgetFixtureId(Context context, int widgetId) {
+    public static int getWidgetFixtureId(Context context, int widgetId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString(WIDGET_PREFERENCES + WIDGET_FIXTURE_ID + widgetId, "");
+        return sharedPreferences.getInt(WIDGET_PREFERENCES + WIDGET_FIXTURE_ID + widgetId, EMPTY_FIXTURE_ID);
     }
 
+    public static void putWidgetFixtureId(Context context, int widgetId, int fixtureId) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(WIDGET_PREFERENCES + WIDGET_FIXTURE_ID + widgetId, fixtureId);
+        editor.apply();
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

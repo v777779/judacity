@@ -34,11 +34,15 @@ public class Config {
     public static final String NT_BUNDLE_INTENT_NOTIFICATION_ID = "nt_bundle_intent_notification_id";
 
 
+    public static final String EMPTY_DASH = "-";
     public static final String EMPTY_LONG_DASH = "\u2014";
     public static final String EMPTY_LONG_DATE = "--/--/----  --:--";
     public static final String EMPTY_NOTIFICATION = " home vs away --/--/----  --:--";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //"2015-11-03T19:45:00Z"
     public static final int EMPTY_NOTIFICATION_ID = -1;
+    public static final String EMPTY_TIME = "- : -";
+
+
 
 
 
@@ -74,6 +78,8 @@ public class Config {
     public static final String BUNDLE_DETAIL_INTENT_ARGS = WIDGET_PACKAGE+"widget.intent.BUNDLE_DETAIL_ARGS";
     public static final String WIDGET_PREFERENCES = WIDGET_PACKAGE+"widget.preferences.";
 
+    public static final int EMPTY_WIDGET_ID = -1;
+    public static final int EMPTY_FIXTURE_ID = -1;
 
 
 

@@ -2,9 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraint_recycler_match_item"
+    android:id="@+id/app_widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_back"
@@ -20,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
         android:contentDescription="@string/text_sm_item_match_league"
-        android:text="@string/text_test_rm_item_league" />
+        android:text="@string/widget_head_text" />
     <!--android:background="?attr/selectableItemBackgroundBorderless"-->
 
     <LinearLayout
@@ -57,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:contentDescription="@string/text_rm_item_team_name"
-                android:text="@string/text_test_rm_item_team_home" />
+                android:text="@string/widget_empty_long_dash" />
 
             <ImageView
                 android:id="@+id/match_notification"
@@ -88,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
                 android:contentDescription="@string/text_sm_item_match_time"
-                android:text="@string/text_test_rm_item_match_time" />
+                android:text="@string/widget_empty_time" />
 
             <TextView
                 android:id="@+id/text_sm_item_date"
@@ -97,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/text_sm_item_match_date"
-                android:text="@string/text_test_sm_item_match_date" />
+                android:text="@string/widget_empty_long_dash" />
 
             <LinearLayout
                 android:id="@+id/widget_linear_score"
@@ -115,7 +114,7 @@
                     android:layout_marginEnd="@dimen/margin_micro"
                     android:background="@drawable/match_score_red"
                     android:contentDescription="@string/text_sm_item_match_score_home"
-                    android:text="@string/text_test_sm_item_match_number_1" />
+                    android:text="@string/widget_empty_dash" />
 
                 <TextView
                     android:id="@+id/text_sm_item_score_away"
@@ -125,7 +124,7 @@
                     android:layout_marginStart="@dimen/margin_micro"
                     android:background="@drawable/match_score_blue"
                     android:contentDescription="@string/text_sm_item_match_score_away"
-                    android:text="@string/text_test_sm_item_match_number_0" />
+                    android:text="@string/widget_empty_dash" />
 
             </LinearLayout>
 
@@ -140,7 +139,7 @@
                 android:minEms="@integer/text_sm_item_status_min"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
-                android:text="@string/text_test_sm_item_match_scheduled"
+                android:text="@string/widget_empty_long_dash"
 
                 />
         </LinearLayout>
@@ -172,7 +171,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_small"
                 android:contentDescription="@string/text_rm_item_team_name"
-                android:text="@string/text_test_rm_item_team_away" />
+                android:text="@string/widget_empty_long_dash" />
 
 
             <ImageView

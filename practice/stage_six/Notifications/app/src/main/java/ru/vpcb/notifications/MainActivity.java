@@ -31,7 +31,8 @@ import ru.vpcb.notifications.reciipe.RecipeItem;
 import ru.vpcb.notifications.widgets.RecipeWidgetProvider;
 import ru.vpcb.notifications.widgets.RecipeWidgetService;
 
-import static ru.vpcb.notifications.Utils.Config.BUNDLE_WIDGET_INTENT;
+import static ru.vpcb.notifications.Utils.Config.BUNDLE_DETAIL_INTENT_ARGS;
+import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_WIDGET_ID;
 import static ru.vpcb.notifications.Utils.Config.showMessage;
 import static ru.vpcb.notifications.Utils.FootballUtils.getRandom;
@@ -72,17 +73,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(getIntent().hasExtra(BUNDLE_WIDGET_INTENT) ) {
+                Bundle bundle = getIntent().getBundleExtra(BUNDLE_MAIN_INTENT_ARGS);
+                if(bundle != null) {
+                    int widgetId = bundle.getInt(WIDGET_WIDGET_ID);
+// test!!!
                     FDFixture fixture = getFixture();
-                    String widgetId = getIntent().getBundleExtra(BUNDLE_WIDGET_INTENT).getString(WIDGET_WIDGET_ID);
-                    String fixtureID = String.valueOf(fixture.getId());
-
-                    startFillWidgetAction(MainActivity.this,fixtureID, widgetId);
+                    fixture.setId(); // random fixture for start
+                    startFillWidgetAction(MainActivity.this, widgetId, fixture.getId());
                     showMessage(MainActivity.this, "Widget added");
 
 
