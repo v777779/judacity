@@ -8,15 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
@@ -51,7 +48,7 @@ import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_REFRESH_ACTION;
 /**
  * Implementation of App Widget functionality.
  */
-public class RecipeWidgetProvider extends AppWidgetProvider {
+public class MatchWidgetProvider extends AppWidgetProvider {
 
     private static RequestBuilder<PictureDrawable> mRequestBuilder;
     private static RequestBuilder<Drawable> mRequestBuilderCommon;
@@ -156,7 +153,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     private static PendingIntent getPendingIntent(Context context, int widgetId, int fixtureId) {
 
-        Intent intent = new Intent(context, RecipeWidgetProvider.class);
+        Intent intent = new Intent(context, MatchWidgetProvider.class);
         intent.setAction(WIDGET_SERVICE_REFRESH_ACTION);
         Bundle args = new Bundle();
         args.putInt(WIDGET_BUNDLE_WIDGET_ID, widgetId);
@@ -182,7 +179,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        RecipeWidgetService.startWidgetUpdateAction(context);
+        MatchWidgetService.startWidgetUpdateAction(context);
     }
 
     @Override
@@ -207,7 +204,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
             int fixtureId = bundle.getInt(WIDGET_BUNDLE_FIXTURE_ID, EMPTY_FIXTURE_ID);
 
-            RecipeWidgetService.startFillWidgetAction(context, widgetId, fixtureId);
+            MatchWidgetService.startFillWidgetAction(context, widgetId, fixtureId);
 
 
         }

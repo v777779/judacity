@@ -37,16 +37,16 @@ import static ru.vpcb.notifications.Utils.Config.WIDGET_BUNDLE_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_FILL_ACTION;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_UPDATE_ACTION;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_BUNDLE_WIDGET_ID;
-import static ru.vpcb.notifications.widgets.RecipeWidgetProvider.getWidgetFixtureId;
+import static ru.vpcb.notifications.widgets.MatchWidgetProvider.getWidgetFixtureId;
 
 
-public class RecipeWidgetService extends IntentService {
+public class MatchWidgetService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
-    public RecipeWidgetService() {
-        super(RecipeWidgetService.class.getSimpleName());
+    public MatchWidgetService() {
+        super(MatchWidgetService.class.getSimpleName());
     }
 
 
@@ -57,14 +57,14 @@ public class RecipeWidgetService extends IntentService {
         Bundle args = new Bundle();
         args.putInt(WIDGET_BUNDLE_WIDGET_ID, widgetId);
         args.putInt(WIDGET_BUNDLE_FIXTURE_ID, fixtureId);
-        Intent intent = new Intent(context, RecipeWidgetService.class);
+        Intent intent = new Intent(context, MatchWidgetService.class);
         intent.putExtra(WIDGET_INTENT_BUNDLE, args);
         intent.setAction(WIDGET_SERVICE_FILL_ACTION);
         context.startService(intent);
     }
 
     public static void startWidgetUpdateAction(Context context) {
-        Intent intent = new Intent(context, RecipeWidgetService.class);
+        Intent intent = new Intent(context, MatchWidgetService.class);
         intent.setAction(WIDGET_SERVICE_UPDATE_ACTION);
         context.startService(intent);
     }
@@ -87,7 +87,7 @@ public class RecipeWidgetService extends IntentService {
 
     private void startWidgetUpdateAction() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        ComponentName componentName = new ComponentName(this, RecipeWidgetProvider.class);
+        ComponentName componentName = new ComponentName(this, MatchWidgetProvider.class);
         int[] ids = appWidgetManager.getAppWidgetIds(componentName);
         if (ids == null) return;
         for (int widgetId : ids) {
@@ -95,7 +95,7 @@ public class RecipeWidgetService extends IntentService {
 
             FDFixture fixture = getFixtureFromDatabase(fixtureId);
 
-            RecipeWidgetProvider.updateWidget(this, appWidgetManager, widgetId, fixture);
+            MatchWidgetProvider.updateWidget(this, appWidgetManager, widgetId, fixture);
         }
     }
 
@@ -257,7 +257,7 @@ public class RecipeWidgetService extends IntentService {
             FDFixture fixture = getFixtureFromDatabase(fixtureId);
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-            RecipeWidgetProvider.fillWidget(this, appWidgetManager, widgetId, fixture);
+            MatchWidgetProvider.fillWidget(this, appWidgetManager, widgetId, fixture);
 
         } catch (NullPointerException e) {
             Timber.d(getString(R.string.widget_read_fixture_exception, e.getMessage()));

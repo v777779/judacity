@@ -3,7 +3,7 @@ package ru.vpcb.notifications.Utils;
 import android.content.Context;
 import android.widget.Toast;
 
-import ru.vpcb.notifications.widgets.RecipeWidgetProvider;
+import ru.vpcb.notifications.widgets.MatchWidgetProvider;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -68,7 +68,7 @@ public class Config {
     // widgets
     public static final String WIDGET_BUNDLE_FIXTURE_ID = "widget_fixture_id";
     public static final String WIDGET_BUNDLE_WIDGET_ID = "widget_widget_id";
-    public static final String WIDGET_PACKAGE = RecipeWidgetProvider.class.getPackage().getName() + ".";
+    public static final String WIDGET_PACKAGE = MatchWidgetProvider.class.getPackage().getName() + ".";
 
     public static final String WIDGET_SERVICE_FILL_ACTION = WIDGET_PACKAGE + "ACTION_FILL";
     public static final String WIDGET_SERVICE_UPDATE_ACTION = WIDGET_PACKAGE + "ACTION_UPDATE";

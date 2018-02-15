@@ -34,7 +34,7 @@ import static ru.vpcb.notifications.Utils.Config.WIDGET_INTENT_BUNDLE;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.notifications.Utils.Config.showMessage;
 import static ru.vpcb.notifications.Utils.FootballUtils.getRnd;
-import static ru.vpcb.notifications.widgets.RecipeWidgetService.startFillWidgetAction;
+import static ru.vpcb.notifications.widgets.MatchWidgetService.startFillWidgetAction;
 
 
 public class MainActivity extends AppCompatActivity {
