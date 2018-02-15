@@ -59,7 +59,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     private int competitionId;
     private int homeTeamId;
     private int awayTeamId;
+// widget
     private String competitionName;
+    private String homeTeamCrestURL;
+    private String awayTeamCrestURL;
+
 
 
     public FDFixture() {
@@ -197,6 +201,15 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.competitionName = competitionName;
     }
 
+    public void setHomeTeamCrestURL(String homeTeamCrestURL) {
+        this.homeTeamCrestURL = homeTeamCrestURL;
+    }
+
+
+    public void setAwayTeamCrestURL(String awayTeamCrestURL) {
+        this.awayTeamCrestURL = awayTeamCrestURL;
+    }
+
 
     public int getId() {
         return id;
@@ -283,6 +296,15 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     public String getCompetitionName() {
         return competitionName;
     }
+
+    public String getHomeTeamCrestURL() {
+        return homeTeamCrestURL;
+    }
+
+    public String getAwayTeamCrestURL() {
+        return awayTeamCrestURL;
+    }
+
 
     public String getMatchTime() {
         if (date == null) return EMPTY_LONG_DASH;

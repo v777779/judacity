@@ -40,7 +40,7 @@
     <style name="Match.Widget" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">normal</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/sm_text_color_light</item>
+        <item name="android:textColor">@color/widget_text_color</item>
         <item name="android:textSize">@dimen/widget_text_size</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -48,7 +48,7 @@
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="Team.Match.Widget" parent="Match.Widget">
+    <style name="Team.Match.Widget" parent="Match.Light.Widget">
         <item name="android:gravity">center|top</item>
         <item name="android:lines">3</item>
     </style>

@@ -10,7 +10,7 @@
 
     <!--match-->
     <!--<color name="sm_text_color_dark">#3a3a3a</color>-->
-    <color name="sm_text_color_light">#f8f8f8</color>
+    <color name="widget_text_color">#f8f8f8</color>
     <!--<color name="sm_text_color_light_back">#c3c3c3</color>-->
 
     <!--<color name="sm_view_border_back">#e0e0e0</color>-->

@@ -42,12 +42,12 @@
 
             <ImageView
                 android:id="@+id/image_sm_team_home"
-                android:layout_width="@dimen/widget_image_team_size"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/widget_image_team_size"
                 android:layout_gravity="center"
 
                 android:contentDescription="@string/image_rm_item_team_logo"
-                android:src="@drawable/logo_chelsea" />
+                android:src="@drawable/fc_logo_widget_home" />
 
             <TextView
                 android:id="@+id/text_sm_team_home"
@@ -160,7 +160,7 @@
                 android:layout_gravity="center"
 
                 android:contentDescription="@string/image_rm_item_team_logo"
-                android:src="@drawable/logo_stoke_city" />
+                android:src="@drawable/fc_logo_widget_away" />
 
 
             <TextView

@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -22,6 +22,9 @@ import ru.vpcb.notifications.Utils.TempUtils;
 import ru.vpcb.notifications.data.FDCompetition;
 import ru.vpcb.notifications.data.FDFixture;
 import ru.vpcb.notifications.data.FDFixtures;
+import ru.vpcb.notifications.data.FDTeam;
+import ru.vpcb.notifications.data.FDTeams;
+import ru.vpcb.notifications.data.PostProcessingEnabler;
 import ru.vpcb.notifications.reciipe.RecipeItem;
 import timber.log.Timber;
 
@@ -127,6 +130,44 @@ public class RecipeWidgetService extends IntentService {
         }
     };
 
+
+    // test!!!
+    private static Comparator<FDTeam> cFt = new Comparator<FDTeam>() {
+        @Override
+        public int compare(FDTeam o1, FDTeam o2) {
+            if (o1 == null || o2 == null) throw new IllegalArgumentException();
+
+            return Integer.compare(o1.getId(), o2.getId());
+        }
+    };
+
+    // test!!!
+    private FDTeam getTeamFromDatabase(int id) {
+        if (id <= 0) return null;
+        String json = TempUtils.readFileAssets(this, "teams.json");
+        try {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapterFactory(new PostProcessingEnabler())
+                    .create();
+            FDTeams teams = gson.fromJson(json, FDTeams.class);
+            List<FDTeam> list = teams.getTeams();
+// test!!!
+
+            FDTeam key = new FDTeam(id, null, null,null,
+                    null, null, 0);
+            Collections.sort(list, cFt);
+            int index = Collections.binarySearch(list, key, cFt);
+            if (index < 0) return null;
+
+            return list.get(index);
+
+        } catch (NullPointerException e) {
+            Timber.d(getString(R.string.widget_read_fixture_exception, e.getMessage()));
+        }
+        return null;
+    }
+
+
     // test!!!
     private static Comparator<FDCompetition> cFc = new Comparator<FDCompetition>() {
         @Override
@@ -144,17 +185,17 @@ public class RecipeWidgetService extends IntentService {
         String json = TempUtils.readFileAssets(this, "competitions.json");
         Type listType = new TypeToken<List<FDCompetition>>() {
         }.getType();
-        List<FDCompetition> competitions = new Gson().fromJson(json, listType);
-        if(competitions == null) return null;
+        List<FDCompetition> list = new Gson().fromJson(json, listType);
+        if(list == null) return null;
 
-        Collections.sort(competitions, cFc);
+        Collections.sort(list, cFc);
         FDCompetition key = new FDCompetition(fixture.getCompetitionId(), null, null, null,
                 0, 0, 0, 0,
                 null, null);
-        int index = Collections.binarySearch(competitions, key, cFc);
+        int index = Collections.binarySearch(list, key, cFc);
 
         if (index <= 1) return null;
-        return competitions.get(index);
+        return list.get(index);
     }
 
 
@@ -163,13 +204,11 @@ public class RecipeWidgetService extends IntentService {
         if (id <= 0) return null;
         String json = TempUtils.readFileAssets(this, "fixtures.json");
         try {
-            FDFixtures fixtures = new Gson().fromJson(json, FDFixtures.class);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapterFactory(new PostProcessingEnabler())
+                    .create();
+            FDFixtures fixtures = gson.fromJson(json, FDFixtures.class);
             List<FDFixture> list = fixtures.getFixtures();
-// test!!!
-            for (FDFixture fixture : list) {
-                fixture.setId();
-            }
-
             FDFixture key = new FDFixture(id, null, null, 0,
                     null, null, 0,
                     0, 0, 0, 0, null);
@@ -179,13 +218,25 @@ public class RecipeWidgetService extends IntentService {
 
             FDFixture fixture = list.get(index);
 
-
             if (fixture == null) return null;
             FDCompetition competition = getCompetitionFromDatabase(fixture);
             if (competition == null) {
                 fixture.setCompetitionName(EMPTY_LONG_DASH);
             } else {
                 fixture.setCompetitionName(competition.getCaption());
+            }
+
+            FDTeam  team = getTeamFromDatabase(fixture.getHomeTeamId());
+            if (team == null) {
+                fixture.setHomeTeamCrestURL("");
+            } else {
+                fixture.setHomeTeamCrestURL(team.getCrestURL());
+            }
+             team = getTeamFromDatabase(fixture.getAwayTeamId());
+            if (team == null) {
+                fixture.setAwayTeamCrestURL("");
+            } else {
+                fixture.setAwayTeamCrestURL(team.getCrestURL());
             }
 
             return fixture;

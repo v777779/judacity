@@ -7,14 +7,28 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.AppWidgetTarget;
+import com.bumptech.glide.request.target.Target;
 
 import ru.vpcb.notifications.MainActivity;
 import ru.vpcb.notifications.R;
 import ru.vpcb.notifications.data.FDFixture;
+import ru.vpcb.notifications.glide.SvgSoftwareLayerSetter;
 import timber.log.Timber;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
@@ -34,6 +48,10 @@ import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_REFRESH_ACTION;
  * Implementation of App Widget functionality.
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
+
+    private static RequestBuilder<PictureDrawable> mRequestBuilder;
+    private static RequestBuilder<Drawable> mRequestBuilderCommon;
+
 
     /**
      * Updates widget with parameters or creates empty new one
@@ -101,13 +119,16 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.text_sm_item_score_home, "" + fixture.getMatchScoreHome());
         views.setTextViewText(R.id.text_sm_item_score_away, "" + fixture.getMatchScoreAway());
         views.setTextViewText(R.id.text_sm_item_status, "" + fixture.getStatus());
-
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
-
         views.setOnClickPendingIntent(R.id.match_refresh, getPendingIntent(context, widgetId, fixtureId));
+
+//        views.setImageViewResource(R.id.image_sm_team_home,R.drawable.fc_logo_widget2);
+//        views.setImageViewResource(R.id.image_sm_team_away,R.drawable.fc_logo_widget3);
 
         appWidgetManager.updateAppWidget(widgetId, views);
     }
+
+
 
 
     private static PendingIntent getPendingIntent(Context context, int widgetId, int fixtureId) {
@@ -171,5 +192,58 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
 
     }
+
+    private void setTeamImage(String imageURL) {
+
+//
+//        if (imageURL == null || imageURL.isEmpty()) return;
+//
+//
+//        imageURL = Config.imageCheckReplaceURL(imageURL);  // address replacement for known addresses
+//        if (imageURL.toLowerCase().endsWith("svg")) {
+//            mRequestBuilder.load(imageURL).into(imageView);
+//
+//        } else {
+//
+//            mRequestBuilderCommon.load(imageURL).into().into(imageView);
+//        }
+    }
+
+
+    private static void setupRequestBuilder(Context context) {
+        if(mRequestBuilder == null) {
+            mRequestBuilder = Glide.with(context)
+                    .as(PictureDrawable.class)
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.fc_logo_loading)
+                            .error(R.drawable.fc_logo))
+
+//                .transition(withCrossFade())
+                    .listener(new SvgSoftwareLayerSetter());
+        }
+
+        if(mRequestBuilderCommon == null) {
+            mRequestBuilderCommon = Glide.with(context)
+                    .as(Drawable.class)
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.fc_logo_loading)
+                            .error(R.drawable.fc_logo))
+//                .transition(withCrossFade())
+                    .listener(new CommonRequestListener());
+        }
+
+    }
+    private static class CommonRequestListener implements RequestListener<Drawable> {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            return false;
+        }
+    }
+
 }
 
