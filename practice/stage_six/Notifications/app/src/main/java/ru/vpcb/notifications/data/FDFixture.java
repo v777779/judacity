@@ -9,11 +9,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import ru.vpcb.notifications.R;
-
+import static ru.vpcb.notifications.Utils.Config.DATE_WIDGET_PATTERN;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_DASH;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.notifications.Utils.Config.EMPTY_TIME;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_MATCH_TIME;
 
 
 /**
@@ -22,7 +21,7 @@ import static ru.vpcb.notifications.Utils.Config.EMPTY_TIME;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDFixture {
+public class FDFixture implements PostProcessingEnabler.PostProcessable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -60,6 +59,7 @@ public class FDFixture {
     private int competitionId;
     private int homeTeamId;
     private int awayTeamId;
+    private String competitionName;
 
 
     public FDFixture() {
@@ -87,6 +87,11 @@ public class FDFixture {
         this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
         this.odds = new FDOdds(homeWin, draw, awayWin);
         this.lastRefresh = lastRefresh;
+    }
+
+    @Override
+    public void postProcess() {
+        setId();
     }
 
 
@@ -188,12 +193,16 @@ public class FDFixture {
         this.competitionId = competitionId;
     }
 
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
+
     public int getId() {
         return id;
     }
 
     public int getCompetitionId() {
-
         return competitionId;
     }
 
@@ -271,6 +280,10 @@ public class FDFixture {
     }
 
 
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
     public String getMatchTime() {
         if (date == null) return EMPTY_LONG_DASH;
         Calendar c = Calendar.getInstance();
@@ -292,8 +305,8 @@ public class FDFixture {
 
     public String getMatchDateWidget() {
 
-        if (date == null) return EMPTY_TIME;
-        SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy");
+        if (date == null) return EMPTY_MATCH_TIME;
+        SimpleDateFormat df = new SimpleDateFormat(DATE_WIDGET_PATTERN);
         return df.format(date);
     }
 

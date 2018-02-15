@@ -13,7 +13,6 @@ import android.widget.RemoteViews;
 import ru.vpcb.notifications.MainActivity;
 import ru.vpcb.notifications.R;
 import ru.vpcb.notifications.data.FDFixture;
-import timber.log.Timber;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
@@ -21,10 +20,7 @@ import static ru.vpcb.notifications.Utils.Config.BUNDLE_DETAIL_INTENT_ARGS;
 
 import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
 
-import static ru.vpcb.notifications.Utils.Config.EMPTY_DASH;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_FIXTURE_ID;
-import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DATE;
 
 import static ru.vpcb.notifications.Utils.Config.WIDGET_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_PREFERENCES;
@@ -81,17 +77,14 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         putWidgetFixtureId(context, widgetId, fixture.getId());
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
 
-        Intent intent;
-        intent = new Intent(context, MainActivity.class);       // call activity second time
+        Intent intent = new Intent(context, MainActivity.class);       // call activity second time
         Bundle args = new Bundle();
         args.putInt(WIDGET_FIXTURE_ID, fixture.getId());
         intent.putExtra(BUNDLE_DETAIL_INTENT_ARGS, args);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetId, intent, FLAG_UPDATE_CURRENT);
 
 // test!!!
-        views.setTextViewText(R.id.text_sm_item_league, "League ID: "+fixture.getCompetitionId());
-
-
+        views.setTextViewText(R.id.text_sm_item_league, fixture.getCompetitionName());
         views.setTextViewText(R.id.text_sm_team_home, fixture.getHomeTeamName());
         views.setTextViewText(R.id.text_sm_team_away, fixture.getAwayTeamName());
         views.setTextViewText(R.id.text_sm_item_time, fixture.getMatchTime());

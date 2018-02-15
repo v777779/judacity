@@ -12,6 +12,34 @@ import ru.vpcb.notifications.widgets.RecipeWidgetProvider;
  * Email: vadim.v.voronov@gmail.com
  */
 public class Config {
+
+    // data
+    public static final String FD_REGEX_TEAMS = ".*teams/";
+    public static final String FD_REGEX_FIXTURES = ".*fixtures/";
+    public static final String FD_REGEX_COMPETITIONS = ".*competitions/";
+
+
+    // competitions
+    public static final String EMPTY_TEAM_NAME = "-";
+    public static final String EMPTY_TWO_DASH = "--";
+    public static final String EMPTY_MATCH_TIME = "-- : --";
+    public static final String EMPTY_FIXTURE_DATE = "--/--/--";
+    public static final String EMPTY_PLAYER_DATE = "--.--.--";
+    public static final String EMPTY_MATCH_SCORE = "- : -";
+
+    // news
+    public static final String EMPTY_DASH = "-";
+    public static final String EMPTY_LONG_DASH = "\u2014";
+    public static final String EMPTY_DATE = "--/--/--";
+    public static final String EMPTY_LONG_DATE = "--/--/----  --:--";
+    public static final String EMPTY_DASH_AGO = "- ago";
+    public static final String EMPTY_NOTIFICATION = " home vs away --/--/----  --:--";
+
+
+    public static final String DATE_FULL_SSS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String DATE_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+
     // notifications
     public static final String NT_FB_JOB_DISPATCHER_ID = "nt_fb_job_dispatcher_id";
     public static final String NT_FB_JOB_CHANNEL_ID = "nt_fb_job_channel_id";
@@ -34,54 +62,25 @@ public class Config {
     public static final String NT_BUNDLE_INTENT_NOTIFICATION_ID = "nt_bundle_intent_notification_id";
 
 
-    public static final String EMPTY_DASH = "-";
-    public static final String EMPTY_LONG_DASH = "\u2014";
-    public static final String EMPTY_LONG_DATE = "--/--/----  --:--";
-    public static final String EMPTY_NOTIFICATION = " home vs away --/--/----  --:--";
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"; //"2015-11-03T19:45:00Z"
     public static final int EMPTY_NOTIFICATION_ID = -1;
-    public static final String EMPTY_TIME = "- : -";
-
-
-
-
-
-    // widget
-    // widget data
-
-
-
-    // old
-//    public static final String WIDGET_PREFERENCES = "ru.vpcb.bakingapp.widget.";
-//
-//    public static final String WIDGET_RECIPE_ID = "widget_recipe_position";
-//    public static final String WIDGET_RECIPE_NAME = "widget_recipe_name";
-//
-//    // fragment detail data
-//    public static final String BUNDLE_DETAIL_EXPANDED = "bundle_detail_expanded";
-//    public static final String BUNDLE_DETAIL_POSITION = "bundle_detail_position";
-//    public static final String BUNDLE_DETAIL_INTENT = "bundle_detail_intent";
-//    public static final String BUNDLE_DETAIL_WIDGET_FILLED = "bundle_detail_widget_filled";
-
-
 
 
     // widgets
     public static final String WIDGET_FIXTURE_ID = "widget_fixture_id";
     public static final String WIDGET_WIDGET_ID = "widget_widget_id";
-    public static final String WIDGET_PACKAGE = RecipeWidgetProvider.class.getPackage().getName()+".";
+    public static final String WIDGET_PACKAGE = RecipeWidgetProvider.class.getPackage().getName() + ".";
 
-    public static final String WIDGET_SERVICE_FILL_ACTION = WIDGET_PACKAGE+"widget.ACTION_FILL";
-    public static final String WIDGET_SERVICE_UPDATE_ACTION = WIDGET_PACKAGE+"widget.ACTION_UPDATE";
+    public static final String WIDGET_SERVICE_FILL_ACTION = WIDGET_PACKAGE + "widget.ACTION_FILL";
+    public static final String WIDGET_SERVICE_UPDATE_ACTION = WIDGET_PACKAGE + "widget.ACTION_UPDATE";
 
-    public static final String BUNDLE_MAIN_INTENT_ARGS = WIDGET_PACKAGE+"widget.intent.BUNDLE_MAIN_ARGS";
-    public static final String BUNDLE_DETAIL_INTENT_ARGS = WIDGET_PACKAGE+"widget.intent.BUNDLE_DETAIL_ARGS";
-    public static final String WIDGET_PREFERENCES = WIDGET_PACKAGE+"widget.preferences.";
+    public static final String BUNDLE_MAIN_INTENT_ARGS = WIDGET_PACKAGE + "widget.intent.BUNDLE_MAIN_ARGS";
+    public static final String BUNDLE_DETAIL_INTENT_ARGS = WIDGET_PACKAGE + "widget.intent.BUNDLE_DETAIL_ARGS";
+    public static final String WIDGET_PREFERENCES = WIDGET_PACKAGE + "widget.preferences.";
 
     public static final int EMPTY_WIDGET_ID = -1;
     public static final int EMPTY_FIXTURE_ID = -1;
 
-
+    public static final String DATE_WIDGET_PATTERN = "EEE, dd MMM yyyy";
 
 
     public static void showMessage(Context context, String message) {

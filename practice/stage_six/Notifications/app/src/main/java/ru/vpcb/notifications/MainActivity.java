@@ -16,26 +16,30 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ru.vpcb.notifications.Utils.TempUtils;
+import ru.vpcb.notifications.data.FDCompetition;
 import ru.vpcb.notifications.data.FDFixture;
 import ru.vpcb.notifications.data.FDFixtures;
+import ru.vpcb.notifications.data.PostProcessingEnabler;
 import ru.vpcb.notifications.notifications.NotificationUtils;
-import ru.vpcb.notifications.reciipe.RecipeItem;
-import ru.vpcb.notifications.widgets.RecipeWidgetProvider;
-import ru.vpcb.notifications.widgets.RecipeWidgetService;
 
-import static ru.vpcb.notifications.Utils.Config.BUNDLE_DETAIL_INTENT_ARGS;
 import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_WIDGET_ID;
 import static ru.vpcb.notifications.Utils.Config.showMessage;
-import static ru.vpcb.notifications.Utils.FootballUtils.getRandom;
+import static ru.vpcb.notifications.Utils.FootballUtils.getRnd;
 import static ru.vpcb.notifications.widgets.RecipeWidgetService.startFillWidgetAction;
 
 
@@ -53,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-
         mFab = findViewById(R.id.fab);
         mFab2 = findViewById(R.id.fab2);
         mProgressBar = findViewById(R.id.progressBar);
@@ -68,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 c.add(Calendar.SECOND, 2);
                 FDFixture fixture = getFixture();
                 fixture.setDate(c.getTime());
-                NotificationUtils.scheduleReminder(MainActivity.this,fixture);
+                NotificationUtils.scheduleReminder(MainActivity.this, fixture);
 
             }
         });
@@ -77,17 +80,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bundle bundle = getIntent().getBundleExtra(BUNDLE_MAIN_INTENT_ARGS);
-                if(bundle != null) {
+                if (bundle != null) {
                     int widgetId = bundle.getInt(WIDGET_WIDGET_ID);
 // test!!!
                     FDFixture fixture = getFixture();
-                    fixture.setId(); // random fixture for start
                     startFillWidgetAction(MainActivity.this, widgetId, fixture.getId());
                     showMessage(MainActivity.this, "Widget added");
 
 
-
-                }else {
+                } else {
                     mProgressBar.setVisibility(View.VISIBLE);
                     WebView webView = findViewById(R.id.webview);
                     webView.setWebViewClient(new WebViewClient() {   // blocks errors
@@ -111,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if(getIntent().hasExtra("this_is_click_on_notification")) {
-            Toast.makeText(this,"Notifications clicked",Toast.LENGTH_SHORT).show();
+        if (getIntent().hasExtra("this_is_click_on_notification")) {
+            Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -166,12 +167,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private FDFixture getFixture() {
+        String json = TempUtils.readFileAssets(MainActivity.this, "fixtures.json");
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new PostProcessingEnabler())
+                .create();
 
-        String json = TempUtils.readFileAssets(MainActivity.this,"fixtures.json");
-        FDFixtures fixtures = new Gson().fromJson(json,FDFixtures.class);
+        FDFixtures fixtures = gson.fromJson(json, FDFixtures.class);
         List<FDFixture> list = fixtures.getFixtures();
-        return list.get(getRandom().nextInt(list.size()));
-
+        return list.get(getRnd().nextInt(list.size()));
     }
+
+
+
+
 
 }

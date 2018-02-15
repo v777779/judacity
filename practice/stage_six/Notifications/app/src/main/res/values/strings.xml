@@ -24,6 +24,11 @@
 
     <string name="widget_date">%1$3s, %2$02d %3$3s %4$04d</string>
 
+
+    <!--messages-->
+    <string name="widget_read_fixture_exception">Widget read fixture exception:%1$s</string>
+
+
     <!--descriptions-->
     <!--screen2-->
     <string name="image_rm_item_team_logo">The Football Team Logo image</string>
@@ -59,8 +64,6 @@
     <!--<string name="text_sm_item_match_min_subscript">The Match Date Minute Subscript</string>-->
 
 
-    <!--messages-->
-    <string name="widget_read_fixture_exception">Widget read fixture exception:%1$s</string>
 
     <!--test-->
     <string name="text_test_rm_item_team_home">Eintracht</string>

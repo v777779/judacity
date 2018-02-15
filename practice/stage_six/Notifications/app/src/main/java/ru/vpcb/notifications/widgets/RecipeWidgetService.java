@@ -18,6 +18,7 @@ import java.util.List;
 
 import ru.vpcb.notifications.R;
 import ru.vpcb.notifications.Utils.TempUtils;
+import ru.vpcb.notifications.data.FDCompetition;
 import ru.vpcb.notifications.data.FDFixture;
 import ru.vpcb.notifications.data.FDFixtures;
 import ru.vpcb.notifications.reciipe.RecipeItem;
@@ -26,6 +27,7 @@ import timber.log.Timber;
 
 import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_FIXTURE_ID;
+import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_WIDGET_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_FILL_ACTION;
@@ -123,7 +125,35 @@ public class RecipeWidgetService extends IntentService {
         }
     };
 
-    @Nullable
+    // test!!!
+    private static Comparator<FDCompetition> cFc = new Comparator<FDCompetition>() {
+        @Override
+        public int compare(FDCompetition o1, FDCompetition o2) {
+            if (o1 == null || o2 == null) throw new IllegalArgumentException();
+
+            return Integer.compare(o1.getId(), o2.getId());
+        }
+    };
+
+    // test!!!
+    private FDCompetition getCompetitionFromDatabase(FDFixture fixture) {
+        if (fixture == null || fixture.getCompetitionId() <= 0) return null;
+
+        String json = TempUtils.readFileAssets(this, "competitions.json");
+        Type listType = new TypeToken<List<FDCompetition>>() {}.getType();
+        List<FDCompetition> competitions = new Gson().fromJson(json, listType);
+        Collections.sort(competitions, cFc);
+        FDCompetition key = new FDCompetition(fixture.getCompetitionId(), null, null, null,
+                0, 0, 0, 0,
+                null, null);
+        int index = Collections.binarySearch(competitions, key, cFc);
+
+        if (index <= 1) return null;
+        return competitions.get(index);
+    }
+
+
+    // test!!!
     private FDFixture getFixtureFromDatabase(int id) {
 
         if (id <= 0) return null;
@@ -159,11 +189,19 @@ public class RecipeWidgetService extends IntentService {
             int fixtureId = bundle.getInt(WIDGET_FIXTURE_ID, EMPTY_FIXTURE_ID);
 
             FDFixture fixture = getFixtureFromDatabase(fixtureId);
+            FDCompetition competition = getCompetitionFromDatabase(fixture);
 
+            if(fixture == null) return;
+            if (competition == null) {
+                fixture.setCompetitionName(EMPTY_LONG_DASH);
+            } else {
+                fixture.setCompetitionName(competition.getCaption());
+            }
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
             RecipeWidgetProvider.fillWidget(this, appWidgetManager, widgetId, fixture);
-        } catch (Exception e) {
-            Timber.d(e.getMessage());
+
+        } catch (NullPointerException  e) {
+            Timber.d(getString(R.string.widget_read_fixture_exception,e.getMessage()));
         }
     }
 
