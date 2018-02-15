@@ -87,7 +87,7 @@ public class Config {
     public static final int WIDGET_PID_OFFSET1 = 0;
     public static final int WIDGET_PID_OFFSET2 = 0;
 
-
+    public static final int WIDGET_ANIMATE_TIMEOUT = 100;
 
     public static void showMessage(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();   // change with shared preference

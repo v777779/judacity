@@ -36,6 +36,7 @@ import ru.vpcb.notifications.glide.SvgSoftwareLayerSetter;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_WIDGET_ID;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_ANIMATE_TIMEOUT;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_INTENT_BUNDLE;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_PID_BASE;
@@ -132,7 +133,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(WIDGET_ANIMATE_TIMEOUT);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
