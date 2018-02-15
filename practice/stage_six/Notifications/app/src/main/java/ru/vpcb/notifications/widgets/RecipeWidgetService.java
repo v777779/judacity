@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,14 +26,14 @@ import ru.vpcb.notifications.reciipe.RecipeItem;
 import timber.log.Timber;
 
 
-import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_INTENT_BUNDLE;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_WIDGET_ID;
-import static ru.vpcb.notifications.Utils.Config.WIDGET_FIXTURE_ID;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_BUNDLE_FIXTURE_ID;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_FILL_ACTION;
 import static ru.vpcb.notifications.Utils.Config.WIDGET_SERVICE_UPDATE_ACTION;
-import static ru.vpcb.notifications.Utils.Config.WIDGET_WIDGET_ID;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.notifications.widgets.RecipeWidgetProvider.getWidgetFixtureId;
 
 
@@ -51,10 +52,10 @@ public class RecipeWidgetService extends IntentService {
             return;
         }
         Bundle args = new Bundle();
-        args.putInt(WIDGET_WIDGET_ID, widgetId);
-        args.putInt(WIDGET_FIXTURE_ID, fixtureId);
+        args.putInt(WIDGET_BUNDLE_WIDGET_ID, widgetId);
+        args.putInt(WIDGET_BUNDLE_FIXTURE_ID, fixtureId);
         Intent intent = new Intent(context, RecipeWidgetService.class);
-        intent.putExtra(BUNDLE_MAIN_INTENT_ARGS, args);
+        intent.putExtra(WIDGET_INTENT_BUNDLE, args);
         intent.setAction(WIDGET_SERVICE_FILL_ACTION);
         context.startService(intent);
     }
@@ -72,7 +73,7 @@ public class RecipeWidgetService extends IntentService {
             String action = intent.getAction();
             if (action == null) return;
             if (action.equals(WIDGET_SERVICE_FILL_ACTION)) {
-                Bundle bundle = intent.getBundleExtra(BUNDLE_MAIN_INTENT_ARGS);
+                Bundle bundle = intent.getBundleExtra(WIDGET_INTENT_BUNDLE);
                 startFillWidgetAction(bundle);
             }
             if (action.equals(WIDGET_SERVICE_UPDATE_ACTION)) {
@@ -90,6 +91,7 @@ public class RecipeWidgetService extends IntentService {
             int fixtureId = getWidgetFixtureId(this, widgetId);
 
             FDFixture fixture = getFixtureFromDatabase(fixtureId);
+
             RecipeWidgetProvider.updateWidget(this, appWidgetManager, widgetId, fixture);
         }
     }
@@ -140,8 +142,11 @@ public class RecipeWidgetService extends IntentService {
         if (fixture == null || fixture.getCompetitionId() <= 0) return null;
 
         String json = TempUtils.readFileAssets(this, "competitions.json");
-        Type listType = new TypeToken<List<FDCompetition>>() {}.getType();
+        Type listType = new TypeToken<List<FDCompetition>>() {
+        }.getType();
         List<FDCompetition> competitions = new Gson().fromJson(json, listType);
+        if(competitions == null) return null;
+
         Collections.sort(competitions, cFc);
         FDCompetition key = new FDCompetition(fixture.getCompetitionId(), null, null, null,
                 0, 0, 0, 0,
@@ -155,7 +160,6 @@ public class RecipeWidgetService extends IntentService {
 
     // test!!!
     private FDFixture getFixtureFromDatabase(int id) {
-
         if (id <= 0) return null;
         String json = TempUtils.readFileAssets(this, "fixtures.json");
         try {
@@ -166,14 +170,25 @@ public class RecipeWidgetService extends IntentService {
                 fixture.setId();
             }
 
-
             FDFixture key = new FDFixture(id, null, null, 0,
                     null, null, 0,
                     0, 0, 0, 0, null);
             Collections.sort(list, cFx);
             int index = Collections.binarySearch(list, key, cFx);
             if (index < 0) return null;
-            return list.get(index);
+
+            FDFixture fixture = list.get(index);
+
+
+            if (fixture == null) return null;
+            FDCompetition competition = getCompetitionFromDatabase(fixture);
+            if (competition == null) {
+                fixture.setCompetitionName(EMPTY_LONG_DASH);
+            } else {
+                fixture.setCompetitionName(competition.getCaption());
+            }
+
+            return fixture;
 
         } catch (NullPointerException e) {
             Timber.d(getString(R.string.widget_read_fixture_exception, e.getMessage()));
@@ -185,23 +200,16 @@ public class RecipeWidgetService extends IntentService {
     private void startFillWidgetAction(Bundle bundle) {
         if (bundle == null) return;
         try {
-            int widgetId = bundle.getInt(WIDGET_WIDGET_ID, EMPTY_WIDGET_ID);
-            int fixtureId = bundle.getInt(WIDGET_FIXTURE_ID, EMPTY_FIXTURE_ID);
+            int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
+            int fixtureId = bundle.getInt(WIDGET_BUNDLE_FIXTURE_ID, EMPTY_FIXTURE_ID);
 
             FDFixture fixture = getFixtureFromDatabase(fixtureId);
-            FDCompetition competition = getCompetitionFromDatabase(fixture);
 
-            if(fixture == null) return;
-            if (competition == null) {
-                fixture.setCompetitionName(EMPTY_LONG_DASH);
-            } else {
-                fixture.setCompetitionName(competition.getCaption());
-            }
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
             RecipeWidgetProvider.fillWidget(this, appWidgetManager, widgetId, fixture);
 
-        } catch (NullPointerException  e) {
-            Timber.d(getString(R.string.widget_read_fixture_exception,e.getMessage()));
+        } catch (NullPointerException e) {
+            Timber.d(getString(R.string.widget_read_fixture_exception, e.getMessage()));
         }
     }
 

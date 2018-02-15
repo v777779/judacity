@@ -17,27 +17,21 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import ru.vpcb.notifications.Utils.TempUtils;
-import ru.vpcb.notifications.data.FDCompetition;
 import ru.vpcb.notifications.data.FDFixture;
 import ru.vpcb.notifications.data.FDFixtures;
 import ru.vpcb.notifications.data.PostProcessingEnabler;
 import ru.vpcb.notifications.notifications.NotificationUtils;
 
-import static ru.vpcb.notifications.Utils.Config.BUNDLE_MAIN_INTENT_ARGS;
-import static ru.vpcb.notifications.Utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.notifications.Utils.Config.WIDGET_WIDGET_ID;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_INTENT_BUNDLE;
+import static ru.vpcb.notifications.Utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.notifications.Utils.Config.showMessage;
 import static ru.vpcb.notifications.Utils.FootballUtils.getRnd;
 import static ru.vpcb.notifications.widgets.RecipeWidgetService.startFillWidgetAction;
@@ -79,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = getIntent().getBundleExtra(BUNDLE_MAIN_INTENT_ARGS);
+                Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
                 if (bundle != null) {
-                    int widgetId = bundle.getInt(WIDGET_WIDGET_ID);
+                    int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID);
 // test!!!
                     FDFixture fixture = getFixture();
                     startFillWidgetAction(MainActivity.this, widgetId, fixture.getId());
