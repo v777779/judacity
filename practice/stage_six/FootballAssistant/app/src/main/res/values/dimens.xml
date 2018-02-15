@@ -112,7 +112,23 @@
     <dimen name="text_news_item_source_size">12sp</dimen>
     <dimen name="text_news_item_time_size">12sp</dimen>
 
+    <!--widgets-->
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_height">110dp</dimen>
+    <dimen name="widget_width">160dp</dimen>
+    <dimen name="widget_resize_height">40dp</dimen>
+    <dimen name="widget_resize_width">160dp</dimen>
 
+    <!--screen_match-->
+    <dimen name="widget_text_size">10sp</dimen>
+    <dimen name="widget_head_size">12sp</dimen>
+    <dimen name="widget_image_team_size">32dp</dimen>
+    <dimen name="widget_text_time_size">32sp</dimen>
+    <dimen name="widget_text_league_size">14sp</dimen>
+    <dimen name="widget_image_score_size">32dp</dimen>
+    <dimen name="widget_text_score_size">16sp</dimen>
+    <dimen name="widget_text_status_size">12sp</dimen>
+    <dimen name="widget_icon_size">36dp</dimen>
 
 
 

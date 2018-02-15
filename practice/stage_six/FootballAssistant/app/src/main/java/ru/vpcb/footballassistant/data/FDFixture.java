@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import static ru.vpcb.footballassistant.utils.Config.DATE_WIDGET_PATTERN;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
@@ -25,7 +28,7 @@ import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_FIXTURES;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDFixture {
+public class FDFixture implements PostProcessingEnabler.PostProcessable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -64,6 +67,8 @@ public class FDFixture {
     private int homeTeamId;
     private int awayTeamId;
 
+    // widgets
+    private String competitionName;
 
     public FDFixture() {
         this.id = -1;
@@ -90,6 +95,11 @@ public class FDFixture {
         this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
         this.odds = new FDOdds(homeWin, draw, awayWin);
         this.lastRefresh = lastRefresh;
+    }
+
+    @Override
+    public void postProcess() {
+        setId();
     }
 
 
@@ -166,19 +176,19 @@ public class FDFixture {
 
 
     public void setId() throws NullPointerException, NumberFormatException {
-// id fixture
+// id
         String href = links.self.getHref();
-        id = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
         if (id == -1) throw new NumberFormatException();
 // id competition
         href = links.competition.getHref();
-        competitionId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        competitionId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
 // id teamHome
         href = links.homeTeam.getHref();
-        homeTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        homeTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
 // id teamAway
         href = links.awayTeam.getHref();
-        awayTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/")+1));
+        awayTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
 
     }
 
@@ -293,6 +303,32 @@ public class FDFixture {
         if (result == null) return EMPTY_MATCH_SCORE;
         return String.format(Locale.ENGLISH, "%d : %d",
                 result.goalsHomeTeam, result.goalsAwayTeam);
+    }
+
+// widgets
+    public String getCompetitionName() {
+        if(competitionName == null || competitionName.isEmpty())return "Leag BundesLiga 2017/18";//EMPTY_LONG_DASH;
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
+    public String getMatchDateWidget() {
+        if (date == null) return EMPTY_MATCH_TIME;
+        SimpleDateFormat df = new SimpleDateFormat(DATE_WIDGET_PATTERN);
+        return df.format(date);
+    }
+
+    public String getMatchScoreHome() {
+        if (result == null || result.goalsHomeTeam < 0) return EMPTY_DASH;
+        return String.valueOf(result.goalsHomeTeam);
+    }
+
+    public String getMatchScoreAway() {
+        if (result == null || result.goalsAwayTeam < 0) return EMPTY_DASH;
+        return String.valueOf(result.goalsAwayTeam);
     }
 
 

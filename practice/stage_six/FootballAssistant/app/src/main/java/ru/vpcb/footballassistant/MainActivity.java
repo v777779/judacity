@@ -25,6 +25,8 @@ import ru.vpcb.footballassistant.services.UpdateService;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
+import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Notifications cut names of teams to 20 characters and add ... at the end
     // TODO Widget FDFixture изменить класс, имена команд и соревнования
     // TODO Widget FDFixture FDTeam добавить пост обработку в Gson
+    // TODO Widget FDFixture добавить CompetitionID, TeamHomeID, TeamAwayID в FDFixture Database
+    // TODO Widget FDFixture все даты хранить только в String Database
+
 
 
 
@@ -193,10 +198,15 @@ public class MainActivity extends AppCompatActivity  {
             public void run() {
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(MainActivity.this,
+                Bundle options = ActivityOptionsCompat.makeCustomAnimation(MainActivity.this,
                         android.R.anim.fade_in, android.R.anim.fade_out)
                         .toBundle();
-                startActivity(intent, bundle);
+
+                Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
+                if (bundle != null) {
+                    intent.putExtra(WIDGET_INTENT_BUNDLE, bundle);
+                }
+                startActivity(intent, options);
 
             }
         }, 250);

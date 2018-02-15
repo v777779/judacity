@@ -291,4 +291,10 @@
     <color name="news_item_source_text">#1e7e61</color>
     <color name="news_item_time_text">#989898</color>
 
+    <!--widgets-->
+    <color name="widget_text_color">#f8f8f8</color>
+    <color name="widget_back_color">#1e7e61</color>
+    <color name="widget_back_light_color">#29a27e</color>
+    <color name="widget_back_stroke_color">#f8f8f8</color>
+
 </resources>

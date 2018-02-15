@@ -157,8 +157,23 @@
     <string name="text_news_item_time_hour">%1$dh</string>
     <string name="text_news_item_time_empty">\u2014</string>
     <string name="text_news_item_separator">|</string>
-    <!--other-->
 
+    <!--widget-->
+    <string name="widget_empty_dash">-</string>
+    <string name="widget_empty_long_dash">\u2014</string>
+    <string name="widget_empty_time">- : -</string>
+
+    <string name="widget_head_text">Click to choose match</string>
+    <string name="widget_body_text">Ingredients List</string>
+    <string name="widget_button">Tap to fill widget</string>
+    <string name="widget_add">Add widget</string>
+    <string name="widget_list_added">List of ingredients added to widget</string>
+
+    <string name="widget_date">%1$3s, %2$02d %3$3s %4$04d</string>
+
+
+
+    <!--other-->
 
     <!--messages-->
     <string name="activity_same_message">You are already here</string>
@@ -177,6 +192,10 @@
 
     <string name="recycler_team_image_exception">RecyclerView Team Image and Name set exception: %1$s</string>
     <string name="notification_empty_activity_exception">Notification empty activity window exception: %1$s</string>
+
+    <!--widgets-->
+    <string name="widget_read_fixture_exception">Widget read fixture exception:%1$s</string>
+
 
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>

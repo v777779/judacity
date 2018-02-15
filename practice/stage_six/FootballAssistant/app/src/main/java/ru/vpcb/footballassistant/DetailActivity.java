@@ -53,16 +53,20 @@ import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
+import ru.vpcb.footballassistant.widgets.MatchWidgetService;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
+import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
+import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 
 public class DetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -282,9 +286,17 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onComplete(View view, int pos) {
+    public void onComplete(View view, int value) {
         Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+// temp!!!
+// widget
+        Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
+        if(bundle != null) {
+            int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID,EMPTY_WIDGET_ID);
+            int fixtureId = value;
+            MatchWidgetService.startFillWidgetAction(this,widgetId,fixtureId);
+        }
         startActivityMatch();
     }
 
@@ -391,8 +403,6 @@ public class DetailActivity extends AppCompatActivity
             }
         });
 
-
-
     }
 
 
@@ -426,7 +436,6 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void startCalendar() {
-
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = CalendarDialog.newInstance(this, getViewPagerDate());
         fm.beginTransaction()

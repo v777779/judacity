@@ -180,6 +180,49 @@ public class FDUtils {
         return map;
     }
 
+   // competition
+   private static FDCompetition readCompetition(Cursor cursor) {
+           int id = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_COMPETITION_ID);
+           if (id <= 0) return null;
+
+           String caption = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_CAPTION);
+           String league = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_LEAGUE);
+           String year = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_YEAR);
+           int currentMatchDay = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_CURRENT_MATCHDAY);
+           int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
+           int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
+           int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
+           Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
+           Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
+
+           FDCompetition competition = new FDCompetition(id, caption, league,
+                   year, currentMatchDay, numberOfMatchDays, numberOfTeams,
+                   numberOfGames, lastUpdated, lastRefresh);
+
+       return competition;
+   }
+
+    public static FDCompetition readCompetition(Context context, int id) {
+        if(id <= 0) return null;
+       Uri uri = FDContract.CpEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
+       String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
+
+       Cursor cursor = context.getContentResolver().query(
+               uri,
+               null,
+               null,
+               null,
+               sortOrder
+       );
+       if (cursor == null || cursor.getCount() == 0) return null;
+       cursor.moveToFirst();
+       FDCompetition competition = readCompetition(cursor);
+       cursor.close();
+       return competition;
+   }
+
+
+
 
     // competition_teams
     public static Map<Integer, List<Integer>> readCompetitionTeams(Context context) {
@@ -256,6 +299,52 @@ public class FDUtils {
         cursor.close();     // disables notifications
         return map;
     }
+
+    // fixture
+    private static FDFixture readFixture(Cursor cursor) {
+        int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
+        if (id <= 0) return null;
+
+        Date date = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE));
+        String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
+        int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
+        String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
+        String awayTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_AWAY);
+
+        int goalsHomeTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_HOME);
+        int goalsAwayTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_AWAY);
+
+        double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
+        double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
+        double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
+        Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_LAST_REFRESH));
+
+        FDFixture fixture = new FDFixture(id, date, status, matchday,
+                homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
+                homeWin, draw, awayWin, lastRefresh);
+
+        return fixture;
+    }
+
+
+    public static FDFixture readFixture(Context context, int id) {
+        if (id <= 0) return null;
+        Uri uri = FDContract.FxEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
+        String sortOrder = FDContract.FxEntry.COLUMN_FIXTURE_ID + " ASC";   // sort by id
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+        if (cursor == null || cursor.getCount() == 0) return null;
+        cursor.moveToFirst();
+        FDFixture fixture = readFixture(cursor);
+        cursor.close();     // disables notifications
+        return fixture;
+    }
+
 
     // read database
     public static void readDatabase(
@@ -821,7 +910,6 @@ public class FDUtils {
     }
 
 
-
     // data
     private static boolean isRefreshed(Context context, Date lastRefresh) {
         if (lastRefresh == null) return false;
@@ -1160,7 +1248,7 @@ public class FDUtils {
     public static List<FDFixture> loadListTeamFixtures(Context context, int id) {
         try {
             return loadListTeamFixtures(id);
-        }catch (NumberFormatException|NullPointerException |IOException |InterruptedException e) {
+        } catch (NumberFormatException | NullPointerException | IOException | InterruptedException e) {
             Timber.d(context.getString(R.string.retrofit_response_empty), e.getMessage());
             return null;
         }
@@ -1176,26 +1264,20 @@ public class FDUtils {
         FDPlayers players = loadListTeamPlayers(id);      // NullPointerException
         List<FDPlayer> list = new ArrayList<>();
         for (FDPlayer player : players.getPlayers()) {
-            if(player == null) continue;
+            if (player == null) continue;
             list.add(player);
         }
         return list;
     }
 
-    public static List<FDPlayer> loadListTeamPlayers(Context context,int teamId) {
+    public static List<FDPlayer> loadListTeamPlayers(Context context, int teamId) {
         try {
             return loadListTeamPlayers(teamId);
-        }catch (NumberFormatException|NullPointerException |IOException |InterruptedException e) {
+        } catch (NumberFormatException | NullPointerException | IOException | InterruptedException e) {
             Timber.d(context.getString(R.string.retrofit_response_empty), e.getMessage());
             return null;
         }
     }
-
-
-
-
-
-
 
 
     public static void sendProgress(Context context, int value) {

@@ -64,7 +64,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      *
      * @param context Context of calling activity
      */
-    public RecyclerAdapter(Context context,  List<FDFixture> list) {
+    public RecyclerAdapter(Context context, List<FDFixture> list) {
         mContext = context;
 
         mRes = context.getResources();
@@ -97,7 +97,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public int getItemViewType(int position) {
 // test  every 3rd is header
 //        return (position % 3 == 0) ? RM_HEAD_VIEW_TYPE : RM_ITEM_VIEW_TYPE;
-        return  RM_ITEM_VIEW_TYPE;
+        return RM_ITEM_VIEW_TYPE;
     }
 
     /**
@@ -138,7 +138,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ICallback) mContext).onComplete(view, pos);
+                if (mList == null || pos < 0 || pos >= mList.size()){
+                    return;
+                }
+                FDFixture fixture = mList.get(pos);
+                if (fixture == null || fixture.getId() < 0) {
+                    return;
+                }
+                ((ICallback) mContext).onComplete(view, fixture.getId());
             }
         });
 
@@ -233,7 +240,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 mTextTeamHome.setText(fixture.getHomeTeamName());
                 mTextTeamAway.setText(fixture.getAwayTeamName());
                 String dateTime = fixture.getMatchDate();
-                mTextTime.setText(dateTime.substring(0,5));
+                mTextTime.setText(dateTime.substring(0, 5));
                 mTextDate.setText(dateTime.substring(6));
 
             }

@@ -16,7 +16,7 @@ import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDTeam {
+public class FDTeam implements PostProcessingEnabler.PostProcessable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -70,8 +70,9 @@ public class FDTeam {
 
 
     public void setId() throws NullPointerException, NumberFormatException {
-        String href = getLinkSelf();
-        id = Integer.valueOf(href.replaceAll(FD_REGEX_TEAMS, ""));
+// id
+        String href = links.self.getHref();
+        id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
         if (id == -1) throw new NumberFormatException();
     }
 
@@ -114,6 +115,11 @@ public class FDTeam {
 
     public Date getLastRefresh() {
         return lastRefresh;
+    }
+
+    @Override
+    public void postProcess() {
+        setId();
     }
 
     // classes

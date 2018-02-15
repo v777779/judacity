@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
 import ru.vpcb.footballassistant.R;
+import ru.vpcb.footballassistant.widgets.MatchWidgetProvider;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -111,7 +112,29 @@ public class Config {
 
     public static final int EMPTY_NOTIFICATION_ID = -1;
 
+    // widgets
+    public static final String WIDGET_BUNDLE_FIXTURE_ID = "widget_fixture_id";
+    public static final String WIDGET_BUNDLE_WIDGET_ID = "widget_widget_id";
+    public static final String WIDGET_PACKAGE = MatchWidgetProvider.class.getPackage().getName() + ".";
 
+    public static final String WIDGET_SERVICE_FILL_ACTION = WIDGET_PACKAGE + "ACTION_FILL";
+    public static final String WIDGET_SERVICE_UPDATE_ACTION = WIDGET_PACKAGE + "ACTION_UPDATE";
+    public static final String WIDGET_SERVICE_REFRESH_ACTION = WIDGET_PACKAGE + "ACTION_REFRESH";
+
+    public static final String WIDGET_INTENT_BUNDLE = WIDGET_PACKAGE + "widget.intent.BUNDLE_ARGS";
+    public static final String WIDGET_PREFERENCES = WIDGET_PACKAGE + "widget.preferences.";
+
+    public static final int EMPTY_WIDGET_ID = -1;
+    public static final int EMPTY_FIXTURE_ID = -1;
+
+    public static final String DATE_WIDGET_PATTERN = "EEE, dd MMM yyyy";
+    public static final int WIDGET_PID_BASE = 12800000;
+    public static final int WIDGET_PID_SCALE = 1000;
+    public static final int WIDGET_PID_OFFSET0 = 0;
+    public static final int WIDGET_PID_OFFSET1 = 0;
+    public static final int WIDGET_PID_OFFSET2 = 0;
+
+    public static final int WIDGET_ANIMATE_TIMEOUT = 100;
 
     //main_activity
     public static final int MAIN_ACTIVITY_STATE_0 = 0;

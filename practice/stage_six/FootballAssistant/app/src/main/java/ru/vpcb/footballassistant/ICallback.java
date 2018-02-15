@@ -20,7 +20,7 @@ public interface ICallback {
      *  Performs callback processing for RecyclerView
      *  in MainActivity
      */
-    void onComplete(View view, int pos);
+    void onComplete(View view, int value);
     /**
      *  Performs callback processing for FragmentError
      *  in DetailActivity
