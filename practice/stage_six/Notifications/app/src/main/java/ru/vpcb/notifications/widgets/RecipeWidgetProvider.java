@@ -3,17 +3,18 @@ package ru.vpcb.notifications.widgets;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
@@ -22,14 +23,14 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.AppWidgetTarget;
 import com.bumptech.glide.request.target.Target;
+
+import java.util.concurrent.ExecutionException;
 
 import ru.vpcb.notifications.MainActivity;
 import ru.vpcb.notifications.R;
 import ru.vpcb.notifications.data.FDFixture;
 import ru.vpcb.notifications.glide.SvgSoftwareLayerSetter;
-import timber.log.Timber;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static ru.vpcb.notifications.Utils.Config.EMPTY_WIDGET_ID;
@@ -91,6 +92,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
+    private static PictureDrawable mPicture;
+
     public static void fillWidget(Context context, AppWidgetManager appWidgetManager,
                                   int widgetId, FDFixture fixture) {
 
@@ -105,9 +108,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);       // call activity second time
         Bundle args = new Bundle();
         args.putInt(WIDGET_BUNDLE_FIXTURE_ID, fixtureId);
-
         intent.putExtra(WIDGET_INTENT_BUNDLE, args);
-
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetPID, intent, FLAG_UPDATE_CURRENT);
 
 // test!!!
@@ -122,13 +123,18 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
         views.setOnClickPendingIntent(R.id.match_refresh, getPendingIntent(context, widgetId, fixtureId));
 
+        setupRequestBuilder(context);
+
+
+//        String imageURL = "http://upload.wikimedia.org/wikipedia/de/0/08/LOSC_Lille_Crest_2012.png";
+//        Bitmap bitmap = loadBitmap(context, imageURL);
+//        if (bitmap != null)
+//            views.setImageViewBitmap(R.id.image_sm_team_home, bitmap);
 //        views.setImageViewResource(R.id.image_sm_team_home,R.drawable.fc_logo_widget2);
 //        views.setImageViewResource(R.id.image_sm_team_away,R.drawable.fc_logo_widget3);
 
         appWidgetManager.updateAppWidget(widgetId, views);
     }
-
-
 
 
     private static PendingIntent getPendingIntent(Context context, int widgetId, int fixtureId) {
@@ -183,8 +189,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
             int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
             int fixtureId = bundle.getInt(WIDGET_BUNDLE_FIXTURE_ID, EMPTY_FIXTURE_ID);
-// test!!!
-//            fixtureId = 161639;
+
             RecipeWidgetService.startFillWidgetAction(context, widgetId, fixtureId);
 
 
@@ -193,25 +198,41 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     }
 
-    private void setTeamImage(String imageURL) {
 
-//
-//        if (imageURL == null || imageURL.isEmpty()) return;
-//
-//
-//        imageURL = Config.imageCheckReplaceURL(imageURL);  // address replacement for known addresses
-//        if (imageURL.toLowerCase().endsWith("svg")) {
-//            mRequestBuilder.load(imageURL).into(imageView);
-//
-//        } else {
-//
-//            mRequestBuilderCommon.load(imageURL).into().into(imageView);
-//        }
+    private static Bitmap loadBitmapStandard(Context context, String imageURL) {
+        if (imageURL == null || imageURL.isEmpty()) return null;
+
+        try {
+            Drawable resource = mRequestBuilderCommon
+                    .load(imageURL)
+                    .submit()
+                    .get();
+
+            if (resource == null) return null;
+
+            if (resource instanceof BitmapDrawable) {
+                return ((BitmapDrawable) resource).getBitmap();
+            }
+
+            int size = context.getResources().getDimensionPixelSize(R.dimen.widget_image_team_size);
+            Bitmap bitmap;
+            if (resource.getIntrinsicWidth() <= 0 || resource.getIntrinsicHeight() <= 0) {
+                bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+            } else {
+                bitmap = Bitmap.createBitmap(resource.getIntrinsicWidth(), resource.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            }
+            Canvas canvas = new Canvas(bitmap);
+//            resource.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            resource.draw(canvas);
+            return bitmap;
+
+        } catch (InterruptedException | ExecutionException e) {
+            return null;
+        }
     }
 
-
     private static void setupRequestBuilder(Context context) {
-        if(mRequestBuilder == null) {
+        if (mRequestBuilder == null) {
             mRequestBuilder = Glide.with(context)
                     .as(PictureDrawable.class)
                     .apply(new RequestOptions()
@@ -222,7 +243,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
                     .listener(new SvgSoftwareLayerSetter());
         }
 
-        if(mRequestBuilderCommon == null) {
+        if (mRequestBuilderCommon == null) {
             mRequestBuilderCommon = Glide.with(context)
                     .as(Drawable.class)
                     .apply(new RequestOptions()
@@ -233,6 +254,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         }
 
     }
+
     private static class CommonRequestListener implements RequestListener<Drawable> {
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -241,6 +263,12 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
         @Override
         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            Bitmap bitmap = Bitmap.createBitmap(resource.getIntrinsicWidth(), resource.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            resource.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            resource.draw(canvas);
+
+
             return false;
         }
     }
