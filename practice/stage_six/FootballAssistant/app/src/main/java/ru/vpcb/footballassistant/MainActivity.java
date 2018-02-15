@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Notifications set minimum delay and flex time
     // TODO Notifications add flag for notification, database field for notification status, set and clear procedure
     // TODO Notifications cut names of teams to 20 characters and add ... at the end
-
+    // TODO Widget FDFixture изменить класс, имена команд и соревнования
+    // TODO Widget FDFixture FDTeam добавить пост обработку в Gson
 
 
 
