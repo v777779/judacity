@@ -22,6 +22,8 @@
     <!--match-->
     <color name="match_color_primary">#1e7e61</color>
     <color name="match_toolbar_back">#1e7e61</color>
+    <color name="match_color_primary_light">#2d9b7a</color>
+
 
     <color name="match_score_red">#fe0000</color>
     <color name="match_score_red_light">#fe6969</color>

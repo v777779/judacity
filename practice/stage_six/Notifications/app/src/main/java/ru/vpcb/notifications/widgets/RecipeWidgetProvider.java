@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -94,16 +96,16 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     private static PictureDrawable mPicture;
 
-    public static void fillWidget(Context context, AppWidgetManager appWidgetManager,
-                                  int widgetId, FDFixture fixture) {
+    public static void fillWidget(final Context context, final AppWidgetManager appWidgetManager,
+                                 final int widgetId, FDFixture fixture) {
 
         if (widgetId <= 0 || fixture == null || fixture.getId() <= 0) return;
 
-        int widgetPID = WIDGET_PID_BASE + WIDGET_PID_SCALE * widgetId + WIDGET_PID_OFFSET0;
+       final int widgetPID = WIDGET_PID_BASE + WIDGET_PID_SCALE * widgetId + WIDGET_PID_OFFSET0;
         int fixtureId = fixture.getId();
 
         putWidgetFixtureId(context, widgetId, fixtureId);
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
+        final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.match_widget_provider);
 
         Intent intent = new Intent(context, MainActivity.class);       // call activity second time
         Bundle args = new Bundle();
@@ -124,6 +126,20 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.match_refresh, getPendingIntent(context, widgetId, fixtureId));
 
         setupRequestBuilder(context);
+
+        views.setInt(R.id.app_widget_container,"setBackgroundResource",R.drawable.widget_back_light);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                views.setInt(R.id.app_widget_container,"setBackgroundResource", R.drawable.widget_back);
+                appWidgetManager.updateAppWidget(widgetId, views);
+            }
+        }).start();
 
 
 //        String imageURL = "http://upload.wikimedia.org/wikipedia/de/0/08/LOSC_Lille_Crest_2012.png";
