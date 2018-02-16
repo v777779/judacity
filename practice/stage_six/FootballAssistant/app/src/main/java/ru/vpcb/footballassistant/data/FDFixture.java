@@ -55,7 +55,6 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     private FDOdds odds;
 
     private int id;
-
     private int competitionId;
     private int homeTeamId;
     private int awayTeamId;
@@ -63,23 +62,13 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     // widgets
     private String competitionName;
 
-    //TODO check if usef for Gson and set default object values Href, String
     public FDFixture() {
-        this.id = EMPTY_INT_VALUE;
-        this.date = EMPTY_STRING;
-        this.status=EMPTY_STRING;
-        this.homeTeamName=EMPTY_STRING;
-        this.awayTeamName=EMPTY_STRING;
-        this.matchDay=EMPTY_INT_VALUE;
-        this.result = new FDResult(EMPTY_INT_VALUE,EMPTY_INT_VALUE);
-        this.odds = new FDOdds(EMPTY_INT_VALUE,EMPTY_INT_VALUE,EMPTY_INT_VALUE);
-
+        this.id = EMPTY_INT_VALUE;                  // id
+        this.competitionId = EMPTY_INT_VALUE;       // id competition
+        this.homeTeamId = EMPTY_INT_VALUE;          // id teamHome
+        this.awayTeamId = EMPTY_INT_VALUE;          // id teamAway
     }
 
-    public FDFixture(String date) {
-        this();
-        this.date = date;
-    }
 
     public FDFixture(int id, String date, String status, int matchDay,
                      String homeTeamName, String awayTeamName,
@@ -93,11 +82,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.awayTeamName = awayTeamName;
         this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
         this.odds = new FDOdds(homeWin, draw, awayWin);
-    }
 
-    @Override
-    public void postProcess() {
-        setId();
     }
 
 
@@ -118,12 +103,6 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @Expose
         private FDLink awayTeam;
 
-        public FDLinks() {
-            self = new FDLink();
-            competition = new FDLink();
-            homeTeam = new FDLink();
-            awayTeam = new FDLink();
-        }
     }
 
     private class FDHalfTime {
@@ -134,11 +113,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @SerializedName("goalsAwayTeam")
         @Expose
         private int goalsAwayTeam;
+
     }
 
 
     private class FDResult {
-
         @SerializedName("goalsHomeTeam")
         @Expose
         private int goalsHomeTeam;
@@ -151,7 +130,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @Expose
         private FDHalfTime halfTime;
 
-        public FDResult(int goalsHomeTeam, int goalsAwayTeam) {
+        FDResult(int goalsHomeTeam, int goalsAwayTeam) {
             this.goalsHomeTeam = goalsHomeTeam;
             this.goalsAwayTeam = goalsAwayTeam;
             this.halfTime = null;
@@ -171,7 +150,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @Expose
         private double awayWin;
 
-        public FDOdds(double homeWin, double draw, double awayWin) {
+        FDOdds(double homeWin, double draw, double awayWin) {
             this.homeWin = homeWin;
             this.draw = draw;
             this.awayWin = awayWin;
@@ -179,13 +158,28 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
 
-    public void setId() throws NullPointerException, NumberFormatException {
-        id = FDUtils.formatId(links.self.getHref());                    // id
-        competitionId = FDUtils.formatId(links.competition.getHref());  // id competition
-        homeTeamId = FDUtils.formatId(links.homeTeam.getHref());        // id teamHome
-        awayTeamId = FDUtils.formatId(links.awayTeam.getHref());        // id teamAway
+    public void setId()  {
+        if (links == null) return;
+        if (links.self != null) {
+            this.id = FDUtils.formatId(links.self.getHref());                    // id
+        }
+        if (links.competition != null) {
+            this.competitionId = FDUtils.formatId(links.competition.getHref());  // id competition
+        }
+        if (links.homeTeam != null) {
+            this.homeTeamId = FDUtils.formatId(links.homeTeam.getHref());        // id teamHome
+        }
+        if (links.awayTeam != null) {
+            this.awayTeamId = FDUtils.formatId(links.awayTeam.getHref());        // id teamAway
+        }
+
+        date = FDUtils.formatDateToSQLite(date);
+
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public int getId() {
         return id;
@@ -196,8 +190,9 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
 
-// TODO check and set if null
-    public String getDate() {      return date;     // check and set if null
+    // TODO check and set if null
+    public String getDate() {
+        return date;     // check and set if null
     }
 
     public String getStatus() {
@@ -262,18 +257,15 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
 
-
-
-// widgets
+    // widgets
     public String getCompetitionName() {
-        if(competitionName == null || competitionName.isEmpty())return EMPTY_LONG_DASH;
+        if (competitionName == null || competitionName.isEmpty()) return EMPTY_LONG_DASH;
         return competitionName;
     }
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
     }
-
 
 
     public int getGoalsHomeTeam() {
@@ -284,6 +276,12 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     public int getGoalsAwayTeam() {
         if (result == null || result.goalsAwayTeam < 0) return EMPTY_INT_VALUE;
         return result.goalsAwayTeam;
+    }
+
+
+    @Override
+    public void postProcess() {
+        setId();
     }
 
 

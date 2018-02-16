@@ -441,7 +441,9 @@ public class DetailActivity extends AppCompatActivity
 // TODO SQLIte Date Check
     private int getIndex(List<FDFixture> list, Calendar c) {
         String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
-        int index = Collections.binarySearch(list, new FDFixture(dateSQLite), cFx);  // for givent day
+        FDFixture fixture = new FDFixture();
+        fixture.setDate(dateSQLite);
+        int index = Collections.binarySearch(list, fixture, cFx);  // for givent day
         if (index < 0) index = -index - 1;
         if (index > list.size()) index = list.size() - 1;
         return index;

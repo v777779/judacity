@@ -3,8 +3,14 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import ru.vpcb.footballassistant.utils.FDUtils;
+
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -12,7 +18,7 @@ import java.util.List;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDFixtures {
+public class FDFixtures implements PostProcessingEnabler.PostProcessable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -27,11 +33,35 @@ public class FDFixtures {
 
     @SerializedName("timeFrameStart")
     @Expose
-    private Date timeFrameStart;
+    private String timeFrameStart;
 
     @SerializedName("timeFrameEnd")
     @Expose
-    private Date timeFrameEnd;
+    private String timeFrameEnd;
+
+    private int competitionId;
+
+    public FDFixtures() {
+        this.competitionId = EMPTY_INT_VALUE;
+    }
+
+    @Override
+    public void postProcess() {
+        setId();
+    }
+
+    private void setId() {
+        if (links != null && links.competition != null) {
+            this.competitionId = FDUtils.formatId(links.competition.getHref());  // id competition
+        }
+        timeFrameEnd = FDUtils.formatDateToSQLite(timeFrameEnd);
+        timeFrameStart = FDUtils.formatDateToSQLite(timeFrameStart);
+
+    }
+
+    public List<FDFixture> getFixtures() {
+        return fixtures;
+    }
 
     private class FDLinks {
         @SerializedName("self")
@@ -41,11 +71,11 @@ public class FDFixtures {
         @SerializedName("competition")
         @Expose
         private FDLink competition;
-    }
 
-
-    public List<FDFixture> getFixtures() {
-        return fixtures;
+        public FDLinks() {
+            this.self = new FDLink();
+            this.competition = new FDLink();
+        }
     }
 
 

@@ -16,6 +16,9 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +41,7 @@ import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDFixtures;
+import ru.vpcb.footballassistant.data.FDLink;
 import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDPlayers;
 import ru.vpcb.footballassistant.data.FDStanding;
@@ -46,6 +50,7 @@ import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.data.FDTeams;
 import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
+import ru.vpcb.footballassistant.data.PostProcessingEnabler;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import timber.log.Timber;
@@ -102,15 +107,18 @@ public class FDUtils {
             new SimpleDateFormat(PATTERN_DATE_SQLITE, Locale.ENGLISH);
 
 
-// stings
+    // stings
     public static int formatId(String href) throws NumberFormatException {
-        int id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-        if (id == EMPTY_INT_VALUE) throw new NumberFormatException();
-        return id;
+        try {
+            return Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
+        } catch (NullPointerException|IndexOutOfBoundsException| NumberFormatException e) {
+            return EMPTY_INT_VALUE;
+        }
     }
 
-    public static String formatIntToString(int value){
-        if(value < 0) return EMPTY_LONG_DASH;
+
+    public static String formatIntToString(int value) {
+        if (value < 0) return EMPTY_LONG_DASH;
 
         return String.valueOf(value);
     }
@@ -173,8 +181,9 @@ public class FDUtils {
     }
 
     // move to pattern SQLIte
-    private static String formatDateToSQLite(String s) {
-       return s.replace("T"," ").replace("Z","");
+    public static String formatDateToSQLite(String s) {
+        if (s == null) return EMPTY_STRING;
+        return s.replace("T", " ").replace("Z", "");
     }
 
 
@@ -189,9 +198,9 @@ public class FDUtils {
                     o1.getDate() == null || o2.getDate() == null)
                 throw new IllegalArgumentException();
 
-            Date dateO1  = FDUtils.formatDateFromSQLite(o1.getDate());
+            Date dateO1 = FDUtils.formatDateFromSQLite(o1.getDate());
             Date dateO2 = FDUtils.formatDateFromSQLite(o2.getDate());
-            if(dateO1 == null || dateO2 == null) throw new IllegalArgumentException();
+            if (dateO1 == null || dateO2 == null) throw new IllegalArgumentException();
 
             return dateO1.compareTo(dateO2);
         }
@@ -215,6 +224,7 @@ public class FDUtils {
             return null;
         }
     }
+
     public static String formatDateToSQLite(Date date) {
         try {
             return formatSQLiteDate.format(date);
@@ -222,10 +232,6 @@ public class FDUtils {
             return null;
         }
     }
-
-
-
-
 
 
     // shared preferences
@@ -537,7 +543,7 @@ public class FDUtils {
 //        String sortOrder = "datetime("+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC LIMIT 1"; // sort by date and time
 //        String sortOrder = "strftime(%s,"+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC";      // sort by date and time
 
-        String sortOrder = "datetime("+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC LIMIT 1"; // sort by date and time
+        String sortOrder = "datetime(" + FDContract.FxEntry.COLUMN_FIXTURE_ID + ")" + " DESC LIMIT 1"; // sort by date and time
 
         Cursor cursor = context.getContentResolver().query(
                 uri,
@@ -1205,10 +1211,13 @@ public class FDUtils {
                     }
                 }).build();
 
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new PostProcessingEnabler())
+                .create();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
                 .baseUrl(FD_BASE_URI)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         return retrofit.create(IFDRetrofitAPI.class);
     }

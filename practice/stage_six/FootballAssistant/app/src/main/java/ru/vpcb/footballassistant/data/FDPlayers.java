@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import ru.vpcb.footballassistant.utils.FDUtils;
+
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
 
 
@@ -14,7 +16,7 @@ import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDPlayers {
+public class FDPlayers implements PostProcessingEnabler.PostProcessable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -23,15 +25,17 @@ public class FDPlayers {
     @Expose
     private int count;
 
-    private int id;
-
     @SerializedName("players")
     @Expose
     private List<FDPlayer> players;
 
+    private int id;
+
+
     public FDPlayers() {
         this.id = -1;
     }
+
 
     public class FDLinks {
         @SerializedName("self")
@@ -49,10 +53,10 @@ public class FDPlayers {
     }
 
 
-    public void setId() throws NullPointerException, NumberFormatException {
-        String href = getLinkTeam();
-        id = Integer.valueOf(href.replaceAll(FD_REGEX_TEAMS, ""));
-        if (id == -1) throw new NumberFormatException();
+    public void setId(){
+        if(links != null && links.self != null) {
+            id = FDUtils.formatId(links.self.getHref());
+        }
     }
 
 
@@ -63,4 +67,11 @@ public class FDPlayers {
     public List<FDPlayer> getPlayers() {
         return players;
     }
+
+
+    @Override
+    public void postProcess() {
+        setId();
+    }
+
 }

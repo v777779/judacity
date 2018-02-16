@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.Collections;
 
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.notifications.NotificationUtils;
@@ -25,6 +26,7 @@ import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
+import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
 
 public class MatchActivity extends AppCompatActivity {
 
@@ -126,7 +128,6 @@ public class MatchActivity extends AppCompatActivity {
         mViewFavorite = findViewById(R.id.match_favorite_back);
 
 
-
         mViewLeague.setPaintFlags(mViewLeague.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mViewLeague.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +148,7 @@ public class MatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                startFragmentTeam();
-                startActivityTeam( 535);
+                startActivityTeam(535);
 //                startActivityTeam(530);
             }
         });
@@ -156,11 +157,12 @@ public class MatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 // test!!!
-                Calendar c= Calendar.getInstance();
-                c.add(Calendar.SECOND,60);
+                Calendar c = Calendar.getInstance();
+                c.add(Calendar.SECOND, 60);
                 String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
-                FDFixture fixture = new FDFixture(dateSQLite);
-                NotificationUtils.scheduleReminder(MatchActivity.this,fixture);
+                FDFixture fixture = new FDFixture();
+                fixture.setDate(dateSQLite);
+                NotificationUtils.scheduleReminder(MatchActivity.this, fixture);
 // test!!!
 // TODO add flag for notification, database field for notification status, set and clear procedure
             }

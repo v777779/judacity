@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import ru.vpcb.footballassistant.utils.FDUtils;
+
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
@@ -16,7 +18,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDCompetition {
+public class FDCompetition implements PostProcessingEnabler.PostProcessable {
 
     @SerializedName("_links")
     @Expose
@@ -62,20 +64,6 @@ public class FDCompetition {
     private List<FDFixture> fixtures;
     private FDTable table;
 
-// TODO Check for Retrofit
-    public FDCompetition() {
-        this.id = EMPTY_INT_VALUE;
-        this.caption = EMPTY_STRING;
-        this.league = EMPTY_STRING;
-        this.year = EMPTY_STRING;
-        this.currentMatchDay= EMPTY_INT_VALUE;
-        this.numberOfMatchDays= EMPTY_INT_VALUE;
-        this.numberOfTeams = EMPTY_INT_VALUE;
-        this.numberOfGames= EMPTY_INT_VALUE;
-        this.lastUpdated = EMPTY_STRING;
-
-    }
-
     public FDCompetition(int id, String caption, String league, String year,
                          int currentMatchDay, int numberOfMatchDays,
                          int numberOfTeams, int numberOfGames,
@@ -94,6 +82,7 @@ public class FDCompetition {
         this.teams = null;
         this.fixtures = null;
     }
+
 
     public class FDLinks {
         @SerializedName("self")
@@ -114,8 +103,14 @@ public class FDCompetition {
 
     }
 
+
+    private void setId() {
+        lastUpdated = FDUtils.formatDateToSQLite(lastUpdated);
+        if (id > 0 || links.self == null) return;
+        id = FDUtils.formatId(links.self.getHref());
+    }
+
     public int getId() {
-        if (id <= 0) throw new NumberFormatException();
         return id;
     }
 
@@ -175,6 +170,11 @@ public class FDCompetition {
 
     public String getLastUpdated() {
         return lastUpdated;
+    }
+
+    @Override
+    public void postProcess() {
+        setId();
     }
 
 

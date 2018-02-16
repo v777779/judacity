@@ -3,6 +3,8 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import ru.vpcb.footballassistant.utils.FDUtils;
+
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_COMPETITIONS;
 
 /**
@@ -128,13 +130,11 @@ public class FDStanding implements PostProcessingEnabler.PostProcessable {
         return links.team.getHref();
     }
 
-
-    public void setId() throws NullPointerException, NumberFormatException {
-// id
-        String href = links.team.getHref();  // for standings only
-        if(group == null && href != null ) {
-            id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-            if (id == -1) throw new NumberFormatException();
+//TODO Check Id
+    public void setId() {
+        if (group != null && id > 0) return;
+        if (links != null && links.team != null) {
+            id = FDUtils.formatId(links.team.getHref());
         }
     }
 

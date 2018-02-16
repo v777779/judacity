@@ -3,11 +3,15 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
 
@@ -46,12 +50,9 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
     private int id;
     private List<FDPlayer> players;
 
-//TODO check if usef for Gson and set default object values Href, String
-
     public FDTeam() {
-        id = -1;
+        this.id = EMPTY_INT_VALUE;
     }
-
 
     public FDTeam(int id, String name, String code, String shortName,
                   String squadMarketValue, String crestURL) {
@@ -65,7 +66,9 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
 
 
      public void setId() throws NullPointerException, NumberFormatException {
-         id = FDUtils.formatId(links.self.getHref());                    // id
+        if(links.self != null) {
+            id = FDUtils.formatId(links.self.getHref());
+        }
      }
 
     public int getId() {
@@ -81,7 +84,6 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
     }
 
     public String getName() {
-        if(name == null || name.isEmpty())return EMPTY_TEAM_NAME;
         return name;
     }
 
@@ -120,7 +122,11 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
         @Expose
         private FDLink players;
 
-
+        public FDLinks() {
+            this.self = new FDLink();
+            this.fixtures = new FDLink();
+            this.players = new FDLink();
+        }
     }
 
 

@@ -321,26 +321,28 @@ public class FavoritesActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    // test!!!
-// TODO Check SQLite Date Format
-    private long getViewPagerDate(int index) {
-        try {
-            String s = mViewPagerData.mList.get(index).get(0).getDate();
-            Calendar c = FDUtils.getCalendarFromString(s);
-            if (c == null) return -1;
-            setZeroTime(c);
-            return c.getTimeInMillis();
-        } catch (NullPointerException | IndexOutOfBoundsException e) {
-            return -1;
-        }
-    }
+//    // test!!!
+//// TODO Check SQLite Date Format
+//    private long getViewPagerDate(int index) {
+//        try {
+//            String s = mViewPagerData.mList.get(index).get(0).getDate();
+//            Calendar c = FDUtils.getCalendarFromString(s);
+//            if (c == null) return -1;
+//            setZeroTime(c);
+//            return c.getTimeInMillis();
+//        } catch (NullPointerException | IndexOutOfBoundsException e) {
+//            return -1;
+//        }
+//    }
 
 
  // test!!!
 // TODO SQLIte Date Check
     private int getIndex(List<FDFixture> list, Calendar c) {
         String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
-        int index = Collections.binarySearch(list, new FDFixture(dateSQLite), cFx);  // for givent day
+        FDFixture fixture = new FDFixture();
+        fixture.setDate(dateSQLite);
+        int index = Collections.binarySearch(list, fixture, cFx);  // for givent day
         if (index < 0) index = -index - 1;
         if (index > list.size()) index = list.size() - 1;
         return index;

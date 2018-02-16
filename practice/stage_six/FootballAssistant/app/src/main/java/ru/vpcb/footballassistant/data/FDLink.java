@@ -3,6 +3,8 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -15,7 +17,7 @@ public class FDLink {
     private String href;
 
     public FDLink() {
-        href = "";
+        href = EMPTY_STRING;
     }
 
     public String getHref() {
