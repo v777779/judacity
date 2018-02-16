@@ -51,7 +51,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFxEntry.TABLE_NAME + " (" +
                 FDContract.CpFxEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " INTEGER NOT NULL, " + // int
-                FDContract.CpFxEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL;)";        // int
+                FDContract.CpFxEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL);";        // int
 
 
         final String CREATE_TABLE_TEAMS = "CREATE TABLE " + FDContract.TmEntry.TABLE_NAME + " (" +
