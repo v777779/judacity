@@ -93,7 +93,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_micro"
-        android:layout_marginBottom="@dimen/margin_bottom_navigation_height"
+        android:layout_marginBottom="@dimen/margin_micro"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

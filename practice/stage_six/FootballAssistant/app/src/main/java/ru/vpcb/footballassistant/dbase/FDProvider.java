@@ -83,6 +83,7 @@ public class FDProvider extends ContentProvider {
 
         final SQLiteDatabase db = mFDDbHelper.getReadableDatabase();
 
+
         Selection builder = getSelection(uri, selection, selectionArgs);
 
         Cursor cursor = db.query(builder.table,
@@ -128,7 +129,7 @@ public class FDProvider extends ContentProvider {
             int nUpdated = db.update(builder.table, contentValues, builder.selection, builder.selectionArgs);
             if (nUpdated != 0) {
                 getContext().getContentResolver().notifyChange(uri, null);
-            }else {
+            } else {
                 return null;  // throws UnsupportedOperationException
             }
             return uri;             // skip insertion
@@ -244,7 +245,7 @@ public class FDProvider extends ContentProvider {
     public static String buildLoaderIdSortOrder(Context context, int id) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             if (id == p.id) {
-                return p.columnId + " ASC";
+                return p.getSortOrder();
             }
         }
         throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));

@@ -150,7 +150,7 @@ public class FavoritesActivity extends AppCompatActivity
 
 
         if (savedInstanceState == null) {
-            refresh(getString(R.string.action_update));
+//            refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
         }

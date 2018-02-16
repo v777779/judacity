@@ -187,10 +187,18 @@ public class FDContract {
                     CpFxEntry.TABLE_ID_MATCHER2, CpFxEntry.COLUMN_FIXTURE_ID
             ),
             new FDParams(TmEntry.LOADER_ID, TmEntry.TABLE_NAME, TmEntry.TABLE_MATCHER, TmEntry.TABLE_ID_MATCHER, TmEntry.COLUMN_TEAM_ID),
-            new FDParams(FxEntry.LOADER_ID, FxEntry.TABLE_NAME, FxEntry.TABLE_MATCHER, FxEntry.TABLE_ID_MATCHER, FxEntry.COLUMN_FIXTURE_ID),
+            new FDParams(FxEntry.LOADER_ID, FxEntry.TABLE_NAME, FxEntry.TABLE_MATCHER, FxEntry.TABLE_ID_MATCHER, FxEntry.COLUMN_FIXTURE_DATE),
             new FDParams(TbEntry.LOADER_ID, TbEntry.TABLE_NAME, TbEntry.TABLE_MATCHER, TbEntry.TABLE_ID_MATCHER, TbEntry.COLUMN_COMPETITION_ID),
             new FDParams(PlEntry.LOADER_ID, PlEntry.TABLE_NAME, PlEntry.TABLE_MATCHER, PlEntry.TABLE_ID_MATCHER, PlEntry.COLUMN_TEAM_ID),
     };
+
+    public static final int  MATCH_PARAMETERS_COMPETITIONS = 0;
+    public static final int MATCH_PARAMETERS_CP_TEAMS = 1;
+    public static final int MATCH_PARAMETERS_CP_FIXTURES = 2;
+    public static final int MATCH_PARAMETERS_TEAMS = 3;
+    public static final int MATCH_PARAMETERS_FIXTURES = 4;
+    public static final int MATCH_PARAMETERS_TABLES = 5;
+    public static final int MATCH_PARAMETERS_PLAYERS = 6;
 
 
     public static final class FDParams {
@@ -225,7 +233,14 @@ public class FDContract {
 
         }
 
+        public String getSortOrder() {
+            if (columnId.equals(FxEntry.COLUMN_FIXTURE_DATE)) {
+                return "datetime(" + columnId + ") ASC";
+            } else {
+                return columnId + " ASC";
+            }
 
+        }
     }
 
 

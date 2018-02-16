@@ -166,7 +166,10 @@ public class DetailActivity extends AppCompatActivity
 
 
         if (savedInstanceState == null) {
-            refresh(getString(R.string.action_update));
+
+//            refresh(getString(R.string.action_update));
+
+
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
@@ -512,7 +515,7 @@ public class DetailActivity extends AppCompatActivity
         List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
         Map<Long, Integer> map = new HashMap<>();
 
-        Collections.sort(fixtures, cFx);
+//        Collections.sort(fixtures, cFx);
         List<List<FDFixture>> list = new ArrayList<>();
 
         Calendar c = Calendar.getInstance();

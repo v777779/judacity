@@ -69,12 +69,14 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.awayTeamId = EMPTY_INT_VALUE;          // id teamAway
     }
 
-
-    public FDFixture(int id, String date, String status, int matchDay,
-                     String homeTeamName, String awayTeamName,
-                     int goalsHomeTeam, int goalsAwayTeam,
+    public FDFixture(int id, int competitionId, int homeTeamId, int awayTeamId,
+                     String date, String status, int matchDay, String homeTeamName,
+                     String awayTeamName, int goalsHomeTeam, int goalsAwayTeam,
                      double homeWin, double draw, double awayWin) {
         this.id = id;
+        this.competitionId= competitionId;
+        this.homeTeamId = homeTeamId;
+        this.awayTeamId = awayTeamId;
         this.date = date;
         this.status = status;
         this.matchDay = matchDay;
@@ -82,9 +84,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.awayTeamName = awayTeamName;
         this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
         this.odds = new FDOdds(homeWin, draw, awayWin);
-
     }
-
 
     private class FDLinks {
         @SerializedName("self")

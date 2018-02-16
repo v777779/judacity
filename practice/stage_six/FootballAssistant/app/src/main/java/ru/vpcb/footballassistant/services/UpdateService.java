@@ -81,14 +81,21 @@ public class UpdateService extends IntentService {
             Map<Integer, FDTeam> mapTeams = new HashMap<>();
             Map<Integer, List<Integer>> mapFixtureKeys = new HashMap<>();
             Map<Integer, FDFixture> mapFixtures = new HashMap<>();
-            FDUtils.readDatabase(this, map, mapTeamKeys, mapTeams,
-                    mapFixtureKeys, mapFixtures);
+//            FDUtils.readDatabase(this, map, mapTeamKeys, mapTeams,
+//                    mapFixtureKeys, mapFixtures);
+//            if (checkEmpty(map, mapTeamKeys, mapTeams,
+//                    mapFixtureKeys, mapFixtures)) {
+//                sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+//                return;
+//            }
 
-            if (checkEmpty(map, mapTeamKeys, mapTeams,
-                    mapFixtureKeys, mapFixtures)) {
+            map = FDUtils.readCompetitions(this);  // competitions only
+            if (map != null  && !map.isEmpty()) {
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
                 return;
             }
+
+
             if (!isOnline(this)) {                                     // no network
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_no_network)));
                 return;
@@ -104,7 +111,7 @@ public class UpdateService extends IntentService {
             FDUtils.sendProgress(this, (int) (UPDATE_SERVICE_PROGRESS * 0.8));
 // save database
             if (isUpdated) {
-                FDUtils.writeDatabase(this, map, false);
+                FDUtils.writeDatabase(this, map, true);
             }
             FDUtils.setRefreshTime(this);
 

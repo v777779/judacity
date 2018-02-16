@@ -188,7 +188,7 @@ public class TeamActivity extends AppCompatActivity
                 mTeamId = intent.getIntExtra(BUNDLE_INTENT_TEAM_ID, EMPTY_TEAM_ID);
             }
 
-            refresh(getString(R.string.action_update));
+//            refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);

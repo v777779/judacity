@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,6 +56,12 @@ import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_COMPETITIONS;
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_FIXTURES;
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_TEAMS;
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_FIXTURES;
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TABLES;
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TEAMS;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
@@ -94,8 +101,8 @@ import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
  */
 
 public class FDUtils {
-    private static final SimpleDateFormat formatDate =
-            new SimpleDateFormat(DATE_FULL_PATTERN, Locale.ENGLISH);
+    //    private static final SimpleDateFormat formatDate =
+//            new SimpleDateFormat(DATE_FULL_PATTERN, Locale.ENGLISH);
     private static final SimpleDateFormat formatMatchDateWidget =
             new SimpleDateFormat(PATTERN_MATCH_DATE_WIDGET, Locale.ENGLISH);
     private static final SimpleDateFormat formatMatchDate =
@@ -111,7 +118,7 @@ public class FDUtils {
     public static int formatId(String href) throws NumberFormatException {
         try {
             return Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-        } catch (NullPointerException|IndexOutOfBoundsException| NumberFormatException e) {
+        } catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {
             return EMPTY_INT_VALUE;
         }
     }
@@ -125,22 +132,11 @@ public class FDUtils {
 
 
     public static Calendar getCalendarFromString(String s) {
-        try {
-            Date date = formatDate.parse(s);
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            return c;
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
-    public static Date getDateFromString(String s) {
-        try {
-            return formatDate.parse(s);
-        } catch (ParseException e) {
-            return null;
-        }
+        Date date = formatDateFromSQLite(s);
+        if (date == null) return null;
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c;
     }
 
 
@@ -156,21 +152,21 @@ public class FDUtils {
 
     public static String formatMatchDateWidget(String s) {
         if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
-        Date date = getDateFromString(s);
+        Date date = formatDateFromSQLite(s);
         if (date == null) return EMPTY_LONG_DASH;
         return formatMatchDateWidget.format(date);
     }
 
     public static String formatMatchDate(String s) {
         if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
-        Date date = getDateFromString(s);
+        Date date = formatDateFromSQLite(s);
         if (date == null) return EMPTY_LONG_DASH;
         return formatMatchDate.format(date);
     }
 
     public static String formatMatchTime(String s) {
         if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
-        Date date = getDateFromString(s);
+        Date date = formatDateFromSQLite(s);
         if (date == null) return EMPTY_LONG_DASH;
         return formatMatchTime.format(date);
     }
@@ -422,7 +418,8 @@ public class FDUtils {
     // competitions
     public static Map<Integer, FDCompetition> readCompetitions(Context context) {
         Uri uri = FDContract.CpEntry.CONTENT_URI;                               // вся таблица
-        String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
+//        String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_COMPETITIONS].getSortOrder();
 
         Cursor cursor = context.getContentResolver().query(
                 uri,
@@ -461,7 +458,8 @@ public class FDUtils {
     public static FDCompetition readCompetition(Context context, int id) {
         if (id <= 0) return null;
         Uri uri = FDContract.CpEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
-        String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
+//        String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_COMPETITIONS].getSortOrder();
 
         Cursor cursor = context.getContentResolver().query(
                 uri,
@@ -481,8 +479,10 @@ public class FDUtils {
     // competition_teams
     public static Map<Integer, List<Integer>> readCompetitionTeams(Context context) {
         Uri uri = FDContract.CpTmEntry.CONTENT_URI;                                     // all table
+//        String sortOrder = FDContract.CpTmEntry.COLUMN_COMPETITION_ID + " ASC";          // sort by id
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_CP_TEAMS].getSortOrder();
 
-        String sortOrder = FDContract.CpTmEntry.COLUMN_COMPETITION_ID + " ASC";          // sort by id
+
         Cursor cursor = context.getContentResolver().query(
                 uri,
                 null,
@@ -499,7 +499,9 @@ public class FDUtils {
     // teams
     public static Map<Integer, FDTeam> readTeams(Context context) {
         Uri uri = FDContract.TmEntry.CONTENT_URI;                               // вся таблица
-        String sortOrder = FDContract.TmEntry.COLUMN_TEAM_ID + " ASC";   // sort by id
+//        String sortOrder = FDContract.TmEntry.COLUMN_TEAM_ID + " ASC";   // sort by id
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_TEAMS].getSortOrder();
+
 
         Cursor cursor = context.getContentResolver().query(
                 uri,
@@ -519,8 +521,10 @@ public class FDUtils {
     // competition_fixture
     public static Map<Integer, List<Integer>> readCompetitionFixtures(Context context) {
         Uri uri = FDContract.CpFxEntry.CONTENT_URI;                                     // all table
+//        String sortOrder = FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " ASC";          // sort by id
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_CP_FIXTURES].getSortOrder();
 
-        String sortOrder = FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " ASC";          // sort by id
+
         Cursor cursor = context.getContentResolver().query(
                 uri,
                 null,
@@ -540,10 +544,10 @@ public class FDUtils {
 //        String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
 //        String sortOrder = FDContract.FxEntry.COLUMN_FIXTURE_ID + " ASC";   // sort by id
 //        String sortOrder = "date("+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC LIMIT 1";    // sort by date
-//        String sortOrder = "datetime("+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC LIMIT 1"; // sort by date and time
-//        String sortOrder = "strftime(%s,"+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC";      // sort by date and time
-
-        String sortOrder = "datetime(" + FDContract.FxEntry.COLUMN_FIXTURE_ID + ")" + " DESC LIMIT 1"; // sort by date and time
+//        String sortOrder = "datetime("+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC LIMIT 1"; // sort by date and time 1 record last
+//        String sortOrder = "strftime(%s,"+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC";      // sort by date and time all records backward
+//        String sortOrder = "datetime(" + FDContract.FxEntry.COLUMN_FIXTURE_DATE + ")" + " ASC"; // sort by date and time
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_FIXTURES].getSortOrder();
 
         Cursor cursor = context.getContentResolver().query(
                 uri,
@@ -562,24 +566,25 @@ public class FDUtils {
     private static FDFixture readFixture(Cursor cursor) {
         int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
         if (id <= 0) return null;
-// TODO Check SQLite Date Format
+
+        int competitionId = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_COMPETITION_ID);
+        int homeTeamId = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_TEAM_HOME_ID);
+        int awayTeamId = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_TEAM_AWAY_ID);
         String date = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE);
         String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
-        int matchDay = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
+        int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
         String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
         String awayTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_AWAY);
 
         int goalsHomeTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_HOME);
         int goalsAwayTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_AWAY);
-
         double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
         double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
         double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
 
-
-        FDFixture fixture = new FDFixture(id, date, status, matchDay,
-                homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
-                homeWin, draw, awayWin);
+        FDFixture fixture = new FDFixture(id, competitionId, homeTeamId, awayTeamId,
+                date, status, matchday, homeTeamName, awayTeamName,
+                goalsHomeTeam, goalsAwayTeam, homeWin, draw, awayWin);
 
         return fixture;
     }
@@ -588,7 +593,9 @@ public class FDUtils {
     public static FDFixture readFixture(Context context, int id) {
         if (id <= 0) return null;
         Uri uri = FDContract.FxEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
-        String sortOrder = FDContract.FxEntry.COLUMN_FIXTURE_ID + " ASC";   // sort by id
+
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_FIXTURES].getSortOrder();
+
         Cursor cursor = context.getContentResolver().query(
                 uri,
                 null,
@@ -739,34 +746,13 @@ public class FDUtils {
     // fixture
     public static Map<Integer, FDFixture> readFixtures(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return null;
-        Map<Integer, FDFixture> map = new HashMap<>();
+        Map<Integer, FDFixture> map = new LinkedHashMap<>();
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
-            if (id <= 0) continue;
-
-// TODO Check SQLite Date Format
-            String date = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE);
-            String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
-            int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
-            String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
-            String awayTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_AWAY);
-
-            int goalsHomeTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_HOME);
-            int goalsAwayTeam = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_GOALS_AWAY);
-
-            double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
-            double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
-            double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
-
-
-            FDFixture fixture = new FDFixture(id, date, status, matchday,
-                    homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
-                    homeWin, draw, awayWin);
-
+            FDFixture fixture = readFixture(cursor);
+            if (fixture == null) continue;
             map.put(fixture.getId(), fixture);
         }
-//        cursor.close(); // notification support
         return map;
     }
 
@@ -1454,20 +1440,16 @@ public class FDUtils {
         if (competition == null || competition.getId() <= 0) return null;
 
         String id = formatString(competition.getId());
-        long lastRefresh = Calendar.getInstance().getTimeInMillis();
+
         FDTeams teams = loadListTeams(id);                   // NullPointerException
-        if (teams == null) {
+//        if (teams == null) {
 // test!!!
 //            Thread.sleep(100);
 //            teams = loadListTeams(id); // second trial
-        }
+//        }
         List<FDTeam> list = new ArrayList<>();
         for (FDTeam team : teams.getTeams()) {
-            try {
-                team.setId();
-            } catch (NullPointerException | NumberFormatException e) {
-                continue;
-            }
+            if (team == null) continue;
             list.add(team);
         }
         return list;
