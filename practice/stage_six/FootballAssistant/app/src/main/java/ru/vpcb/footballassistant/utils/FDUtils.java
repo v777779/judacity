@@ -101,44 +101,20 @@ public class FDUtils {
     private static final SimpleDateFormat formatSQLiteDate =
             new SimpleDateFormat(PATTERN_DATE_SQLITE, Locale.ENGLISH);
 
-// test!!!
-// test!!!
-// TODO Check SQLite Date Format
-public  long getViewPagerDate(ViewPagerDataint index) {
-    try {
-        String s = mViewPagerData.mList.get(index).get(0).getDate();
-        Calendar c = FDUtils.getCalendarFromString(s);
-        if (c == null) return -1;
-        setZeroTime(c);
-        return c.getTimeInMillis();
-    } catch (NullPointerException | IndexOutOfBoundsException e) {
-        return -1;
-    }
-}
 
-    // test!!!
-// TODO Check SQLite Date Format
-    private Calendar getViewPagerDate() {
-        try {
-            String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
-            Calendar c = FDUtils.getCalendarFromString(s);
-            if (c == null) return null;
-            setZeroTime(c);
-            return c;
-        } catch (NullPointerException e) {
-            return null;
-        }
-
-
-
-
-
-        // stings
+// stings
     public static int formatId(String href) throws NumberFormatException {
         int id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
         if (id == EMPTY_INT_VALUE) throw new NumberFormatException();
         return id;
     }
+
+    public static String formatIntToString(int value){
+        if(value < 0) return EMPTY_LONG_DASH;
+
+        return String.valueOf(value);
+    }
+
 
     public static Calendar getCalendarFromString(String s) {
         try {

@@ -27,6 +27,7 @@ import static ru.vpcb.footballassistant.utils.Config.WIDGET_PID_OFFSET1;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_PID_SCALE;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_PREFERENCES;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_SERVICE_REFRESH_ACTION;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatIntToString;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDateWidget;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchTimeWidget;
 
@@ -90,14 +91,15 @@ public class MatchWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, widgetPID, intent, FLAG_UPDATE_CURRENT);
 
 // test!!!
+// TODO Check Score formatter
         views.setTextViewText(R.id.text_sm_item_league, fixture.getCompetitionName());
         views.setTextViewText(R.id.text_sm_team_home, fixture.getHomeTeamName());
         views.setTextViewText(R.id.text_sm_team_away, fixture.getAwayTeamName());
         views.setTextViewText(R.id.text_sm_item_time, formatMatchTimeWidget(fixture.getDate()));
         views.setTextViewText(R.id.text_sm_item_date, formatMatchDateWidget(fixture.getDate()));
-        views.setTextViewText(R.id.text_sm_item_score_home, "" + fixture.getMatchScoreHome());
-        views.setTextViewText(R.id.text_sm_item_score_away, "" + fixture.getMatchScoreAway());
-        views.setTextViewText(R.id.text_sm_item_status, "" + fixture.getStatus());
+        views.setTextViewText(R.id.text_sm_item_score_home, formatIntToString(fixture.getGoalsHomeTeam()));
+        views.setTextViewText(R.id.text_sm_item_score_away, formatIntToString(fixture.getGoalsAwayTeam()));
+        views.setTextViewText(R.id.text_sm_item_status, fixture.getStatus());
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
         views.setOnClickPendingIntent(R.id.match_refresh, getPendingIntent(context, widgetId, fixtureId));
 

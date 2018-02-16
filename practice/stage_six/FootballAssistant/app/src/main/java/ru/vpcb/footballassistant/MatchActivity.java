@@ -19,6 +19,7 @@ import java.util.Calendar;
 
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.notifications.NotificationUtils;
+import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
@@ -157,7 +158,8 @@ public class MatchActivity extends AppCompatActivity {
 // test!!!
                 Calendar c= Calendar.getInstance();
                 c.add(Calendar.SECOND,60);
-                FDFixture fixture = new FDFixture(c.getTime());
+                String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
+                FDFixture fixture = new FDFixture(dateSQLite);
                 NotificationUtils.scheduleReminder(MatchActivity.this,fixture);
 // test!!!
 // TODO add flag for notification, database field for notification status, set and clear procedure

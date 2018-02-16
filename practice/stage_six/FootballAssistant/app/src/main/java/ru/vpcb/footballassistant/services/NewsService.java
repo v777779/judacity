@@ -70,7 +70,7 @@ public class NewsService extends IntentService {
     }
 
     private void onActionUpdate() {
-        if (FootballUtils.isNewsDataRefreshed(this)) {
+        if (FDUtils.isNewsDataRefreshed(this)) {
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
             return;  // data updated
         }

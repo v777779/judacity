@@ -253,7 +253,7 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
                 if (competition != null) league = competition.getCaption();
             }
 
-            String score = formatMatchScore(fixture.getDate());
+            String score = formatMatchScore(fixture.getGoalsHome(),fixture.getGoalsAwayTeam());
             String dateTime = formatMatchDate(fixture.getDate());
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {

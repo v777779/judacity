@@ -276,14 +276,14 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
 
 
 
-    public String getMatchScoreHome() {
-        if (result == null || result.goalsHomeTeam < 0) return EMPTY_DASH;
-        return String.valueOf(result.goalsHomeTeam);
+    public int getGoalsHomeTeam() {
+        if (result == null || result.goalsHomeTeam < 0) return EMPTY_INT_VALUE;
+        return result.goalsHomeTeam;
     }
 
-    public String getMatchScoreAway() {
-        if (result == null || result.goalsAwayTeam < 0) return EMPTY_DASH;
-        return String.valueOf(result.goalsAwayTeam);
+    public int getGoalsAwayTeam() {
+        if (result == null || result.goalsAwayTeam < 0) return EMPTY_INT_VALUE;
+        return result.goalsAwayTeam;
     }
 
 
