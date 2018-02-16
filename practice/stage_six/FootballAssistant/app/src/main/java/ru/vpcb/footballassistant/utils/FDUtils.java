@@ -6,9 +6,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.RemoteException;
+import android.support.v7.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,10 +45,15 @@ import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.FD_BASE_URI;
 import static ru.vpcb.footballassistant.utils.Config.FD_API_KEY;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_DELAY;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_1;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_2;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_3;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_4;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_5;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_6;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
-import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefBool;
-import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefInt;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -54,7 +64,66 @@ import static ru.vpcb.footballassistant.utils.FootballUtils.getPrefInt;
 
 public class FDUtils {
 
+    // shared preferences
+    public static boolean getPrefBool(Context context, int keyId, int valueId) {
+        Resources res = context.getResources();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean value = sp.getBoolean(res.getString(keyId), res.getBoolean(valueId));
+        return value;
+    }
 
+    public static int getPrefInt(Context context, int keyId, int defaultId) {
+        Resources res = context.getResources();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        int value = sp.getInt(res.getString(keyId), res.getInteger(defaultId));
+        return value;
+    }
+
+    public static void setRefreshTime(Context context) {
+        Resources res = context.getResources();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(res.getString(R.string.pref_data_update_time_key), FDUtils.currentTimeMinutes());
+        editor.apply();
+    }
+
+    public static boolean isFootballDataRefreshed(Context context) {
+        int time = getPrefInt(context,
+                R.string.pref_data_update_time_key,
+                R.integer.pref_data_update_time_default);
+        int delay = getPrefInt(context,
+                R.string.pref_data_delay_time_key,
+                R.integer.pref_data_delay_time_default);
+
+        return FDUtils.currentTimeMinutes() - time < delay;
+    }
+
+    public static boolean isNewsDataRefreshed(Context context) {
+        int time = getPrefInt(context,
+                R.string.pref_news_update_time_key,
+                R.integer.pref_news_update_time_default);
+        int delay = getPrefInt(context,
+                R.string.pref_news_delay_time_key,
+                R.integer.pref_news_delay_time_default);
+
+        return FDUtils.currentTimeMinutes() - time < delay;
+    }
+
+    // data
+    private static boolean isRefreshed(Context context, Date lastRefresh) {
+        if (lastRefresh == null) return false;
+
+        long delay = TimeUnit.MINUTES.toMillis(
+                getPrefInt(context, R.string.pref_data_delay_time_key, R.integer.pref_data_delay_time_default));
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        long refreshTime = lastRefresh.getTime();
+
+        return currentTime - refreshTime < delay;
+    }
+
+
+    // database
     public static Uri buildTableNameUri(String tableName) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).build();
     }
@@ -88,8 +157,16 @@ public class FDUtils {
         return new Date(TimeUnit.MINUTES.toMillis(time));
     }
 
-    private static String format(Context context, int id, FDCompetition competition, String message) {
-        return context.getString(R.string.load_database, id, competition.getId(), message);
+    private static String format(Context context, int code, FDCompetition competition, String message) {
+        int id = -1;
+        if (competition != null) id = competition.getId();
+        return context.getString(R.string.load_database, code, id, message);
+    }
+
+    private static String format(Context context, int code, FDTeam team, String message) {
+        int id = -1;
+        if (team == null) id = team.getId();
+        return context.getString(R.string.load_database, id, team.getId(), message);
     }
 
     // data
@@ -180,48 +257,46 @@ public class FDUtils {
         return map;
     }
 
-   // competition
-   private static FDCompetition readCompetition(Cursor cursor) {
-           int id = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_COMPETITION_ID);
-           if (id <= 0) return null;
+    // competition
+    private static FDCompetition readCompetition(Cursor cursor) {
+        int id = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_COMPETITION_ID);
+        if (id <= 0) return null;
 
-           String caption = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_CAPTION);
-           String league = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_LEAGUE);
-           String year = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_YEAR);
-           int currentMatchDay = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_CURRENT_MATCHDAY);
-           int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
-           int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
-           int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
-           Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
-           Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
+        String caption = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_CAPTION);
+        String league = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_LEAGUE);
+        String year = cursor.getString(FDDbHelper.ICpEntry.COLUMN_COMPETITION_YEAR);
+        int currentMatchDay = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_CURRENT_MATCHDAY);
+        int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
+        int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
+        int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
+        Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
+        Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
 
-           FDCompetition competition = new FDCompetition(id, caption, league,
-                   year, currentMatchDay, numberOfMatchDays, numberOfTeams,
-                   numberOfGames, lastUpdated, lastRefresh);
+        FDCompetition competition = new FDCompetition(id, caption, league,
+                year, currentMatchDay, numberOfMatchDays, numberOfTeams,
+                numberOfGames, lastUpdated, lastRefresh);
 
-       return competition;
-   }
+        return competition;
+    }
 
     public static FDCompetition readCompetition(Context context, int id) {
-        if(id <= 0) return null;
-       Uri uri = FDContract.CpEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
-       String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
+        if (id <= 0) return null;
+        Uri uri = FDContract.CpEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
+        String sortOrder = FDContract.CpEntry.COLUMN_COMPETITION_ID + " ASC";   // sort by id
 
-       Cursor cursor = context.getContentResolver().query(
-               uri,
-               null,
-               null,
-               null,
-               sortOrder
-       );
-       if (cursor == null || cursor.getCount() == 0) return null;
-       cursor.moveToFirst();
-       FDCompetition competition = readCompetition(cursor);
-       cursor.close();
-       return competition;
-   }
-
-
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+        if (cursor == null || cursor.getCount() == 0) return null;
+        cursor.moveToFirst();
+        FDCompetition competition = readCompetition(cursor);
+        cursor.close();
+        return competition;
+    }
 
 
     // competition_teams
@@ -781,7 +856,7 @@ public class FDUtils {
         return operations;
     }
 
-    // team
+    // fixture
     public static ContentProviderResult[] writeFixture(Context context, FDFixture fixture,
                                                        boolean forceDelete)
             throws OperationApplicationException, RemoteException {
@@ -826,6 +901,81 @@ public class FDUtils {
         writeFixtures(context, map, forceDelete);
     }
 
+    // write long term data
+    // table
+    public static ArrayList<ContentProviderOperation> writeTable(FDTable table, boolean forceDelete) {
+
+        if (table == null || table.getId() <= 0) return null;
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+
+        Uri uri = buildItemIdUri(FDContract.TbEntry.TABLE_NAME, table.getId());
+        int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
+
+        if (forceDelete) { // force clear Teams table
+            operations.add(ContentProviderOperation.newDelete(uri).build());
+        }
+
+        ContentValues values = new ContentValues();
+
+
+        values.put(FDContract.TmEntry.COLUMN_TEAM_ID, team.getId());                                // int
+        values.put(FDContract.TmEntry.COLUMN_TEAM_NAME, team.getName());                            // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_CODE, team.getCode());                            // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME, team.getShortName());                 // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE, team.getSquadMarketValue());        // string
+        values.put(FDContract.TmEntry.COLUMN_TEAM_CREST_URI, team.getCrestURL());                   // string
+        values.put(FDContract.TmEntry.COLUMN_LAST_REFRESH, refreshTime);                            // int from date
+
+        operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+        return operations;
+    }
+
+    // table
+    public static ContentProviderResult[] writeTable(Context context, FDTeam team,
+                                                     boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeTeam(team, forceDelete));
+    }
+
+    // tables
+    public static ContentProviderResult[] writeTables(Context context,
+                                                      Map<Integer, FDCompetition> map,
+                                                      boolean forceDelete, int timeout)
+            throws OperationApplicationException, RemoteException {
+
+        if (map == null || map.size() == 0) return null;
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<>();
+        if (forceDelete) {                                          // force clear table
+            Uri uri = FDContract.TbEntry.CONTENT_URI;
+            listOperations.add(ContentProviderOperation.newDelete(uri).build());
+        }
+
+        for (FDCompetition competition : map.values()) {
+            if (competition == null || competition.getId() <= 0) continue;
+            FDTable table = competition.getTable();
+            List<ContentProviderOperation> operations = writeTable(table, false);
+            if (operations == null) continue;
+            listOperations.addAll(operations);
+
+        }
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
+    }
+
+
+// connection
+
+    /**
+     * Returns status of connection to network
+     *
+     * @param context Context of calling activity
+     * @return boolean status of connection, true if connected, false if not
+     */
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
     // network
     private static IFDRetrofitAPI setupRetrofit() {
@@ -880,7 +1030,7 @@ public class FDUtils {
     }
 
     // table
-    private FDTable loadTable(String competition)
+    private static FDTable loadTable(String competition)
             throws NullPointerException, IOException {
 
         IFDRetrofitAPI retrofitAPI = setupRetrofit();
@@ -888,7 +1038,7 @@ public class FDUtils {
     }
 
     // players
-    private FDPlayers loadListPlayers(String team)
+    private static FDPlayers loadListPlayers(String team)
             throws NullPointerException, IOException {
 
         IFDRetrofitAPI retrofitAPI = setupRetrofit();
@@ -910,18 +1060,6 @@ public class FDUtils {
     }
 
 
-    // data
-    private static boolean isRefreshed(Context context, Date lastRefresh) {
-        if (lastRefresh == null) return false;
-
-        long delay = TimeUnit.MINUTES.toMillis(
-                getPrefInt(context, R.string.pref_data_delay_time_key, R.integer.pref_data_delay_time_default));
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-        long refreshTime = lastRefresh.getTime();
-
-        return currentTime - refreshTime < delay;
-    }
-
     // load
     // competitions
     public static Map<Integer, FDCompetition> loadCompetitions(Context context, Map<Integer, FDCompetition> map)
@@ -939,7 +1077,7 @@ public class FDUtils {
                 competition.setFixtures(fixtures);
 
             } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
-                Timber.d(format(context, 1, competition, e.getMessage()));
+                Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_1, competition, e.getMessage()));
             }
         }
         return map;
@@ -1005,7 +1143,7 @@ public class FDUtils {
                     List<FDTeam> teams = loadListTeams(competition);                    // load
                     competition.setTeams(teams);
                 } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
-                    Timber.d(format(context, 2, competition, e.getMessage()));
+                    Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_2, competition, e.getMessage()));
                 }
             }
 // fixtures
@@ -1024,7 +1162,7 @@ public class FDUtils {
                     List<FDFixture> fixtures = loadListFixtures(competition);           // load
                     competition.setFixtures(fixtures);
                 } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
-                    Timber.d(format(context, 3, competition, e.getMessage()));
+                    Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_3, competition, e.getMessage()));
                 }
 
             }
@@ -1069,7 +1207,7 @@ public class FDUtils {
                 List<FDTeam> teams = loadListTeams(competition);                    // load
                 competition.setTeams(teams);
             } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
-                Timber.d(format(context, 4, competition, e.getMessage()));
+                Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_4, competition, e.getMessage()));
             }
 // fixtures
             try {
@@ -1077,7 +1215,7 @@ public class FDUtils {
                 competition.setFixtures(fixtures);
 
             } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
-                Timber.d(format(context, 5, competition, e.getMessage()));
+                Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_5, competition, e.getMessage()));
             }
 // progress
             progress += step;
@@ -1288,5 +1426,64 @@ public class FDUtils {
                 .putExtra(context.getString(R.string.extra_progress_counter), value));
 
     }
+
+    // load long term
+// load tables
+    public static boolean loadTablesLongTerm(Context context, Map<Integer, FDCompetition> map,
+                                             double progress, double step)
+            throws NullPointerException, IOException {
+        if (map == null || map.isEmpty()) return false;
+
+
+        for (FDCompetition competition : map.values()) {
+
+            if (competition == null || competition.getId() <= 0) continue;
+            int competitionId = competition.getId();
+            String id = formatString(competitionId);
+
+// tables
+            try {
+                FDTable table = loadTable(id);
+                competition.setTable(table);
+                Thread.sleep(LOAD_DB_DELAY);
+
+            } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+                Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_6, competition, e.getMessage()));
+            }
+
+// progress
+            progress += step;
+            sendProgress(context, (int) progress);// t,f
+        }
+        return true;
+    }
+
+    // load players
+    public static boolean loadPlayersLongTerm(Context context, Map<Integer, FDTeam> map,
+                                              double progress, double step)
+            throws NullPointerException, IOException {
+        if (map == null || map.isEmpty()) return false;
+
+
+        for (FDTeam team : map.values()) {
+            if (team == null || team.getId() <= 0) continue;
+            int teamId = team.getId();
+            String id = formatString(teamId);
+// tables
+            try {
+                FDPlayers players = loadListPlayers(id);
+                team.setPlayers(players.getPlayers());
+                Thread.sleep(LOAD_DB_DELAY);
+
+            } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+                Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_6, team, e.getMessage()));
+            }
+// progress
+            progress += step;
+            sendProgress(context, (int) progress);// t,f
+        }
+        return true;
+    }
+
 
 }

@@ -24,6 +24,8 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_DELAY;
+import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_TIMEOUT;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_TAG;
@@ -70,7 +72,6 @@ public class UpdateService extends IntentService {
         }
     }
 
-
     private void onActionUpdate() {
         try {
 
@@ -105,7 +106,7 @@ public class UpdateService extends IntentService {
             if (isUpdated) {
                 FDUtils.writeDatabase(this, map, false);
             }
-            FootballUtils.setRefreshTime(this);
+            FDUtils.setRefreshTime(this);
 
         } catch (IOException e) {
 // test !!!  catch errors
@@ -123,6 +124,34 @@ public class UpdateService extends IntentService {
         }
 //60%
         sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+
+// long term
+        try {
+
+            double progress = 0;
+            double step = 100 / (mMapCompetitions.size() + mMapTeams.size());
+
+            Thread.sleep(LOAD_DB_TIMEOUT);
+            FDUtils.loadTablesLongTerm(this, mMapCompetitions, progress, step, LOAD_DB_DELAY);
+            progress += step * mMapCompetitions.size();
+            FDUtils.loadPlayersLongTerm(this, mMapTeams, progress, step, LOAD_DB_DELAY);
+
+        } catch (IOException | InterruptedException e) {
+// test !!!  catch errors
+            Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+            return;
+        } catch (NullPointerException | NumberFormatException e) {
+            Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+            return;
+        }
+//        catch (OperationApplicationException | RemoteException e) {
+//            Timber.d(getString(R.string.update_content_error) + e.getMessage());
+//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+//            return;
+//        }
+
     }
 
     private boolean checkEmpty(Map<Integer, FDCompetition> map,

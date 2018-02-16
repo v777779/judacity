@@ -60,6 +60,7 @@ public class FDCompetition {
 
     private List<FDTeam> teams;
     private List<FDFixture> fixtures;
+    private FDTable table;
 
 
     public FDCompetition() {
@@ -134,6 +135,13 @@ public class FDCompetition {
         this.fixtures = fixtures;
     }
 
+    public FDTable getTable() {
+        return table;
+    }
+
+    public void setTable(FDTable table) {
+        this.table = table;
+    }
 
     public String getLeague() {
         if (league == null || league.isEmpty()) return EMPTY_LONG_DASH;

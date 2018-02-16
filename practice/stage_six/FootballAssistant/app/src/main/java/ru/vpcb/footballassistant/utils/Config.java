@@ -4,6 +4,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
+import java.util.concurrent.TimeUnit;
+
 import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.widgets.MatchWidgetProvider;
 
@@ -84,6 +86,16 @@ public class Config {
     public static final String UPDATE_SERVICE_TAG = "UpdaterService";
     public static final int UPDATE_SERVICE_PROGRESS = 100;
     public static final int MAIN_ACTIVITY_PROGRESS = 100;
+    public static final int LOAD_DB_EXCEPTION_CODE_1 =  1;
+    public static final int LOAD_DB_EXCEPTION_CODE_2 =  2;
+    public static final int LOAD_DB_EXCEPTION_CODE_3 =  3;
+    public static final int LOAD_DB_EXCEPTION_CODE_4 =  4;
+    public static final int LOAD_DB_EXCEPTION_CODE_5 =  5;
+    public static final int LOAD_DB_EXCEPTION_CODE_6 =  6;
+    public static final int LOAD_DB_EXCEPTION_CODE_7 =  7;
+
+    public static final long LOAD_DB_TIMEOUT  = TimeUnit.SECONDS.toMillis(90);
+    public static final long LOAD_DB_DELAY  = TimeUnit.SECONDS.toMillis(2);
 
 
     // loaders
