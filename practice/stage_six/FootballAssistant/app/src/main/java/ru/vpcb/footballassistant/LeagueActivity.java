@@ -72,6 +72,8 @@ import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
+import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
+import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class LeagueActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -452,27 +454,41 @@ public class LeagueActivity extends AppCompatActivity
     }
 
     // test!!!
+// TODO Check SQLite Date Format
     private long getViewPagerDate(int index) {
-        Calendar calendar = Calendar.getInstance();
         try {
-            calendar.setTime(mViewPagerData.mList.get(index).get(0).getDate());
-            setZeroTime(calendar);
-            return calendar.getTimeInMillis();
+            String s = mViewPagerData.mList.get(index).get(0).getDate();
+            Calendar c = FDUtils.getCalendarFromString(s);
+            if (c == null) return -1;
+            setZeroTime(c);
+            return c.getTimeInMillis();
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             return -1;
         }
     }
 
     // test!!!
+// TODO Check SQLite Date Format
     private Calendar getViewPagerDate() {
-        Calendar calendar = Calendar.getInstance();
         try {
-            calendar.setTime(mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate());
-            setZeroTime(calendar);
-            return calendar;
+            String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
+            Calendar c = FDUtils.getCalendarFromString(s);
+            if (c == null) return null;
+            setZeroTime(c);
+            return c;
         } catch (NullPointerException e) {
             return null;
         }
+    }
+    // test!!!
+// TODO SQLIte Date Check
+    private int getIndex(List<FDFixture> list, Calendar c) {
+        String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
+        int index = Collections.binarySearch(list, new FDFixture(dateSQLite), cFx);  // for givent day
+        if (index < 0) index = -index - 1;
+        if (index > list.size()) index = list.size() - 1;
+        return index;
+
     }
 
     private void startCalendar() {

@@ -9,7 +9,9 @@ import java.text.SimpleDateFormat;
 import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 
 
@@ -63,10 +65,21 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
 
     //TODO check if usef for Gson and set default object values Href, String
     public FDFixture() {
-        this.id = -1;
+        this.id = EMPTY_INT_VALUE;
+        this.date = EMPTY_STRING;
+        this.status=EMPTY_STRING;
+        this.homeTeamName=EMPTY_STRING;
+        this.awayTeamName=EMPTY_STRING;
+        this.matchDay=EMPTY_INT_VALUE;
+        this.result = new FDResult(EMPTY_INT_VALUE,EMPTY_INT_VALUE);
+        this.odds = new FDOdds(EMPTY_INT_VALUE,EMPTY_INT_VALUE,EMPTY_INT_VALUE);
+
     }
 
-
+    public FDFixture(String date) {
+        this();
+        this.date = date;
+    }
 
     public FDFixture(int id, String date, String status, int matchDay,
                      String homeTeamName, String awayTeamName,
@@ -75,7 +88,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.id = id;
         this.date = date;
         this.status = status;
-        this.matchDay = this.matchDay;
+        this.matchDay = matchDay;
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
         this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
@@ -224,27 +237,27 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
     public int getGoalsHome() {
-        if (result == null) return -1;
+        if (result == null) return EMPTY_INT_VALUE;
         return result.goalsHomeTeam;
     }
 
     public int getGoalsAway() {
-        if (result == null) return -1;
+        if (result == null) return EMPTY_INT_VALUE;
         return result.goalsAwayTeam;
     }
 
     public double getHomeWin() {
-        if (odds == null) return -1;
+        if (odds == null) return EMPTY_INT_VALUE;
         return odds.homeWin;
     }
 
     public double getDraw() {
-        if (odds == null) return -1;
+        if (odds == null) return EMPTY_INT_VALUE;
         return odds.draw;
     }
 
     public double getAwayWin() {
-        if (odds == null) return -1;
+        if (odds == null) return EMPTY_INT_VALUE;
         return odds.awayWin;
     }
 

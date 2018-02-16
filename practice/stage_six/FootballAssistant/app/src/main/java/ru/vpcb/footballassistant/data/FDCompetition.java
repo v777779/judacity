@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -60,8 +62,18 @@ public class FDCompetition {
     private List<FDFixture> fixtures;
     private FDTable table;
 
-
+// TODO Check for Retrofit
     public FDCompetition() {
+        this.id = EMPTY_INT_VALUE;
+        this.caption = EMPTY_STRING;
+        this.league = EMPTY_STRING;
+        this.year = EMPTY_STRING;
+        this.currentMatchDay= EMPTY_INT_VALUE;
+        this.numberOfMatchDays= EMPTY_INT_VALUE;
+        this.numberOfTeams = EMPTY_INT_VALUE;
+        this.numberOfGames= EMPTY_INT_VALUE;
+        this.lastUpdated = EMPTY_STRING;
+
     }
 
     public FDCompetition(int id, String caption, String league, String year,

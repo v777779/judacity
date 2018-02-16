@@ -105,19 +105,8 @@ public class MatchWidgetService extends IntentService {
 
 
     // test!!!
-    private static Comparator<FDFixture> cFx = new Comparator<FDFixture>() {
-        @Override
-        public int compare(FDFixture o1, FDFixture o2) {
-            int cmp;
-            if (o1 != null && o2 != null)
-                return Integer.compare(o1.getId(), o2.getId());
 
-            if (o1 == null && o2 != null) return -1;
-            if (o1 != null && o2 == null) return 1;
 
-            return 0;
-        }
-    };
 
 
 

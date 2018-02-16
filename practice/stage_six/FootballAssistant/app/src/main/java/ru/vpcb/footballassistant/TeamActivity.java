@@ -454,28 +454,10 @@ public class TeamActivity extends AppCompatActivity
     }
 
 
-    private static Comparator<FDFixture> cFx = new Comparator<FDFixture>() {
-        @Override
-        public int compare(FDFixture o1, FDFixture o2) {
-            if (o1 == null || o2 == null ||
-                    o1.getDate() == null || o2.getDate() == null)
-                throw new IllegalArgumentException();
 
 
-            return o1.getDate().compareTo(o2.getDate());
-
-        }
-    };
-
-    private void setZeroTime(Calendar c) {
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
 
 
-    private void setDay(Calendar c, Date date) {
-        c.setTime(date);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
 
     private int getIndex(List<FDFixture> list, Calendar c) {
         int index = Collections.binarySearch(list, new FDFixture(c.getTime()), cFx);  // for givent day

@@ -14,6 +14,7 @@ import ru.vpcb.footballassistant.utils.Config;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 
+
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov

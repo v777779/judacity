@@ -39,7 +39,7 @@ public class FDTable implements PostProcessingEnabler.PostProcessable {
         this.id = -1;
     }
 
-    private void setId() {
+    public void setId() {
         // id
         String href = links.competition.getHref();
         id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
@@ -61,12 +61,6 @@ public class FDTable implements PostProcessingEnabler.PostProcessable {
         private FDLink competition;
 
     }
-
-    public void setId(int id) throws NumberFormatException {
-        this.id = id;
-        if (id == -1) throw new NumberFormatException();
-    }
-
 
     public int getId() {
         return id;
@@ -94,5 +88,13 @@ public class FDTable implements PostProcessingEnabler.PostProcessable {
 
     public void setChampionship(boolean championship) {
         isChampionship = championship;
+    }
+
+    public int getMatchDay() {
+        return matchDay;
+    }
+
+    public String getLeagueCaption() {
+        return leagueCaption;
     }
 }

@@ -108,7 +108,27 @@ public class UpdateService extends IntentService {
             }
             FDUtils.setRefreshTime(this);
 
-        } catch (IOException e) {
+
+            //60%
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+
+
+            double progress = 0;
+            double step = 100 / (mMapCompetitions.size() + mMapTeams.size());
+            Thread.sleep(LOAD_DB_TIMEOUT);
+
+            if(progress + 1 >  100) {
+                FDUtils.loadTablesLongTerm(this, mMapCompetitions, progress, step);
+                progress += step * mMapCompetitions.size();
+                FDUtils.loadPlayersLongTerm(this, mMapTeams, progress, step);
+            }
+
+
+
+
+
+
+        } catch (IOException | InterruptedException e) {
 // test !!!  catch errors
             Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
@@ -122,35 +142,15 @@ public class UpdateService extends IntentService {
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
             return;
         }
-//60%
+
+// test!!!
         sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
 
 // long term
-        try {
 
-            double progress = 0;
-            double step = 100 / (mMapCompetitions.size() + mMapTeams.size());
 
-            Thread.sleep(LOAD_DB_TIMEOUT);
-            FDUtils.loadTablesLongTerm(this, mMapCompetitions, progress, step, LOAD_DB_DELAY);
-            progress += step * mMapCompetitions.size();
-            FDUtils.loadPlayersLongTerm(this, mMapTeams, progress, step, LOAD_DB_DELAY);
 
-        } catch (IOException | InterruptedException e) {
-// test !!!  catch errors
-            Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-            return;
-        } catch (NullPointerException | NumberFormatException e) {
-            Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-            return;
-        }
-//        catch (OperationApplicationException | RemoteException e) {
-//            Timber.d(getString(R.string.update_content_error) + e.getMessage());
-//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-//            return;
-//        }
+
 
     }
 

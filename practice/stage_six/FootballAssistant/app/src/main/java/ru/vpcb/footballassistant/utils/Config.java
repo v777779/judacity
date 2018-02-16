@@ -46,6 +46,19 @@ public class Config {
     public static final String FD_REGEX_FIXTURES = ".*fixtures/";
     public static final String FD_REGEX_COMPETITIONS = ".*competitions/";
 
+    // tables
+    public static final  int TABLE_SCALE_ID = 10000;
+    public static final String EMPTY_GROUP= "";
+    public static final String TABLE_GROUP_A= "A";
+    public static final String TABLE_GROUP_B= "B";
+    public static final String TABLE_GROUP_C= "C";
+    public static final String TABLE_GROUP_D= "D";
+    public static final String TABLE_GROUP_E= "E";
+    public static final String TABLE_GROUP_F= "F";
+    public static final String TABLE_GROUP_G= "G";
+    public static final String TABLE_GROUP_H= "H";
+
+
     // news
     public static final String ND_BASE_URI = "https://newsapi.org/v2/";
     public static final String ND_HEADLINES_GET = "top-headlines";
@@ -66,6 +79,10 @@ public class Config {
     public static final String EMPTY_TWO_DASH = "--";
     public static final String EMPTY_MATCH_TIME = "- : -";
     public static final String EMPTY_MATCH_SCORE = "- : -";
+    public static final String EMPTY_FIXTURE_DATE = "--/--/--";
+    public static final String EMPTY_PLAYER_DATE = "--.--.--";
+    public static final String EMPTY_STRING = "";
+    public static final int EMPTY_INT_VALUE = -1;
 
     // news
     public static final String EMPTY_DASH = "-";
@@ -78,6 +95,8 @@ public class Config {
 
     public static final String DATE_FULL_SSS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String DATE_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String PATTERN_DATE_SQLITE= "yyyy-MM-dd HH:mm:ss";
+
 
     public static final String FORMAT_MATCH_TIME_WIDGET = "%02d:%02d";
     public static final String FORMAT_MATCH_DATE = "%02d:%02d,%02d/%02d/%04d";
@@ -92,13 +111,13 @@ public class Config {
     public static final String UPDATE_SERVICE_TAG = "UpdaterService";
     public static final int UPDATE_SERVICE_PROGRESS = 100;
     public static final int MAIN_ACTIVITY_PROGRESS = 100;
-    public static final int LOAD_DB_EXCEPTION_CODE_1 =  1;
-    public static final int LOAD_DB_EXCEPTION_CODE_2 =  2;
-    public static final int LOAD_DB_EXCEPTION_CODE_3 =  3;
-    public static final int LOAD_DB_EXCEPTION_CODE_4 =  4;
-    public static final int LOAD_DB_EXCEPTION_CODE_5 =  5;
-    public static final int LOAD_DB_EXCEPTION_CODE_6 =  6;
-    public static final int LOAD_DB_EXCEPTION_CODE_7 =  7;
+    public static final int EXCEPTION_CODE_1 =  1;
+    public static final int EXCEPTION_CODE_2 =  2;
+    public static final int EXCEPTION_CODE_3 =  3;
+    public static final int EXCEPTION_CODE_4 =  4;
+    public static final int EXCEPTION_CODE_5 =  5;
+    public static final int EXCEPTION_CODE_6 =  6;
+    public static final int EXCEPTION_CODE_7 =  7;
 
     public static final long LOAD_DB_TIMEOUT  = TimeUnit.SECONDS.toMillis(90);
     public static final long LOAD_DB_DELAY  = TimeUnit.SECONDS.toMillis(2);

@@ -70,7 +70,6 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.FxEntry.COLUMN_COMPETITION_ID + " INTEGER, " +               // int
                 FDContract.FxEntry.COLUMN_TEAM_HOME_ID + " INTEGER, " +                 // int
                 FDContract.FxEntry.COLUMN_TEAM_AWAY_ID + " INTEGER, " +                 // int
-                FDContract.FxEntry.COLUMN_COMPETITION_NAME + " TEXT, " +                // string
                 FDContract.FxEntry.COLUMN_FIXTURE_DATE + " TEXT NOT NULL, " +           // string int from date
                 FDContract.FxEntry.COLUMN_FIXTURE_STATUS + " TEXT, " +                  // string
                 FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY + " INTEGER, " +             // int
@@ -85,8 +84,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
-//                FDContract.TbEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.TbEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
+                FDContract.TbEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.TbEntry.COLUMN_COMPETITION_ID + " INTEGER NOT NULL, " +      // int
                 FDContract.TbEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
                 FDContract.TbEntry.COLUMN_COMPETITION_MATCHDAY + " INTEGER, " +         // int
                 FDContract.TbEntry.COLUMN_LEAGUE_CAPTION + " TEXT, " +                  // string
@@ -103,8 +102,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.TbEntry.COLUMN_TEAM_LOSSES + " INTEGER);";                   // int
 
         final String CREATE_TABLE_PLAYERS = "CREATE TABLE " + FDContract.PlEntry.TABLE_NAME + " (" +
-//                FDContract.PlEntry._ID + " INTEGER PRIMARY KEY, " +
-                FDContract.PlEntry.COLUMN_PLAYER_ID + " INTEGER PRIMARY KEY, " +        // int
+                FDContract.PlEntry._ID + " INTEGER PRIMARY KEY, " +                     // int
                 FDContract.PlEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
                 FDContract.PlEntry.COLUMN_PLAYER_NAME + " TEXT, " +                     // string
                 FDContract.PlEntry.COLUMN_PLAYER_POSITION + " TEXT, " +                 // string
@@ -159,13 +157,13 @@ public class FDDbHelper extends SQLiteOpenHelper {
 
 
     public interface ICpTmEntry {
-        int _ID = 0;                            // int
+        int _ID = 0;                            // int auto
         int COLUMN_COMPETITION_ID = 1;          // int
         int COLUMN_TEAM_ID = 2;                 // int
     }
 
     public interface ICpFxEntry {
-        int _ID = 0;                            // int
+        int _ID = 0;                            // int auto
         int COLUMN_COMPETITION_ID = 1;          // int
         int COLUMN_FIXTURE_ID = 2;              // int
     }
@@ -197,27 +195,27 @@ public class FDDbHelper extends SQLiteOpenHelper {
     }
 
     public interface ITbEntry {
-        int COLUMN_COMPETITION_ID = 0;          // int
-        int COLUMN_TEAM_ID = 1;                 // int
-        int COLUMN_COMPETITION_MATCHDAY = 2;    // int
-        int COLUMN_LEAGUE_CAPTION = 3;          // string
-        int COLUMN_TEAM_POSITION = 4;           // int
-        int COLUMN_TEAM_NAME = 5;               // string
-        int COLUMN_CREST_URI = 6;               // string
-        int COLUMN_TEAM_PLAYED_GAMES = 7;       // int
-        int COLUMN_TEAM_POINTS = 8;             // int
-        int COLUMN_TEAM_GOALS = 9;              // int
-        int COLUMN_TEAM_GOALS_AGAINST = 10;     // int
-        int COLUMN_TEAM_GOALS_DIFFERENCE = 11;  // int
-        int COLUMN_TEAM_WINS = 12;              // int
-        int COLUMN_TEAM_DRAWS = 13;             // int
-        int COLUMN_TEAM_LOSSES = 14;            // int
-        int COLUMN_LAST_REFRESH = 15;           // int from date
+        int _ID = 0;                            // int auto
+        int COLUMN_COMPETITION_ID = 1;          // int
+        int COLUMN_TEAM_ID = 2;                 // int
+        int COLUMN_GROUP_NAME = 3;              // string
+        int COLUMN_COMPETITION_MATCHDAY = 4;    // int
+        int COLUMN_LEAGUE_CAPTION = 5;          // string
+        int COLUMN_TEAM_POSITION = 6;           // int
+        int COLUMN_TEAM_NAME = 7;               // string
+        int COLUMN_CREST_URI = 8;               // string
+        int COLUMN_TEAM_PLAYED_GAMES = 9;       // int
+        int COLUMN_TEAM_POINTS = 10;             // int
+        int COLUMN_TEAM_GOALS = 11;              // int
+        int COLUMN_TEAM_GOALS_AGAINST = 12;     // int
+        int COLUMN_TEAM_GOALS_DIFFERENCE = 13;  // int
+        int COLUMN_TEAM_WINS = 14;              // int
+        int COLUMN_TEAM_DRAWS = 15;             // int
+        int COLUMN_TEAM_LOSSES = 16;            // int
     }
 
     public interface IPlEntry {
-        //  int _ID + " INTEGER PRIMARY KEY, " +
-        int COLUMN_PLAYER_ID = 0;               // int
+        int _ID = 0;                            // int auto
         int COLUMN_TEAM_ID = 1;                 // int
         int COLUMN_PLAYER_NAME = 2;             // string
         int COLUMN_PLAYER_POSITION = 3;         // string

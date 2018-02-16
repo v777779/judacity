@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
-import ru.vpcb.footballassistant.glide.GlideApp;
+
 import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.utils.Config;
 
@@ -309,18 +309,20 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
     }
 
     private void setupRequestBuilder() {
-        mRequestBuilder = GlideApp.with(mContext)
+        mRequestBuilder = Glide.with(mContext)
                 .as(PictureDrawable.class)
-                .placeholder(R.drawable.fc_logo_loading)
-                .error(R.drawable.fc_logo)
-//                .transition(withCrossFade())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.fc_logo_loading)
+                        .error(R.drawable.fc_logo)
+                )
                 .listener(new SvgSoftwareLayerSetter());
 
-        mRequestBuilderCommon = GlideApp.with(mContext)
+        mRequestBuilderCommon = Glide.with(mContext)
                 .as(Drawable.class)
-                .placeholder(R.drawable.fc_logo_loading)
-                .error(R.drawable.fc_logo)
-//                .transition(withCrossFade())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.fc_logo_loading)
+                        .error(R.drawable.fc_logo)
+                )
                 .listener(new CommonRequestListener());
 
     }

@@ -143,4 +143,67 @@ public class FDStanding implements PostProcessingEnabler.PostProcessable {
         return id;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public String getCrestURI() {
+        return crestURI;
+    }
+
+    public int getPlayedGames() {
+        return playedGames;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public int getGoals() {
+        return goals;
+    }
+
+    public int getGoalsAgainst() {
+        return goalsAgainst;
+    }
+
+    public int getGoalDifference() {
+        return goalDifference;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public int getDraws() {
+        return draws;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public FDStat getHome() {
+        return home;
+    }
+
+    public FDStat getAway() {
+        return away;
+    }
 }

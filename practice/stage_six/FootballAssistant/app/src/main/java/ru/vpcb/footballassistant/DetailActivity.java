@@ -67,6 +67,10 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
+import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLite;
+import static ru.vpcb.footballassistant.utils.FDUtils.setDay;
+import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class DetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -86,7 +90,6 @@ public class DetailActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private ImageView mViewPagerBack;
     private TabLayout mTabLayout;
-
 
 
     private BottomNavigationView mBottomNavigation;
@@ -140,13 +143,9 @@ public class DetailActivity extends AppCompatActivity
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
 
 
-
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
-
-
-
 
 
 // progress
@@ -166,8 +165,7 @@ public class DetailActivity extends AppCompatActivity
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
 
-
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
@@ -292,10 +290,10 @@ public class DetailActivity extends AppCompatActivity
 // temp!!!
 // widget
         Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
-        if(bundle != null) {
-            int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID,EMPTY_WIDGET_ID);
+        if (bundle != null) {
+            int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
             int fixtureId = value;
-            MatchWidgetService.startFillWidgetAction(this,widgetId,fixtureId);
+            MatchWidgetService.startFillWidgetAction(this, widgetId, fixtureId);
         }
         startActivityMatch();
     }
@@ -337,7 +335,7 @@ public class DetailActivity extends AppCompatActivity
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
-        startActivity(intent,bundle);
+        startActivity(intent, bundle);
         finish();
     }
 
@@ -364,7 +362,7 @@ public class DetailActivity extends AppCompatActivity
     private void startActivityNews() {
         Intent intent = new Intent(this, NewsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
-       Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
         startActivity(intent, bundle);
@@ -379,9 +377,9 @@ public class DetailActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = TeamFragment.newInstance();
 
-        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG,POP_BACK_STACK_INCLUSIVE);
+        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
-                .replace(R.id.container_detail,fragment)
+                .replace(R.id.container_detail, fragment)
                 .addToBackStack(FRAGMENT_TEAM_TAG)
                 .commit();
 
@@ -411,28 +409,43 @@ public class DetailActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    // test!!!
+// test!!!
+// TODO Check SQLite Date Format
     private long getViewPagerDate(int index) {
-        Calendar calendar = Calendar.getInstance();
         try {
-            calendar.setTime(mViewPagerData.mList.get(index).get(0).getDate());
-            setZeroTime(calendar);
-            return calendar.getTimeInMillis();
+            String s = mViewPagerData.mList.get(index).get(0).getDate();
+            Calendar c = FDUtils.getCalendarFromString(s);
+            if (c == null) return -1;
+            setZeroTime(c);
+            return c.getTimeInMillis();
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             return -1;
         }
     }
 
-    // test!!!
+// test!!!
+// TODO Check SQLite Date Format
     private Calendar getViewPagerDate() {
-        Calendar calendar = Calendar.getInstance();
         try {
-            calendar.setTime(mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate());
-            setZeroTime(calendar);
-            return calendar;
+            String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
+            Calendar c = FDUtils.getCalendarFromString(s);
+            if (c == null) return null;
+            setZeroTime(c);
+            return c;
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+// test!!!
+// TODO SQLIte Date Check
+    private int getIndex(List<FDFixture> list, Calendar c) {
+        String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
+        int index = Collections.binarySearch(list, new FDFixture(dateSQLite), cFx);  // for givent day
+        if (index < 0) index = -index - 1;
+        if (index > list.size()) index = list.size() - 1;
+        return index;
+
     }
 
     private void startCalendar() {
@@ -450,7 +463,7 @@ public class DetailActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this,list);
+        RecyclerAdapter adapter = new RecyclerAdapter(this, list);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -460,36 +473,6 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-    private static Comparator<FDFixture> cFx = new Comparator<FDFixture>() {
-        @Override
-        public int compare(FDFixture o1, FDFixture o2) {
-            if (o1 == null || o2 == null ||
-                    o1.getDate() == null || o2.getDate() == null)
-                throw new IllegalArgumentException();
-
-
-            return o1.getDate().compareTo(o2.getDate());
-
-        }
-    };
-
-    private void setZeroTime(Calendar c) {
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
-
-
-    private void setDay(Calendar c, Date date) {
-        c.setTime(date);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
-
-    private int getIndex(List<FDFixture> list, Calendar c) {
-        int index = Collections.binarySearch(list, new FDFixture(c.getTime()), cFx);  // for givent day
-        if (index < 0) index = -index - 1;
-        if (index > list.size()) index = list.size() - 1;
-        return index;
-
-    }
 
 //    private void setupViewPagerSource() {
 //        int last = 0;
@@ -535,7 +518,9 @@ public class DetailActivity extends AppCompatActivity
         current = getIndex(fixtures, c);  // index of current day
 
         while (next < fixtures.size()) {
-            setDay(c, fixtures.get(next).getDate());
+            Date date = formatDateFromSQLite(fixtures.get(next).getDate());
+
+            setDay(c, date);
             map.put(c.getTimeInMillis(), list.size());
             c.add(Calendar.DATE, 1);  // next day
             next = getIndex(fixtures, c);
@@ -560,7 +545,7 @@ public class DetailActivity extends AppCompatActivity
 
     private String getRecyclerTitle(List<FDFixture> list) {
         try {
-            return FootballUtils.formatStringDate(list.get(0).getDate());
+            return FDUtils.formatMatchDate(list.get(0).getDate());
         } catch (NullPointerException e) {
             return EMPTY_FIXTURE_DATE;
         }

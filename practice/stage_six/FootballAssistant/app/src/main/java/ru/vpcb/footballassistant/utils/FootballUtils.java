@@ -44,15 +44,15 @@ public class FootballUtils {
         return s.substring(s.lastIndexOf("/") + 1);
     }
 
-    public static String formatStringDate(Date date) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-
-        String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
-        String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
-        String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
-        return "" + day + "/" + month + "/" + year.substring(2, year.length()) + "";
-    }
+//    public static String formatStringDate(Date date) {
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(date);
+//
+//        String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
+//        String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
+//        String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
+//        return "" + day + "/" + month + "/" + year.substring(2, year.length()) + "";
+//    }
 
     public static String formatStringDate(Date date, String delim) {
         Calendar c = Calendar.getInstance();

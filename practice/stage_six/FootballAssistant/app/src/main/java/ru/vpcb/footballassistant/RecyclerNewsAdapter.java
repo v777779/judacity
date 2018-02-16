@@ -16,10 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import java.text.DateFormat;
@@ -33,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDFixture;
-import ru.vpcb.footballassistant.glide.GlideApp;
+
 import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.news.NDArticle;
 import ru.vpcb.footballassistant.utils.Config;
@@ -258,17 +260,21 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
 
 
     private void setupRequestBuilder() {
-        mRequestBuilder = GlideApp.with(mContext)
+        mRequestBuilder = Glide.with(mContext)
                 .as(PictureDrawable.class)
-                .placeholder(R.drawable.fc_logo_loading)
-                .error(R.drawable.fc_logo)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.fc_logo_loading)
+                        .error(R.drawable.fc_logo)
+                )
 //                .transition(withCrossFade())
                 .listener(new SvgSoftwareLayerSetter());
 
-        mRequestBuilderCommon = GlideApp.with(mContext)
+        mRequestBuilderCommon = Glide.with(mContext)
                 .as(Drawable.class)
-                .placeholder(R.drawable.fc_logo_loading)
-                .error(R.drawable.fc_logo)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.fc_logo_loading)
+                        .error(R.drawable.fc_logo)
+                )
 //                .transition(withCrossFade())
                 .listener(new CommonRequestListener());
 

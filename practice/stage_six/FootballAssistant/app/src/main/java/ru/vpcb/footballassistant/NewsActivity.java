@@ -64,6 +64,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
+import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class NewsActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -347,24 +348,28 @@ public class NewsActivity extends AppCompatActivity
     }
 
     // test!!!
+// TODO Check SQLite Date Format
     private long getViewPagerDate(int index) {
-        Calendar calendar = Calendar.getInstance();
         try {
-            calendar.setTime(mViewPagerData.mList.get(index).get(0).getDate());
-            setZeroTime(calendar);
-            return calendar.getTimeInMillis();
+            String s = mViewPagerData.mList.get(index).get(0).getDate();
+            Calendar c = FDUtils.getCalendarFromString(s);
+            if (c == null) return -1;
+            setZeroTime(c);
+            return c.getTimeInMillis();
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             return -1;
         }
     }
 
     // test!!!
+// TODO Check SQLite Date Format
     private Calendar getViewPagerDate() {
-        Calendar calendar = Calendar.getInstance();
         try {
-            calendar.setTime(mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate());
-            setZeroTime(calendar);
-            return calendar;
+            String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
+            Calendar c = FDUtils.getCalendarFromString(s);
+            if (c == null) return null;
+            setZeroTime(c);
+            return c;
         } catch (NullPointerException e) {
             return null;
         }
@@ -392,29 +397,6 @@ public class NewsActivity extends AppCompatActivity
         return recyclerView;
     }
 
-
-    private static Comparator<FDFixture> cFx = new Comparator<FDFixture>() {
-        @Override
-        public int compare(FDFixture o1, FDFixture o2) {
-            if (o1 == null || o2 == null ||
-                    o1.getDate() == null || o2.getDate() == null)
-                throw new IllegalArgumentException();
-
-
-            return o1.getDate().compareTo(o2.getDate());
-
-        }
-    };
-
-    private void setZeroTime(Calendar c) {
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
-
-
-    private void setDay(Calendar c, Date date) {
-        c.setTime(date);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
 
     private int getIndex(List<FDFixture> list, Calendar c) {
         int index = Collections.binarySearch(list, new FDFixture(c.getTime()), cFx);  // for givent day

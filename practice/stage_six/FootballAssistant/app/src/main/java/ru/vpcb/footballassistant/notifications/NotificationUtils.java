@@ -22,6 +22,7 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,7 @@ import ru.vpcb.footballassistant.DetailActivity;
 import ru.vpcb.footballassistant.MainActivity;
 import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_ACTIVITY_PENDING_ID;
@@ -63,7 +65,9 @@ public class NotificationUtils {
 
         Calendar current = Calendar.getInstance();
         Calendar next = Calendar.getInstance();
-        next.setTime(fixture.getDate());
+        Date fixtureDate = FDUtils.formatDateFromSQLite(fixture.getDate());
+
+        next.setTime(fixtureDate);
 
         long currentTime = TimeUnit.MILLISECONDS.toSeconds(current.getTimeInMillis());   // current time in seconds
         long matchTime = TimeUnit.MILLISECONDS.toSeconds(next.getTimeInMillis());                    // target time, clear seconds

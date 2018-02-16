@@ -26,7 +26,6 @@ import ru.vpcb.footballassistant.utils.Config;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDate;
-import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDateTime;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchTime;
 
 /**
