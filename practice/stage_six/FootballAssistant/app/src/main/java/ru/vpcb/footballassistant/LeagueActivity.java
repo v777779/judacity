@@ -374,7 +374,7 @@ public class LeagueActivity extends AppCompatActivity
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
-        startActivity(intent,bundle);
+        startActivity(intent, bundle);
         finish();
     }
 
@@ -387,6 +387,7 @@ public class LeagueActivity extends AppCompatActivity
         startActivity(intent, bundle);
         finish();
     }
+
     private void startActivityNews() {
         Intent intent = new Intent(this, NewsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
@@ -406,9 +407,6 @@ public class LeagueActivity extends AppCompatActivity
         startActivity(intent, bundle);
         finish();
     }
-
-
-
 
 
     private void setupMapLeagueName() {
@@ -480,6 +478,7 @@ public class LeagueActivity extends AppCompatActivity
             return null;
         }
     }
+
     // test!!!
 // TODO SQLIte Date Check
     private int getIndex(List<FDFixture> list, Calendar c) {
@@ -490,6 +489,7 @@ public class LeagueActivity extends AppCompatActivity
         return index;
 
     }
+
 
     private void startCalendar() {
 
@@ -567,12 +567,6 @@ public class LeagueActivity extends AppCompatActivity
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
     }
 
-    private int getIndex(List<FDFixture> list, Calendar c) {
-        int index = Collections.binarySearch(list, new FDFixture(c.getTime()), cFx);  // for givent day
-        if (index < 0) index = -index - 1;
-        if (index > list.size()) index = list.size() - 1;
-        return index;
-    }
 
     private ViewPagerData getViewPagerData(List<FDFixture> fixtures, List<FDPlayer> players) {
 // fixtures
@@ -598,7 +592,7 @@ public class LeagueActivity extends AppCompatActivity
 
     private String getRecyclerTitle(List<FDFixture> list) {
         try {
-            return FootballUtils.formatStringDate(list.get(0).getDate());
+            return FDUtils.formatMatchDate(list.get(0).getDate());
         } catch (NullPointerException e) {
             return EMPTY_FIXTURE_DATE;
         }
@@ -825,7 +819,7 @@ public class LeagueActivity extends AppCompatActivity
                         Context context = LeagueActivity.this;
                         switch (item.getItemId()) {
                             case R.id.navigation_matches:
-                               startActivityMatches();
+                                startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
                                 Toast.makeText(context, "Action news", Toast.LENGTH_SHORT).show();

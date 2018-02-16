@@ -55,6 +55,9 @@ import timber.log.Timber;
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
+import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLite;
+import static ru.vpcb.footballassistant.utils.FDUtils.setDay;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class FavoritesActivity extends AppCompatActivity
@@ -333,6 +336,17 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
 
+ // test!!!
+// TODO SQLIte Date Check
+    private int getIndex(List<FDFixture> list, Calendar c) {
+        String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
+        int index = Collections.binarySearch(list, new FDFixture(dateSQLite), cFx);  // for givent day
+        if (index < 0) index = -index - 1;
+        if (index > list.size()) index = list.size() - 1;
+        return index;
+
+    }
+
     // test!!!
     private RecyclerView getRecycler(List<FDFixture> list) {
         Config.Span sp = Config.getDisplayMetrics(this);
@@ -350,13 +364,7 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
 
-    private int getIndex(List<FDFixture> list, Calendar c) {
-        int index = Collections.binarySearch(list, new FDFixture(c.getTime()), cFx);  // for givent day
-        if (index < 0) index = -index - 1;
-        if (index > list.size()) index = list.size() - 1;
-        return index;
 
-    }
 
 //    private void setupViewPagerSource() {
 //        int last = 0;
@@ -402,7 +410,9 @@ public class FavoritesActivity extends AppCompatActivity
         current = getIndex(fixtures, c);  // index of current day
 
         while (next < fixtures.size()) {
-            setDay(c, fixtures.get(next).getDate());
+            Date date = formatDateFromSQLite(fixtures.get(next).getDate());
+
+            setDay(c, date);
             map.put(c.getTimeInMillis(), list.size());
             c.add(Calendar.DATE, 1);  // next day
             next = getIndex(fixtures, c);

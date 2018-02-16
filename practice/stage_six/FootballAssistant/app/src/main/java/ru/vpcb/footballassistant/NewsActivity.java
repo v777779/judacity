@@ -64,6 +64,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
+import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class NewsActivity extends AppCompatActivity
@@ -398,8 +399,11 @@ public class NewsActivity extends AppCompatActivity
     }
 
 
+    // test!!!
+// TODO SQLIte Date Check
     private int getIndex(List<FDFixture> list, Calendar c) {
-        int index = Collections.binarySearch(list, new FDFixture(c.getTime()), cFx);  // for givent day
+        String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
+        int index = Collections.binarySearch(list, new FDFixture(dateSQLite), cFx);  // for givent day
         if (index < 0) index = -index - 1;
         if (index > list.size()) index = list.size() - 1;
         return index;
