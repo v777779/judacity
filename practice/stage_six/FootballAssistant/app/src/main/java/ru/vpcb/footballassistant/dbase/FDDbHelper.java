@@ -33,27 +33,25 @@ public class FDDbHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_COMPETITIONS = "CREATE TABLE " + FDContract.CpEntry.TABLE_NAME + " (" +
 //                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.CpEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +       // int
-                FDContract.CpEntry.COLUMN_COMPETITION_CAPTION + " TEXT NOT NULL, " +                    // string
-                FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE + " TEXT NOT NULL, " +         // string
-                FDContract.CpEntry.COLUMN_COMPETITION_YEAR + " TEXT NOT NULL, " +           // string
-                FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY + " INTEGER NOT NULL, " +        // int
-                FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS + " INTEGER NOT NULL, " +        // int
-                FDContract.CpEntry.COLUMN_NUMBER_TEAMS + " INTEGER NOT NULL, " +            // int
-                FDContract.CpEntry.COLUMN_NUMBER_GAMES + " INTEGER NOT NULL, " +            // int
-                FDContract.CpEntry.COLUMN_LAST_UPDATE + " INTEGER NOT NULL, " +             // int from date
-                FDContract.CpEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";             // int from date
+                FDContract.CpEntry.COLUMN_COMPETITION_CAPTION + " TEXT, " +                    // string
+                FDContract.CpEntry.COLUMN_COMPETITION_LEAGUE + " TEXT, " +         // string
+                FDContract.CpEntry.COLUMN_COMPETITION_YEAR + " TEXT, " +           // string
+                FDContract.CpEntry.COLUMN_CURRENT_MATCHDAY + " INTEGER, " +        // int
+                FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS + " INTEGER, " +        // int
+                FDContract.CpEntry.COLUMN_NUMBER_TEAMS + " INTEGER, " +            // int
+                FDContract.CpEntry.COLUMN_NUMBER_GAMES + " INTEGER, " +            // int
+                FDContract.CpEntry.COLUMN_LAST_UPDATE + " TEXT);";                          // string int from date
+
 
         final String CREATE_TABLE_COMPETITION_TEAMS = "CREATE TABLE " + FDContract.CpTmEntry.TABLE_NAME + " (" +
                 FDContract.CpTmEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +                 // int
                 FDContract.CpTmEntry.COLUMN_COMPETITION_ID + " INTEGER NOT NULL, " +                // int
-                FDContract.CpTmEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +                       // int
-                FDContract.CpTmEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";                   // int from date
+                FDContract.CpTmEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL);";                       // int
 
         final String CREATE_TABLE_COMPETITION_FIXTURES = "CREATE TABLE " + FDContract.CpFxEntry.TABLE_NAME + " (" +
                 FDContract.CpFxEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 FDContract.CpFxEntry.COLUMN_COMPETITION_ID + " INTEGER NOT NULL, " + // int
-                FDContract.CpFxEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL, " +        // int
-                FDContract.CpFxEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";       // int from date
+                FDContract.CpFxEntry.COLUMN_FIXTURE_ID + " INTEGER NOT NULL;)";        // int
 
 
         final String CREATE_TABLE_TEAMS = "CREATE TABLE " + FDContract.TmEntry.TABLE_NAME + " (" +
@@ -63,56 +61,59 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.TmEntry.COLUMN_TEAM_CODE + " TEXT, " +                       // string
                 FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME + " TEXT, " +                 // string
                 FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE + " TEXT, " +               // string
-                FDContract.TmEntry.COLUMN_TEAM_CREST_URI + " TEXT, " +                  // string
-                FDContract.TmEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
+                FDContract.TmEntry.COLUMN_TEAM_CREST_URI + " TEXT);";                  // string
+
 
         final String CREATE_TABLE_FIXTURES = "CREATE TABLE " + FDContract.FxEntry.TABLE_NAME + " (" +
 //                FDContract.FxEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.FxEntry.COLUMN_FIXTURE_ID + " INTEGER PRIMARY KEY, " +       // int
-                FDContract.FxEntry.COLUMN_FIXTURE_DATE + " INTEGER NOT NULL, " +   // int from date
-                FDContract.FxEntry.COLUMN_FIXTURE_STATUS + " TEXT NOT NULL, " +         // string
-                FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY + " INTEGER NOT NULL, " +    // int
-                FDContract.FxEntry.COLUMN_FIXTURE_TEAM_HOME + " TEXT NOT NULL, " +      // string
-                FDContract.FxEntry.COLUMN_FIXTURE_TEAM_AWAY + " TEXT NOT NULL, " +      // string
-                FDContract.FxEntry.COLUMN_FIXTURE_GOALS_HOME + " INTEGER NOT NULL, " +  // int
-                FDContract.FxEntry.COLUMN_FIXTURE_GOALS_AWAY + " INTEGER NOT NULL, " +  // int
+                FDContract.FxEntry.COLUMN_COMPETITION_ID + " INTEGER, " +               // int
+                FDContract.FxEntry.COLUMN_TEAM_HOME_ID + " INTEGER, " +                 // int
+                FDContract.FxEntry.COLUMN_TEAM_AWAY_ID + " INTEGER, " +                 // int
+                FDContract.FxEntry.COLUMN_COMPETITION_NAME + " TEXT, " +                // string
+                FDContract.FxEntry.COLUMN_FIXTURE_DATE + " TEXT NOT NULL, " +           // string int from date
+                FDContract.FxEntry.COLUMN_FIXTURE_STATUS + " TEXT, " +                  // string
+                FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY + " INTEGER, " +             // int
+                FDContract.FxEntry.COLUMN_FIXTURE_TEAM_HOME + " TEXT, " +               // string
+                FDContract.FxEntry.COLUMN_FIXTURE_TEAM_AWAY + " TEXT, " +               // string
+                FDContract.FxEntry.COLUMN_FIXTURE_GOALS_HOME + " INTEGER, " +           // int
+                FDContract.FxEntry.COLUMN_FIXTURE_GOALS_AWAY + " INTEGER, " +           // int
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN + " REAL, " +                // real
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW + " REAL, " +               // real
-                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY + " REAL, " +               // real
-                FDContract.FxEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
+                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY + " REAL);";                // real
+
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
 //                FDContract.TbEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.TbEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +   // int
                 FDContract.TbEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
-                FDContract.TbEntry.COLUMN_COMPETITION_MATCHDAY + " INTEGER NOT NULL, " +    // int
-                FDContract.TbEntry.COLUMN_LEAGUE_CAPTION + " TEXT NOT NULL, " +         // string
+                FDContract.TbEntry.COLUMN_COMPETITION_MATCHDAY + " INTEGER, " +         // int
+                FDContract.TbEntry.COLUMN_LEAGUE_CAPTION + " TEXT, " +                  // string
                 FDContract.TbEntry.COLUMN_TEAM_POSITION + " INTEGER NOT NULL, " +       // int
-                FDContract.TbEntry.COLUMN_TEAM_NAME + " TEXT NOT NULL, " +              // string
-                FDContract.TbEntry.COLUMN_CREST_URI + " TEXT, " +              // string
-                FDContract.TbEntry.COLUMN_TEAM_PLAYED_GAMES + " INTEGER NOT NULL, " +   // int
-                FDContract.TbEntry.COLUMN_TEAM_POINTS + " INTEGER NOT NULL, " +         // int
-                FDContract.TbEntry.COLUMN_TEAM_GOALS + " INTEGER NOT NULL, " +          // int
-                FDContract.TbEntry.COLUMN_TEAM_GOALS_AGAINST + " INTEGER NOT NULL, " +  // int
-                FDContract.TbEntry.COLUMN_TEAM_GOALS_DIFFERENCE + " INTEGER NOT NULL, " +   // int
-                FDContract.TbEntry.COLUMN_TEAM_WINS + " INTEGER NOT NULL, " +           // int
-                FDContract.TbEntry.COLUMN_TEAM_DRAWS + " INTEGER NOT NULL, " +          // int
-                FDContract.TbEntry.COLUMN_TEAM_LOSSES + " INTEGER NOT NULL, " +         // int
-                FDContract.TbEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
+                FDContract.TbEntry.COLUMN_TEAM_NAME + " TEXT, " +                       // string
+                FDContract.TbEntry.COLUMN_CREST_URI + " TEXT, " +                       // string
+                FDContract.TbEntry.COLUMN_TEAM_PLAYED_GAMES + " INTEGER, " +            // int
+                FDContract.TbEntry.COLUMN_TEAM_POINTS + " INTEGER, " +                  // int
+                FDContract.TbEntry.COLUMN_TEAM_GOALS + " INTEGER, " +                   // int
+                FDContract.TbEntry.COLUMN_TEAM_GOALS_AGAINST + " INTEGERL, " +          // int
+                FDContract.TbEntry.COLUMN_TEAM_GOALS_DIFFERENCE + " INTEGER, " +        // int
+                FDContract.TbEntry.COLUMN_TEAM_WINS + " INTEGER, " +                    // int
+                FDContract.TbEntry.COLUMN_TEAM_DRAWS + " INTEGER, " +                   // int
+                FDContract.TbEntry.COLUMN_TEAM_LOSSES + " INTEGER);";                   // int
 
         final String CREATE_TABLE_PLAYERS = "CREATE TABLE " + FDContract.PlEntry.TABLE_NAME + " (" +
 //                FDContract.PlEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.PlEntry.COLUMN_PLAYER_ID + " INTEGER PRIMARY KEY, " +        // int
                 FDContract.PlEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
-                FDContract.PlEntry.COLUMN_PLAYER_NAME + " TEXT NOT NULL, " +            // string
+                FDContract.PlEntry.COLUMN_PLAYER_NAME + " TEXT, " +                     // string
                 FDContract.PlEntry.COLUMN_PLAYER_POSITION + " TEXT, " +                 // string
                 FDContract.PlEntry.COLUMN_PLAYER_JERSEY_NUMBER + " INTEGER, " +         // int
                 FDContract.PlEntry.COLUMN_PLAYER_DATE_BIRTH + " TEXT, " +               // int from date
                 FDContract.PlEntry.COLUMN_PLAYER_NATIONALITY + " TEXT, " +              // string
                 FDContract.PlEntry.COLUMN_PLAYER_DATE_CONTRACT + " TEXT, " +            // int from date
-                FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT, " +             // string
-                FDContract.PlEntry.COLUMN_LAST_REFRESH + " INTEGER NOT NULL);";         // int from date
+                FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT);";              // string
+
 
         db.execSQL(CREATE_TABLE_COMPETITIONS);
         db.execSQL(CREATE_TABLE_COMPETITION_TEAMS);
@@ -152,8 +153,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_NUMBER_MATCHDAYS = 5;        // int
         int COLUMN_NUMBER_TEAMS = 6;            // int
         int COLUMN_NUMBER_GAMES = 7;            // int
-        int COLUMN_LAST_UPDATE = 8;             // int from date
-        int COLUMN_LAST_REFRESH = 9;            // int from date
+        int COLUMN_LAST_UPDATE = 8;             // string int from date
+
     }
 
 
@@ -161,14 +162,12 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int _ID = 0;                            // int
         int COLUMN_COMPETITION_ID = 1;          // int
         int COLUMN_TEAM_ID = 2;                 // int
-        int COLUMN_LAST_REFRESH = 3;            // int from date
     }
 
     public interface ICpFxEntry {
         int _ID = 0;                            // int
         int COLUMN_COMPETITION_ID = 1;          // int
         int COLUMN_FIXTURE_ID = 2;              // int
-        int COLUMN_LAST_REFRESH = 3;            // int from date
     }
 
     public interface ITmEntry {
@@ -178,22 +177,23 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_TEAM_SHORT_NAME = 3;         // string
         int COLUMN_TEAM_MARKET_VALUE = 4;       // string
         int COLUMN_TEAM_CREST_URI = 5;          // string
-        int COLUMN_LAST_REFRESH = 6;            // int from date
     }
 
     public interface IFxEntry {
         int COLUMN_FIXTURE_ID = 0;              // int
-        int COLUMN_FIXTURE_DATE = 1;            // int from date
-        int COLUMN_FIXTURE_STATUS = 2;          // string
-        int COLUMN_FIXTURE_MATCHDAY = 3;        // int
-        int COLUMN_FIXTURE_TEAM_HOME = 4;       // string
-        int COLUMN_FIXTURE_TEAM_AWAY = 5;       // string
-        int COLUMN_FIXTURE_GOALS_HOME = 6;      // int
-        int COLUMN_FIXTURE_GOALS_AWAY = 7;      // int
-        int COLUMN_FIXTURE_ODDS_WIN = 8;        // real
-        int COLUMN_FIXTURE_ODDS_DRAW = 9;      // real
-        int COLUMN_FIXTURE_ODDS_AWAY = 10;      // real
-        int COLUMN_LAST_REFRESH = 11;           // int from date
+        int COLUMN_COMPETITION_ID = 1;          // int
+        int COLUMN_TEAM_HOME_ID = 2;            // int
+        int COLUMN_TEAM_AWAY_ID = 3;            // int
+        int COLUMN_FIXTURE_DATE = 4;            // string int from date
+        int COLUMN_FIXTURE_STATUS = 5;          // string
+        int COLUMN_FIXTURE_MATCHDAY = 6;        // int
+        int COLUMN_FIXTURE_TEAM_HOME = 7;       // string
+        int COLUMN_FIXTURE_TEAM_AWAY = 8;       // string
+        int COLUMN_FIXTURE_GOALS_HOME = 9;      // int
+        int COLUMN_FIXTURE_GOALS_AWAY = 10;     // int
+        int COLUMN_FIXTURE_ODDS_WIN = 11;       // real
+        int COLUMN_FIXTURE_ODDS_DRAW = 12;      // real
+        int COLUMN_FIXTURE_ODDS_AWAY = 13;      // real
     }
 
     public interface ITbEntry {

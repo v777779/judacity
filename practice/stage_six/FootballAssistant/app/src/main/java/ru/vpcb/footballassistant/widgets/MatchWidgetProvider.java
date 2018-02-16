@@ -27,6 +27,8 @@ import static ru.vpcb.footballassistant.utils.Config.WIDGET_PID_OFFSET1;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_PID_SCALE;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_PREFERENCES;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_SERVICE_REFRESH_ACTION;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDateWidget;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchTimeWidget;
 
 /**
  * Implementation of App Widget functionality.
@@ -91,8 +93,8 @@ public class MatchWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.text_sm_item_league, fixture.getCompetitionName());
         views.setTextViewText(R.id.text_sm_team_home, fixture.getHomeTeamName());
         views.setTextViewText(R.id.text_sm_team_away, fixture.getAwayTeamName());
-        views.setTextViewText(R.id.text_sm_item_time, fixture.getMatchTime());
-        views.setTextViewText(R.id.text_sm_item_date, fixture.getMatchDateWidget());
+        views.setTextViewText(R.id.text_sm_item_time, formatMatchTimeWidget(fixture.getDate()));
+        views.setTextViewText(R.id.text_sm_item_date, formatMatchDateWidget(fixture.getDate()));
         views.setTextViewText(R.id.text_sm_item_score_home, "" + fixture.getMatchScoreHome());
         views.setTextViewText(R.id.text_sm_item_score_away, "" + fixture.getMatchScoreAway());
         views.setTextViewText(R.id.text_sm_item_status, "" + fixture.getStatus());

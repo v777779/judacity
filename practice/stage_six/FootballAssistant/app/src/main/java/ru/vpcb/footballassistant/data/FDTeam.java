@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import ru.vpcb.footballassistant.utils.FDUtils;
+
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
 
@@ -43,7 +45,8 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
 
     private int id;
     private List<FDPlayer> players;
-    private Date lastRefresh;
+
+//TODO check if usef for Gson and set default object values Href, String
 
     public FDTeam() {
         id = -1;
@@ -51,34 +54,19 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
 
 
     public FDTeam(int id, String name, String code, String shortName,
-                  String squadMarketValue, String crestURL, long lastRefresh) {
+                  String squadMarketValue, String crestURL) {
         this.id = id;
         this.name = name;
         this.code=code;
         this.shortName = shortName;
         this.squadMarketValue = squadMarketValue;
         this.crestURL = crestURL;
-        this.lastRefresh = new Date(lastRefresh);
     }
 
 
-
-
-    public String getLinkSelf() {
-        return links.self.getHref();
-    }
-
-
-    public void setId() throws NullPointerException, NumberFormatException {
-// id
-        String href = links.self.getHref();
-        id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-        if (id == -1) throw new NumberFormatException();
-    }
-
-    public void setLastRefresh(long lastRefresh) {
-        this.lastRefresh = new Date(lastRefresh);
-    }
+     public void setId() throws NullPointerException, NumberFormatException {
+         id = FDUtils.formatId(links.self.getHref());                    // id
+     }
 
     public int getId() {
         return id;
@@ -111,10 +99,6 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
 
     public String getCrestURL() {
         return crestURL;
-    }
-
-    public Date getLastRefresh() {
-        return lastRefresh;
     }
 
     @Override

@@ -64,9 +64,7 @@ public class Config {
     // competitions
     public static final String EMPTY_TEAM_NAME = "-";
     public static final String EMPTY_TWO_DASH = "--";
-    public static final String EMPTY_MATCH_TIME = "-- : --";
-    public static final String EMPTY_FIXTURE_DATE = "--/--/--";
-    public static final String EMPTY_PLAYER_DATE = "--.--.--";
+    public static final String EMPTY_MATCH_TIME = "- : -";
     public static final String EMPTY_MATCH_SCORE = "- : -";
 
     // news
@@ -80,6 +78,14 @@ public class Config {
 
     public static final String DATE_FULL_SSS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String DATE_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    public static final String FORMAT_MATCH_TIME_WIDGET = "%02d:%02d";
+    public static final String FORMAT_MATCH_DATE = "%02d:%02d,%02d/%02d/%04d";
+    public static final String FORMAT_MATCH_SCORE = "%d : % d";
+
+    public static final String PATTERN_MATCH_DATE = "dd/MM/yy";
+    public static final String PATTERN_MATCH_TIME = "HH:mm";
+    public static final String PATTERN_MATCH_DATETIME = "HH:mm,dd/MM/yy";
 
 
     // update service
@@ -139,7 +145,9 @@ public class Config {
     public static final int EMPTY_WIDGET_ID = -1;
     public static final int EMPTY_FIXTURE_ID = -1;
 
-    public static final String DATE_WIDGET_PATTERN = "EEE, dd MMM yyyy";
+    public static final String PATTERN_MATCH_DATE_WIDGET = "EEE, dd MMM yyyy";
+
+
     public static final int WIDGET_PID_BASE = 12800000;
     public static final int WIDGET_PID_SCALE = 1000;
     public static final int WIDGET_PID_OFFSET0 = 0;

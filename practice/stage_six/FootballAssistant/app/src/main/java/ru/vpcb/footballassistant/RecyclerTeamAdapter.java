@@ -40,6 +40,8 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDate;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchScore;
 
 /**
  * RecyclerView Adapter class
@@ -252,8 +254,8 @@ public class RecyclerTeamAdapter extends RecyclerView.Adapter<RecyclerTeamAdapte
                 if (competition != null) league = competition.getCaption();
             }
 
-            String score = fixture.getMatchScore();
-            String dateTime = fixture.getMatchDate();
+            String score = formatMatchScore(fixture.getDate());
+            String dateTime = formatMatchDate(fixture.getDate());
 
             if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {
                 layout.setBackgroundColor(mColorDark);

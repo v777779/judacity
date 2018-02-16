@@ -259,7 +259,7 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
 //            }
 //
 //            String score = fixture.getMatchScore();
-//            String dateTime = fixture.getMatchDate();
+//            String dateTime = fixture.formatMatchDate();
 //
 //            if (getItemViewType() == RT_ITEM_VIEW_TYPE_DARK) {
 //                layout.setBackgroundColor(mColorDark);

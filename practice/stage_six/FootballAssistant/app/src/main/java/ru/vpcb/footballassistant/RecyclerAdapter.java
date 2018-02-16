@@ -25,6 +25,9 @@ import ru.vpcb.footballassistant.utils.Config;
 
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDate;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDateTime;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchTime;
 
 /**
  * RecyclerView Adapter class
@@ -138,7 +141,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mList == null || pos < 0 || pos >= mList.size()){
+                if (mList == null || pos < 0 || pos >= mList.size()) {
                     return;
                 }
                 FDFixture fixture = mList.get(pos);
@@ -228,21 +231,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
             if (getItemViewType() == RM_HEAD_VIEW_TYPE) {
                 if (position == 0) {
-                    mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_favorites));
+                setText( mTextLeague,mContext.getString(R.string.text_test_rm_item_favorites));
                     mImageLeague.setImageResource(R.drawable.ic_star);
                 } else {
-                    mTextLeague.setText(mContext.getString(R.string.text_test_rm_item_league2));
+                setText(mTextLeague,mContext.getString(R.string.text_test_rm_item_league2));
                     mImageLeague.setImageResource(R.drawable.icon_ball);
                 }
             }
 
             if (getItemViewType() == RM_ITEM_VIEW_TYPE) {
-                mTextTeamHome.setText(fixture.getHomeTeamName());
-                mTextTeamAway.setText(fixture.getAwayTeamName());
-                String dateTime = fixture.getMatchDate();
-                mTextTime.setText(dateTime.substring(0, 5));
-                mTextDate.setText(dateTime.substring(6));
-
+                setText(mTextTeamHome,fixture.getHomeTeamName());
+                setText(mTextTeamAway,fixture.getAwayTeamName());
+                setText(mTextTime,formatMatchTime(fixture.getDate()));
+                setText(mTextDate,formatMatchDate(fixture.getDate()));
             }
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 //
@@ -265,6 +266,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //            mItemTitle.setTransitionName(mRes.getString(R.string.transition_title, getItemId()));
         }
 
+        private void setText(TextView textView, String s) {
+            if (textView == null || s == null || s.isEmpty()) return;
+            textView.setText(s);
+        }
 
     }
 

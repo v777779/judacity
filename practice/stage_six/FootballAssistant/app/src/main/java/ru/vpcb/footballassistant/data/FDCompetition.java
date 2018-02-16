@@ -54,9 +54,7 @@ public class FDCompetition {
 
     @SerializedName("lastUpdated")
     @Expose
-    private Date lastUpdated;
-
-    private Date lastRefresh;
+    private String lastUpdated;
 
     private List<FDTeam> teams;
     private List<FDFixture> fixtures;
@@ -69,7 +67,7 @@ public class FDCompetition {
     public FDCompetition(int id, String caption, String league, String year,
                          int currentMatchDay, int numberOfMatchDays,
                          int numberOfTeams, int numberOfGames,
-                         Date lastUpdated, Date lastRefresh) {
+                         String lastUpdated) {
 
         this.links = null;
         this.id = id;
@@ -81,7 +79,6 @@ public class FDCompetition {
         this.numberOfTeams = numberOfTeams;
         this.numberOfGames = numberOfGames;
         this.lastUpdated = lastUpdated;
-        this.lastRefresh = lastRefresh;
         this.teams = null;
         this.fixtures = null;
     }
@@ -103,10 +100,6 @@ public class FDCompetition {
         @Expose
         private FDLink table;
 
-    }
-
-    public void setLastRefresh(Date lastRefresh) {
-        this.lastRefresh = lastRefresh;
     }
 
     public int getId() {
@@ -168,11 +161,9 @@ public class FDCompetition {
         return numberOfGames;
     }
 
-    public Date getLastUpdated() {
+    public String getLastUpdated() {
         return lastUpdated;
     }
 
-    public Date getLastRefresh() {
-        return lastRefresh;
-    }
+
 }

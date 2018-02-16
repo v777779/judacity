@@ -11,7 +11,7 @@ import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_COMPETITIONS;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDStanding {
+public class FDStanding implements PostProcessingEnabler.PostProcessable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -91,6 +91,11 @@ public class FDStanding {
         this.id = -1;
     }
 
+    @Override
+    public void postProcess() {
+        setId();
+    }
+
     public class FDLinks {
         @SerializedName("team")
         @Expose
@@ -125,9 +130,12 @@ public class FDStanding {
 
 
     public void setId() throws NullPointerException, NumberFormatException {
-        String href = getLinkTeam();
-        id = Integer.valueOf(href.replaceAll(FD_REGEX_COMPETITIONS, ""));
-        if (id == 0) throw new NumberFormatException();
+// id
+        String href = links.team.getHref();  // for standings only
+        if(group == null && href != null ) {
+            id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
+            if (id == -1) throw new NumberFormatException();
+        }
     }
 
 

@@ -1,25 +1,16 @@
 package ru.vpcb.footballassistant.data;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
 
-import static ru.vpcb.footballassistant.utils.Config.DATE_WIDGET_PATTERN;
+import ru.vpcb.footballassistant.utils.FDUtils;
+
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
-import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_COMPETITIONS;
-import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_FIXTURES;
 
 
 /**
@@ -35,15 +26,15 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
 
     @SerializedName("date")
     @Expose
-    private Date date;
+    private String date;
 
     @SerializedName("status")
     @Expose
     private String status;
 
-    @SerializedName("matchday")
+    @SerializedName("matchDay")
     @Expose
-    private int matchday;
+    private int matchDay;
 
     @SerializedName("homeTeamName")
     @Expose
@@ -62,7 +53,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     private FDOdds odds;
 
     private int id;
-    private Date lastRefresh;
+
     private int competitionId;
     private int homeTeamId;
     private int awayTeamId;
@@ -70,31 +61,25 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     // widgets
     private String competitionName;
 
+    //TODO check if usef for Gson and set default object values Href, String
     public FDFixture() {
         this.id = -1;
     }
 
-    public FDFixture(Date date) {  // for comparator
-        this.id = -1;
-        this.date = date;
-        this.homeTeamName = "home_team";
-        this.awayTeamName = "away_team";
-        this.status = "demo";
-    }
 
-    public FDFixture(int id, Date date, String status, int matchday,
+
+    public FDFixture(int id, String date, String status, int matchDay,
                      String homeTeamName, String awayTeamName,
                      int goalsHomeTeam, int goalsAwayTeam,
-                     double homeWin, double draw, double awayWin, Date lastRefresh) {
+                     double homeWin, double draw, double awayWin) {
         this.id = id;
         this.date = date;
         this.status = status;
-        this.matchday = matchday;
+        this.matchDay = this.matchDay;
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
         this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
         this.odds = new FDOdds(homeWin, draw, awayWin);
-        this.lastRefresh = lastRefresh;
     }
 
     @Override
@@ -120,6 +105,12 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @Expose
         private FDLink awayTeam;
 
+        public FDLinks() {
+            self = new FDLink();
+            competition = new FDLink();
+            homeTeam = new FDLink();
+            awayTeam = new FDLink();
+        }
     }
 
     private class FDHalfTime {
@@ -176,42 +167,24 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
 
 
     public void setId() throws NullPointerException, NumberFormatException {
-// id
-        String href = links.self.getHref();
-        id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-        if (id == -1) throw new NumberFormatException();
-// id competition
-        href = links.competition.getHref();
-        competitionId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-// id teamHome
-        href = links.homeTeam.getHref();
-        homeTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-// id teamAway
-        href = links.awayTeam.getHref();
-        awayTeamId = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
-
+        id = FDUtils.formatId(links.self.getHref());                    // id
+        competitionId = FDUtils.formatId(links.competition.getHref());  // id competition
+        homeTeamId = FDUtils.formatId(links.homeTeam.getHref());        // id teamHome
+        awayTeamId = FDUtils.formatId(links.awayTeam.getHref());        // id teamAway
     }
 
-    public void setLastRefresh(long lastRefresh) {
-        this.lastRefresh = new Date(lastRefresh);
-    }
-
-    public void setCompetitionId(int competitionId) {
-
-        this.competitionId = competitionId;
-    }
 
     public int getId() {
         return id;
     }
 
     public int getCompetitionId() {
-
         return competitionId;
     }
 
-    public Date getDate() {
-        return date;
+
+// TODO check and set if null
+    public String getDate() {      return date;     // check and set if null
     }
 
     public String getStatus() {
@@ -220,7 +193,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
     public int getMatchDay() {
-        return matchday;
+        return matchDay;
     }
 
 
@@ -275,35 +248,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         return odds.awayWin;
     }
 
-    public Date getLastRefresh() {
-        return lastRefresh;
-    }
 
 
-    public String getMatchTime() {
-        if (date == null) return EMPTY_MATCH_TIME;
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        return String.format(Locale.ENGLISH,
-                "%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
-    }
-
-    public String getMatchDate() {
-        if (date == null) return EMPTY_MATCH_TIME;
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        return String.format(Locale.ENGLISH,
-                "%02d:%02d,%02d/%02d/%04d",
-                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
-                c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1,
-                c.get(Calendar.YEAR));
-    }
-
-    public String getMatchScore() {
-        if (result == null) return EMPTY_MATCH_SCORE;
-        return String.format(Locale.ENGLISH, "%d : %d",
-                result.goalsHomeTeam, result.goalsAwayTeam);
-    }
 
 // widgets
     public String getCompetitionName() {
@@ -315,11 +261,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.competitionName = competitionName;
     }
 
-    public String getMatchDateWidget() {
-        if (date == null) return EMPTY_MATCH_TIME;
-        SimpleDateFormat df = new SimpleDateFormat(DATE_WIDGET_PATTERN);
-        return df.format(date);
-    }
+
 
     public String getMatchScoreHome() {
         if (result == null || result.goalsHomeTeam < 0) return EMPTY_DASH;

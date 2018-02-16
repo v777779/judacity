@@ -14,6 +14,10 @@ public class FDLink {
     @Expose
     private String href;
 
+    public FDLink() {
+        href = "";
+    }
+
     public String getHref() {
         return href;
     }

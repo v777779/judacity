@@ -16,11 +16,14 @@ import android.os.RemoteException;
 import android.support.v7.preference.PreferenceManager;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +38,7 @@ import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDFixtures;
 import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDPlayers;
+import ru.vpcb.footballassistant.data.FDStanding;
 import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.data.FDTeams;
@@ -43,6 +47,14 @@ import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
+import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_TIME_WIDGET;
+import static ru.vpcb.footballassistant.utils.Config.DATE_FULL_PATTERN;
+import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE;
+import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE_WIDGET;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.FD_BASE_URI;
 import static ru.vpcb.footballassistant.utils.Config.FD_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_DELAY;
@@ -52,6 +64,7 @@ import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_3;
 import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_4;
 import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_5;
 import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_EXCEPTION_CODE_6;
+import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
 
@@ -63,6 +76,78 @@ import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
  */
 
 public class FDUtils {
+    private static final SimpleDateFormat formatDate =
+            new SimpleDateFormat(DATE_FULL_PATTERN,Locale.ENGLISH);
+    private static final SimpleDateFormat formatMatchDateWidget =
+            new SimpleDateFormat(PATTERN_MATCH_DATE_WIDGET,Locale.ENGLISH);
+    private static final SimpleDateFormat formatMatchDate =
+            new SimpleDateFormat(PATTERN_MATCH_DATE,Locale.ENGLISH);
+    private static final SimpleDateFormat formatMatchTime =
+            new SimpleDateFormat(PATTERN_MATCH_TIME,Locale.ENGLISH);
+
+    // stings
+    public static int formatId(String href) throws NumberFormatException {
+        int id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
+        if (id == -1) throw new NumberFormatException();
+        return id;
+    }
+
+    private static Calendar getCalendarFromString(String s) {
+        try {
+            Date date = formatDate.parse(s);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            return c;
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    private static Date getDateFromString(String s) {
+        try {
+            return formatDate.parse(s);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+
+    public static String formatMatchTimeWidget(String s) {
+        if (s == null || s.isEmpty()) return EMPTY_MATCH_TIME;
+
+        Calendar c = getCalendarFromString(s);
+        if (c == null) return EMPTY_MATCH_TIME;
+
+        return String.format(Locale.ENGLISH, FORMAT_MATCH_TIME_WIDGET,
+                c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+    }
+
+    public static String formatMatchDateWidget(String s) {
+        if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
+        Date date = getDateFromString(s);
+        if (date == null) return EMPTY_LONG_DASH;
+        return formatMatchDateWidget.format(date);
+    }
+
+    public static String formatMatchDate(String s) {
+        if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
+        Date date = getDateFromString(s);
+        if (date == null) return EMPTY_LONG_DASH;
+        return formatMatchDate.format(date);
+    }
+
+    public static String formatMatchTime(String s) {
+        if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
+        Date date = getDateFromString(s);
+        if (date == null) return EMPTY_LONG_DASH;
+        return formatMatchTime.format(date);
+    }
+
+    public static String formatMatchScore(int home, int away) {
+        if (home < 0 || away < 0) return EMPTY_MATCH_SCORE;
+        return String.format(Locale.ENGLISH, FORMAT_MATCH_SCORE, home, away);
+    }
+
 
     // shared preferences
     public static boolean getPrefBool(Context context, int keyId, int valueId) {
@@ -111,16 +196,16 @@ public class FDUtils {
     }
 
     // data
-    private static boolean isRefreshed(Context context, Date lastRefresh) {
-        if (lastRefresh == null) return false;
-
-        long delay = TimeUnit.MINUTES.toMillis(
-                getPrefInt(context, R.string.pref_data_delay_time_key, R.integer.pref_data_delay_time_default));
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-        long refreshTime = lastRefresh.getTime();
-
-        return currentTime - refreshTime < delay;
-    }
+//    private static boolean isRefreshed(Context context, Date lastRefresh) {
+//        if (lastRefresh == null) return false;
+//
+//        long delay = TimeUnit.MINUTES.toMillis(
+//                getPrefInt(context, R.string.pref_data_delay_time_key, R.integer.pref_data_delay_time_default));
+//        long currentTime = Calendar.getInstance().getTimeInMillis();
+//        long refreshTime = lastRefresh.getTime();
+//
+//        return currentTime - refreshTime < delay;
+//    }
 
 
     // database
@@ -269,12 +354,11 @@ public class FDUtils {
         int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
         int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
         int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
-        Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
-        Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
+        String lastUpdated = cursor.getString(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE);
 
         FDCompetition competition = new FDCompetition(id, caption, league,
                 year, currentMatchDay, numberOfMatchDays, numberOfTeams,
-                numberOfGames, lastUpdated, lastRefresh);
+                numberOfGames, lastUpdated);
 
         return competition;
     }
@@ -320,7 +404,6 @@ public class FDUtils {
     // teams
     public static Map<Integer, FDTeam> readTeams(Context context) {
         Uri uri = FDContract.TmEntry.CONTENT_URI;                               // вся таблица
-//        String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
         String sortOrder = FDContract.TmEntry.COLUMN_TEAM_ID + " ASC";   // sort by id
 
         Cursor cursor = context.getContentResolver().query(
@@ -380,9 +463,9 @@ public class FDUtils {
         int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
         if (id <= 0) return null;
 
-        Date date = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE));
+        String date = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE);
         String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
-        int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
+        int matchDay = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
         String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
         String awayTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_AWAY);
 
@@ -392,11 +475,11 @@ public class FDUtils {
         double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
         double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
         double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
-        Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_LAST_REFRESH));
 
-        FDFixture fixture = new FDFixture(id, date, status, matchday,
+
+        FDFixture fixture = new FDFixture(id, date, status, matchDay,
                 homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
-                homeWin, draw, awayWin, lastRefresh);
+                homeWin, draw, awayWin);
 
         return fixture;
     }
@@ -478,12 +561,11 @@ public class FDUtils {
             int numberOfMatchDays = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_MATCHDAYS);
             int numberOfTeams = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_TEAMS);
             int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
-            Date lastUpdated = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE));
-            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.ICpEntry.COLUMN_LAST_REFRESH));
+            String lastUpdated = cursor.getString(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE);
 
             FDCompetition competition = new FDCompetition(id, caption, league,
                     year, currentMatchDay, numberOfMatchDays, numberOfTeams,
-                    numberOfGames, lastUpdated, lastRefresh);
+                    numberOfGames, lastUpdated);
 
             map.put(competition.getId(), competition);
         }
@@ -524,10 +606,9 @@ public class FDUtils {
             String shortName = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_SHORT_NAME);
             String squadMarketValue = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_MARKET_VALUE);
             String crestURL = cursor.getString(FDDbHelper.ITmEntry.COLUMN_TEAM_CREST_URI);
-            long lastRefresh = TimeUnit.MINUTES.toMillis(
-                    cursor.getInt(FDDbHelper.ITmEntry.COLUMN_LAST_REFRESH));
 
-            FDTeam team = new FDTeam(id, name, code, shortName, squadMarketValue, crestURL, lastRefresh);
+
+            FDTeam team = new FDTeam(id, name, code, shortName, squadMarketValue, crestURL);
             map.put(team.getId(), team);
         }
 //        cursor.close();
@@ -564,7 +645,7 @@ public class FDUtils {
             int id = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ID);
             if (id <= 0) continue;
 
-            Date date = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE));
+            String date = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_DATE);
             String status = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_STATUS);
             int matchday = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FIXTURE_MATCHDAY);
             String homeTeamName = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_TEAM_HOME);
@@ -576,11 +657,11 @@ public class FDUtils {
             double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
             double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
             double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
-            Date lastRefresh = minutesToDate(cursor.getInt(FDDbHelper.IFxEntry.COLUMN_LAST_REFRESH));
+
 
             FDFixture fixture = new FDFixture(id, date, status, matchday,
                     homeTeamName, awayTeamName, goalsHomeTeam, goalsAwayTeam,
-                    homeWin, draw, awayWin, lastRefresh);
+                    homeWin, draw, awayWin);
 
             map.put(fixture.getId(), fixture);
         }
@@ -605,8 +686,6 @@ public class FDUtils {
         }
 
         ContentValues values = new ContentValues();
-        int lastUpdate = dateToMinutes(competition.getLastUpdated());
-        int lastRefresh = currentTimeMinutes();
 
         values.put(FDContract.CpEntry.COLUMN_COMPETITION_ID, competition.getId());                  // int
         values.put(FDContract.CpEntry.COLUMN_COMPETITION_CAPTION, competition.getCaption());        // string
@@ -616,8 +695,7 @@ public class FDUtils {
         values.put(FDContract.CpEntry.COLUMN_NUMBER_MATCHDAYS, competition.getNumberOfMatchDays()); // int
         values.put(FDContract.CpEntry.COLUMN_NUMBER_TEAMS, competition.getNumberOfTeams());         // int
         values.put(FDContract.CpEntry.COLUMN_NUMBER_GAMES, competition.getNumberOfGames());         // int
-        values.put(FDContract.CpEntry.COLUMN_LAST_UPDATE, lastUpdate);                              // int from date
-        values.put(FDContract.CpEntry.COLUMN_LAST_REFRESH, lastRefresh);                            // string from date
+        values.put(FDContract.CpEntry.COLUMN_LAST_UPDATE, competition.getLastUpdated());                              // int from date
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
 
         return operations;
@@ -668,7 +746,6 @@ public class FDUtils {
             ContentValues values = new ContentValues();
             values.put(FDContract.CpTmEntry.COLUMN_COMPETITION_ID, competition.getId());            // int
             values.put(FDContract.CpTmEntry.COLUMN_TEAM_ID, team.getId());                          // int
-            values.put(FDContract.CpTmEntry.COLUMN_LAST_REFRESH, refreshTime);                      // string from date
             operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
         }
         return operations;
@@ -726,7 +803,6 @@ public class FDUtils {
         values.put(FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME, team.getShortName());                 // string
         values.put(FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE, team.getSquadMarketValue());        // string
         values.put(FDContract.TmEntry.COLUMN_TEAM_CREST_URI, team.getCrestURL());                   // string
-        values.put(FDContract.TmEntry.COLUMN_LAST_REFRESH, refreshTime);                            // int from date
 
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
         return operations;
@@ -781,12 +857,10 @@ public class FDUtils {
         for (FDFixture fixture : competition.getFixtures()) {
             if (fixture == null || fixture.getId() <= 0) continue;
             uri = buildItemIdUri(FDContract.CpFxEntry.TABLE_NAME, competition.getId(), fixture.getId());
-            int refreshTime = dateToMinutes(fixture.getLastRefresh());
 
             ContentValues values = new ContentValues();
             values.put(FDContract.CpFxEntry.COLUMN_COMPETITION_ID, competition.getId());            // int
             values.put(FDContract.CpFxEntry.COLUMN_FIXTURE_ID, fixture.getId());                    // int
-            values.put(FDContract.CpFxEntry.COLUMN_LAST_REFRESH, refreshTime);                      // string from date
             operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
         }
         return operations;
@@ -829,29 +903,24 @@ public class FDUtils {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
         Uri uri = buildItemIdUri(FDContract.FxEntry.TABLE_NAME, fixture.getId());
-
         if (forceDelete) { // force clear Teams table
             operations.add(ContentProviderOperation.newDelete(uri).build());
         }
-
-        int refreshTime = dateToMinutes(fixture.getLastRefresh());
-        int fixtureDate = dateToMinutes(fixture.getDate());
-
-
         ContentValues values = new ContentValues();
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_ID, fixture.getId());                          // int
-        values.put(FDContract.FxEntry.COLUMN_FIXTURE_DATE, fixtureDate);                            // int
+        values.put(FDContract.FxEntry.COLUMN_COMPETITION_ID, fixture.getCompetitionId());           // int
+        values.put(FDContract.FxEntry.COLUMN_TEAM_HOME_ID, fixture.getHomeTeamId());                // int
+        values.put(FDContract.FxEntry.COLUMN_TEAM_AWAY_ID, fixture.getAwayTeamId());                // int
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_DATE, fixture.getDate());                      // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_STATUS, fixture.getStatus());                  // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_MATCHDAY, fixture.getMatchDay());              // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_TEAM_HOME, fixture.getHomeTeamName());         // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_TEAM_AWAY, fixture.getAwayTeamName());         // string
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_GOALS_HOME, fixture.getGoalsHome());           // int
-        values.put(FDContract.FxEntry.COLUMN_FIXTURE_GOALS_AWAY, fixture.getGoalsAway());           // string
-        values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN, fixture.getHomeWin());               // string
-        values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW, fixture.getDraw());                 // string
-        values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY, fixture.getAwayWin());              // string
-        values.put(FDContract.FxEntry.COLUMN_LAST_REFRESH, refreshTime);                            // int from date
-
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_GOALS_AWAY, fixture.getGoalsAway());           // int
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN, fixture.getHomeWin());               // double
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW, fixture.getDraw());                 // double
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY, fixture.getAwayWin());              // double
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
         return operations;
     }
@@ -903,6 +972,31 @@ public class FDUtils {
 
     // write long term data
     // table
+    private static ContentProviderOperation writeTableRecord(FDStanding standing, String competitionId, String groupName) {
+        ContentValues values = new ContentValues();
+
+
+        values.put(FDContract.TbEntry.COLUMN_COMPETITION_ID, standing.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_ID, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_COMPETITION_MATCHDAY, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_LEAGUE_CAPTION, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_POSITION, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_NAME, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_CREST_URI, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_POINTS, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_GOALS, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_GOALS_AGAINST, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_GOALS_DIFFERENCE, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_WINS, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_DRAWS, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_LOSSES, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_POINTS, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_POINTS, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_POINTS, table.getId());                                // int
+
+
+    }
+
     public static ArrayList<ContentProviderOperation> writeTable(FDTable table, boolean forceDelete) {
 
         if (table == null || table.getId() <= 0) return null;
@@ -911,20 +1005,38 @@ public class FDUtils {
         Uri uri = buildItemIdUri(FDContract.TbEntry.TABLE_NAME, table.getId());
         int refreshTime = (int) (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTime().getTime()));
 
-        if (forceDelete) { // force clear Teams table
+        if (forceDelete) {                                                                  // force clear table
             operations.add(ContentProviderOperation.newDelete(uri).build());
         }
+
 
         ContentValues values = new ContentValues();
 
 
-        values.put(FDContract.TmEntry.COLUMN_TEAM_ID, team.getId());                                // int
-        values.put(FDContract.TmEntry.COLUMN_TEAM_NAME, team.getName());                            // string
-        values.put(FDContract.TmEntry.COLUMN_TEAM_CODE, team.getCode());                            // string
-        values.put(FDContract.TmEntry.COLUMN_TEAM_SHORT_NAME, team.getShortName());                 // string
-        values.put(FDContract.TmEntry.COLUMN_TEAM_MARKET_VALUE, team.getSquadMarketValue());        // string
-        values.put(FDContract.TmEntry.COLUMN_TEAM_CREST_URI, team.getCrestURL());                   // string
-        values.put(FDContract.TmEntry.COLUMN_LAST_REFRESH, refreshTime);                            // int from date
+        values.put(FDContract.TbEntry.COLUMN_COMPETITION_ID, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_COMPETITION_ID, table.getId());                                // int
+        values.put(FDContract.TbEntry.COLUMN_TEAM_NAME, team.getName());                            // string
+        values.put(FDContract.TbEntry.COLUMN_TEAM_CODE, team.getCode());                            // string
+        values.put(FDContract.TbEntry.COLUMN_TEAM_SHORT_NAME, team.getShortName());                 // string
+        values.put(FDContract.TbEntry.COLUMN_TEAM_MARKET_VALUE, team.getSquadMarketValue());        // string
+        values.put(FDContract.TbEntry.COLUMN_TEAM_CREST_URI, team.getCrestURL());                   // string
+        values.put(FDContract.TbEntry.COLUMN_LAST_REFRESH, refreshTime);                            // int from date
+        public static final String COLUMN_COMPETITION_ID = "competition_id";                // int
+        public static final String COLUMN_TEAM_ID = "team_id";                              // int
+        public static final String COLUMN_COMPETITION_MATCHDAY = "competition_matchday";    // int
+        public static final String COLUMN_LEAGUE_CAPTION = "league_caption";                // string
+        public static final String COLUMN_TEAM_POSITION = "team_position";                  // int
+        public static final String COLUMN_TEAM_NAME = "team_name";                          // string
+        public static final String COLUMN_CREST_URI = "crest_uri";                          // string
+        public static final String COLUMN_TEAM_PLAYED_GAMES = "team_played_games";          // int
+        public static final String COLUMN_TEAM_POINTS = "team_points";                      // int
+        public static final String COLUMN_TEAM_GOALS = "team_goals";                        // int
+        public static final String COLUMN_TEAM_GOALS_AGAINST = "team_goals_against";        // int
+        public static final String COLUMN_TEAM_GOALS_DIFFERENCE = "team_goals_difference";  // int
+        public static final String COLUMN_TEAM_WINS = "team_wins";                          // int
+        public static final String COLUMN_TEAM_DRAWS = "team_draws";                        // int
+        public static final String COLUMN_TEAM_LOSSES = "team_losses";                      // int
+        public static final String COLUMN_LAST_REFRESH = "last_refresh";                    // int from date
 
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
         return operations;
@@ -1083,95 +1195,95 @@ public class FDUtils {
         return map;
     }
 
-    private static boolean isCompetitionsRefreshed(Context context, Map<Integer, FDCompetition> map) {
-        if (map == null || map.isEmpty()) return false;
-        for (FDCompetition competition : map.values()) {
-            if (competition == null || competition.getId() <= 0 ||
-                    !isRefreshed(context, competition.getLastRefresh())) return false;
-        }
-        return true; // all data ok and refreshed
-    }
+//    private static boolean isCompetitionsRefreshed(Context context, Map<Integer, FDCompetition> map) {
+//        if (map == null || map.isEmpty()) return false;
+//        for (FDCompetition competition : map.values()) {
+//            if (competition == null || competition.getId() <= 0 ||
+//                    !isRefreshed(context, competition.getLastRefresh())) return false;
+//        }
+//        return true; // all data ok and refreshed
+//    }
 
     // all maps read by loaders
 // load competitions
-    public static boolean loadDatabaseRefresh(
-            Context context, Map<Integer, FDCompetition> map,
-            Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
-            Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures,
-            boolean forceUpdate) throws NullPointerException, IOException {
-
-// progress
-        double step;
-        double progress = 0;
-
-// load teams or skip
-        boolean isUpdated = false;
-        boolean isCompetitionUpdated = false;
-// load map
-        if (forceUpdate || !isCompetitionsRefreshed(context, map)) {
-            isUpdated = true;
-            isCompetitionUpdated = true;
-            map.clear();
-            List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
-            Date lastRefresh = currentTimeMinutesToDate();
-            for (FDCompetition competition : list) {
-                if (competition == null || competition.getId() <= 0) continue;
-                competition.setLastRefresh(lastRefresh);
-                map.put(competition.getId(), competition);
-            }
-        }
-
-        step = UPDATE_SERVICE_PROGRESS * 0.8 / (map.size() + 1); // 1 + t.map.size + f.map.size
-        progress = step;
-        sendProgress(context, (int) progress);  // +1
-
-        for (FDCompetition competition : map.values()) {
-            if (competition == null || competition.getId() <= 0) continue;
-// teams
-            boolean isRefreshed = false;
-            if (!forceUpdate && !isCompetitionUpdated &&                                // if competitions updated load teams
-                    isRefreshed(context, competition.getLastRefresh())) {               // check smart update
-                isRefreshed = true;
-                if (competition.getTeams() == null) {
-                    isRefreshed = setListTeams(competition, mapTeamKeys, mapTeams);     // restore teams from keys
-                }
-            }
-
-            if (!isRefreshed) {
-                try {
-                    isUpdated = true;                                                   // one item changed
-                    List<FDTeam> teams = loadListTeams(competition);                    // load
-                    competition.setTeams(teams);
-                } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
-                    Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_2, competition, e.getMessage()));
-                }
-            }
-// fixtures
-            isRefreshed = false;
-            if (!forceUpdate && !isCompetitionUpdated &&                                // if competitions updated load fixtures
-                    isRefreshed(context, competition.getLastRefresh())) {               // check smart update
-                isRefreshed = true;
-                if (competition.getFixtures() == null) {
-                    isRefreshed = setListFixtures(competition, mapFixtureKeys, mapFixtures);
-                }
-            }
-
-            if (!isRefreshed) {
-                try {
-                    isUpdated = true;                                                   // one item changed
-                    List<FDFixture> fixtures = loadListFixtures(competition);           // load
-                    competition.setFixtures(fixtures);
-                } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
-                    Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_3, competition, e.getMessage()));
-                }
-
-            }
-// progress
-            progress += step;
-            sendProgress(context, (int) progress);// t,f
-        }
-        return isUpdated;
-    }
+//    public static boolean loadDatabaseRefresh(
+//            Context context, Map<Integer, FDCompetition> map,
+//            Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,
+//            Map<Integer, List<Integer>> mapFixtureKeys, Map<Integer, FDFixture> mapFixtures,
+//            boolean forceUpdate) throws NullPointerException, IOException {
+//
+//// progress
+//        double step;
+//        double progress = 0;
+//
+//// load teams or skip
+//        boolean isUpdated = false;
+//        boolean isCompetitionUpdated = false;
+//// load map
+//        if (forceUpdate || !isCompetitionsRefreshed(context, map)) {
+//            isUpdated = true;
+//            isCompetitionUpdated = true;
+//            map.clear();
+//            List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
+//            Date lastRefresh = currentTimeMinutesToDate();
+//            for (FDCompetition competition : list) {
+//                if (competition == null || competition.getId() <= 0) continue;
+//                competition.setLastRefresh(lastRefresh);
+//                map.put(competition.getId(), competition);
+//            }
+//        }
+//
+//        step = UPDATE_SERVICE_PROGRESS * 0.8 / (map.size() + 1); // 1 + t.map.size + f.map.size
+//        progress = step;
+//        sendProgress(context, (int) progress);  // +1
+//
+//        for (FDCompetition competition : map.values()) {
+//            if (competition == null || competition.getId() <= 0) continue;
+//// teams
+//            boolean isRefreshed = false;
+//            if (!forceUpdate && !isCompetitionUpdated &&                                // if competitions updated load teams
+//                    isRefreshed(context, competition.getLastRefresh())) {               // check smart update
+//                isRefreshed = true;
+//                if (competition.getTeams() == null) {
+//                    isRefreshed = setListTeams(competition, mapTeamKeys, mapTeams);     // restore teams from keys
+//                }
+//            }
+//
+//            if (!isRefreshed) {
+//                try {
+//                    isUpdated = true;                                                   // one item changed
+//                    List<FDTeam> teams = loadListTeams(competition);                    // load
+//                    competition.setTeams(teams);
+//                } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+//                    Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_2, competition, e.getMessage()));
+//                }
+//            }
+//// fixtures
+//            isRefreshed = false;
+//            if (!forceUpdate && !isCompetitionUpdated &&                                // if competitions updated load fixtures
+//                    isRefreshed(context, competition.getLastRefresh())) {               // check smart update
+//                isRefreshed = true;
+//                if (competition.getFixtures() == null) {
+//                    isRefreshed = setListFixtures(competition, mapFixtureKeys, mapFixtures);
+//                }
+//            }
+//
+//            if (!isRefreshed) {
+//                try {
+//                    isUpdated = true;                                                   // one item changed
+//                    List<FDFixture> fixtures = loadListFixtures(competition);           // load
+//                    competition.setFixtures(fixtures);
+//                } catch (NullPointerException | NumberFormatException | IOException | InterruptedException e) {
+//                    Timber.d(format(context, LOAD_DB_EXCEPTION_CODE_3, competition, e.getMessage()));
+//                }
+//
+//            }
+//// progress
+//            progress += step;
+//            sendProgress(context, (int) progress);// t,f
+//        }
+//        return isUpdated;
+//    }
 
 
     // all maps read by loaders
@@ -1189,11 +1301,10 @@ public class FDUtils {
 // load map
         map.clear();
         List<FDCompetition> list = loadListCompetitions();  // NullPointerException, IOException
-        Date lastRefresh = currentTimeMinutesToDate();
+
         for (FDCompetition competition : list) {
             if (competition == null || competition.getId() <= 0) continue;
-            competition.setLastRefresh(lastRefresh);
-            map.put(competition.getId(), competition);
+               map.put(competition.getId(), competition);
         }
 
         step = UPDATE_SERVICE_PROGRESS * 0.8 / (map.size() + 1); // 1 + t.map.size + f.map.size
@@ -1232,7 +1343,7 @@ public class FDUtils {
 
         String id = formatString(competition.getId());
         long lastRefresh = Calendar.getInstance().getTimeInMillis();
-        FDTeams teams = loadListTeams(id);      // NullPointerException
+        FDTeams teams = loadListTeams(id);                   // NullPointerException
         if (teams == null) {
 // test!!!
 //            Thread.sleep(100);
@@ -1242,7 +1353,6 @@ public class FDUtils {
         for (FDTeam team : teams.getTeams()) {
             try {
                 team.setId();
-                team.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;
             }
@@ -1258,7 +1368,7 @@ public class FDUtils {
         if (competition == null || competition.getId() <= 0) return null;
 // smart update check
         List<FDTeam> list = competition.getTeams();
-        if (!forceUpdate && list != null && isRefreshed(context, competition.getLastRefresh())) {  // check smart update
+        if (!forceUpdate && list != null) {  // check smart update
             return list;
         }
 // no teams
@@ -1313,8 +1423,11 @@ public class FDUtils {
 
         int competitionId = competition.getId();
         String id = formatString(competitionId);
-        long lastRefresh = Calendar.getInstance().getTimeInMillis();
+        String caption = competition.getCaption();
+
         FDFixtures fixtures = loadListFixtures(id);      // NullPointerException
+
+// TODO check for repetitions of load
         if (fixtures == null) {
 // test!!!
 //            Thread.sleep(100);
@@ -1324,8 +1437,6 @@ public class FDUtils {
         for (FDFixture fixture : fixtures.getFixtures()) {
             try {
                 fixture.setId();
-
-                fixture.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;
             }
@@ -1374,7 +1485,6 @@ public class FDUtils {
         for (FDFixture fixture : fixtures.getFixtures()) {
             try {
                 fixture.setId();
-                fixture.setLastRefresh(lastRefresh);
             } catch (NullPointerException | NumberFormatException e) {
                 continue;
             }

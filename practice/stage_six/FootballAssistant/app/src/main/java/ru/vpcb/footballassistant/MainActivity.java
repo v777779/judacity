@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Widget FDFixture FDTeam добавить пост обработку в Gson
     // TODO Widget FDFixture добавить CompetitionID, TeamHomeID, TeamAwayID в FDFixture Database
     // TODO Widget FDFixture все даты хранить только в String Database
+    // TODO News last refresh завести свою preference
 
 
 

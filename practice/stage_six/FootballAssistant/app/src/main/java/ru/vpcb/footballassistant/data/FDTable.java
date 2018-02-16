@@ -11,7 +11,7 @@ import java.util.List;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDTable {
+public class FDTable implements PostProcessingEnabler.PostProcessable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -27,17 +27,28 @@ public class FDTable {
     @SerializedName("standing")
     @Expose
     private List<FDStanding> standing;
-// cup
+    // cup
     @SerializedName("standings")
     @Expose
     private FDStandingGroup standings;
 
     private int id;
-
     private boolean isChampionship;
 
     public FDTable() {
         this.id = -1;
+    }
+
+    private void setId() {
+        // id
+        String href = links.competition.getHref();
+        id = Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
+        if (id == -1) throw new NumberFormatException();
+    }
+
+    @Override
+    public void postProcess() {
+        setId();
     }
 
     public class FDLinks {
