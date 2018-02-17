@@ -11,6 +11,7 @@ import ru.vpcb.footballassistant.utils.FDUtils;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 
@@ -59,6 +60,14 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     private int homeTeamId;
     private int awayTeamId;
 
+// favorite
+    private boolean isFavorite;
+
+// notification
+    private boolean isNotified;
+    private int notificationId;
+
+
     // widgets
     private String competitionName;
 
@@ -67,6 +76,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.competitionId = EMPTY_INT_VALUE;       // id competition
         this.homeTeamId = EMPTY_INT_VALUE;          // id teamHome
         this.awayTeamId = EMPTY_INT_VALUE;          // id teamAway
+
+        this.isFavorite = false;
+        this.isNotified = false;
+        this.notificationId = EMPTY_NOTIFICATION_ID;
+
     }
 
     public FDFixture(int id, int competitionId, int homeTeamId, int awayTeamId,
@@ -190,9 +204,9 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
 
-    // TODO check and set if null
+
     public String getDate() {
-        return date;     // check and set if null
+        return date;
     }
 
     public String getStatus() {
@@ -278,6 +292,31 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         return result.goalsAwayTeam;
     }
 
+// favorite
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+// notification
+    public boolean isNotified() {
+        return isNotified;
+    }
+
+    public void setNotified(boolean notified) {
+        isNotified = notified;
+    }
+
+    public int getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(int notificationId) {
+        this.notificationId = notificationId;
+    }
 
     @Override
     public void postProcess() {

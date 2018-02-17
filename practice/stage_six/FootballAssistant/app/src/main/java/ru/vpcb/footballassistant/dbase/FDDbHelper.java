@@ -84,7 +84,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
-                FDContract.TbEntry._ID + " INTEGER PRIMARY KEY, " +
+                FDContract.TbEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 FDContract.TbEntry.COLUMN_COMPETITION_ID + " INTEGER NOT NULL, " +      // int
                 FDContract.TbEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
                 FDContract.TbEntry.COLUMN_COMPETITION_MATCHDAY + " INTEGER, " +         // int
@@ -102,7 +102,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.TbEntry.COLUMN_TEAM_LOSSES + " INTEGER);";                   // int
 
         final String CREATE_TABLE_PLAYERS = "CREATE TABLE " + FDContract.PlEntry.TABLE_NAME + " (" +
-                FDContract.PlEntry._ID + " INTEGER PRIMARY KEY, " +                     // int
+                FDContract.PlEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 FDContract.PlEntry.COLUMN_TEAM_ID + " INTEGER NOT NULL, " +             // int
                 FDContract.PlEntry.COLUMN_PLAYER_NAME + " TEXT, " +                     // string
                 FDContract.PlEntry.COLUMN_PLAYER_POSITION + " TEXT, " +                 // string
