@@ -228,6 +228,9 @@
     <string name="text_rm_item_match_time">The Football Match time</string>
     <string name="text_rm_item_league_name">The Football League Name</string>
     <string name="image_rm_item_league_logo">The Football League Logo image</string>
+    <string name="text_rm_viewpager_back_dsc">Viewpager Background Image</string>
+    <string name="text_rm_viewpager_toolbar_back_dsc">Viewpager Title Bar Background Image</string>
+
 
 
     <!--screen4-->
