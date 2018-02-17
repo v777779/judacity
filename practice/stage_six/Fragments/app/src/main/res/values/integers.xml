@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="pref_data_update_time_default">0</integer>
+    <integer name="pref_data_delay_time_default">240</integer>
+
+    <integer name="pref_news_update_time_default">0</integer>
+    <integer name="pref_news_delay_time_default">240</integer>
+
+
+    <!--match-->
+    <integer name="text_sm_item_status_min">7</integer>
+    <!--player-->
+    <integer name="text_tm_item_position_min">8</integer>
+</resources>

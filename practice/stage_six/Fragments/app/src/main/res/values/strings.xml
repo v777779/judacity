@@ -1,0 +1,421 @@
+<resources>
+    <string name="app_name">Football</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_match">MatchActivity</string>
+
+    <string name="title_activity_team">TeamActivity</string>
+    <string name="title_activity_league">LeagueActivity</string>
+    <string name="title_activity_news">NewsActivity</string>
+    <string name="title_activity_favorites">FavoritesActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+
+    <!--titles-->
+    <string name="screen_match">Matches</string>
+    <string name="screen_team">Team</string>
+    <string name="screen_league">Leaue</string>
+    <string name="screen_news">News</string>
+    <string name="screen_favorites">Favorites</string>
+    <string name="screen_settings">Settings</string>
+
+    <!--menu-->
+    <string name="action_settings">Settings</string>
+    <string name="action_calendar">Calendar</string>
+    <string name="action_share">Share</string>
+
+    <!--navigation-->
+    <string name="title_matches">Matches</string>
+    <string name="title_news">News</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_settings">Settings</string>
+
+    <!--preferences-->
+<!--switch    -->
+    <string name="pref_notifications_key">pref_notifications_key</string>
+    <string name="pref_notifications_off">Disabled</string>
+    <string name="pref_notifications_on">Enabled</string>
+    <string name="pref_notifications_title">Notifications</string>
+    <!--switch    -->
+    <string name="pref_snackbar_key">pref_snackbar_key</string>
+    <string name="pref_snackbar_off">Toast</string>
+    <string name="pref_snackbar_on">Snackbar</string>
+    <string name="pref_snackbar_title">Messages style</string>
+<!--list-->
+    <string name="pref_data_delay_time_key">pref_data_delay_time_key</string>
+    <string name="pref_data_delay_time_title">Update Matches</string>
+<!--list-->
+    <string name="pref_news_delay_time_key">pref_news_delay_time_key</string>
+    <string name="pref_news_delay_time_title">Update News</string>
+
+    <string name="pref_delay_time_high">"-1"</string>
+    <string name="pref_delay_time_high_message">Data never will be updated</string>
+
+    <string-array name="pref_delay_time_titles">
+        <item>Always</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>4 hours</item>
+        <item>8 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_delay_time_values">
+        <item>1</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+        <item>480</item>
+        <item>-1</item>
+    </string-array>
+
+
+
+    <!--preference values-->
+    <string name="pref_data_update_time_key">pref_data_update_time_key</string>
+    <string name="pref_news_update_time_key">pref_news_update_time_key</string>
+
+    <!--notifications-->
+    <string name="notification_delay_time_min">Match already started</string>
+    <string name="notification_title">Match Reminder</string>
+    <string name="notification_body">%1$s vs %2$s\nDate: %3$s </string>
+    <string name="notification_time">%1$02d/%2$02d/%3$04d %4$02d:%5$02d</string>
+
+
+
+    <!--retrofit-->
+    <string name="retrofit_response_empty">Retrofit response is empty</string>
+    <string name="retrofit_response_exception">Retrofit response is exception:</string>
+
+    <!--action-->
+    <string name="action_update">ru.vpcb.footballassistant.intent.action.ACTION_UPDATE</string>
+    <string name="action_refresh">ru.vpcb.footballassistant.intent.action.ACTION_REFRESH</string>
+
+    <!--extra-->
+    <string name="extra_empty_cursor">ru.vpcb.footballassistant.intent.extra.EMPTY_CURSOR</string>
+    <string name="extra_progress_counter">ru.vpcb.footballassistant.intent.extra.PROGRESS_COUNTER</string>
+
+
+    <!--broadcast-->
+
+    <string name="broadcast_data_update_started">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_STARTED</string>
+    <string name="broadcast_data_update_finished">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_FINISHED</string>
+    <string name="broadcast_data_no_network">ru.vpcb.footballassistant.intent.action.DATA_NO_NETWORK</string>
+    <string name="broadcast_data_update_error">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_ERROR</string>
+    <string name="broadcast_data_no_network_empty">ru.vpcb.footballassistant.intent.action.DATA_NO_NETWORK_EMPTY</string>
+    <string name="broadcast_data_update_progress">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_PROGRESS</string>
+
+    <string name="broadcast_news_update_started">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_STARTED</string>
+    <string name="broadcast_news_update_finished">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_FINISHED</string>
+    <string name="broadcast_news_no_network">ru.vpcb.footballassistant.intent.action.NEWS_NO_NETWORK</string>
+    <string name="broadcast_news_update_error">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_ERROR</string>
+    <string name="broadcast_news_no_network_empty">ru.vpcb.footballassistant.intent.action.NEWS_NO_NETWORK_EMPTY</string>
+    <string name="broadcast_news_update_progress">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_PROGRESS</string>
+
+
+
+    <!--match-->
+    <string name="text_sm_item_match_long_dash">\u2014</string>
+    <string name="text_sm_item_match_start_header">THE MATCH STARTS IN</string>
+    <string name="text_sm_item_match_subscript_days">days</string>
+    <string name="text_sm_item_match_subscript_hours">hours</string>
+    <string name="text_sm_item_match_subscript_mins">minutes</string>
+
+    <string name="text_sm_item_match_league_underline"><u>%1$s</u></string>
+
+    <!--bet-->
+    <string name="text_sm_item_match_letter_w">W</string>
+    <string name="text_sm_item_match_letter_d">D</string>
+    <string name="text_sm_item_match_letter_l">L</string>
+    <string name="text_sm_item_match_betting">FOOTBALL &amp; BETTING</string>
+
+    <string name="text_sm_item_match_bet_sub_win">win</string>
+    <string name="text_sm_item_match_bet_sub_draw">draw</string>
+    <string name="text_sm_item_match_bet_sub_loss">loss</string>
+
+    <!--recycler-->
+    <string name="text_sm_item_prev_meeting">Previous Meetings</string>
+
+    <!--player-->
+    <string name="text_tm_item_player_sub_birthday">birthday</string>
+    <string name="text_tm_item_player_sub_contract">contract end</string>
+    <string name="text_tm_item_player_sub_number">number</string>
+    <string name="text_tm_item_player_nationality">[ \u2014 ]</string>
+
+    <!--league-->
+    <!--head-->
+    <string name="text_lg_head_team_pos">№</string>
+    <string name="text_lg_head_team_name">Club Name</string>
+    <string name="text_lg_head_team_matches">M</string>
+    <string name="text_lg_head_team_points">P</string>
+    <string name="text_lg_head_team_goals">G</string>
+    <string name="text_lg_head_team_wins">W</string>
+    <string name="text_lg_head_team_draws">D</string>
+    <string name="text_lg_head_team_losses">L</string>
+
+    <!--news-->
+    <string name="text_news_item_head_underlined"> <u> %1$s </u> </string>
+    <string name="text_news_item_time_min">%1$dm</string>
+    <string name="text_news_item_time_hour">%1$dh</string>
+    <string name="text_news_item_time_empty">\u2014</string>
+    <string name="text_news_item_separator">|</string>
+
+    <!--widget-->
+    <string name="widget_empty_dash">-</string>
+    <string name="widget_empty_long_dash">\u2014</string>
+    <string name="widget_empty_time">- : -</string>
+
+    <string name="widget_head_text">Click to choose match</string>
+    <string name="widget_body_text">Ingredients List</string>
+    <string name="widget_button">Tap to fill widget</string>
+    <string name="widget_add">Add widget</string>
+    <string name="widget_list_added">List of ingredients added to widget</string>
+
+    <string name="widget_date">%1$3s, %2$02d %3$3s %4$04d</string>
+
+
+
+    <!--other-->
+
+    <!--messages-->
+    <string name="activity_same_message">You are already here</string>
+
+    <!--exception-->
+    <string name="update_content_error">Update content error: </string>
+    <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
+    <string name="load_database">LoadDatabase exception(%1$d,%2$d): %3$s</string>
+    <string name="write_database">WriteDatabase exception(%1$d,%2$d): %3$s</string>
+    <string name="content_provider_insert">Content provider insert exception: </string>
+
+    <string name="unknown_uri">Unknown uri: %1$s"</string>
+    <string name="unknown_loader_id">Unknown id: %1$d"</string>
+
+    <string name="calendar_set_date_exception">Calendar set date exception: %1$s</string>
+    <string name="viewpager_tab_exception">Tab Layout Titles exception: %1$s</string>
+
+    <string name="recycler_team_image_exception">RecyclerView Team Image and Name set exception: %1$s</string>
+    <string name="notification_empty_activity_exception">Notification empty activity window exception: %1$s</string>
+
+    <!--widgets-->
+    <string name="widget_read_fixture_exception">Widget read fixture exception:%1$s</string>
+
+
+    <!--diagnostic-->
+    <string name="get_competitions_map_null">Get competitions map must not be null</string>
+
+    <!--progress-->
+    <string name="progress_constant">100</string>
+
+    <!--descriptions-->
+
+    <!--appbar-->
+    <!--screen1-->
+    <string name="image_application_logo">Application Logo Image</string>
+    <!--screen2-->
+    <string name="text_application_name">Application Name Text</string>
+
+
+    <!--screen1-->
+    <string name="front_image_application">The Ball front image of application</string>
+
+    <!--screen2-->
+    <string name="image_rm_item_team_logo">The Football Team Logo image</string>
+    <string name="text_rm_item_team_name">The Football Team Name</string>
+    <string name="image_rm_item_service_icon">The Football Match service icon</string>
+    <string name="text_rm_item_match_time">The Football Match time</string>
+    <string name="text_rm_item_league_name">The Football League Name</string>
+    <string name="image_rm_item_league_logo">The Football League Logo image</string>
+
+
+    <!--screen4-->
+    <!--match-->
+    <string name="text_sm_item_match_country">The Name of Country</string>
+    <string name="text_sm_item_match_league">The Name of League</string>
+    <string name="text_sm_item_match_score_home">The Score of Home Team</string>
+    <string name="text_sm_item_match_score_away">The Score of Away Team</string>
+    <string name="text_sm_item_match_status">The Match Status</string>
+    <string name="text_sm_item_match_icon_notification">Notification Icon</string>
+    <string name="text_sm_item_match_icon_notification_back">Notification Icon Circle</string>
+    <string name="text_sm_item_match_icon_favorite">Favorites Icon</string>
+    <string name="text_sm_item_match_icon_favorite_back">Favorite Icon Circle</string>
+
+    <!--start-->
+    <string name="text_sm_item_match_date">The Match Date</string>
+    <string name="text_sm_item_match_time">The Match Time</string>
+    <string name="text_sm_item_match_starts_in">The Match Starts In</string>
+
+    <string name="text_sm_item_match_date_days">The Match Date Days</string>
+    <string name="text_sm_item_match_date_hours">The Match Date Hours</string>
+    <string name="text_sm_item_match_date_mins">The Match Date Minutes</string>
+
+    <string name="text_sm_item_match_day_subscript">The Match Date Day Subscript</string>
+    <string name="text_sm_item_match_hour_subscript">The Match Date Hour Subscript</string>
+    <string name="text_sm_item_match_min_subscript">The Match Date Minute Subscript</string>
+
+    <string name="text_character_letter">The Letter</string>
+    <string name="text_character_dash">The Dash Line</string>
+    <string name="text_sm_item_match_full_date">The Match Start Full Date and Time</string>
+    <!--bet-->
+    <string name="text_sm_item_match_bet">The Football and Betting</string>
+    <string name="text_sm_item_match_bet_sub_wins">The Subscript Win</string>
+    <string name="text_sm_item_match_bet_sub_draws">The Subscript Draw</string>
+    <string name="text_sm_item_match_bet_sub_losses">The Subscript Loss</string>
+
+    <!--recycler-->
+    <string name="text_sm_item_prev_meetings">Previous Meetings Header</string>
+    <string name="text_sm_item_match_score">The Score of Match</string>
+
+
+    <!--screen7-->
+    <!--player-->
+    <string name="image_tm_item_player_flag_dsc">The Country Flag of Player</string>
+    <string name="text_tm_item_player_name_dsc">The Player Name and Second Name</string>
+    <string name="text_tm_item_player_number_dsc">The Player Number</string>
+    <string name="text_tm_item_player_position_dsc">The Player Position in a Team</string>
+    <string name="text_tm_item_player_birthday_dsc">The Player Birthday Date</string>
+    <string name="text_tm_item_player_contract_dsc">The Player Contract End Date</string>
+
+    <string name="text_tm_item_player_sub_position_dsc">The Player Subscript Position</string>
+    <string name="text_tm_item_player_sub_birthday_dsc">The Player Subscript Birthday Date</string>
+    <string name="text_tm_item_player_sub_contract_dsc">The Player Subscript Contract End Date</string>
+    <string name="text_tm_item_player_sub_number_dsc">The Player Subscript Number</string>
+    <string name="text_tm_item_player_nationality_dsc">The nationality of Player</string>
+
+    <!--screen8-->
+    <!--league-->
+    <!--item-->
+    <string name="text_lg_team_pos_dsc">The Team Position Number in League Table</string>
+    <string name="image_lg_team_logo_dsc">The Team Logo in League Table</string>
+    <string name="text_lg_team_name_dsc">The Team Name in League Table</string>
+    <string name="text_lg_team_matches_dsc">The Number of Team Matches in League Table</string>
+    <string name="text_lg_team_points_dsc">The Number of Team Points in League Table</string>
+    <string name="text_lg_team_goals_dsc">The Number of Team Goals in League Table</string>
+    <string name="text_lg_team_wins_dsc">The Number of Team Wins in League Table</string>
+    <string name="text_lg_team_draws_dsc">The Number of Team Draws in League Table</string>
+    <string name="text_lg_team_losses_dsc">The Number of Team Losses in League Table</string>
+    <string name="text_lg_team_separator_vertical_dsc">The Vertical Separator in League Table</string>
+    <string name="text_lg_team_separator_horizontal_dsc">The Horizontal Separator in League Table</string>
+<!--head-->
+    <string name="text_lg_head_team_pos_dsc">The Header  Team Position Number in League Table</string>
+    <string name="text_lg_head_team_name_dsc">The Header Team Logo and Name in League Table</string>
+    <string name="text_lg_head_team_matches_dsc">The Header  Number of Team Matches in League Table</string>
+    <string name="text_lg_head_team_points_dsc">The Header  Number of Team Points in League Table</string>
+    <string name="text_lg_head_team_goals_dsc">The Header  Number of Team Goals in League Table</string>
+    <string name="text_lg_head_team_wins_dsc">The Header  Number of Team Wins in League Table</string>
+    <string name="text_lg_head_team_draws_dsc">The Header  Number of Team Draws in League Table</string>
+    <string name="text_lg_head_team_losses_dsc">The Header  Number of Team Losses in League Table</string>
+
+<!--screen 9-->
+    <string name="image_news_item_poster_dsc">The News Poster image</string>
+    <string name="text_news_item_header_dsc">The News Header Text</string>
+    <string name="text_news_item_body_dsc">The News Body Text</string>
+    <string name="text_news_item_source_dsc">The News Source Name</string>
+    <string name="text_news_item_time_dsc">The News Time in Hours Past</string>
+    <string name="text_news_item_separator_dsc">The Separator Character</string>
+
+
+    <!--other-->
+    <!--competition-->
+
+    <!--dialog-->
+    <string name="dialog_title">Dialog</string>
+
+    <!--calendar-->
+    <string name="calendar_title">Calendar</string>
+    <string name="calendar_text_year">%1$04d</string>
+    <string name="calendar_text_date">%1$s, %2$s %3$02d</string>
+
+
+    <!--test-->
+    <string name="text_test_rm_item_team_home">Eintracht Braunschweig</string>
+    <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
+    <string name="text_test_rm_item_match_time">19:05</string>
+    <string name="text_test_rm_item_match_date">20/01/18</string>
+    <string name="text_test_rm_item_league_code">FAC</string>
+    <string name="text_test_rm_item_league">Premier League 2017/18</string>
+    <string name="text_test_rm_item_league2">Champions League 2017/18</string>
+    <string name="text_test_rm_item_league3">League One 2017/18</string>
+    <string name="text_test_rm_item_league4">League Two 2017/18</string>
+    <string name="text_test_rm_item_favorites">Favorite matches</string>
+
+    <string name="text_test_calendar_line1">2017</string>
+    <string name="text_test_calendar_line2">Thu, Apr 3</string>
+
+
+    <string name="text_test_sm_item_match_country">England</string>
+    <string name="text_test_sm_item_match_number_1">1</string>
+    <string name="text_test_sm_item_match_number_0">0</string>
+
+    <string name="text_test_sm_item_match_number_1_9">1.9</string>
+    <string name="text_test_sm_item_match_number_3_5">3.5</string>
+    <string name="text_test_sm_item_match_number_4_0">4.0</string>
+
+    <string name="text_test_sm_item_match_finished">FINISHED</string>
+    <string name="text_test_sm_item_match_timed">TIMED</string>
+    <string name="text_test_sm_item_match_cancelled">CANCELLED</string>
+    <string name="text_test_sm_item_match_scheduled">SCHEDULED</string>
+
+    <string name="text_test_sm_item_match_date">Sat, 20 Jan 2018</string>
+    <string name="text_test_sm_item_match_date_time">20 Jan 2018 19:05</string>
+    <string name="text_test_sm_match_recycler_date">20 Jan 2018</string>
+    <string name="text_test_sm_match_recycler_score">1 : 0</string>
+
+    <string name="text_test_tm_item_player_name">Michael Dawson</string>
+    <string name="text_test_tm_item_player_number">21</string>
+    <string name="text_test_tm_item_player_position">Centre-Back</string>
+    <string name="text_test_tm_item_player_birthday">18.11.83</string>
+    <string name="text_test_tm_item_player_contract">30.06.18</string>
+
+    <string name="text_test_tm_item_player_name2">Paul McShane</string>
+    <string name="text_test_tm_item_player_number2">15</string>
+    <string name="text_test_tm_item_player_position2">Centre-Back</string>
+    <string name="text_test_tm_item_player_birthday2">06.01.86</string>
+    <string name="text_test_tm_item_player_contract2">30.06.18</string>
+
+    <string name="text_test_lg_item_team_pos_1">1</string>
+    <string name="text_test_lg_item_team_pos_2">2</string>
+    <string name="text_test_lg_item_team_pos_3">3</string>
+    <string name="text_test_lg_item_team_pos_4">4</string>
+    <string name="text_test_lg_item_team_pos_5">5</string>
+
+    <string name="text_test_lg_item_team_pos_22">22</string>
+    <string name="text_test_lg_item_team_pos_65">65</string>
+    <string name="text_test_lg_item_team_pos_12">12</string>
+    <string name="text_test_lg_item_team_pos_77">77</string>
+    <string name="text_test_lg_item_team_pos_82">82</string>
+    <string name="text_test_lg_item_team_pos_34">34</string>
+
+    <string name="text_test_lg_item_team_pos_122">122</string>
+    <string name="text_test_lg_item_team_pos_165">165</string>
+    <string name="text_test_lg_item_team_pos_112">112</string>
+    <string name="text_test_lg_item_team_pos_177">177</string>
+    <string name="text_test_lg_item_team_pos_182">182</string>
+    <string name="text_test_lg_item_team_pos_134">134</string>
+
+    <string name="text_test_lg_item_team_pos_7">7</string>
+    <string name="text_test_lg_item_team_pos_8">8</string>
+
+
+    <string name="text_test_lg_item_team_name_1">Eintracht Braunschweig FC Junior League sdfd sdfd sdfdsf</string>
+    <string name="text_test_lg_item_team_name_2">Manchester United Junior League FC</string>
+    <string name="text_test_lg_item_team_name_3">Team Name 3</string>
+    <string name="text_test_lg_item_team_name_4">Team Name 4</string>
+    <string name="text_test_lg_item_team_name_5">Team Name 5</string>
+
+
+    <string name="text_test_news_item_head">Scotland fights back to beat France 32-26</string>
+    <string name="text_test_news_item_body">EDINBURGH, Scotland (AP)  Scotland rebounded from its
+        mauling in Wales by fighting back to beat France 32-26 in Six Nations rugby at
+        Murrayfield, with a string of successful penalty kicks by recalled scrumhalf
+        Greig Laidlaw completing the turnaround on Sunday.</string>
+    <string name="text_test_news_item_time">15 hr ago</string>
+    <string name="text_test_news_item_source">Fox Sports</string>
+
+
+
+
+
+    <string name="large_text">
+
+    </string>
+
+
+</resources>
