@@ -46,6 +46,11 @@
 <!--list-->
     <string name="pref_news_delay_time_key">pref_news_delay_time_key</string>
     <string name="pref_news_delay_time_title">Update News</string>
+<!--list-->
+    <string name="pref_fixture_dates_span_key">pref_fixture_dates_span_key</string>
+    <string name="pref_fixture_dates_span_title">Match Dates Span in Days</string>
+
+
 
     <string name="pref_delay_time_high">"-1"</string>
     <string name="pref_delay_time_high_message">Data never will be updated</string>

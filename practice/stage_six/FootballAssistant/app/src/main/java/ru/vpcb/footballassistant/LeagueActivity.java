@@ -59,12 +59,12 @@ import timber.log.Timber;
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LEAGUE_VIEWPAGER_POS;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS_DEFAULT;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LEAGUE_ID;
 
-import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
 import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
@@ -172,7 +172,7 @@ public class LeagueActivity extends AppCompatActivity
 
         } else {
             mIsRotated = true;
-            mViewPagerPos = savedInstanceState.getInt(BUNDLE_LEAGUE_VIEWPAGER_POS, FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS);
+            mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS, BUNDLE_VIEWPAGER_POS_DEFAULT);
             mLeagueId = savedInstanceState.getInt(BUNDLE_LEAGUE_ID, EMPTY_LEAGUE_ID);
         }
 
@@ -217,7 +217,7 @@ public class LeagueActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(BUNDLE_LEAGUE_VIEWPAGER_POS, mViewPagerPos);
+        outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
         outState.putInt(BUNDLE_LEAGUE_ID, mLeagueId);
     }
 

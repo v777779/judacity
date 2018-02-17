@@ -218,6 +218,12 @@ public class Config {
     //detail activity
     public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
     public static final int CALENDAR_DIALOG_ACTION_CANCEL = 1;
+    public static final String BUNDLE_VIEWPAGER_DATE_BUNDLE = "bundle_viewpager_date_bundle";
+    public static final String BUNDLE_VIEWPAGER_DATE_BEFORE = "bundle_viewpager_date_before";
+    public static final String BUNDLE_VIEWPAGER_DATE_AFTER = "bundle_viewpager_date_after";
+    public static final String BUNDLE_VIEWPAGER_POS = "bundle_viewpager_pos";
+    public static final int BUNDLE_VIEWPAGER_POS_DEFAULT = 2;
+
 
     // team activity
     public static final String BUNDLE_INTENT_TEAM_ID = "bundle_intent_team_id";
@@ -226,10 +232,6 @@ public class Config {
 
     // fragment_team
     public static final String FRAGMENT_TEAM_TAG = "fragment_team";
-    public static final String BUNDLE_TEAM_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
-
-    public static final int FRAGMENT_TEAM_VIEWPAGER_TEAM_POS = 0;
-    public static final int FRAGMENT_TEAM_VIEWPAGER_PLAYERS_POS = 1;
 
 
     // league activity
@@ -237,10 +239,7 @@ public class Config {
     public static final String BUNDLE_LEAGUE_ID = "bundle_league_id";
     public static final int EMPTY_LEAGUE_ID = -1;
 
-    // fragment_league
-    public static final String FRAGMENT_LEAGUE_TAG = "fragment_league";
-    public static final String BUNDLE_LEAGUE_VIEWPAGER_POS = "fragment_team_bundle_viewpager_pos";
-    public static final int FRAGMENT_LEAGUE_VIEWPAGER_LEAGUE_POS = 0;
+
 
     public static final String[] LEAGUE_CODES = new String[]{
             "BL1", "Germany", "1. Bundesliga",

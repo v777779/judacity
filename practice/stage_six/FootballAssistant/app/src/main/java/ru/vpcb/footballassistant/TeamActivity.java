@@ -58,12 +58,12 @@ import timber.log.Timber;
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS_DEFAULT;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_TEAM_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
-import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_VIEWPAGER_TEAM_POS;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
@@ -156,7 +156,7 @@ public class TeamActivity extends AppCompatActivity
             }
         } else {
             mIsRotated = true;
-            mViewPagerPos = savedInstanceState.getInt(BUNDLE_TEAM_VIEWPAGER_POS, FRAGMENT_TEAM_VIEWPAGER_TEAM_POS);
+            mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS, BUNDLE_VIEWPAGER_POS_DEFAULT);
             mTeamId = savedInstanceState.getInt(BUNDLE_TEAM_ID, EMPTY_TEAM_ID);
         }
 // params
@@ -180,25 +180,12 @@ public class TeamActivity extends AppCompatActivity
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
-
-        if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            mTeamId = EMPTY_TEAM_ID;
-            if (intent != null && intent.hasExtra(BUNDLE_INTENT_TEAM_ID)) {
-                mTeamId = intent.getIntExtra(BUNDLE_INTENT_TEAM_ID, EMPTY_TEAM_ID);
-            }
-
 //            refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
-        } else {
-            mIsRotated = true;
-            mViewPagerPos = savedInstanceState.getInt(BUNDLE_TEAM_VIEWPAGER_POS, FRAGMENT_TEAM_VIEWPAGER_TEAM_POS);
-            mTeamId = savedInstanceState.getInt(BUNDLE_TEAM_ID, EMPTY_TEAM_ID);
-        }
 
 
     }
@@ -206,7 +193,7 @@ public class TeamActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(BUNDLE_TEAM_VIEWPAGER_POS, mViewPagerPos);
+        outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
         outState.putInt(BUNDLE_TEAM_ID, mTeamId);
     }
 
