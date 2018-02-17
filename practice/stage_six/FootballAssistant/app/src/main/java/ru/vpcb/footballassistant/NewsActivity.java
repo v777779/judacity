@@ -197,7 +197,7 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return FDLoader.getInstance(this, id);
+        return FDLoader.getInstance(this, id, args);
     }
 
 
@@ -283,7 +283,7 @@ public class NewsActivity extends AppCompatActivity
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
-        startActivity(intent,bundle);
+        startActivity(intent, bundle);
         finish();
     }
 
@@ -730,7 +730,7 @@ public class NewsActivity extends AppCompatActivity
                                 startActivityFavorites();
                                 return true;
                             case R.id.navigation_settings:
-                               startActivitySettings();
+                                startActivitySettings();
                                 return true;
                         }
                         return false;

@@ -61,6 +61,7 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_AFTER
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_BEFORE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_BUNDLE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_MIN;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
@@ -167,7 +168,7 @@ public class DetailActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             mViewPagerBundle = getDatesSpanBundle(Calendar.getInstance());
-            mViewPagerPos = getFixtureDatesSpan(); // center of -span 0 span+
+            mViewPagerPos = getFixtureDatesSpan() / 2 ; // center of -span 0 span+
 
         } else {
             mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_VIEWPAGER_DATE_BUNDLE);
@@ -229,7 +230,7 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return FDLoader.getInstance(this, id);
+        return FDLoader.getInstance(this, id, args);
     }
 
 
@@ -319,7 +320,7 @@ public class DetailActivity extends AppCompatActivity
             if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
 
                 mViewPagerBundle = getDatesSpanBundle(calendar);
-                mViewPagerPos = getFixtureDatesSpan(); // center of -span 0 span+
+                mViewPagerPos = getFixtureDatesSpan() / 2; // center of -span 0 span+
                 restartLoaders();
             }
 
@@ -355,9 +356,11 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private int getFixtureDatesSpan() {
-        return PreferenceManager.getDefaultSharedPreferences(this)
+        int dateSpan = PreferenceManager.getDefaultSharedPreferences(this)
                 .getInt(getString(R.string.pref_fixture_dates_span_key), getResources()
                         .getInteger(R.integer.pref_fixture_dates_span_default));
+        if (dateSpan < BUNDLE_VIEWPAGER_SPAN_MIN) dateSpan = BUNDLE_VIEWPAGER_SPAN_MIN;
+        return dateSpan;
     }
 
     private Bundle getDatesSpanBundle(Calendar c) {
@@ -365,9 +368,10 @@ public class DetailActivity extends AppCompatActivity
         String dateAfter;
         int dateSpan = getFixtureDatesSpan();
 
-        c.add(Calendar.DATE, -dateSpan);
+        setZeroTime(c);
+        c.add(Calendar.DATE, -dateSpan / 2);
         dateBefore = formatDateToSQLite(c.getTime());
-        c.add(Calendar.DATE, dateSpan);
+        c.add(Calendar.DATE, dateSpan + (1 - (dateSpan % 2)));
         dateAfter = formatDateToSQLite(c.getTime());
 
         Bundle bundle = new Bundle();

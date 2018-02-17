@@ -193,7 +193,7 @@ public class FavoritesActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return FDLoader.getInstance(this, id);
+        return FDLoader.getInstance(this, id, args);
     }
 
 
