@@ -165,15 +165,16 @@ public class DetailActivity extends AppCompatActivity
             Calendar c = Calendar.getInstance();
             String dateBefore;
             String dateAfter;
-            c.add(Calendar.DATE, -2);
+            c.add(Calendar.DATE, -10);
             dateBefore = formatDateToSQLite(c.getTime());
-            c.add(Calendar.DATE, +5);
+            c.add(Calendar.DATE, +10);
             dateAfter = formatDateToSQLite(c.getTime());
 
             dateBundle = new Bundle();
             dateBundle.putString("bundle_date_before", dateBefore);
             dateBundle.putString("bundle_date_after", dateAfter);
             mViewPagerPos = 2;
+            mViewPagerBack.setVisibility(View.VISIBLE);
 
 
         } else {
@@ -181,10 +182,10 @@ public class DetailActivity extends AppCompatActivity
             setupViewPager();
             dateBundle = savedInstanceState.getBundle("bundle_viewpager_buyndle");
             mViewPagerPos = savedInstanceState.getInt("bundle_viewpager_pos");
+            mViewPagerBack.setVisibility(View.INVISIBLE);
         }
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
-        mViewPagerBack.setVisibility(View.VISIBLE);
 
 
 //        if (savedInstanceState == null) {
@@ -339,9 +340,9 @@ public class DetailActivity extends AppCompatActivity
 
                 String dateBefore;
                 String dateAfter;
-                c.add(Calendar.DATE, -2);
+                c.add(Calendar.DATE, -10);
                 dateBefore = formatDateToSQLite(c.getTime());
-                c.add(Calendar.DATE, +5);
+                c.add(Calendar.DATE, +10);
                 dateAfter = formatDateToSQLite(c.getTime());
                 Bundle bundle = new Bundle();
                 bundle.putString("bundle_date_before", dateBefore);
@@ -716,7 +717,7 @@ public class DetailActivity extends AppCompatActivity
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(mViewPagerPos);
 
-
+        mViewPagerBack.animate().alpha(0).setDuration(750).start();
     }
 
 //    private void setupViewPager2() {
