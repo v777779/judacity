@@ -37,12 +37,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -73,7 +71,7 @@ import static ru.vpcb.footballassistant.utils.FDUtils.formatDateToSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.setDay;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
-public class DetailActivity extends AppCompatActivity
+public class DetailActivity2 extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private static boolean sIsTimber;
@@ -117,8 +115,6 @@ public class DetailActivity extends AppCompatActivity
     // test!!!
 // TODO  make parcelable for ViewPager and rotation
     private ViewPagerData mViewPagerData;
-    private int mViewPagerPos;
-    private Bundle dateBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,47 +154,40 @@ public class DetailActivity extends AppCompatActivity
         setupReceiver();
         setupListeners();
 
-
         if (savedInstanceState == null) {
-
             setupViewPager();
-            Calendar c = Calendar.getInstance();
-            String dateBefore;
-            String dateAfter;
-            c.add(Calendar.DATE, -2);
-            dateBefore = formatDateToSQLite(c.getTime());
-            c.add(Calendar.DATE, +5);
-            dateAfter = formatDateToSQLite(c.getTime());
-
-            dateBundle = new Bundle();
-            dateBundle.putString("bundle_date_before", dateBefore);
-            dateBundle.putString("bundle_date_after", dateAfter);
-            mViewPagerPos = 2;
-
-
         } else {
 // test!!!  check data
             setupViewPager();
-            dateBundle = savedInstanceState.getBundle("bundle_viewpager_buyndle");
-            mViewPagerPos = savedInstanceState.getInt("bundle_viewpager_pos");
         }
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
-        mViewPagerBack.setVisibility(View.VISIBLE);
-
+        mViewPager.setVisibility(View.GONE);
+        mViewPagerBack.setVisibility(View.GONE);
 
 //        if (savedInstanceState == null) {
 
 //            refresh(getString(R.string.action_update));
+        Calendar c = Calendar.getInstance();
+        String dateBefore;
+        String dateAfter;
+        c.add(Calendar.DATE, -2);
+        dateBefore = formatDateToSQLite(c.getTime());
+        c.add(Calendar.DATE, +5);
+        dateAfter = formatDateToSQLite(c.getTime());
+        Bundle bundle = new Bundle();
+        bundle.putString("bundle_date_before", dateBefore);
+        bundle.putString("bundle_date_after", dateAfter);
 
-        getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, dateBundle, this);
+//        getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+//        getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+//        getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
+//        getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+//        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);
 //        }
-
-
+        if (savedInstanceState == null) {
+            startFragmentDetail();
+        }
     }
 
     @Override
@@ -221,13 +210,6 @@ public class DetailActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBundle("bundle_viewpager_bundle", dateBundle);
-        outState.putInt("bundle_viewpager_pos", mViewPagerPos);
     }
 
     @Override
@@ -346,14 +328,12 @@ public class DetailActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putString("bundle_date_before", dateBefore);
                 bundle.putString("bundle_date_after", dateAfter);
-                dateBundle = bundle;
-                mViewPagerPos = 2; // center of list
 
-                getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().restartLoader(FDContract.FxEntry.LOADER_ID, dateBundle, this);
+//                getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+//                getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+//                getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
+//                getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+//                getSupportLoaderManager().restartLoader(FDContract.FxEntry.LOADER_ID, bundle, this);
 
 
             }
@@ -365,7 +345,10 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-// methods
+    // methods
+    public ViewPagerData getData() {
+        return mViewPagerData;
+    }
 
     private void startActivitySettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -405,6 +388,19 @@ public class DetailActivity extends AppCompatActivity
                 .toBundle();
         startActivity(intent, bundle);
         finish();
+    }
+
+
+    private void startFragmentDetail() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = DetailFragment.newInstance();
+
+        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
+        fm.beginTransaction()
+                .replace(R.id.container_detail, fragment)
+                .addToBackStack(FRAGMENT_TEAM_TAG)
+                .commit();
+
     }
 
     private void startFragmentLeague() {
@@ -451,7 +447,7 @@ public class DetailActivity extends AppCompatActivity
 // TODO Check SQLite Date Format
     private long getViewPagerDate(int index) {
         try {
-            String s = mViewPagerData.mList.get(index).get(0).getDate();
+            String s = mViewPagerData.getList().get(index).get(0).getDate();
             Calendar c = FDUtils.getCalendarFromString(s);
             if (c == null) return -1;
             setZeroTime(c);
@@ -465,7 +461,7 @@ public class DetailActivity extends AppCompatActivity
 // TODO Check SQLite Date Format
     private Calendar getViewPagerDate() {
         try {
-            String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
+            String s = mViewPagerData.getList().get(mViewPager.getCurrentItem()).get(0).getDate();
             Calendar c = FDUtils.getCalendarFromString(s);
             if (c == null) return null;
             setZeroTime(c);
@@ -601,7 +597,6 @@ public class DetailActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
-                mViewPagerPos = position;
             }
 
             @Override
@@ -685,38 +680,38 @@ public class DetailActivity extends AppCompatActivity
 
     private void updateViewPager(final ViewPagerData data) {
         if (mViewPager == null || data == null) return;
-//        int pos = mViewPager.getCurrentItem();
-//
-//
-//        if (pos == 0) {
-//            pos = data.mPos;                    // current day
-//        } else {
-//
-//// test!!!
-//// TODO CHECK MAP  AFTER deletion  all works but Map
-////            data.getList().remove(210);
-////            data.getList().remove(211);
-////            data.getList().remove(212);
-////            data.getRecyclers().remove(210);
-////            data.getRecyclers().remove(211);
-////            data.getRecyclers().remove(212);
-////            data.getTitles().remove(210);
-////            data.getTitles().remove(211);
-////            data.getTitles().remove(212);
-////            List<Long> keys = new ArrayList<>(data.getMap().keySet());
-////            data.getMap().remove(keys.get(210));
-////            data.getMap().remove(keys.get(212));
-////            data.getMap().remove(keys.get(214));
-//// end test!!!
-//
-//            updateTabLayout(data, mViewPagerData);
-//            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
-//        }
+        int pos = mViewPager.getCurrentItem();
+
+
+        if (pos == 0) {
+            pos = data.getPos();                    // current day
+        } else {
+
+// test!!!
+// TODO CHECK MAP  AFTER deletion  all works but Map
+//            data.getList().remove(210);
+//            data.getList().remove(211);
+//            data.getList().remove(212);
+//            data.getRecyclers().remove(210);
+//            data.getRecyclers().remove(211);
+//            data.getRecyclers().remove(212);
+//            data.getTitles().remove(210);
+//            data.getTitles().remove(211);
+//            data.getTitles().remove(212);
+//            List<Long> keys = new ArrayList<>(data.getMap().keySet());
+//            data.getMap().remove(keys.get(210));
+//            data.getMap().remove(keys.get(212));
+//            data.getMap().remove(keys.get(214));
+// end test!!!
+
+            updateTabLayout(data, mViewPagerData);
+            if (pos >= data.getRecyclers().size()) pos = data.getRecyclers().size() - 1;
+        }
         mViewPagerData = data;
-        ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
-        mViewPager.setCurrentItem(mViewPagerPos);
+        ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.getRecyclers(), data.getTitles());
+        mViewPager.setCurrentItem(pos);
 
-
+        startFragmentDetail();
     }
 
 //    private void setupViewPager2() {
@@ -848,7 +843,7 @@ public class DetailActivity extends AppCompatActivity
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         View rootView = getWindow().getDecorView();
 
-                        Context context = DetailActivity.this;
+                        Context context = DetailActivity2.this;
                         switch (item.getItemId()) {
                             case R.id.navigation_matches:
                                 Toast.makeText(context, getString(R.string.activity_same_message),
@@ -900,45 +895,45 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
-    private class ViewPagerData {
-        private List<View> mRecyclers;
-        private List<String> mTitles;
-        private int mPos;
-        private List<List<FDFixture>> mList;
-        private Map<Long, Integer> mMap;
-
-
-        public ViewPagerData(List<View> recyclers, List<String> titles, int pos,
-                             List<List<FDFixture>> list,
-                             Map<Long, Integer> map) {
-            this.mRecyclers = recyclers;
-            this.mTitles = titles;
-            this.mPos = pos;
-            this.mList = list;
-            this.mMap = map;
-
-        }
-
-        public List<View> getRecyclers() {
-            return mRecyclers;
-        }
-
-        public List<String> getTitles() {
-            return mTitles;
-        }
-
-        public int getPos() {
-            return mPos;
-        }
-
-        public List<List<FDFixture>> getList() {
-            return mList;
-        }
-
-        public Map<Long, Integer> getMap() {
-            return mMap;
-        }
-    }
+//    public class ViewPagerData {
+//        private List<View> mRecyclers;
+//        private List<String> mTitles;
+//        private int mPos;
+//        private List<List<FDFixture>> mList;
+//        private Map<Long, Integer> mMap;
+//
+//
+//        public ViewPagerData(List<View> recyclers, List<String> titles, int pos,
+//                             List<List<FDFixture>> list,
+//                             Map<Long, Integer> map) {
+//            this.mRecyclers = recyclers;
+//            this.mTitles = titles;
+//            this.mPos = pos;
+//            this.mList = list;
+//            this.mMap = map;
+//
+//        }
+//
+//        public List<View> getRecyclers() {
+//            return mRecyclers;
+//        }
+//
+//        public List<String> getTitles() {
+//            return mTitles;
+//        }
+//
+//        public int getPos() {
+//            return mPos;
+//        }
+//
+//        public List<List<FDFixture>> getList() {
+//            return mList;
+//        }
+//
+//        public Map<Long, Integer> getMap() {
+//            return mMap;
+//        }
+//    }
 
     // TODO Make encapsulation data and maps to ViewPager and other Activities
     private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {

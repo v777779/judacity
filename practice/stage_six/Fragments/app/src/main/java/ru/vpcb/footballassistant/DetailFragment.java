@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,9 +27,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,12 +41,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -73,7 +75,7 @@ import static ru.vpcb.footballassistant.utils.FDUtils.formatDateToSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.setDay;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
-public class DetailActivity extends AppCompatActivity
+public class DetailFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private static boolean sIsTimber;
@@ -117,13 +119,32 @@ public class DetailActivity extends AppCompatActivity
     // test!!!
 // TODO  make parcelable for ViewPager and rotation
     private ViewPagerData mViewPagerData;
+
+    private View mRootView;
+    private DetailActivity2 mActivity;
+    private Context mContext;
     private int mViewPagerPos;
-    private Bundle dateBundle;
+
+
+    public static Fragment newInstance() {
+        Fragment fragment = new DetailFragment();
+        Bundle args = new Bundle();
+// set arguments
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (DetailActivity2) context;
+
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
 
         // log
         if (!sIsTimber) {
@@ -135,21 +156,77 @@ public class DetailActivity extends AppCompatActivity
             mHandler = new Handler();
         }
 
-// bind
-        mFab = findViewById(R.id.fab);
-        mFab2 = findViewById(R.id.fab2);
-        mProgressValue = findViewById(R.id.progress_value);
-        mToolbarLogo = findViewById(R.id.toolbar_logo);
-        mBottomNavigation = findViewById(R.id.bottom_navigation);
-        mViewPager = findViewById(R.id.viewpager_main);
-        mViewPagerBack = findViewById(R.id.image_viewpager_back);
-        mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
-
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
 
+//        if (savedInstanceState == null) {
+//            refresh(getString(R.string.action_update));
+        if (savedInstanceState == null) {
+            Calendar c = Calendar.getInstance();
+            String dateBefore;
+            String dateAfter;
+            c.add(Calendar.DATE, -2);
+            dateBefore = formatDateToSQLite(c.getTime());
+            c.add(Calendar.DATE, +5);
+            dateAfter = formatDateToSQLite(c.getTime());
+            Bundle bundle = new Bundle();
+            bundle.putString("bundle_date_before", dateBefore);
+            bundle.putString("bundle_date_after", dateAfter);
+
+            getLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);
+
+            mViewPagerPos = 2;
+        } else {
+            Calendar c = Calendar.getInstance();
+            String dateBefore;
+            String dateAfter;
+            c.add(Calendar.DATE, -4);
+            dateBefore = formatDateToSQLite(c.getTime());
+            c.add(Calendar.DATE, +2);
+            dateAfter = formatDateToSQLite(c.getTime());
+            Bundle bundle = new Bundle();
+            bundle.putString("bundle_date_before", dateBefore);
+            bundle.putString("bundle_date_after", dateAfter);
+
+            getLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+            getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);
+
+            mViewPagerPos = savedInstanceState.getInt("bundle_viewpager_pos");
+        }
+
+//        }
+
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        mRootView = inflater.inflate(R.layout.detail_fragment, container, false);
+
+
+// bind
+        mFab = mRootView.findViewById(R.id.fab);
+        mFab2 = mRootView.findViewById(R.id.fab2);
+        mProgressValue = mRootView.findViewById(R.id.progress_value);
+        mToolbarLogo = mRootView.findViewById(R.id.toolbar_logo);
+        mBottomNavigation = mRootView.findViewById(R.id.bottom_navigation);
+        mViewPager = mRootView.findViewById(R.id.viewpager_main);
+        mViewPagerBack = mRootView.findViewById(R.id.image_viewpager_back);
+        mTabLayout = mRootView.findViewById(R.id.toolbar_sliding_tabs);
+
+// params
+        mContext = getContext();
 
 // progress
         setupActionBar();
@@ -158,61 +235,27 @@ public class DetailActivity extends AppCompatActivity
         setupReceiver();
         setupListeners();
 
-
-        if (savedInstanceState == null) {
-
-            setupViewPager();
-            Calendar c = Calendar.getInstance();
-            String dateBefore;
-            String dateAfter;
-            c.add(Calendar.DATE, -2);
-            dateBefore = formatDateToSQLite(c.getTime());
-            c.add(Calendar.DATE, +5);
-            dateAfter = formatDateToSQLite(c.getTime());
-
-            dateBundle = new Bundle();
-            dateBundle.putString("bundle_date_before", dateBefore);
-            dateBundle.putString("bundle_date_after", dateAfter);
-            mViewPagerPos = 2;
-
-
-        } else {
-// test!!!  check data
-            setupViewPager();
-            dateBundle = savedInstanceState.getBundle("bundle_viewpager_buyndle");
-            mViewPagerPos = savedInstanceState.getInt("bundle_viewpager_pos");
-        }
+        setupViewPager();
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
-        mViewPagerBack.setVisibility(View.VISIBLE);
+        mViewPagerBack.setVisibility(View.INVISIBLE);
 
 
-//        if (savedInstanceState == null) {
-
-//            refresh(getString(R.string.action_update));
-
-        getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, dateBundle, this);
-//        }
-
-
+        return mRootView;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_match, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            startActivitySettings();
+
             return true;
         }
         if (id == R.id.action_calendar) {
@@ -224,20 +267,13 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBundle("bundle_viewpager_bundle", dateBundle);
-        outState.putInt("bundle_viewpager_pos", mViewPagerPos);
-    }
-
-    @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         registerReceiver();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         unregisterReceiver();
     }
@@ -246,7 +282,7 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return FDLoader.getInstance(this, id, args);
+        return FDLoader.getInstance(getContext(), id, args);
     }
 
 
@@ -309,6 +345,12 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("bundle_viewpager_pos", mViewPagerPos);
+    }
+
+    @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 // cursors will be closed by supportLoaderManager().CursorLoader()
 
@@ -320,13 +362,7 @@ public class DetailActivity extends AppCompatActivity
                 .setAction("Action", null).show();
 // temp!!!
 // widget
-        Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
-        if (bundle != null) {
-            int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
-            int fixtureId = value;
-            MatchWidgetService.startFillWidgetAction(this, widgetId, fixtureId);
-        }
-        startActivityMatch();
+
     }
 
     @Override
@@ -346,14 +382,12 @@ public class DetailActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putString("bundle_date_before", dateBefore);
                 bundle.putString("bundle_date_after", dateAfter);
-                dateBundle = bundle;
-                mViewPagerPos = 2; // center of list
 
-                getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
-                getSupportLoaderManager().restartLoader(FDContract.FxEntry.LOADER_ID, dateBundle, this);
+                getLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+                getLoaderManager().initLoader(FDContract.CpTmEntry.LOADER_ID, null, this);
+                getLoaderManager().initLoader(FDContract.CpFxEntry.LOADER_ID, null, this);
+                getLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, null, this);
+                getLoaderManager().restartLoader(FDContract.FxEntry.LOADER_ID, bundle, this);
 
 
             }
@@ -367,52 +401,13 @@ public class DetailActivity extends AppCompatActivity
 
 // methods
 
-    private void startActivitySettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
-        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
-                android.R.anim.fade_in, android.R.anim.fade_out)
-                .toBundle();
-        startActivity(intent, bundle);
-        finish();
-    }
-
-
-    private void startActivityFavorites() {
-        Intent intent = new Intent(this, FavoritesActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
-        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
-                android.R.anim.fade_in, android.R.anim.fade_out)
-                .toBundle();
-        startActivity(intent, bundle);
-        finish();
-    }
-
-
-//    private void startActivityNews() {
-//        Intent intent = new Intent(this, NewsActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear stack hard but flashes fade in out
-////        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);  // standard transition
-//    }
-
-    private void startActivityNews() {
-        Intent intent = new Intent(this, NewsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
-        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
-                android.R.anim.fade_in, android.R.anim.fade_out)
-                .toBundle();
-        startActivity(intent, bundle);
-        finish();
-    }
 
     private void startFragmentLeague() {
 
     }
 
     private void startFragmentTeam() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         Fragment fragment = TeamFragment.newInstance();
 
         fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
@@ -441,11 +436,6 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
-
-    private void startActivityMatch() {
-        Intent intent = new Intent(this, MatchActivity.class);
-        startActivity(intent);
-    }
 
     // test!!!
 // TODO Check SQLite Date Format
@@ -489,7 +479,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void startCalendar() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         Fragment fragment = CalendarDialog.newInstance(this, getViewPagerDate());
         fm.beginTransaction()
                 .add(fragment, getString(R.string.calendar_title))
@@ -498,16 +488,16 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private RecyclerView getRecycler(List<FDFixture> list) {
-        Config.Span sp = Config.getDisplayMetrics(this);
+        Config.Span sp = Config.getDisplayMetrics(mActivity);
 
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this, list);
+        RecyclerAdapter adapter = new RecyclerAdapter(mContext, list);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
         return recyclerView;
     }
@@ -591,7 +581,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(mActivity, null, null);
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -613,7 +603,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void setupViewPager(ViewPagerData viewPagerData) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, viewPagerData.getRecyclers(), viewPagerData.getTitles());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(mActivity, viewPagerData.getRecyclers(), viewPagerData.getTitles());
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(mViewPagerData.getPos());
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
@@ -624,6 +614,7 @@ public class DetailActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
+                mViewPagerPos = position;
             }
 
             @Override
@@ -777,12 +768,12 @@ public class DetailActivity extends AppCompatActivity
 
 
     private void setupActionBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = mRootView.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.screen_match));
-        setSupportActionBar(toolbar);
+        mActivity.setSupportActionBar(toolbar);
 
         mToolbarLogo.setVisibility(View.INVISIBLE);
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = mActivity.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("");
             actionBar.show();
@@ -790,10 +781,10 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
-    private void refresh(String action) {
-        Intent intent = new Intent(action, null, this, UpdateService.class);
-        startService(intent);
-    }
+//    private void refresh(String action) {
+//        Intent intent = new Intent(action, null, this, UpdateService.class);
+//        startService(intent);
+//    }
 
 
     private void setupReceiver() {
@@ -806,11 +797,11 @@ public class DetailActivity extends AppCompatActivity
         intentFilter.addAction(getString(R.string.broadcast_data_update_finished));
         intentFilter.addAction(getString(R.string.broadcast_data_no_network));
         intentFilter.addAction(getString(R.string.broadcast_data_update_progress));
-        registerReceiver(mMessageReceiver, intentFilter);
+        mContext.registerReceiver(mMessageReceiver, intentFilter);
     }
 
     private void unregisterReceiver() {
-        unregisterReceiver(mMessageReceiver);
+        mContext.unregisterReceiver(mMessageReceiver);
     }
 
 
@@ -840,28 +831,27 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void setupBottomNavigation() {
-        mBottomNavigation = findViewById(R.id.bottom_navigation);
+        mBottomNavigation = mRootView.findViewById(R.id.bottom_navigation);
         mBottomNavigation.setSelectedItemId(R.id.navigation_matches);
         mBottomNavigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        View rootView = getWindow().getDecorView();
 
-                        Context context = DetailActivity.this;
+
                         switch (item.getItemId()) {
                             case R.id.navigation_matches:
-                                Toast.makeText(context, getString(R.string.activity_same_message),
+                                Toast.makeText(mContext, getString(R.string.activity_same_message),
                                         Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.navigation_news:
-                                startActivityNews();
+
                                 return true;
                             case R.id.navigation_favorites:
-                                startActivityFavorites();
+
                                 return true;
                             case R.id.navigation_settings:
-                                startActivitySettings();
+
                                 return true;
                         }
                         return false;
