@@ -779,12 +779,22 @@ public class DetailActivity extends AppCompatActivity
 //            updateTabLayout(data, mViewPagerData);
 //            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
 //        }
+
+
         mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(mViewPagerPos);
+// animation
         mViewPagerBack.animate().alpha(0).setStartDelay(VIEWPAGER_BACK_START_DELAY)
                 .setDuration(VIEWPAGER_BACK_DURATION).start();
         mViewPager.animate().alpha(1).setDuration(750).start();
+// tablayout scrolling
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mTabLayout.setScrollPosition(mViewPagerPos,0,false);
+            }
+        },100);
 
     }
 
