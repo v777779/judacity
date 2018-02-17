@@ -26,7 +26,6 @@ import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPL
 public class CalendarDialog extends DialogFragment implements View.OnClickListener {
 
     private ICallback mCallback;
-    private int mLayoutId;
     private CalendarView mCalendarView;
     private TextView mTextViewYear;
     private TextView mTextViewDate;
@@ -35,7 +34,6 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     public static Fragment newInstance(ICallback callback, Calendar calendar) {
         CalendarDialog fragment = new CalendarDialog();
         fragment.setStyle(R.style.Dialog_Title, R.style.Calendar_Dialog);
-        fragment.mLayoutId = R.layout.fragment_calendar;
         fragment.mCallback = callback;
         fragment.mCalendar = calendar;
         return fragment;
@@ -63,7 +61,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(mLayoutId, null);
+        View v = inflater.inflate(R.layout.fragment_calendar, null);
         v.findViewById(R.id.btn_ok).setOnClickListener(this);
         v.findViewById(R.id.btn_cancel).setOnClickListener(this);
         getDialog().setTitle(getString(R.string.calendar_title));
@@ -80,12 +78,13 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                mCalendar.set(year,month,dayOfMonth);
+                mCalendar.set(year, month, dayOfMonth);
                 setCalendarHead();
             }
         });
 
-       setCalendarHead();
+        setCalendarHead();
+        getDialog().setCanceledOnTouchOutside(true);
 
         return v;
     }
@@ -124,7 +123,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     }
 
 
-    private void  setCalendarHead() {
+    private void setCalendarHead() {
         mTextViewYear.setText(getString(R.string.calendar_text_year, mCalendar.get(Calendar.YEAR)));
 
         mTextViewDate.setText(getString(R.string.calendar_text_date,

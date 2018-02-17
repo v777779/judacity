@@ -257,11 +257,15 @@ public class FDUtils {
         return value;
     }
 
-    public static int getPrefInt(Context context, int keyId, int defaultId) {
+    public static int getPrefString(Context context, int keyId, int defaultId) {
         Resources res = context.getResources();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        int value = sp.getInt(res.getString(keyId), res.getInteger(defaultId));
-        return value;
+        try {
+            String s = sp.getString(res.getString(keyId), res.getString(defaultId));
+            return Integer.valueOf(s);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     public static void setRefreshTime(Context context) {
@@ -269,28 +273,31 @@ public class FDUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(res.getString(R.string.pref_data_update_time_key), FDUtils.currentTimeMinutes());
+        editor.putString(res.getString(R.string.pref_data_update_time_key), String.valueOf(FDUtils.currentTimeMinutes()));
         editor.apply();
     }
 
     public static boolean isFootballDataRefreshed(Context context) {
-        int time = getPrefInt(context,
+        int time = getPrefString(context,
                 R.string.pref_data_update_time_key,
-                R.integer.pref_data_update_time_default);
-        int delay = getPrefInt(context,
+                R.string.pref_data_update_time_default);
+        int delay = getPrefString(context,
                 R.string.pref_data_delay_time_key,
-                R.integer.pref_data_delay_time_default);
+                R.string.pref_data_delay_time_default);
+        if (time < 0 || delay < 0) return false;
 
         return FDUtils.currentTimeMinutes() - time < delay;
     }
 
     public static boolean isNewsDataRefreshed(Context context) {
-        int time = getPrefInt(context,
+        int time = getPrefString(context,
                 R.string.pref_news_update_time_key,
-                R.integer.pref_news_update_time_default);
-        int delay = getPrefInt(context,
+                R.string.pref_news_update_time_default);
+        int delay = getPrefString(context,
                 R.string.pref_news_delay_time_key,
-                R.integer.pref_news_delay_time_default);
+                R.string.pref_news_delay_time_default);
+
+        if (time < 0 || delay < 0) return false;
 
         return FDUtils.currentTimeMinutes() - time < delay;
     }
@@ -1060,9 +1067,9 @@ public class FDUtils {
         return operations;
     }
 
-// not insert, just update
+    // not insert, just update
     public static ContentProviderResult[] updateFixtureProjection(Context context, FDFixture fixture,
-                                                       boolean forceDelete)
+                                                                  boolean forceDelete)
             throws OperationApplicationException, RemoteException {
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, updateFixtureProjection(fixture));
     }
@@ -1105,14 +1112,14 @@ public class FDUtils {
         progress += step;
         sendProgress(context, (int) progress);
         writeCompetitionTeams(context, map, forceDelete);
-        progress += step/2;
+        progress += step / 2;
         sendProgress(context, (int) progress);
         writeTeams(context, map, forceDelete);
         progress += step;
-        sendProgress(context,(int)progress );
+        sendProgress(context, (int) progress);
         writeCompetitionFixtures(context, map, forceDelete);
-        progress += step/2;
-        sendProgress(context, (int)progress);
+        progress += step / 2;
+        sendProgress(context, (int) progress);
         writeFixtures(context, map, forceDelete);
 
     }

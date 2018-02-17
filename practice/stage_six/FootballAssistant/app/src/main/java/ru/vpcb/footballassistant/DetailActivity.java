@@ -64,7 +64,9 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_BUNDL
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_CENTER;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS_CLEAR;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_MIN;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_DEFAULT;
+
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_LIMITS;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
@@ -328,7 +330,6 @@ public class DetailActivity extends AppCompatActivity
 
         try {
             if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
-
                 mViewPagerBundle = getDatesSpanBundle(calendar);
                 mViewPagerPos = BUNDLE_VIEWPAGER_POS_CLEAR; // clear to fill
                 restartLoaders();
@@ -366,25 +367,40 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private int getFixtureDatesSpan() {
-        int dateSpan = PreferenceManager.getDefaultSharedPreferences(this)
-                .getInt(getString(R.string.pref_fixture_dates_span_key), getResources()
-                        .getInteger(R.integer.pref_fixture_dates_span_default));
-        if (dateSpan < BUNDLE_VIEWPAGER_SPAN_MIN) dateSpan = BUNDLE_VIEWPAGER_SPAN_MIN;
-        return dateSpan;
+        String stringDateSpan = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(getString(R.string.pref_date_span_key),
+                        getString(R.string.pref_date_span_default));
+        int dateSpan = BUNDLE_VIEWPAGER_SPAN_DEFAULT;
+        try {
+            dateSpan = Integer.valueOf(stringDateSpan);
+
+        }catch (NumberFormatException e) {
+        }
+         return dateSpan;
     }
 
     private Bundle getDatesSpanBundle(Calendar c) {
         String dateBefore;
         String dateAfter;
         String dateCenter;
+
         int dateSpan = getFixtureDatesSpan();
         setZeroTime(c);
 
-        dateCenter = formatDateToSQLite(c.getTime());
-        c.add(Calendar.DATE, -dateSpan / 2);
-        dateBefore = formatDateToSQLite(c.getTime());
-        c.add(Calendar.DATE, dateSpan + (1 - (dateSpan % 2)));
-        dateAfter = formatDateToSQLite(c.getTime());
+        if(dateSpan > 0) {
+
+            dateCenter = formatDateToSQLite(c.getTime());
+            c.add(Calendar.DATE, -dateSpan / 2);
+            dateBefore = formatDateToSQLite(c.getTime());
+            c.add(Calendar.DATE, dateSpan + (1 - (dateSpan % 2)));
+            dateAfter = formatDateToSQLite(c.getTime());
+        }else {
+            dateCenter = formatDateToSQLite(c.getTime());
+            c.add(Calendar.DATE, -BUNDLE_VIEWPAGER_SPAN_LIMITS);
+            dateBefore = formatDateToSQLite(c.getTime());
+            c.add(Calendar.DATE, BUNDLE_VIEWPAGER_SPAN_LIMITS*2);
+            dateAfter = formatDateToSQLite(c.getTime());
+        }
 
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_VIEWPAGER_DATE_BEFORE, dateBefore);

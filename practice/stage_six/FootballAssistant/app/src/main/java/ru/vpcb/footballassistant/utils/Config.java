@@ -226,7 +226,8 @@ public class Config {
     public static final String BUNDLE_VIEWPAGER_POS = "bundle_viewpager_pos";
     public static final int BUNDLE_VIEWPAGER_POS_DEFAULT = 0;
     public static final int BUNDLE_VIEWPAGER_POS_CLEAR = -1;
-    public static final int BUNDLE_VIEWPAGER_SPAN_MIN = 2;
+    public static final int BUNDLE_VIEWPAGER_SPAN_DEFAULT = 10;
+    public static final int BUNDLE_VIEWPAGER_SPAN_LIMITS = 730;
 
     public static final int VIEWPAGER_BACK_START_DELAY = 0;
     public static final int VIEWPAGER_BACK_DURATION = 750;

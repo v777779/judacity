@@ -62,7 +62,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         if (preference instanceof android.support.v7.preference.ListPreference) {
             String s = (String) newValue;
             if (s.equals(getString(R.string.pref_delay_time_high))) {
-                showMessage(getActivity(),getString(R.string.pref_delay_time_high_message));
+                if(preference.getTitle().toString().equals(getString(R.string.pref_date_span_title))) {
+                    showMessage(getActivity(),getString(R.string.pref_date_span_high_message));
+                }else {
+                    showMessage(getActivity(), getString(R.string.pref_delay_time_high_message));
+                }
             }
 
         }
