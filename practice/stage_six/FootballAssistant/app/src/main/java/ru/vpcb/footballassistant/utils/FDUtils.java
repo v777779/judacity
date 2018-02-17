@@ -1011,7 +1011,7 @@ public class FDUtils {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
         Uri uri = buildItemIdUri(FDContract.FxEntry.TABLE_NAME, fixture.getId());
-        if (forceDelete) { // force clear Teams table
+        if (forceDelete) { // force clear fixture from table
             operations.add(ContentProviderOperation.newDelete(uri).build());
         }
         ContentValues values = new ContentValues();
@@ -1062,7 +1062,7 @@ public class FDUtils {
             List<FDFixture> fixtures = competition.getFixtures();
             if (fixtures == null || fixtures.size() == 0) continue;
             for (FDFixture fixture : fixtures) {
-                List<ContentProviderOperation> operations = writeFixture(fixture, false);
+                List<ContentProviderOperation> operations = writeFixture(fixture, forceDelete);
                 if (operations == null) continue;
                 listOperations.addAll(operations);
             }

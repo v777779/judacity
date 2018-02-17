@@ -111,7 +111,7 @@ public class UpdateService extends IntentService {
             FDUtils.sendProgress(this, (int) (UPDATE_SERVICE_PROGRESS * 0.8));
 // save database
             if (isUpdated) {
-                FDUtils.writeDatabase(this, map, true);
+                FDUtils.writeDatabase(this, map, false); //  true delete false update
             }
             FDUtils.setRefreshTime(this);
 
