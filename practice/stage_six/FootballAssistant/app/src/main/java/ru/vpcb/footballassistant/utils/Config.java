@@ -96,6 +96,7 @@ public class Config {
     public static final String DATE_FULL_SSS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String DATE_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String PATTERN_DATE_SQLITE = "yyyy-MM-dd HH:mm:ss";
+    public static final String PATTERN_DATE_SQLITE_ZERO_TIME = "yyyy-MM-dd";
 
 
     public static final String FORMAT_MATCH_TIME_WIDGET = "%02d:%02d";
@@ -221,9 +222,13 @@ public class Config {
     public static final String BUNDLE_VIEWPAGER_DATE_BUNDLE = "bundle_viewpager_date_bundle";
     public static final String BUNDLE_VIEWPAGER_DATE_BEFORE = "bundle_viewpager_date_before";
     public static final String BUNDLE_VIEWPAGER_DATE_AFTER = "bundle_viewpager_date_after";
+    public static final String BUNDLE_VIEWPAGER_DATE_CENTER = "bundle_viewpager_date_center";
     public static final String BUNDLE_VIEWPAGER_POS = "bundle_viewpager_pos";
     public static final int BUNDLE_VIEWPAGER_POS_DEFAULT = 0;
     public static final int BUNDLE_VIEWPAGER_SPAN_MIN = 2;
+
+    public static final int VIEWPAGER_BACK_START_DELAY = 750;
+    public static final int VIEWPAGER_BACK_DURATION = 2500;
 
 
     // team activity

@@ -14,7 +14,7 @@
         android:id="@+id/image_viewpager_back"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.25"
+        android:alpha="0.75"
         android:scaleType="centerCrop"
         android:src="@drawable/back_003"
         app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation"

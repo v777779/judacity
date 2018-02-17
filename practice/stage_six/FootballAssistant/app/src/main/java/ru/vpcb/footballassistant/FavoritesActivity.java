@@ -326,7 +326,7 @@ public class FavoritesActivity extends AppCompatActivity
 //    private long getViewPagerDate(int index) {
 //        try {
 //            String s = mViewPagerData.mList.get(index).get(0).getDate();
-//            Calendar c = FDUtils.getCalendarFromString(s);
+//            Calendar c = FDUtils.getCalendarFromSQLite(s);
 //            if (c == null) return -1;
 //            setZeroTime(c);
 //            return c.getTimeInMillis();

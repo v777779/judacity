@@ -73,10 +73,12 @@
 
 
 
-    <color name="rm_view_border_back">#e0e0e0</color>
+    <color name="rm_view_border_back">#f0f0f0</color>
     <color name="rm_item_card_back">#bdf8f8f8</color>
     <color name="rm_head_card_back">#d5d5d5</color>
 
+
+    <!--<color name="rm_view_border_back">#e0e0e0</color>-->
 <!-- background glass-->
     <!--<color name="rm_view_border_back">#f0f0f0</color>-->
     <!--<color name="rm_item_card_back">#bdf8f8f8</color>-->

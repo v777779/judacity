@@ -35,9 +35,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +65,6 @@ import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
-import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class TeamActivity extends AppCompatActivity
@@ -383,7 +379,7 @@ public class TeamActivity extends AppCompatActivity
     private long getViewPagerDate(int index) {
         try {
             String s = mViewPagerData.mList.get(index).get(0).getDate();
-            Calendar c = FDUtils.getCalendarFromString(s);
+            Calendar c = FDUtils.getCalendarFromSQLite(s);
             if (c == null) return -1;
             setZeroTime(c);
             return c.getTimeInMillis();
@@ -397,7 +393,7 @@ public class TeamActivity extends AppCompatActivity
     private Calendar getViewPagerDate() {
         try {
             String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
-            Calendar c = FDUtils.getCalendarFromString(s);
+            Calendar c = FDUtils.getCalendarFromSQLite(s);
             if (c == null) return null;
             setZeroTime(c);
             return c;

@@ -13,7 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.preference.PreferenceManager;
 
 import com.google.gson.Gson;
@@ -42,7 +42,6 @@ import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDFixtures;
-import ru.vpcb.footballassistant.data.FDLink;
 import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDPlayers;
 import ru.vpcb.footballassistant.data.FDStanding;
@@ -60,15 +59,14 @@ import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_COMPET
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_FIXTURES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_TEAMS;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_FIXTURES;
-import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TABLES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TEAMS;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_TIME_WIDGET;
-import static ru.vpcb.footballassistant.utils.Config.DATE_FULL_PATTERN;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_7;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE;
+import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE_ZERO_TIME;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
@@ -113,6 +111,9 @@ public class FDUtils {
     private static final SimpleDateFormat formatSQLiteDate =
             new SimpleDateFormat(PATTERN_DATE_SQLITE, Locale.ENGLISH);
 
+    private static final SimpleDateFormat formatSQLiteDateZeroTime =
+            new SimpleDateFormat(PATTERN_DATE_SQLITE_ZERO_TIME, Locale.ENGLISH);
+
 
     // stings
     public static int formatId(String href) throws NumberFormatException {
@@ -131,7 +132,7 @@ public class FDUtils {
     }
 
 
-    public static Calendar getCalendarFromString(String s) {
+    public static Calendar getCalendarFromSQLite(String s) {
         Date date = formatDateFromSQLite(s);
         if (date == null) return null;
         Calendar c = Calendar.getInstance();
@@ -143,7 +144,7 @@ public class FDUtils {
     public static String formatMatchTimeWidget(String s) {
         if (s == null || s.isEmpty()) return EMPTY_MATCH_TIME;
 
-        Calendar c = getCalendarFromString(s);
+        Calendar c = getCalendarFromSQLite(s);
         if (c == null) return EMPTY_MATCH_TIME;
 
         return String.format(Locale.ENGLISH, FORMAT_MATCH_TIME_WIDGET,
@@ -186,6 +187,15 @@ public class FDUtils {
     // int
 
     // date and time
+    public static Comparator<Pair<Long,Integer>> cPx = new Comparator<Pair<Long,Integer>>() {
+        @Override
+        public int compare(Pair<Long,Integer> o1, Pair<Long,Integer> o2) {
+            if (o1 == null || o2 == null || o1.first == null || o2.first == null)
+                throw new IllegalArgumentException();
+
+            return o1.first.compareTo(o2.first);
+        }
+    };
 
     public static Comparator<FDFixture> cFx = new Comparator<FDFixture>() {
         @Override
@@ -220,6 +230,15 @@ public class FDUtils {
             return null;
         }
     }
+
+    public static Date formatDateFromSQLiteZeroTime(String s) {
+        try {
+            return formatSQLiteDateZeroTime.parse(s.substring(0,s.lastIndexOf(" ")));
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
 
     public static String formatDateToSQLite(Date date) {
         try {
