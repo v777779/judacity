@@ -126,7 +126,7 @@
 
 
         <ImageView
-            android:id="@+id/icon_rm_item_notification"
+            android:id="@+id/icon_rm_item_favorite"
             android:layout_width="@dimen/icon_rm_item_size"
             android:layout_height="@dimen/icon_rm_item_size"
 
@@ -146,10 +146,10 @@
             android:layout_height="@dimen/icon_rm_item_size"
             android:contentDescription="@string/image_rm_item_service_icon"
             android:src="@drawable/ic_notifications"
-            app:layout_constraintBottom_toBottomOf="@+id/icon_rm_item_notification"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_rm_item_favorite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guide_v3"
-            app:layout_constraintTop_toTopOf="@+id/icon_rm_item_notification" />
+            app:layout_constraintTop_toTopOf="@+id/icon_rm_item_favorite" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide_v1"

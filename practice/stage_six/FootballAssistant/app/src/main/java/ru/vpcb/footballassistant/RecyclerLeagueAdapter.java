@@ -95,8 +95,8 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
-        mRequestBuilder = GlideUtils.getRequestBuilder(context);
-        mRequestBuilderCommon = GlideUtils.getRequestBuilderCommon(context);
+        mRequestBuilder = GlideUtils.getRequestBuilderSvg(context);
+        mRequestBuilderCommon = GlideUtils.getRequestBuilderPng(context);
 
     }
 

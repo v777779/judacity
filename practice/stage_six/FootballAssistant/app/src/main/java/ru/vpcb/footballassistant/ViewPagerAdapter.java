@@ -84,20 +84,4 @@ public class ViewPagerAdapter extends PagerAdapter {
         notifyDataSetChanged();
     }
 
-    private RecyclerView getRecycler(List<FDFixture> list) {
-//        Config.Span sp = Config.getDisplayMetrics(mActivity);
-        Config.Span sp = null;
-
-
-        View recyclerLayout = mActivity.getLayoutInflater().inflate(R.layout.recycler_main, null);
-        RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
-
-        RecyclerAdapter adapter = new RecyclerAdapter(mActivity,  list);
-        adapter.setHasStableIds(true);
-        recyclerView.setAdapter(adapter);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-        recyclerView.setLayoutManager(layoutManager);
-        return recyclerView;
-    }
 }

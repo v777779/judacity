@@ -5,6 +5,7 @@
 
     <!--match-->
     <integer name="text_sm_item_status_min">7</integer>
+    <integer name="text_rm_item_status_min">9</integer>
     <!--player-->
     <integer name="text_tm_item_position_min">8</integer>
 </resources>

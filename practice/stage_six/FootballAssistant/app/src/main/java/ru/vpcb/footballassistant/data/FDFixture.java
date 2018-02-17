@@ -213,7 +213,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
     public String getStatus() {
-        if (status == null || status.isEmpty()) return EMPTY_TEAM_NAME;
+        if (status == null || status.isEmpty()) return EMPTY_LONG_DASH;
         return status.toUpperCase();
     }
 

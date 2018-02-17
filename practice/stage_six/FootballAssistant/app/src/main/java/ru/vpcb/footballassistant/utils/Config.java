@@ -205,8 +205,9 @@ public class Config {
     private static final int MIN_HEIGHT = 100;
     private static final int MIN_WIDTH = 100;
 
-    public static final int RM_ITEM_VIEW_TYPE = 0;
-    public static final int RM_HEAD_VIEW_TYPE = 1;
+    public static final int RM_ITEM_VIEW_TYPE_LIGHT = 0;
+    public static final int RM_ITEM_VIEW_TYPE_DARK = 1;
+    public static final int RM_HEAD_VIEW_TYPE = 2;
     public static final int RT_ITEM_VIEW_TYPE_LIGHT = 0;
     public static final int RT_ITEM_VIEW_TYPE_DARK = 1;
     public static final int RT_HEAD_VIEW_TYPE = 2;

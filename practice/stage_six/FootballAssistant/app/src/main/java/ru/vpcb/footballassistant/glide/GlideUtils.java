@@ -34,7 +34,7 @@ public class GlideUtils {
     public static void setTeamImage(int id, ImageView imageView, Map<Integer, FDTeam> map,
                                     RequestBuilder<PictureDrawable> requestBuilder,
                                     RequestBuilder<Drawable> requestBuilderCommon) {
-        if (map == null) return;
+        if (map == null || id <= 0) return;
         FDTeam team = map.get(id);
         if (team == null) return;
 
@@ -65,7 +65,7 @@ public class GlideUtils {
 
 
     // glide
-    public static RequestBuilder<PictureDrawable> getRequestBuilder(Context context) {
+    public static RequestBuilder<PictureDrawable> getRequestBuilderSvg(Context context) {
         return Glide.with(context)
                 .as(PictureDrawable.class)
                 .apply(new RequestOptions()
@@ -75,7 +75,7 @@ public class GlideUtils {
                 .listener(new SvgSoftwareLayerSetter());
     }
 
-    public static RequestBuilder<Drawable> getRequestBuilderCommon(Context context) {
+    public static RequestBuilder<Drawable> getRequestBuilderPng(Context context) {
         return Glide.with(context)
                 .as(Drawable.class)
                 .apply(new RequestOptions()

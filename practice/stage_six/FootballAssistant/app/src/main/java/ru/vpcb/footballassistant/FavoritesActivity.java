@@ -356,7 +356,7 @@ public class FavoritesActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this,list);
+        RecyclerAdapter adapter = new RecyclerAdapter(this,list,null);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -440,7 +440,7 @@ public class FavoritesActivity extends AppCompatActivity
 
 
     private void setupRecycler() {
-        RecyclerAdapter adapter = new RecyclerAdapter(this, null);
+        RecyclerAdapter adapter = new RecyclerAdapter(this, null, null);
         adapter.setHasStableIds(true);
         mRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -449,7 +449,7 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
     private void setupRecycler(List<FDFixture> list) {
-        RecyclerAdapter adapter = new RecyclerAdapter(this, list);
+        RecyclerAdapter adapter = new RecyclerAdapter(this, list,null);
         adapter.setHasStableIds(true);
         mRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

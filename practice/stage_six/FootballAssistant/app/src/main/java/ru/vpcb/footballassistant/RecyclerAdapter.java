@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,17 +17,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.RequestBuilder;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.utils.Config;
 
+import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderPng;
+import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderSvg;
+import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
-import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
+import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE_DARK;
+import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE_LIGHT;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDate;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchTime;
 
@@ -59,22 +70,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Resources mRes;
 
     private List<FDFixture> mList;
+    private Map<Integer, FDTeam> mMap;
     private DateFormat mDateFormat;
+    private RequestBuilder<PictureDrawable> mRequestSvg;
+    private RequestBuilder<Drawable> mRequestPng;
 
     /**
      * Constructor of RecyclerAdapter
      *
      * @param context Context of calling activity
      */
-    public RecyclerAdapter(Context context, List<FDFixture> list) {
+    public RecyclerAdapter(Context context, List<FDFixture> list, Map<Integer, FDTeam> map) {
         mContext = context;
 
         mRes = context.getResources();
         mList = list;
+        mMap = map;
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
         mDateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
+        mRequestSvg = getRequestBuilderSvg(context);
+        mRequestPng = getRequestBuilderPng(context);
+
     }
 
     /**
@@ -97,9 +115,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-// test  every 3rd is header
-//        return (position % 3 == 0) ? RM_HEAD_VIEW_TYPE : RM_ITEM_VIEW_TYPE;
-        return RM_ITEM_VIEW_TYPE;
+        return (position % 2 == 0) ? RM_ITEM_VIEW_TYPE_LIGHT : RM_ITEM_VIEW_TYPE_DARK;
     }
 
     /**
@@ -113,13 +129,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId;
-        if (viewType == RM_ITEM_VIEW_TYPE) {
-            layoutId = R.layout.recycler_match_item;
-        } else {
+        if (viewType == RM_HEAD_VIEW_TYPE) {
             layoutId = R.layout.recycler_match_head;
+        } else {
+            layoutId = R.layout.recycler_match_item;
         }
+
+
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
-                .inflate(layoutId, parent, false);
+                .inflate(R.layout.recycler_match_item, parent, false);
 
 //        view.getLayoutParams().height = mSpan.getHeight();
         return new ViewHolder(view);
@@ -203,8 +221,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         @BindView(R.id.image_rm_head_league)
         ImageView mImageLeague;
         @Nullable
-        @BindView(R.id.text_tm_item_date)
+        @BindView(R.id.text_rm_item_date)
         TextView mTextDate;
+        @Nullable
+        @BindView(R.id.icon_rm_item_favorite)
+        ImageView mImageFavorite;
+        @Nullable
+        @BindView(R.id.icon_rm_item_notify)
+        ImageView mImageNotify;
+        @Nullable
+        @BindView(R.id.text_rm_item_status)
+        TextView mTextStatus;
+
+
+        @Nullable
+        @BindView(R.id.constraint_recycler_match_item)
+        View mLayout;
+
+        private int mColorDark;
 
         /**
          * Constructor
@@ -215,6 +249,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            mColorDark = ContextCompat.getColor(mContext, R.color.rm_item_card_back_dark);
         }
 
         /**
@@ -228,42 +263,36 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
             FDFixture fixture = mList.get(position);
 
-            if (getItemViewType() == RM_HEAD_VIEW_TYPE) {
-                if (position == 0) {
-                setText( mTextLeague,mContext.getString(R.string.text_test_rm_item_favorites));
-                    mImageLeague.setImageResource(R.drawable.ic_star);
-                } else {
-                setText(mTextLeague,mContext.getString(R.string.text_test_rm_item_league2));
-                    mImageLeague.setImageResource(R.drawable.icon_ball);
-                }
-            }
+//            if (getItemViewType() == RM_HEAD_VIEW_TYPE) {
+//                if (position == 0) {
+//                setText( mTextLeague,mContext.getString(R.string.text_test_rm_item_favorites));
+//                    mImageLeague.setImageResource(R.drawable.ic_star);
+//                } else {
+//                setText(mTextLeague,mContext.getString(R.string.text_test_rm_item_league2));
+//                    mImageLeague.setImageResource(R.drawable.icon_ball);
+//                }
+//            }
 
-            if (getItemViewType() == RM_ITEM_VIEW_TYPE) {
-                setText(mTextTeamHome,fixture.getHomeTeamName());
-                setText(mTextTeamAway,fixture.getAwayTeamName());
-                setText(mTextTime,formatMatchTime(fixture.getDate()));
-                setText(mTextDate,formatMatchDate(fixture.getDate()));
+            if (getItemViewType() == RM_ITEM_VIEW_TYPE_DARK) {
+                mLayout.setBackgroundColor(mColorDark);
 
             }
-//            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
-//
-//            Glide.with(mContext)
-//                    .load(imageURL)
-//                    .listener(new RequestListener<Drawable>() {
-//                        @Override
-//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                            mProgressBarImage.setVisibility(View.INVISIBLE);
-//                            return false;
-//                        }
-//                    })
-//                    .into(mItemImage);
-//            mItemImage.setTransitionName(mRes.getString(R.string.transition_image, getItemId()));
-//            mItemTitle.setTransitionName(mRes.getString(R.string.transition_title, getItemId()));
+            setText(mTextTeamHome, fixture.getHomeTeamName());
+            setText(mTextTeamAway, fixture.getAwayTeamName());
+            setText(mTextTime, formatMatchTime(fixture.getDate()));
+            setText(mTextDate, formatMatchDate(fixture.getDate()));
+            setText(mTextStatus, fixture.getStatus());
+            setTeamImage(fixture.getHomeTeamId(), mImageHome, mMap, mRequestSvg, mRequestPng);
+            setTeamImage(fixture.getAwayTeamId(), mImageAway, mMap, mRequestSvg, mRequestPng);
+
+            if(fixture.isFavorite()) {
+                mImageFavorite.setImageResource(R.drawable.ic_star);
+            }
+            if(fixture.isNotified()) {
+                mImageNotify.setImageResource(R.drawable.ic_notifications);
+            }
+
+
         }
 
         private void setText(TextView textView, String s) {

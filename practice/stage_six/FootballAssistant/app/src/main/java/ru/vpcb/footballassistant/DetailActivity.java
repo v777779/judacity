@@ -545,7 +545,7 @@ public class DetailActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this, list);
+        RecyclerAdapter adapter = new RecyclerAdapter(this, list,mMapTeams);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 

@@ -43,7 +43,8 @@ import ru.vpcb.footballassistant.utils.Config;
 import static ru.vpcb.footballassistant.utils.Config.DATE_FULL_PATTERN;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
-import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE;
+import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE_LIGHT;
+
 
 /**
  * RecyclerView Adapter class
@@ -121,7 +122,7 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
     public int getItemViewType(int position) {
 // test  every 3rd is header
 //        return (position % 3 == 0) ? RM_HEAD_VIEW_TYPE : RM_ITEM_VIEW_TYPE;
-        return RM_ITEM_VIEW_TYPE;
+        return RM_ITEM_VIEW_TYPE_LIGHT;
     }
 
     /**
