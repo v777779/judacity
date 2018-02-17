@@ -243,6 +243,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 setText(mTextTeamAway,fixture.getAwayTeamName());
                 setText(mTextTime,formatMatchTime(fixture.getDate()));
                 setText(mTextDate,formatMatchDate(fixture.getDate()));
+
             }
 //            String imageURL = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 //

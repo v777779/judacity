@@ -9,6 +9,8 @@ import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -16,6 +18,9 @@ import android.os.RemoteException;
 import android.support.v4.util.Pair;
 import android.support.v7.preference.PreferenceManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -39,6 +44,7 @@ import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.footballassistant.R;
+import ru.vpcb.footballassistant.RecyclerLeagueAdapter;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDFixtures;
@@ -53,6 +59,7 @@ import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
 import ru.vpcb.footballassistant.data.PostProcessingEnabler;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
+import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_COMPETITIONS;

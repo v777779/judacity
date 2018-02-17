@@ -32,6 +32,7 @@ import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
 
+import ru.vpcb.footballassistant.glide.GlideUtils;
 import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.utils.Config;
 
@@ -94,8 +95,8 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
-
-        setupRequestBuilder();
+        mRequestBuilder = GlideUtils.getRequestBuilder(context);
+        mRequestBuilderCommon = GlideUtils.getRequestBuilderCommon(context);
 
     }
 
@@ -274,70 +275,13 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
 //            mTextStatus.setText(fixture.getStatus());
             mTextTeamPos.setText(String.valueOf(position));
             mTextTeamName.setText(fixture.getHomeTeamName());
-            setTeamImage(fixture.getHomeTeamId(), mImageTeamLogo);
+//            setTeamImage(fixture.getHomeTeamId(), mImageTeamLogo);
+            GlideUtils.setTeamImage(fixture.getHomeTeamId(), mImageTeamLogo, mMapTeam,
+                    mRequestBuilder, mRequestBuilderCommon);
         }
 
 
-        private void setTeamImage(int id, ImageView imageView) {
-            if (mMapTeam == null) return;
-            FDTeam team = mMapTeam.get(id);
-            if (team == null) return;
-
-            String imageURL = team.getCrestURL();
-            if (imageURL == null || imageURL.isEmpty()) return;
-
-            imageURL = Config.imageCheckReplaceURL(imageURL);  // address replacement for known addresses
-            if (imageURL.toLowerCase().endsWith("svg")) {
-                mRequestBuilder.load(imageURL).into(imageView);
-
-            } else {
-                mRequestBuilderCommon.load(imageURL).into(imageView);
-            }
-        }
     }
 
-    private void loadStandard(String imageURL, ImageView imageView) {
-        if (imageURL == null || imageURL.isEmpty()) return;
-
-        Glide.with(mContext)
-                .load(imageURL)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.fc_logo_loading)
-                        .error(R.drawable.fc_logo)
-                )
-                .into(imageView);
-    }
-
-    private void setupRequestBuilder() {
-        mRequestBuilder = Glide.with(mContext)
-                .as(PictureDrawable.class)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.fc_logo_loading)
-                        .error(R.drawable.fc_logo)
-                )
-                .listener(new SvgSoftwareLayerSetter());
-
-        mRequestBuilderCommon = Glide.with(mContext)
-                .as(Drawable.class)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.fc_logo_loading)
-                        .error(R.drawable.fc_logo)
-                )
-                .listener(new CommonRequestListener());
-
-    }
-
-
-    private class CommonRequestListener implements RequestListener<Drawable> {
-        @Override
-        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-            return false;
-        }
-
-        @Override
-        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-            return false;
-        }
-    }
 
 }
