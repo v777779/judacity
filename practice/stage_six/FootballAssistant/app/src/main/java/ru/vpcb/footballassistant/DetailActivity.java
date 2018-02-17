@@ -63,6 +63,7 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_BEFOR
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_BUNDLE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_CENTER;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS_CLEAR;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_MIN;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
@@ -177,6 +178,7 @@ public class DetailActivity extends AppCompatActivity
             mViewPagerBundle = getDatesSpanBundle(Calendar.getInstance());
             mViewPagerPos =  -1; // center of -span 0 span+
             mViewPagerBack.setVisibility(View.VISIBLE);
+            mViewPager.setAlpha(0);
         } else {
             mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_VIEWPAGER_DATE_BUNDLE);
             mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS);
@@ -328,7 +330,7 @@ public class DetailActivity extends AppCompatActivity
             if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
 
                 mViewPagerBundle = getDatesSpanBundle(calendar);
-                mViewPagerPos = -1; // clear to fill
+                mViewPagerPos = BUNDLE_VIEWPAGER_POS_CLEAR; // clear to fill
                 restartLoaders();
             }
 
@@ -594,25 +596,19 @@ public class DetailActivity extends AppCompatActivity
 //        Collections.sort(fixtures, cFx);
         List<List<FDFixture>> list = new ArrayList<>();
 
-
-        Calendar c = getCalendarFromSQLite(mViewPagerBundle.getString(BUNDLE_VIEWPAGER_DATE_CENTER));
-
-
-        setZeroTime(c);
-        current = getIndex(fixtures, c);  // index of current day
-
+        Date date = formatDateFromSQLiteZeroTime(mViewPagerBundle.getString(BUNDLE_VIEWPAGER_DATE_CENTER));
 
         List<Long> times = getTimesList(fixtures);
-        current = getIndex(times, c.getTimeInMillis());
-
-        List<Date> dates = new ArrayList<>();
-        for (Long time : times) {
-            dates.add(new Date(time ));
-        }
+        current = getIndex(times, date.getTime());
 
         while (next < times.size() - 1) {
-            long time = formatDateFromSQLiteZeroTime(fixtures.get(next).getDate()).getTime();
-            map.put(time, list.size());
+            date = formatDateFromSQLiteZeroTime(fixtures.get(next).getDate());
+            if(date == null)  {  // skip wrong date
+                next++;
+                continue;
+            }
+            long time = date.getTime();
+//            map.put(time, list.size());
             time += TimeUnit.DAYS.toMillis(1);
             next = getIndex(times, time);
             list.add(new ArrayList<>(fixtures.subList(last, next)));
@@ -772,7 +768,7 @@ public class DetailActivity extends AppCompatActivity
         mViewPager.setCurrentItem(mViewPagerPos);
         mViewPagerBack.animate().alpha(0).setStartDelay(VIEWPAGER_BACK_START_DELAY)
                 .setDuration(VIEWPAGER_BACK_DURATION).start();
-//        mViewPager.animate().alpha(1).setDuration(750).start();
+        mViewPager.animate().alpha(1).setDuration(750).start();
 
     }
 
