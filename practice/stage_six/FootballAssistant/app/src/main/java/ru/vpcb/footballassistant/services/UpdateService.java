@@ -3,10 +3,12 @@ package ru.vpcb.footballassistant.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.database.Cursor;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_TAG;
 import static ru.vpcb.footballassistant.utils.FootballUtils.isOnline;
+import static ru.vpcb.footballassistant.utils.FootballUtils.rnd;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -38,23 +41,6 @@ import static ru.vpcb.footballassistant.utils.FootballUtils.isOnline;
  * Email: vadim.v.voronov@gmail.com
  */
 public class UpdateService extends IntentService {
-
-    private boolean isCursorEmpty;
-    private boolean isSmartUpdate;
-
-    private Retrofit mRetrofit;
-    private IFDRetrofitAPI mRetrofitAPI;
-    private OkHttpClient mOkHttpClient;
-
-    private Map<Integer, FDCompetition> mMapCompetitions;
-
-    private Map<Integer, FDFixture> mMapFixture;
-    private Map<Integer, FDTable> mMapTables;
-    private Map<Integer, List<FDPlayer>> mMapPlayers;
-
-
-    private Map<Integer, List<Integer>> mapCpTeams;
-    private Map<Integer, FDTeam> mMapTeams;
 
 
     public UpdateService() {
@@ -83,8 +69,9 @@ public class UpdateService extends IntentService {
             Map<Integer, FDFixture> mapFixtures = new HashMap<>();
             FDUtils.readDatabase(this, map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures);
+
             if (checkEmpty(map, mapTeamKeys, mapTeams,
-                    mapFixtureKeys, mapFixtures)) {
+                    mapFixtureKeys, mapFixtures) && FDUtils.isFootballDataRefreshed(this)) {
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
                 return;
             }
@@ -107,7 +94,7 @@ public class UpdateService extends IntentService {
 // load database
             boolean isUpdated = FDUtils.loadDatabase(this, map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures);
-// 50%
+// 80%
             FDUtils.sendProgress(this, (int) (UPDATE_SERVICE_PROGRESS * 0.8));
 // save database
             if (isUpdated) {
@@ -115,24 +102,19 @@ public class UpdateService extends IntentService {
             }
             FDUtils.setRefreshTime(this);
 
-
-            //60%
+// finished
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
 
-
+// long term
             double progress = 0;
-            double step = 100 / (mMapCompetitions.size() + mMapTeams.size());
-            Thread.sleep(LOAD_DB_TIMEOUT);
+            double step = 100 / (map.size() + mapTeams.size());
 
-            if(progress + 1 >  100) {
-                FDUtils.loadTablesLongTerm(this, mMapCompetitions, progress, step);
-                progress += step * mMapCompetitions.size();
-                FDUtils.loadPlayersLongTerm(this, mMapTeams, progress, step);
+            if (progress + 1 > 100) {
+                Thread.sleep(LOAD_DB_TIMEOUT);
+                FDUtils.loadTablesLongTerm(this, map, progress, step);
+                progress += step * map.size();
+                FDUtils.loadPlayersLongTerm(this, mapTeams, progress, step);
             }
-
-
-
-
 
 
         } catch (IOException | InterruptedException e) {
@@ -150,13 +132,45 @@ public class UpdateService extends IntentService {
             return;
         }
 
-// test!!!
-        sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
-
-// long term
+    }
 
 
+    private void testWriteFixtures(Map<Integer, FDCompetition> map,
+                                   Map<Integer, FDFixture> mapFixture) throws OperationApplicationException, RemoteException {
 
+        List<FDFixture> list = new ArrayList<>(mapFixture.values());
+        FDFixture fixture = list.get(rnd.nextInt(list.size()));
+
+        int fixtureId = fixture.getId();
+        FDFixture fixture2 = FDUtils.readFixture(this, fixtureId);
+
+        fixture2.setFavorite(true);
+        FDUtils.updateFixtureProjection(this, fixture2, false); // update
+
+        FDFixture fixture3 = FDUtils.readFixture(this, fixtureId);
+        fixture3.setNotificationId(12200);
+        fixture3.setNotified(true);
+        FDUtils.updateFixtureProjection(this, fixture3, false); // update
+
+        FDFixture fixture4 = FDUtils.readFixture(this, fixtureId);
+
+//        FDUtils.writeFixtures(this,map,false);
+
+        FDFixture fixture5 = FDUtils.readFixture(this, fixtureId);
+
+        fixtureId = 714092;
+        FDFixture fixture6 = new FDFixture(fixtureId, fixture5.getCompetitionId(),
+                fixture5.getHomeTeamId(), fixture5.getAwayTeamId(), fixture5.getDate(),
+                fixture5.getStatus(), fixture5.getMatchDay(), fixture5.getHomeTeamName(),
+                fixture5.getAwayTeamName(), fixture5.getGoalsHomeTeam(), fixture5.getGoalsAwayTeam(),
+                fixture5.getHomeWin(), fixture5.getDraw(), fixture5.getAwayWin(),
+                fixture5.isFavorite(), fixture5.isNotified(), fixture5.getNotificationId());
+
+
+
+        FDUtils.updateFixtureProjection(this, fixture6, false); // update
+        FDFixture fixture7 = FDUtils.readFixture(this, fixtureId);
+        fixtureId = 728092;
 
 
     }

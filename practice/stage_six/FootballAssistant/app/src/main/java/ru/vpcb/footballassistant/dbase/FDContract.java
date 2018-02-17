@@ -108,7 +108,9 @@ public class FDContract {
         public static final String COLUMN_FIXTURE_ODDS_WIN = "fixture_odds_home_win";   // real
         public static final String COLUMN_FIXTURE_ODDS_DRAW = "fixture_odds_draw";      // real
         public static final String COLUMN_FIXTURE_ODDS_AWAY = "fixture_odds_away_win";  // real
-
+        public static final String COLUMN_FAVORITES_STATE = "favorites_state";          // int
+        public static final String COLUMN_NOTIFICATION_STATE = "notification_state";    // int
+        public static final String COLUMN_NOTIFICATION_ID = "notification_id";          // int
 
         public static final int LOADER_ID = 1224;                                       // int
     }
@@ -171,8 +173,9 @@ public class FDContract {
         public static final String COLUMN_NUMBER_GAMES = "number_games";                // int
         public static final String COLUMN_LAST_UPDATE = "last_update";                  // string int from date
 
-        public static final int LOADER_ID = 1220;                                       // int
+        public static final int LOADER_ID = 1227;                                       // int
     }
+
 
     public static final FDParams[] MATCH_PARAMETERS = new FDParams[]{
             new FDParams(CpEntry.LOADER_ID,

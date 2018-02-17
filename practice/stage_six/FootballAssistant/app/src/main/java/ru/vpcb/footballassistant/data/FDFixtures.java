@@ -79,13 +79,5 @@ public class FDFixtures implements PostProcessingEnabler.PostProcessable {
     }
 
 
-    @Override
-    public String toString() {
-        return "FDFixtures{" +
-                ", fixtures=" + fixtures.get(0).toString() +
-                ", count=" + count +
-                ", timeFrameStart=" + timeFrameStart +
-                ", timeFrameEnd=" + timeFrameEnd +
-                '}';
-    }
+
 }

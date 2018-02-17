@@ -187,9 +187,9 @@ public class FDUtils {
     // int
 
     // date and time
-    public static Comparator<Pair<Long,Integer>> cPx = new Comparator<Pair<Long,Integer>>() {
+    public static Comparator<Pair<Long, Integer>> cPx = new Comparator<Pair<Long, Integer>>() {
         @Override
-        public int compare(Pair<Long,Integer> o1, Pair<Long,Integer> o2) {
+        public int compare(Pair<Long, Integer> o1, Pair<Long, Integer> o2) {
             if (o1 == null || o2 == null || o1.first == null || o2.first == null)
                 throw new IllegalArgumentException();
 
@@ -233,7 +233,7 @@ public class FDUtils {
 
     public static Date formatDateFromSQLiteZeroTime(String s) {
         try {
-            return formatSQLiteDateZeroTime.parse(s.substring(0,s.lastIndexOf(" ")));
+            return formatSQLiteDateZeroTime.parse(s.substring(0, s.lastIndexOf(" ")));
         } catch (ParseException e) {
             return null;
         }
@@ -600,10 +600,15 @@ public class FDUtils {
         double homeWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_WIN);
         double draw = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_DRAW);
         double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
+        boolean isFavorite = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FAVORITES_STATE) != 0;
+        boolean isNotified = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_STATE) != 0;
+        int notificationId = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_ID);
+
 
         FDFixture fixture = new FDFixture(id, competitionId, homeTeamId, awayTeamId,
                 date, status, matchday, homeTeamName, awayTeamName,
-                goalsHomeTeam, goalsAwayTeam, homeWin, draw, awayWin);
+                goalsHomeTeam, goalsAwayTeam, homeWin, draw, awayWin,
+                isFavorite, isNotified, notificationId);
 
         return fixture;
     }
@@ -1032,15 +1037,34 @@ public class FDUtils {
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN, fixture.getHomeWin());               // double
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW, fixture.getDraw());                 // double
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY, fixture.getAwayWin());              // double
+//        values.put(FDContract.FxEntry.COLUMN_FAVORITES_STATE, fixture.isFavorite() ? 1 : 0);        // int
+//        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_STATE, fixture.isNotified() ? 1 : 0);     // int
+//        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_ID, fixture.getNotificationId());         // int
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
         return operations;
     }
 
     // fixture
-    public static ContentProviderResult[] writeFixture(Context context, FDFixture fixture,
+    public static ArrayList<ContentProviderOperation> updateFixtureProjection(FDFixture fixture) {
+
+        if (fixture == null || fixture.getId() <= 0) return null;
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+
+        Uri uri = buildItemIdUri(FDContract.FxEntry.TABLE_NAME, fixture.getId());
+        ContentValues values = new ContentValues();
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_ID, fixture.getId());                          // int
+        values.put(FDContract.FxEntry.COLUMN_FAVORITES_STATE, fixture.isFavorite() ? 1 : 0);        // int
+        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_STATE, fixture.isNotified() ? 1 : 0);     // int
+        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_ID, fixture.getNotificationId());         // int
+        operations.add(ContentProviderOperation.newUpdate(uri).withValues(values).build());
+        return operations;
+    }
+
+// not insert, just update
+    public static ContentProviderResult[] updateFixtureProjection(Context context, FDFixture fixture,
                                                        boolean forceDelete)
             throws OperationApplicationException, RemoteException {
-        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeFixture(fixture, forceDelete));
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, updateFixtureProjection(fixture));
     }
 
     // teams
@@ -1074,11 +1098,23 @@ public class FDUtils {
     public static void writeDatabase(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 
+        double progress = UPDATE_SERVICE_PROGRESS * 0.8;
+        double step = 4;
+        sendProgress(context, (int) progress);
         writeCompetitions(context, map, forceDelete);
+        progress += step;
+        sendProgress(context, (int) progress);
         writeCompetitionTeams(context, map, forceDelete);
+        progress += step/2;
+        sendProgress(context, (int) progress);
         writeTeams(context, map, forceDelete);
+        progress += step;
+        sendProgress(context,(int)progress );
         writeCompetitionFixtures(context, map, forceDelete);
+        progress += step/2;
+        sendProgress(context, (int)progress);
         writeFixtures(context, map, forceDelete);
+
     }
 
     // write long term data

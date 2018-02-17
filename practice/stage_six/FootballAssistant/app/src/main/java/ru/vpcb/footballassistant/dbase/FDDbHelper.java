@@ -79,8 +79,10 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.FxEntry.COLUMN_FIXTURE_GOALS_AWAY + " INTEGER, " +           // int
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_WIN + " REAL, " +                // real
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW + " REAL, " +               // real
-                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY + " REAL);";                // real
-
+                FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY + " REAL, " +               // real
+                FDContract.FxEntry.COLUMN_FAVORITES_STATE + " INTEGER, " +              // int
+                FDContract.FxEntry.COLUMN_NOTIFICATION_STATE  + " INTEGER, " +          // int
+                FDContract.FxEntry.COLUMN_NOTIFICATION_ID + " INTEGER);";               // int
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
@@ -192,6 +194,9 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_FIXTURE_ODDS_WIN = 11;       // real
         int COLUMN_FIXTURE_ODDS_DRAW = 12;      // real
         int COLUMN_FIXTURE_ODDS_AWAY = 13;      // real
+        int COLUMN_FAVORITES_STATE = 14;        // int
+        int COLUMN_NOTIFICATION_STATE = 15;     // int
+        int COLUMN_NOTIFICATION_ID = 16;        // int
     }
 
     public interface ITbEntry {

@@ -60,10 +60,10 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     private int homeTeamId;
     private int awayTeamId;
 
-// favorite
+    // favorite
     private boolean isFavorite;
 
-// notification
+    // notification
     private boolean isNotified;
     private int notificationId;
 
@@ -86,9 +86,10 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     public FDFixture(int id, int competitionId, int homeTeamId, int awayTeamId,
                      String date, String status, int matchDay, String homeTeamName,
                      String awayTeamName, int goalsHomeTeam, int goalsAwayTeam,
-                     double homeWin, double draw, double awayWin) {
+                     double homeWin, double draw, double awayWin,
+                     boolean isFavorite, boolean isNotified, int notificationId) {
         this.id = id;
-        this.competitionId= competitionId;
+        this.competitionId = competitionId;
         this.homeTeamId = homeTeamId;
         this.awayTeamId = awayTeamId;
         this.date = date;
@@ -98,6 +99,9 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.awayTeamName = awayTeamName;
         this.result = new FDResult(goalsHomeTeam, goalsAwayTeam);
         this.odds = new FDOdds(homeWin, draw, awayWin);
+        this.isFavorite = isFavorite;
+        this.isNotified = isNotified;
+        this.notificationId = notificationId;
     }
 
     private class FDLinks {
@@ -172,7 +176,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
 
-    public void setId()  {
+    public void setId() {
         if (links == null) return;
         if (links.self != null) {
             this.id = FDUtils.formatId(links.self.getHref());                    // id
@@ -202,7 +206,6 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     public int getCompetitionId() {
         return competitionId;
     }
-
 
 
     public String getDate() {
@@ -292,7 +295,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         return result.goalsAwayTeam;
     }
 
-// favorite
+    // favorite
     public boolean isFavorite() {
         return isFavorite;
     }
@@ -301,7 +304,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         isFavorite = favorite;
     }
 
-// notification
+    // notification
     public boolean isNotified() {
         return isNotified;
     }
@@ -324,10 +327,5 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     }
 
 
-    @Override
-    public String toString() {
-        return String.format("%s %s:%s %s", SimpleDateFormat.getDateTimeInstance(
-                DateFormat.MEDIUM, DateFormat.SHORT).format(date),
-                homeTeamName.trim(), awayTeamName.trim(), status);
-    }
+
 }
