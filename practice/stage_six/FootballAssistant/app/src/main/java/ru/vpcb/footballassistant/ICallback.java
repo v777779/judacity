@@ -12,6 +12,8 @@ import android.view.View;
 import java.util.Calendar;
 import java.util.Date;
 
+import ru.vpcb.footballassistant.data.FDFixture;
+
 /**
  *  ICallback callback common user interface.
  */
@@ -27,6 +29,8 @@ public interface ICallback {
      */
     void onComplete(int mode, Calendar calendar);
 
+
+    void onComplete(View view, FDFixture fixture);
 
 
 }

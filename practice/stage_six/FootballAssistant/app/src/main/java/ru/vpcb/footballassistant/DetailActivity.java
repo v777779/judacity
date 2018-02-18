@@ -318,16 +318,23 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onComplete(View view, int value) {
+    public void onComplete(View view, FDFixture fixture) {
 // widget
         if (mBundleExtra != null) {
             int widgetId = mBundleExtra.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
-            MatchWidgetService.startFillWidgetAction(this, widgetId, value);
+            int fixtureId = fixture.getId();
+            MatchWidgetService.startFillWidgetAction(this, widgetId,fixtureId);
             mViewPagerBundle = null;
             mWidgetBar.setVisibility(View.INVISIBLE);
         }
 //        startActivityMatch();
-        startMatchFragment(value);
+
+        startMatchFragment(fixture.getId(),fixture.getHomeTeamId(),fixture.getAwayTeamId());
+    }
+
+    @Override
+    public void onComplete(View view, int value) {
+
     }
 
     @Override
@@ -345,6 +352,8 @@ public class DetailActivity extends AppCompatActivity
         }
 
     }
+
+
 
 
     // methods
@@ -482,9 +491,9 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
-    private void startMatchFragment(int id) {
+    private void startMatchFragment(int id, int homeTeamId, int awayTeamId) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = MatchFragment.newInstance(id);
+        Fragment fragment = MatchFragment.newInstance(id,homeTeamId,awayTeamId);
         fm.popBackStackImmediate(MATCH_FRAGMENT_TAG,POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
                 .replace(R.id.container_detail,fragment)

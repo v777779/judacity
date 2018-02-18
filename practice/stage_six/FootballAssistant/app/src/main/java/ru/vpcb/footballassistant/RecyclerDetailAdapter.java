@@ -165,7 +165,7 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
                 if (fixture == null || fixture.getId() < 0) {
                     return;
                 }
-                ((ICallback) mContext).onComplete(view, fixture.getId());
+                ((ICallback) mContext).onComplete(view, fixture);
             }
         });
 

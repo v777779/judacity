@@ -45,8 +45,11 @@ import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_AWAY_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -99,10 +102,12 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     private FDTeam mTeamAway;
 
 
-    public static Fragment newInstance(int id) {
+    public static Fragment newInstance(int id, int homeTeamId, int awayTeamId) {
         Fragment fragment = new MatchFragment();
         Bundle args = new Bundle();
         args.putInt(BUNDLE_MATCH_FIXTURE_ID, id);
+        args.putInt(BUNDLE_MATCH_HOME_TEAM_ID, homeTeamId);
+        args.putInt(BUNDLE_MATCH_AWAY_TEAM_ID, awayTeamId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -141,12 +146,27 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 //            }
 //        });
 
-        int id = getFixtureId();
-        if (id <= 0) return;
+        Bundle args = getArguments();
+        int fixtureId = EMPTY_FIXTURE_ID;
+        int homeTeamId = EMPTY_TEAM_ID;
+        int awayTeamId = EMPTY_TEAM_ID;
+        if (args != null) {
+            fixtureId = args.getInt(BUNDLE_MATCH_FIXTURE_ID, EMPTY_FIXTURE_ID);
+            homeTeamId = args.getInt(BUNDLE_MATCH_HOME_TEAM_ID, EMPTY_TEAM_ID);
+            awayTeamId = args.getInt(BUNDLE_MATCH_AWAY_TEAM_ID, EMPTY_TEAM_ID);
+        }
+        if (fixtureId <= 0) return;
+        Bundle bundle = new Bundle();
+        bundle.putInt(BUNDLE_MATCH_FIXTURE_ID, fixtureId);
+        getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures for both this teams
 
-        getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+        if (homeTeamId <= 0 || awayTeamId <= 0) return;
+        bundle = new Bundle();
+        bundle.putInt(BUNDLE_MATCH_HOME_TEAM_ID, homeTeamId);
+        bundle.putInt(BUNDLE_MATCH_AWAY_TEAM_ID, awayTeamId);
 
-
+        getLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, bundle, this);  // teams
+        getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
     }
 
     @Nullable
@@ -157,7 +177,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         setupActionBar(savedInstanceState);
         setupListeners();
-        bindViews();
+
 
         return mRootView;
     }
@@ -182,7 +202,33 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        if (loader == null || loader.getId() <= 0 || cursor == null || cursor.getCount() == 0) {
+            return;
+        }
+        switch (loader.getId()) {
+            case FDContract.FxEntry.LOADER_ID:
+                Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursor);
+                if(mapFixtures == null || mapFixtures.isEmpty()) {
+                    break;
+                }
+                mMapFixtures.putAll(mapFixtures);
+                bindViewsFixture();
+
+            break;
+            case FDContract.TmEntry.LOADER_ID:
+                Map<Integer, FDTeam> mapTeams = FDUtils.readTeams(cursor);
+                if(mapTeams == null || mapTeams.isEmpty()) {
+                    break;
+                }
+                mMapTeams.putAll(mapTeams);
+                bindViewsTeams();
+
+            break;
+            default:
+        }
+
 
     }
 
@@ -199,11 +245,18 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         return args.getInt(BUNDLE_MATCH_FIXTURE_ID, EMPTY_FIXTURE_ID);
 
     }
-
-    private void bindViews() {
+    private void bindViewsTeams() {
 
 
     }
+
+
+    private void bindViewsFixture() {
+
+
+    }
+
+
 
     private void startActivityLeague(int id) {
 //        Intent intent = new Intent(this, LeagueActivity.class);

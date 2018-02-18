@@ -253,7 +253,9 @@ public class Config {
     // match fragment
     public static final String MATCH_FRAGMENT_TAG = "match_fragment";
     public static final String BUNDLE_MATCH_FIXTURE_ID = "bundle_match_fixture_id";
-public static final String BUNDLE_APP_BAR_HEIGHT = "bundle_app_bar_height";
+    public static final String BUNDLE_MATCH_HOME_TEAM_ID = "bundle_match_home_team_id";
+    public static final String BUNDLE_MATCH_AWAY_TEAM_ID = "bundle_match_away_team_id";
+    public static final String BUNDLE_APP_BAR_HEIGHT = "bundle_app_bar_height";
 
 
 
