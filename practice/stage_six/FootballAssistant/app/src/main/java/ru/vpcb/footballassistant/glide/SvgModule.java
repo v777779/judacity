@@ -3,6 +3,7 @@ package ru.vpcb.footballassistant.glide;
 import android.content.Context;
 import android.graphics.drawable.PictureDrawable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
@@ -63,6 +64,8 @@ public class SvgModule extends AppGlideModule {
                 .error(R.drawable.image_error)
                 .format(DecodeFormat.PREFER_ARGB_8888)
         );
+
+        builder.setLogLevel(Log.ERROR);  // default Log.DEBUG
     }
 
     // Disable manifest parsing to avoid adding similar modules twice.

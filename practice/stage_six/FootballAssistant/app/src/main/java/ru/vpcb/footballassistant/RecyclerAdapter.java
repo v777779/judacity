@@ -72,8 +72,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private List<FDFixture> mList;
     private Map<Integer, FDTeam> mMap;
     private DateFormat mDateFormat;
-    private RequestBuilder<PictureDrawable> mRequestSvg;
-    private RequestBuilder<Drawable> mRequestPng;
+    private static RequestBuilder<PictureDrawable> mRequestSvg;
+    private static RequestBuilder<Drawable> mRequestPng;
 
     /**
      * Constructor of RecyclerAdapter
@@ -90,8 +90,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
         mDateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
-        mRequestSvg = getRequestBuilderSvg(context);
-        mRequestPng = getRequestBuilderPng(context);
+        if(mRequestSvg == null) mRequestSvg = getRequestBuilderSvg(context);
+        if(mRequestPng == null ) mRequestPng = getRequestBuilderPng(context);
 
     }
 
