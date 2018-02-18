@@ -221,10 +221,6 @@ public class Config {
     //detail activity
     public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
     public static final int CALENDAR_DIALOG_ACTION_CANCEL = 1;
-    public static final String BUNDLE_VIEWPAGER_DATE_BUNDLE = "bundle_viewpager_date_bundle";
-    public static final String BUNDLE_VIEWPAGER_DATE_BEFORE = "bundle_viewpager_date_before";
-    public static final String BUNDLE_VIEWPAGER_DATE_AFTER = "bundle_viewpager_date_after";
-    public static final String BUNDLE_VIEWPAGER_DATE_CENTER = "bundle_viewpager_date_center";
     public static final String BUNDLE_VIEWPAGER_POS = "bundle_viewpager_pos";
     public static final int BUNDLE_VIEWPAGER_POS_DEFAULT = 0;
     public static final int BUNDLE_VIEWPAGER_POS_CLEAR = -1;
@@ -236,6 +232,23 @@ public class Config {
 
     public static final int MESSAGE_TOAST_SUPER_LONG = 30000;
     public static final int MESSAGE_TOAST_TICK = 1000;
+
+    // loaders
+    public static final String BUNDLE_LOADER_REQUEST = "bundle_laoder_request";
+    public static final int BUNDLE_LOADER_REQUEST_DATES = 0;
+    public static final int BUNDLE_LOADER_REQUEST_ID = 1;
+    public static final int BUNDLE_LOADER_REQUEST_TEAMS = 2;
+    public static final int BUNDLE_LOADER_REQUEST_FIXTURES = 3;
+
+    public static final String BUNDLE_LOADER_DATA_BUNDLE = "bundle_loader_data_bundle";
+    public static final String BUNDLE_LOADER_DATE_BEFORE = "bundle_loader_date_before";
+    public static final String BUNDLE_LOADER_DATE_AFTER = "bundle_loader_date_after";
+    public static final String BUNDLE_LOADER_DATE_CENTER = "bundle_loader_date_center";
+
+    public static final String BUNDLE_LOADER_ITEM_ID = "bundle_loader_item_id";
+    public static final String BUNDLE_LOADER_ITEM_ID1 = "bundle_loader_item_id2";
+    public static final String BUNDLE_LOADER_ITEM_ID2 = "bundle_loader_item_id2";
+
 
     // match fragment
     public static final String MATCH_FRAGMENT_TAG = "match_fragment";

@@ -3,17 +3,11 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
-import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
 
 
 /**
@@ -67,7 +61,7 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
 
      public void setId() throws NullPointerException, NumberFormatException {
         if(links.self != null) {
-            id = FDUtils.formatId(links.self.getHref());
+            id = FDUtils.formatHrefToId(links.self.getHref());
         }
      }
 

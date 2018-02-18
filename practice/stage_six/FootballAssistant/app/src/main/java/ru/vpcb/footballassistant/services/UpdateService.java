@@ -73,6 +73,9 @@ public class UpdateService extends IntentService {
             if (checkEmpty(map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures) && FDUtils.isFootballDataRefreshed(this)) {
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+
+                FDFixture fixture4 = FDUtils.readFixture(this, 160794);
+
                 return;
             }
 

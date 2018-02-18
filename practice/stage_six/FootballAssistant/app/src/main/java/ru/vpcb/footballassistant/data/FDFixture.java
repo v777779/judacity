@@ -3,16 +3,11 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import ru.vpcb.footballassistant.utils.FDUtils;
 
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 
 
@@ -179,16 +174,16 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     public void setId() {
         if (links == null) return;
         if (links.self != null) {
-            this.id = FDUtils.formatId(links.self.getHref());                    // id
+            this.id = FDUtils.formatHrefToId(links.self.getHref());                    // id
         }
         if (links.competition != null) {
-            this.competitionId = FDUtils.formatId(links.competition.getHref());  // id competition
+            this.competitionId = FDUtils.formatHrefToId(links.competition.getHref());  // id competition
         }
         if (links.homeTeam != null) {
-            this.homeTeamId = FDUtils.formatId(links.homeTeam.getHref());        // id teamHome
+            this.homeTeamId = FDUtils.formatHrefToId(links.homeTeam.getHref());        // id teamHome
         }
         if (links.awayTeam != null) {
-            this.awayTeamId = FDUtils.formatId(links.awayTeam.getHref());        // id teamAway
+            this.awayTeamId = FDUtils.formatHrefToId(links.awayTeam.getHref());        // id teamAway
         }
 
         date = FDUtils.formatDateToSQLite(date);

@@ -123,9 +123,17 @@ public class FDUtils {
 
 
     // stings
-    public static int formatId(String href) throws NumberFormatException {
+    public static int formatHrefToId(String href) throws NumberFormatException {
         try {
             return Integer.valueOf(href.substring(href.lastIndexOf("/") + 1));
+        } catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {
+            return EMPTY_INT_VALUE;
+        }
+    }
+    public static int formatStringToId(String s) throws NumberFormatException {
+        try {
+            if(s == null || s.isEmpty()) return EMPTY_INT_VALUE;
+            return Integer.valueOf(s);
         } catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {
             return EMPTY_INT_VALUE;
         }

@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
-import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_COMPETITIONS;
-
 /**
  * Exercise for course : Android Developer Nanodegree
  * Created: Vadim Voronov
@@ -134,7 +132,7 @@ public class FDStanding implements PostProcessingEnabler.PostProcessable {
     public void setId() {
         if (group != null && id > 0) return;
         if (links != null && links.team != null) {
-            id = FDUtils.formatId(links.team.getHref());
+            id = FDUtils.formatHrefToId(links.team.getHref());
         }
     }
 

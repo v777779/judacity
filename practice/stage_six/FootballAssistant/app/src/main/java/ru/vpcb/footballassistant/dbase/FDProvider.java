@@ -233,6 +233,7 @@ public class FDProvider extends ContentProvider {
         throw new UnsupportedOperationException(getContext().getString(R.string.unknown_uri, uri.toString()));
     }
 
+
     public static Uri buildLoaderIdUri(Context context, int id) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             if (id == p.id) {

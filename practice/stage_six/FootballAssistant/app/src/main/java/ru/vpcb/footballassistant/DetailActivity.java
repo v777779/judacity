@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -57,10 +56,10 @@ import ru.vpcb.footballassistant.widgets.MatchWidgetService;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_AFTER;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_BEFORE;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_BUNDLE;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_DATE_CENTER;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_AFTER;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_BEFORE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_BUNDLE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_CENTER;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS_CLEAR;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_DEFAULT;
@@ -85,8 +84,6 @@ import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLiteZeroTime;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateToSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
-import static ru.vpcb.footballassistant.utils.FootballUtils.showMessage;
-import static ru.vpcb.footballassistant.utils.FootballUtils.showMessageLong;
 
 public class DetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -190,7 +187,7 @@ public class DetailActivity extends AppCompatActivity
             mViewPager.setAlpha(0);
             mTabLayout.setAlpha(0);
         } else {
-            mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_VIEWPAGER_DATE_BUNDLE);
+            mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_LOADER_DATA_BUNDLE);
             mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS);
             mViewPagerBack.setVisibility(View.INVISIBLE);
             mBundleExtra = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
@@ -209,7 +206,7 @@ public class DetailActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBundle(BUNDLE_VIEWPAGER_DATE_BUNDLE, mViewPagerBundle);
+        outState.putBundle(BUNDLE_LOADER_DATA_BUNDLE, mViewPagerBundle);
         outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
         outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA, mBundleExtra);
     }
@@ -423,9 +420,9 @@ public class DetailActivity extends AppCompatActivity
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_VIEWPAGER_DATE_BEFORE, dateBefore);
-        bundle.putString(BUNDLE_VIEWPAGER_DATE_AFTER, dateAfter);
-        bundle.putString(BUNDLE_VIEWPAGER_DATE_CENTER, dateCenter);
+        bundle.putString(BUNDLE_LOADER_DATE_BEFORE, dateBefore);
+        bundle.putString(BUNDLE_LOADER_DATE_AFTER, dateAfter);
+        bundle.putString(BUNDLE_LOADER_DATE_CENTER, dateCenter);
         return bundle;
     }
 
@@ -643,7 +640,7 @@ public class DetailActivity extends AppCompatActivity
 //        Collections.sort(fixtures, cFx);
         List<List<FDFixture>> list = new ArrayList<>();
 
-        Date date = formatDateFromSQLiteZeroTime(mViewPagerBundle.getString(BUNDLE_VIEWPAGER_DATE_CENTER));
+        Date date = formatDateFromSQLiteZeroTime(mViewPagerBundle.getString(BUNDLE_LOADER_DATE_CENTER));
 
         List<Long> times = getTimesList(fixtures);
         current = getIndex(times, date.getTime());

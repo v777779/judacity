@@ -2,6 +2,7 @@ package ru.vpcb.footballassistant;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Paint;
 import android.os.Binder;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +36,8 @@ import butterknife.Unbinder;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
+import ru.vpcb.footballassistant.dbase.FDContract;
+import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.notifications.NotificationUtils;
 import ru.vpcb.footballassistant.utils.FDUtils;
 
@@ -44,7 +49,7 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
-public class MatchFragment extends Fragment {
+public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // match toolbar
     @BindView(R.id.image_sm_team_home)
@@ -117,13 +122,6 @@ public class MatchFragment extends Fragment {
 //        mMapTeams = mActivity.getMapTeams();      // need own loaders
 
 
-
-        Bundle args = getArguments();
-        if (args != null) {
-            int id = args.getInt(BUNDLE_MATCH_FIXTURE_ID, EMPTY_FIXTURE_ID);
-
-        }
-
         if (savedInstanceState == null) {
             AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
             mAppBarHeight = appBarLayout.getHeight();
@@ -142,6 +140,13 @@ public class MatchFragment extends Fragment {
 //                }
 //            }
 //        });
+
+        int id = getFixtureId();
+        if (id <= 0) return;
+
+        getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+
+
     }
 
     @Nullable
@@ -170,7 +175,30 @@ public class MatchFragment extends Fragment {
         mUnbinder.unbind();
     }
 
+    // callbacks
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return FDLoader.getInstance(mContext, id, args);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
     // methods
+
+    private int getFixtureId() {
+        Bundle args = getArguments();
+        if (args == null) return EMPTY_FIXTURE_ID;
+        return args.getInt(BUNDLE_MATCH_FIXTURE_ID, EMPTY_FIXTURE_ID);
+
+    }
 
     private void bindViews() {
 
@@ -283,5 +311,6 @@ public class MatchFragment extends Fragment {
         AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
         appBarLayout.getLayoutParams().height = 0;
     }
+
 
 }

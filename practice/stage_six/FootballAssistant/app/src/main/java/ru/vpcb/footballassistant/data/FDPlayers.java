@@ -7,8 +7,6 @@ import java.util.List;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
-import static ru.vpcb.footballassistant.utils.Config.FD_REGEX_TEAMS;
-
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -55,7 +53,7 @@ public class FDPlayers implements PostProcessingEnabler.PostProcessable {
 
     public void setId(){
         if(links != null && links.self != null) {
-            id = FDUtils.formatId(links.self.getHref());
+            id = FDUtils.formatHrefToId(links.self.getHref());
         }
     }
 

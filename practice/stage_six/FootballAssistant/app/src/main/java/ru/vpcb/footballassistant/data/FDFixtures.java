@@ -3,14 +3,11 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -52,7 +49,7 @@ public class FDFixtures implements PostProcessingEnabler.PostProcessable {
 
     private void setId() {
         if (links != null && links.competition != null) {
-            this.competitionId = FDUtils.formatId(links.competition.getHref());  // id competition
+            this.competitionId = FDUtils.formatHrefToId(links.competition.getHref());  // id competition
         }
         timeFrameEnd = FDUtils.formatDateToSQLite(timeFrameEnd);
         timeFrameStart = FDUtils.formatDateToSQLite(timeFrameStart);
