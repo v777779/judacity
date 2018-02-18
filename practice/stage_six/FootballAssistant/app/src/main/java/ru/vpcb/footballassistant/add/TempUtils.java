@@ -30,6 +30,7 @@ public class TempUtils {
             return sb.toString();
         } catch (IOException e) {
             //log the exception
+
             return null;
         } finally {
             if (reader != null) {
