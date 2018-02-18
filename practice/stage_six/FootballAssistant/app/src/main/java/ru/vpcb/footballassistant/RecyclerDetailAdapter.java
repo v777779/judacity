@@ -282,8 +282,10 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
             setText(mTextTime, formatMatchTime(fixture.getDate()));
             setText(mTextDate, formatMatchDate(fixture.getDate()));
             setText(mTextStatus, fixture.getStatus());
-            setTeamImage(fixture.getHomeTeamId(), mImageHome, mMap, mRequestSvg, mRequestPng);
-            setTeamImage(fixture.getAwayTeamId(), mImageAway, mMap, mRequestSvg, mRequestPng);
+            setTeamImage(fixture.getHomeTeamId(),
+                    mImageHome, mMap, mRequestSvg, mRequestPng,R.drawable.fc_logo);
+            setTeamImage(fixture.getAwayTeamId(),
+                    mImageAway, mMap, mRequestSvg, mRequestPng,R.drawable.fc_logo);
 
             if(fixture.isFavorite()) {
                 mImageFavorite.setImageResource(R.drawable.ic_star);
@@ -301,6 +303,17 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
         }
 
     }
-
+//    mTextTeamHome = view.findViewById(R.id.text_tm_item_home);
+//    mTextTeamAway= view.findViewById(R.id.text_tm_item_away);
+//    mTextTime= view.findViewById(R.id.text_tm_item_time);
+//    mTextLeague= view.findViewById(R.id.text_rm_head_league);
+//    mImageHome= view.findViewById(R.id.image_rm_item_home);
+//    mImageAway= view.findViewById(R.id.image_rm_item_away);
+//    mImageLeague= view.findViewById(R.id.image_rm_head_league);
+//    mTextDate= view.findViewById(R.id.text_rm_item_date);
+//    mImageFavorite= view.findViewById(R.id.icon_rm_item_favorite);
+//    mImageNotify= view.findViewById(R.id.icon_rm_item_notify);
+//    mTextStatus= view.findViewById(R.id.text_rm_item_status);
+//    mLayout = view.findViewById(R.id.constraint_recycler_match_item);
 
 }

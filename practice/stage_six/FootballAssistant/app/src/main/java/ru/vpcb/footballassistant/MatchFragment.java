@@ -1,35 +1,26 @@
 package ru.vpcb.footballassistant;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Calendar;
-import java.util.HashMap;
+import com.bumptech.glide.RequestBuilder;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -42,27 +33,25 @@ import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.dbase.FDProvider;
-import ru.vpcb.footballassistant.notifications.NotificationUtils;
+import ru.vpcb.footballassistant.glide.GlideUtils;
 import ru.vpcb.footballassistant.utils.FDUtils;
 
-import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID2;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST_FIXTURES;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_AWAY_TEAM;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_ID;
-import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private RequestBuilder<PictureDrawable> mRequestSvgH;
+    private RequestBuilder<Drawable> mRequestPngH;
+    private RequestBuilder<PictureDrawable> mRequestSvgA;
+    private RequestBuilder<Drawable> mRequestPngA;
+
 
     // match toolbar
     @BindView(R.id.image_sm_team_home)
@@ -112,6 +101,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     private FDTeam mAwayTeam;
 
 
+
     public static Fragment newInstance(FDFixture fixture,FDTeam homeTeam, FDTeam awayTeam) {
         MatchFragment fragment = new MatchFragment();
         Bundle args = new Bundle();
@@ -135,16 +125,24 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMapTeams = new LinkedHashMap<>();
-        mMapFixtures = new LinkedHashMap<>(); // fixed order
-
-
 
         if (savedInstanceState == null) {
             AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
             mAppBarHeight = appBarLayout.getHeight();
         } else {
             mAppBarHeight = savedInstanceState.getInt(BUNDLE_APP_BAR_HEIGHT);
+        }
+
+        Bundle args = getArguments();
+        if (args == null) return;
+        mFixture = args.getParcelable(BUNDLE_MATCH_FIXTURE);
+        mHomeTeam = args.getParcelable(BUNDLE_MATCH_HOME_TEAM);
+        mAwayTeam = args.getParcelable(BUNDLE_MATCH_AWAY_TEAM);
+
+        if (mFixture == null || mFixture.getId() <= 0 ||
+                mFixture.getHomeTeamId() <= 0 ||
+                mFixture.getAwayTeamId() <= 0) {
+            return;
         }
 
 
@@ -159,17 +157,19 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 //            }
 //        });
 
-        Bundle args = getArguments();
-        if (args == null) return;
-        mFixture = args.getParcelable(BUNDLE_MATCH_FIXTURE);
-        mHomeTeam = args.getParcelable(BUNDLE_MATCH_HOME_TEAM);
-        mAwayTeam = args.getParcelable(BUNDLE_MATCH_AWAY_TEAM);
+// parameters
 
-        if (mFixture == null || mFixture.getId() <= 0 ||
-                mFixture.getHomeTeamId() <= 0 ||
-                mFixture.getAwayTeamId() <= 0) {
-            return;
-        }
+            mRequestSvgH = GlideUtils.getRequestBuilderSvg(mContext,R.drawable.fc_logo_widget_home);
+            mRequestPngH = GlideUtils.getRequestBuilderPng(mContext,R.drawable.fc_logo_widget_home);
+            mRequestSvgA = GlideUtils.getRequestBuilderSvg(mContext,R.drawable.fc_logo_widget_away);
+            mRequestPngA = GlideUtils.getRequestBuilderPng(mContext,R.drawable.fc_logo_widget_away);
+
+        mMapTeams = new LinkedHashMap<>();
+        mMapFixtures = new LinkedHashMap<>(); // fixed order
+
+
+
+
 // load fixtures from teams
         Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
                 mFixture.getHomeTeamId(),mFixture.getAwayTeamId());
@@ -258,6 +258,29 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
 
     private void bindViews() {
+
+// toolbar
+        String country = FDUtils.getCountry(mFixture.getLeague());
+        mTextCountry.setText(country);
+        mViewLeague.setText(mFixture.getCompetitionName());
+        setTeamImage(mHomeTeam.getCrestURL(), mViewTeamHome,mRequestSvgH, mRequestPngH,
+                R.drawable.fc_logo_widget_home);
+        setTeamImage(mAwayTeam.getCrestURL(), mViewTeamAway,mRequestSvgA, mRequestPngA,
+                R.drawable.fc_logo_widget_away);
+        mTextTime.setText(FDUtils.formatMatchTime(mFixture.getDate()));
+        mTextTeamHome.setText(mFixture.getHomeTeamName());
+        mTextTeamAway.setText(mFixture.getAwayTeamName());
+        mTextDate.setText(FDUtils.formatMatchDate(mFixture.getDate()));
+        mTextScoreHome.setText(FDUtils.formatFromInt(mFixture.getGoalsHome()));
+        mTextScoreAway.setText(FDUtils.formatFromInt(mFixture.getGoalsAway()));
+        mTextStatus.setText(mFixture.getStatus());
+        if(mFixture.isFavorite()) {
+            mViewFavorite.setImageResource(R.drawable.ic_star);
+        }
+        if(mFixture.isNotified()) {
+            mViewNotification.setImageResource(R.drawable.ic_notifications);
+        }
+
 
 
     }

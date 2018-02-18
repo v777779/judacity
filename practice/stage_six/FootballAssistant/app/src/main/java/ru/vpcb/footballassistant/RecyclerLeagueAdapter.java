@@ -277,7 +277,7 @@ public class RecyclerLeagueAdapter extends RecyclerView.Adapter<RecyclerLeagueAd
             mTextTeamName.setText(fixture.getHomeTeamName());
 //            setTeamImage(fixture.getHomeTeamId(), mImageTeamLogo);
             GlideUtils.setTeamImage(fixture.getHomeTeamId(), mImageTeamLogo, mMapTeam,
-                    mRequestBuilder, mRequestBuilderCommon);
+                    mRequestBuilder, mRequestBuilderCommon,R.drawable.fc_logo);
         }
 
 

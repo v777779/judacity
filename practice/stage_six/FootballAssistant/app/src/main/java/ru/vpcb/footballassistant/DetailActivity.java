@@ -58,8 +58,6 @@ import ru.vpcb.footballassistant.widgets.MatchWidgetService;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID2;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_BUNDLE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_CENTER;
@@ -335,7 +333,10 @@ public class DetailActivity extends AppCompatActivity
         FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
 
         FDCompetition competition = mMap.get(fixture.getCompetitionId());
-        if (competition != null) fixture.setCompetitionName(competition.getCaption());
+        if (competition != null) {
+            fixture.setCompetitionName(competition.getCaption());
+            fixture.setLeague(competition.getLeague());
+        }
 
         startMatchFragment(fixture, homeTeam, awayTeam);
     }

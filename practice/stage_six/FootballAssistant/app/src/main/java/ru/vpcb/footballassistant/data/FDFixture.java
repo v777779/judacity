@@ -68,6 +68,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
 
     // widgets
     private String competitionName;
+    private String league;
 
     public FDFixture() {
         this.id = EMPTY_INT_VALUE;                  // id
@@ -78,7 +79,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.isFavorite = false;
         this.isNotified = false;
         this.notificationId = EMPTY_NOTIFICATION_ID;
-
+        this.competitionName = EMPTY_LONG_DASH;
+        this.league = EMPTY_LONG_DASH;
     }
 
     public FDFixture(int id, int competitionId, int homeTeamId, int awayTeamId,
@@ -100,6 +102,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.isFavorite = isFavorite;
         this.isNotified = isNotified;
         this.notificationId = notificationId;
+        this.competitionName = EMPTY_LONG_DASH;
+        this.league = EMPTY_LONG_DASH;
     }
 
     protected FDFixture(Parcel in) {
@@ -116,11 +120,10 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         isNotified = in.readByte() != 0;
         notificationId = in.readInt();
         competitionName = in.readString();
-        // FDLink
+        league = in.readString();
+// FDLink
         links = new FDLinks();
-
         links.self.setHref(in.readString());
-
         links.competition.setHref(in.readString());
         links.homeTeam.setHref(in.readString());
         links.awayTeam.setHref(in.readString());
@@ -172,6 +175,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         parcel.writeByte((byte) (isNotified ? 1 : 0));
         parcel.writeInt(notificationId);
         parcel.writeString(competitionName);
+        parcel.writeString(league);
 // FDLink
         if(links == null) links = new FDLinks();
         parcel.writeString(links.self.getHref());
@@ -394,6 +398,13 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.competitionName = competitionName;
     }
 
+    public String getLeague() {
+        return league;
+    }
+
+    public void setLeague(String league) {
+        this.league = league;
+    }
 
     public int getGoalsHomeTeam() {
         if (result == null || result.goalsHomeTeam < 0) return EMPTY_INT_VALUE;

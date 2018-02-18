@@ -72,6 +72,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_TIME_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_7;
+import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE_ZERO_TIME;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE;
@@ -130,9 +131,10 @@ public class FDUtils {
             return EMPTY_INT_VALUE;
         }
     }
+
     public static int formatStringToId(String s) throws NumberFormatException {
         try {
-            if(s == null || s.isEmpty()) return EMPTY_INT_VALUE;
+            if (s == null || s.isEmpty()) return EMPTY_INT_VALUE;
             return Integer.valueOf(s);
         } catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {
             return EMPTY_INT_VALUE;
@@ -198,8 +200,14 @@ public class FDUtils {
         return s.replace("T", " ").replace("Z", "");
     }
 
+    public static String formatFromInt(int value) {
+        if (value < 0) return EMPTY_LONG_DASH;
+        return String.format(Locale.ENGLISH, "%d", value);
+    }
+
 
     // int
+
 
     // date and time
     public static Comparator<Pair<Long, Integer>> cPx = new Comparator<Pair<Long, Integer>>() {
@@ -261,6 +269,16 @@ public class FDUtils {
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    public static String getCountry(String league) {
+        if (league == null || league.isEmpty()) return EMPTY_STRING;
+
+        for (int i = 0; i < Config.LEAGUE_CODES.length; i += 3) {
+            if (league.equals(Config.LEAGUE_CODES[i])) return LEAGUE_CODES[i + 1];
+
+        }
+        return EMPTY_STRING;
     }
 
 

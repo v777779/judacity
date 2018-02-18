@@ -31,15 +31,39 @@ import ru.vpcb.footballassistant.utils.Config;
 public class GlideUtils {
 
 
+    public static void setTeamImage( String imageURL,ImageView imageView,
+                                    RequestBuilder<PictureDrawable> requestBuilder,
+                                    RequestBuilder<Drawable> requestBuilderCommon,
+                                     int resourceId) {
+
+        if (imageURL == null || imageURL.isEmpty()) {
+            imageView.setImageResource(resourceId);
+            return;
+        }
+
+        imageURL = Config.imageCheckReplaceURL(imageURL);  // address replacement for known addresses
+        if (imageURL.toLowerCase().endsWith("svg")) {
+            requestBuilder.load(imageURL).into(imageView);
+        } else {
+            requestBuilderCommon.load(imageURL).into(imageView);
+        }
+    }
+
+
+
     public static void setTeamImage(int id, ImageView imageView, Map<Integer, FDTeam> map,
                                     RequestBuilder<PictureDrawable> requestBuilder,
-                                    RequestBuilder<Drawable> requestBuilderCommon) {
+                                    RequestBuilder<Drawable> requestBuilderCommon,
+                                    int resourceId) {
         if (map == null || id <= 0) return;
         FDTeam team = map.get(id);
         if (team == null) return;
 
         String imageURL = team.getCrestURL();
-        if (imageURL == null || imageURL.isEmpty()) return;
+        if (imageURL == null || imageURL.isEmpty()) {
+            imageView.setImageResource(resourceId);
+            return;
+        }
 
         imageURL = Config.imageCheckReplaceURL(imageURL);  // address replacement for known addresses
         if (imageURL.toLowerCase().endsWith("svg")) {
@@ -81,6 +105,26 @@ public class GlideUtils {
                 .apply(new RequestOptions()
                         .placeholder(R.drawable.fc_logo_loading)
                         .error(R.drawable.fc_logo)
+                )
+                .listener(new CommonRequestListener());
+    }
+
+    public static RequestBuilder<PictureDrawable> getRequestBuilderSvg(Context context, int id) {
+        return Glide.with(context)
+                .as(PictureDrawable.class)
+                .apply(new RequestOptions()
+                        .placeholder(id)
+                        .error(id)
+                )
+                .listener(new SvgSoftwareLayerSetter());
+    }
+
+    public static RequestBuilder<Drawable> getRequestBuilderPng(Context context, int id) {
+        return Glide.with(context)
+                .as(Drawable.class)
+                .apply(new RequestOptions()
+                        .placeholder(id)
+                        .error(id)
                 )
                 .listener(new CommonRequestListener());
     }
