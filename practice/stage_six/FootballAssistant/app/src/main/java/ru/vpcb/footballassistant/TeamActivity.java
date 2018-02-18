@@ -351,7 +351,7 @@ public class TeamActivity extends AppCompatActivity
 
         fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
-                .replace(R.id.container_detail, fragment)
+                .replace(R.id.container_team, fragment)
                 .addToBackStack(FRAGMENT_TEAM_TAG)
                 .commit();
 

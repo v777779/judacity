@@ -37,8 +37,11 @@ import ru.vpcb.footballassistant.notifications.NotificationUtils;
 import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 
 public class MatchFragment extends Fragment {
@@ -83,16 +86,21 @@ public class MatchFragment extends Fragment {
     private Unbinder mUnbinder;
 
 
-
-    private Map<Integer,FDCompetition> mMap;
-    private Map<Integer,FDTeam> mMapTeams;
-    private Map<Integer,FDFixture> mMapFixtures;
+    private Map<Integer, FDCompetition> mMap;
+    private Map<Integer, FDTeam> mMapTeams;
+    private Map<Integer, FDFixture> mMapFixtures;
     private FDFixture mFixture;
     private FDTeam mTeamHome;
     private FDTeam mTeamAway;
 
 
-
+    public static Fragment newInstance(int id) {
+        Fragment fragment = new MatchFragment();
+        Bundle args = new Bundle();
+        args.putInt(BUNDLE_MATCH_FIXTURE_ID, id);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
     @Override
@@ -105,16 +113,24 @@ public class MatchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMap = mActivity.getMap();
-        mMapTeams = mActivity.getMapTeams();  // already loaded by parent activity
+//        mMap = mActivity.getMap();                // not guaranteed on rotation
+//        mMapTeams = mActivity.getMapTeams();      // need own loaders
 
 
-        Bundle args =  getArguments();
-        if(args != null)  {
 
-
+        Bundle args = getArguments();
+        if (args != null) {
+            int id = args.getInt(BUNDLE_MATCH_FIXTURE_ID, EMPTY_FIXTURE_ID);
 
         }
+
+        if (savedInstanceState == null) {
+            AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
+            mAppBarHeight = appBarLayout.getHeight();
+        } else {
+            mAppBarHeight = savedInstanceState.getInt(BUNDLE_APP_BAR_HEIGHT);
+        }
+
 
 // test!!! protrusion check
 // resolved with  set AppBarLayout.height to 0
@@ -132,7 +148,7 @@ public class MatchFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.match_fragment, container, false);
-        mUnbinder = ButterKnife.bind(this,mRootView);
+        mUnbinder = ButterKnife.bind(this, mRootView);
 
         setupActionBar(savedInstanceState);
         setupListeners();
@@ -141,6 +157,11 @@ public class MatchFragment extends Fragment {
         return mRootView;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUNDLE_APP_BAR_HEIGHT, mAppBarHeight);
+    }
 
     @Override
     public void onDestroyView() {
@@ -152,7 +173,6 @@ public class MatchFragment extends Fragment {
     // methods
 
     private void bindViews() {
-
 
 
     }
@@ -187,6 +207,22 @@ public class MatchFragment extends Fragment {
     }
 
     private void setupListeners() {
+
+        mViewArrowBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.onBackPressed();
+            }
+        });
+
+        mViewShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
+
         mViewLeague.setPaintFlags(mViewLeague.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mViewLeague.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,9 +281,6 @@ public class MatchFragment extends Fragment {
     private void setupActionBar(Bundle savedInstance) {
         mActivity.getSupportActionBar().hide();
         AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
-        if (savedInstance == null) {
-            mAppBarHeight = appBarLayout.getHeight();
-        }
         appBarLayout.getLayoutParams().height = 0;
     }
 

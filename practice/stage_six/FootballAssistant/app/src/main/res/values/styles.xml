@@ -34,9 +34,9 @@
 
 
     <style name="TextToolbar" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">@dimen/image_rm_item_appbar_size</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:gravity">start|center</item>
-        <item name="android:layout_gravity">start|center</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="Item.TextRecycler" parent="TextAppearance.AppCompat.Medium">

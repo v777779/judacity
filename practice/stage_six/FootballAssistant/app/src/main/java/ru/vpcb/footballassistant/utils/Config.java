@@ -238,7 +238,9 @@ public class Config {
     public static final int MESSAGE_TOAST_TICK = 1000;
 
     // match fragment
+    public static final String MATCH_FRAGMENT_TAG = "match_fragment";
     public static final String BUNDLE_MATCH_FIXTURE_ID = "bundle_match_fixture_id";
+public static final String BUNDLE_APP_BAR_HEIGHT = "bundle_app_bar_height";
 
 
 

@@ -73,6 +73,7 @@ import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
+import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
@@ -210,7 +211,7 @@ public class DetailActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBundle(BUNDLE_VIEWPAGER_DATE_BUNDLE, mViewPagerBundle);
         outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
-        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA,mBundleExtra);
+        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA, mBundleExtra);
     }
 
     @Override
@@ -321,10 +322,6 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public void onComplete(View view, int value) {
-        Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-// temp!!!
-//TODO Add WIDGET BAR TO DETAIL ACTIVITY
 // widget
         if (mBundleExtra != null) {
             int widgetId = mBundleExtra.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
@@ -332,7 +329,8 @@ public class DetailActivity extends AppCompatActivity
             mViewPagerBundle = null;
             mWidgetBar.setVisibility(View.INVISIBLE);
         }
-        startActivityMatch();
+//        startActivityMatch();
+        startMatchFragment(value);
     }
 
     @Override
@@ -353,6 +351,7 @@ public class DetailActivity extends AppCompatActivity
 
 
     // methods
+
 
     public Map<Integer, FDCompetition> getMap() {
         return mMap;
@@ -485,6 +484,17 @@ public class DetailActivity extends AppCompatActivity
                 .commit();
 
     }
+
+    private void startMatchFragment(int id) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = MatchFragment.newInstance(id);
+        fm.popBackStackImmediate(MATCH_FRAGMENT_TAG,POP_BACK_STACK_INCLUSIVE);
+        fm.beginTransaction()
+                .replace(R.id.container_detail,fragment)
+                .addToBackStack(MATCH_FRAGMENT_TAG)
+                .commit();
+    }
+
 
     private void setupListeners() {
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -808,7 +818,7 @@ public class DetailActivity extends AppCompatActivity
 // animation
         mViewPagerBack.animate().alpha(0).setStartDelay(VIEWPAGER_BACK_START_DELAY)
                 .setDuration(VIEWPAGER_BACK_DURATION).start();
-        if(mViewPager.getAlpha() == 0) {
+        if (mViewPager.getAlpha() == 0) {
             mViewPager.animate()
                     .alpha(1)
                     .setStartDelay(VIEWPAGER_BACK_START_DELAY)
