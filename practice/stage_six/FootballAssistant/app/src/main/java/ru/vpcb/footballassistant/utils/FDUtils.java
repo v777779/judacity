@@ -347,6 +347,15 @@ public class FDUtils {
                 .build();
     }
 
+    public static Uri buildItemIdUri(String tableName, String id, String id2) {
+        return FDContract.BASE_CONTENT_URI.buildUpon()
+                .appendPath(tableName)
+                .appendPath(id)
+                .appendPath(id2)
+                .build();
+    }
+
+
     public static int currentTimeMinutes() {
         return (int) TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis());
     }

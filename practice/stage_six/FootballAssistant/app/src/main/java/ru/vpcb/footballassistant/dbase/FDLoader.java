@@ -33,12 +33,14 @@ public class FDLoader extends CursorLoader {
         String sortOrder = FDProvider.buildLoaderIdSortOrder(context, id);
         String selection = null;
 
+
         if (args != null) {
             int type = args.getInt(BUNDLE_LOADER_REQUEST); // type of request
             if (type == BUNDLE_LOADER_REQUEST_DATES) {
                 String dateBefore = args.getString(BUNDLE_LOADER_DATE_BEFORE);
                 String dateAfter = args.getString(BUNDLE_LOADER_DATE_AFTER);
-                selection = FDContract.FxEntry.COLUMN_FIXTURE_DATE + " BETWEEN '" + dateBefore + "' AND '" + dateAfter + "'";
+//                selection = FDContract.FxEntry.COLUMN_FIXTURE_DATE + " BETWEEN '" + dateBefore + "' AND '" + dateAfter + "'";
+                uri = FDUtils.buildItemIdUri(FDContract.FxEntry.TABLE_NAME, dateBefore, dateAfter);
 
             } else if (type == BUNDLE_LOADER_REQUEST_FIXTURES) {
 
@@ -49,7 +51,6 @@ public class FDLoader extends CursorLoader {
 
         return new FDLoader(context, uri, sortOrder, selection);
     }
-
 
 
 }
