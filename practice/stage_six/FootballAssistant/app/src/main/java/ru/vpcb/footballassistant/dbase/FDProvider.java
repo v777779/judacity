@@ -237,7 +237,12 @@ public class FDProvider extends ContentProvider {
                 if (p.tableName.equals(FDContract.TmEntry.TABLE_NAME)) {
                     sel = new Selection(p.tableName, p.columnId2 + "=? OR "+p.columnId3+"=?",
                             new String[]{_id, _id2});
-                } else {
+                } else if(p.tableName.equals(FDContract.FxEntry.TABLE_NAME)) {
+                    sel = new Selection(p.tableName,
+                            p.columnId2 + "=?" + " AND " + p.columnId3 + "=?"+ " OR "+
+                            p.columnId2 + "=?" + " AND " + p.columnId3 + "=?",
+                            new String[]{_id, _id2,_id2,_id});
+                }else {
 
                     sel = new Selection(p.tableName, p.columnId2 + "=?" + " AND " + p.columnId3 + "=?",
                             new String[]{_id, _id2});
@@ -264,6 +269,24 @@ public class FDProvider extends ContentProvider {
         throw new UnsupportedOperationException(getContext().getString(R.string.unknown_uri, uri.toString()));
     }
 
+    public static Uri buildLoaderIdUri(Context context, int id, String itemId, String itemId2) {
+        for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
+            if (id == p.id) {
+                return  FDUtils.buildItemIdUri(p.tableName,itemId,itemId2);
+            }
+        }
+        throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
+    }
+
+
+    public static Uri buildLoaderIdUri(Context context, int id, long itemId, long itemId2) {
+        for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
+            if (id == p.id) {
+                return  FDUtils.buildItemIdUri(p.tableName,itemId,itemId2);
+            }
+        }
+        throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
+    }
 
     public static Uri buildLoaderIdUri(Context context, int id) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
@@ -273,6 +296,8 @@ public class FDProvider extends ContentProvider {
         }
         throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
     }
+
+
 
     public static String buildLoaderIdSortOrder(Context context, int id) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {

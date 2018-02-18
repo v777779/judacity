@@ -30,7 +30,4 @@ public interface ICallback {
     void onComplete(int mode, Calendar calendar);
 
 
-    void onComplete(View view, FDFixture fixture);
-
-
 }

@@ -162,10 +162,10 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
                     return;
                 }
                 FDFixture fixture = mList.get(pos);
-                if (fixture == null || fixture.getId() < 0) {
+                if (fixture == null || fixture.getId() <= 0) {
                     return;
                 }
-                ((ICallback) mContext).onComplete(view, fixture);
+                ((ICallback) mContext).onComplete(view, fixture.getId());
             }
         });
 

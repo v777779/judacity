@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +49,7 @@ import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
+import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
@@ -56,9 +58,10 @@ import ru.vpcb.footballassistant.widgets.MatchWidgetService;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_AFTER;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_BEFORE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID2;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_BUNDLE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_CENTER;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS_CLEAR;
@@ -318,24 +321,25 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onComplete(View view, FDFixture fixture) {
+    public void onComplete(View view, int fixtureId) {
 // widget
         if (mBundleExtra != null) {
             int widgetId = mBundleExtra.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
-            int fixtureId = fixture.getId();
-            MatchWidgetService.startFillWidgetAction(this, widgetId,fixtureId);
+            MatchWidgetService.startFillWidgetAction(this, widgetId, fixtureId);
             mViewPagerBundle = null;
             mWidgetBar.setVisibility(View.INVISIBLE);
         }
 //        startActivityMatch();
+        FDFixture fixture = mMapFixtures.get(fixtureId);
+        FDTeam homeTeam = mMapTeams.get(fixture.getHomeTeamId());
+        FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
 
-        startMatchFragment(fixture.getId(),fixture.getHomeTeamId(),fixture.getAwayTeamId());
+        FDCompetition competition = mMap.get(fixture.getCompetitionId());
+        if (competition != null) fixture.setCompetitionName(competition.getCaption());
+
+        startMatchFragment(fixture, homeTeam, awayTeam);
     }
 
-    @Override
-    public void onComplete(View view, int value) {
-
-    }
 
     @Override
     public void onComplete(int mode, Calendar calendar) {
@@ -352,8 +356,6 @@ public class DetailActivity extends AppCompatActivity
         }
 
     }
-
-
 
 
     // methods
@@ -429,9 +431,12 @@ public class DetailActivity extends AppCompatActivity
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_LOADER_DATE_BEFORE, dateBefore);
-        bundle.putString(BUNDLE_LOADER_DATE_AFTER, dateAfter);
+//        bundle.putString(BUNDLE_LOADER_DATA_ID, dateBefore);
+//        bundle.putString(BUNDLE_LOADER_DATA_ID2, dateAfter);
         bundle.putString(BUNDLE_LOADER_DATE_CENTER, dateCenter);
+
+        Uri uri = FDProvider.buildLoaderIdUri(this, FDContract.FxEntry.LOADER_ID, dateBefore, dateAfter);
+        bundle.putString(BUNDLE_LOADER_DATA_URI, uri.toString());
         return bundle;
     }
 
@@ -491,12 +496,12 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
-    private void startMatchFragment(int id, int homeTeamId, int awayTeamId) {
+    private void startMatchFragment(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = MatchFragment.newInstance(id,homeTeamId,awayTeamId);
-        fm.popBackStackImmediate(MATCH_FRAGMENT_TAG,POP_BACK_STACK_INCLUSIVE);
+        Fragment fragment = MatchFragment.newInstance(fixture, homeTeam, awayTeam);
+        fm.popBackStackImmediate(MATCH_FRAGMENT_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
-                .replace(R.id.container_detail,fragment)
+                .replace(R.id.container_detail, fragment)
                 .addToBackStack(MATCH_FRAGMENT_TAG)
                 .commit();
     }

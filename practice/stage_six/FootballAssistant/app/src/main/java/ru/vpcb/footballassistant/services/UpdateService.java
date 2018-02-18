@@ -74,8 +74,8 @@ public class UpdateService extends IntentService {
                     mapFixtureKeys, mapFixtures) && FDUtils.isFootballDataRefreshed(this)) {
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
 
-                FDFixture fixture4 = FDUtils.readFixture(this, 160794);
-
+                FDFixture fixture4 = FDUtils.readFixture(this, 152028);
+                FDFixture fixture5 = FDUtils.readFixture(this, 162334);
                 return;
             }
 

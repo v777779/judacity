@@ -1,5 +1,8 @@
 package ru.vpcb.footballassistant.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,7 +20,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDFixture implements PostProcessingEnabler.PostProcessable {
+public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcelable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -99,6 +102,96 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         this.notificationId = notificationId;
     }
 
+    protected FDFixture(Parcel in) {
+        date = in.readString();
+        status = in.readString();
+        matchDay = in.readInt();
+        homeTeamName = in.readString();
+        awayTeamName = in.readString();
+        id = in.readInt();
+        competitionId = in.readInt();
+        homeTeamId = in.readInt();
+        awayTeamId = in.readInt();
+        isFavorite = in.readByte() != 0;
+        isNotified = in.readByte() != 0;
+        notificationId = in.readInt();
+        competitionName = in.readString();
+        // FDLink
+        links = new FDLinks();
+
+        links.self.setHref(in.readString());
+
+        links.competition.setHref(in.readString());
+        links.homeTeam.setHref(in.readString());
+        links.awayTeam.setHref(in.readString());
+// FDOdds
+        odds = new FDOdds();
+        odds.homeWin = in.readDouble();
+        odds.draw = in.readDouble();
+        odds.awayWin = in.readDouble();
+
+// FDResult
+        result = new FDResult();
+        result.goalsHomeTeam = in.readInt();
+        result.goalsAwayTeam = in.readInt();
+        result.halfTime = new FDHalfTime();
+        result.halfTime.goalsHomeTeam = in.readInt();
+        result.halfTime.goalsAwayTeam = in.readInt();
+
+    }
+
+    public static final Creator<FDFixture> CREATOR = new Creator<FDFixture>() {
+        @Override
+        public FDFixture createFromParcel(Parcel in) {
+            return new FDFixture(in);
+        }
+
+        @Override
+        public FDFixture[] newArray(int size) {
+            return new FDFixture[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(date);
+        parcel.writeString(status);
+        parcel.writeInt(matchDay);
+        parcel.writeString(homeTeamName);
+        parcel.writeString(awayTeamName);
+        parcel.writeInt(id);
+        parcel.writeInt(competitionId);
+        parcel.writeInt(homeTeamId);
+        parcel.writeInt(awayTeamId);
+        parcel.writeByte((byte) (isFavorite ? 1 : 0));
+        parcel.writeByte((byte) (isNotified ? 1 : 0));
+        parcel.writeInt(notificationId);
+        parcel.writeString(competitionName);
+// FDLink
+        if(links == null) links = new FDLinks();
+        parcel.writeString(links.self.getHref());
+        parcel.writeString(links.competition.getHref());
+        parcel.writeString(links.homeTeam.getHref());
+        parcel.writeString(links.awayTeam.getHref());
+// FDOdds
+        if(odds == null) odds = new FDOdds();
+        parcel.writeDouble(odds.homeWin);
+        parcel.writeDouble(odds.draw);
+        parcel.writeDouble(odds.awayWin);
+// FDResult
+        if(result == null) result = new FDResult();
+        parcel.writeInt(result.goalsHomeTeam);
+        parcel.writeInt(result.goalsAwayTeam);
+        parcel.writeInt(result.halfTime.goalsHomeTeam);
+        parcel.writeInt(result.halfTime.goalsAwayTeam);
+
+    }
+
     private class FDLinks {
         @SerializedName("self")
         @Expose
@@ -116,6 +209,12 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @Expose
         private FDLink awayTeam;
 
+        FDLinks() {
+            self = new FDLink();
+            competition = new FDLink();
+            homeTeam = new FDLink();
+            awayTeam = new FDLink();
+        }
     }
 
     private class FDHalfTime {
@@ -127,6 +226,10 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @Expose
         private int goalsAwayTeam;
 
+        FDHalfTime() {
+            goalsHomeTeam = EMPTY_INT_VALUE;
+            goalsAwayTeam = EMPTY_INT_VALUE;
+        }
     }
 
 
@@ -142,6 +245,12 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @SerializedName("halfTime")
         @Expose
         private FDHalfTime halfTime;
+
+        FDResult() {
+            goalsHomeTeam = EMPTY_INT_VALUE;
+            goalsAwayTeam = EMPTY_INT_VALUE;
+            halfTime = new FDHalfTime();
+        }
 
         FDResult(int goalsHomeTeam, int goalsAwayTeam) {
             this.goalsHomeTeam = goalsHomeTeam;
@@ -162,6 +271,12 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
         @SerializedName("awayWin")
         @Expose
         private double awayWin;
+
+        FDOdds() {
+            homeWin = EMPTY_INT_VALUE;
+            draw = EMPTY_INT_VALUE;
+            awayWin = EMPTY_INT_VALUE;
+        }
 
         FDOdds(double homeWin, double draw, double awayWin) {
             this.homeWin = homeWin;
@@ -320,7 +435,6 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable {
     public void postProcess() {
         setId();
     }
-
 
 
 }

@@ -7,14 +7,12 @@ import android.support.v4.content.CursorLoader;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_AFTER;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_BEFORE;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_ITEM_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_ITEM_ID2;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID2;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST_DATES;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST_FIXTURES;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST_TEAMS;
 
 /**
@@ -35,17 +33,12 @@ public class FDLoader extends CursorLoader {
 
 
         if (args != null) {
-            int type = args.getInt(BUNDLE_LOADER_REQUEST); // type of request
-            if (type == BUNDLE_LOADER_REQUEST_DATES) {
-                String dateBefore = args.getString(BUNDLE_LOADER_DATE_BEFORE);
-                String dateAfter = args.getString(BUNDLE_LOADER_DATE_AFTER);
+            String s = args.getString(BUNDLE_LOADER_DATA_URI);
+//                String itemId2 = args.getString(BUNDLE_LOADER_DATA_ID2);
 //                selection = FDContract.FxEntry.COLUMN_FIXTURE_DATE + " BETWEEN '" + dateBefore + "' AND '" + dateAfter + "'";
-                uri = FDUtils.buildItemIdUri(FDContract.FxEntry.TABLE_NAME, dateBefore, dateAfter);
-
-            } else if (type == BUNDLE_LOADER_REQUEST_FIXTURES) {
-
-            } else if (type == BUNDLE_LOADER_REQUEST_TEAMS) {
-
+//                uri = FDUtils.buildItemIdUri(FDContract.FxEntry.TABLE_NAME, dateBefore, dateAfter);
+            if (s != null && !s.isEmpty()) {
+                uri = Uri.parse(s);
             }
         }
 

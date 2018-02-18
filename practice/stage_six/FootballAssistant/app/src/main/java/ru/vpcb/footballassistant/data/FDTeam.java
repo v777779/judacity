@@ -1,5 +1,8 @@
 package ru.vpcb.footballassistant.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +19,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
  * Date: 24-Jan-18
  * Email: vadim.v.voronov@gmail.com
  */
-public class FDTeam implements PostProcessingEnabler.PostProcessable {
+public class FDTeam implements PostProcessingEnabler.PostProcessable, Parcelable {
     @SerializedName("_links")
     @Expose
     private FDLinks links;
@@ -59,7 +62,34 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
     }
 
 
-     public void setId() throws NullPointerException, NumberFormatException {
+    protected FDTeam(Parcel in) {
+        name = in.readString();
+        code = in.readString();
+        shortName = in.readString();
+        squadMarketValue = in.readString();
+        crestURL = in.readString();
+        id = in.readInt();
+// links
+        links = new FDLinks();
+        links.self.setHref(in.readString());
+        links.players.setHref(in.readString());
+        links.fixtures.setHref(in.readString());
+
+    }
+
+    public static final Creator<FDTeam> CREATOR = new Creator<FDTeam>() {
+        @Override
+        public FDTeam createFromParcel(Parcel in) {
+            return new FDTeam(in);
+        }
+
+        @Override
+        public FDTeam[] newArray(int size) {
+            return new FDTeam[size];
+        }
+    };
+
+    public void setId() throws NullPointerException, NumberFormatException {
         if(links.self != null) {
             id = FDUtils.formatHrefToId(links.self.getHref());
         }
@@ -102,6 +132,28 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
         setId();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(code);
+        parcel.writeString(shortName);
+        parcel.writeString(squadMarketValue);
+        parcel.writeString(crestURL);
+        parcel.writeInt(id);
+// links
+        if(links == null) links = new FDLinks();
+        parcel.writeString(links.self.getHref());
+        parcel.writeString(links.players.getHref());
+        parcel.writeString(links.fixtures.getHref());
+
+
+    }
+
     // classes
     private class FDLinks {
         @SerializedName("self")
@@ -116,7 +168,7 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable {
         @Expose
         private FDLink players;
 
-        public FDLinks() {
+        FDLinks() {
             this.self = new FDLink();
             this.fixtures = new FDLink();
             this.players = new FDLink();

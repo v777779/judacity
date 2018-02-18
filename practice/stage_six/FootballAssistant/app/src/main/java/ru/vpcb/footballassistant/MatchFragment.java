@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -38,6 +41,7 @@ import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
+import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.notifications.NotificationUtils;
 import ru.vpcb.footballassistant.utils.FDUtils;
 
@@ -45,9 +49,15 @@ import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_AWAY_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_ID2;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST_FIXTURES;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_AWAY_TEAM;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM_ID;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
@@ -98,16 +108,18 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     private Map<Integer, FDTeam> mMapTeams;
     private Map<Integer, FDFixture> mMapFixtures;
     private FDFixture mFixture;
-    private FDTeam mTeamHome;
-    private FDTeam mTeamAway;
+    private FDTeam mHomeTeam;
+    private FDTeam mAwayTeam;
 
 
-    public static Fragment newInstance(int id, int homeTeamId, int awayTeamId) {
-        Fragment fragment = new MatchFragment();
+    public static Fragment newInstance(FDFixture fixture,FDTeam homeTeam, FDTeam awayTeam) {
+        MatchFragment fragment = new MatchFragment();
         Bundle args = new Bundle();
-        args.putInt(BUNDLE_MATCH_FIXTURE_ID, id);
-        args.putInt(BUNDLE_MATCH_HOME_TEAM_ID, homeTeamId);
-        args.putInt(BUNDLE_MATCH_AWAY_TEAM_ID, awayTeamId);
+        args.putParcelable(BUNDLE_MATCH_FIXTURE, fixture);
+        if(homeTeam != null)
+            args.putParcelable(BUNDLE_MATCH_HOME_TEAM, homeTeam);
+        if(awayTeam != null)
+            args.putParcelable(BUNDLE_MATCH_AWAY_TEAM, awayTeam);
         fragment.setArguments(args);
         return fragment;
     }
@@ -123,8 +135,9 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mMap = mActivity.getMap();                // not guaranteed on rotation
-//        mMapTeams = mActivity.getMapTeams();      // need own loaders
+        mMapTeams = new LinkedHashMap<>();
+        mMapFixtures = new LinkedHashMap<>(); // fixed order
+
 
 
         if (savedInstanceState == null) {
@@ -147,25 +160,22 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 //        });
 
         Bundle args = getArguments();
-        int fixtureId = EMPTY_FIXTURE_ID;
-        int homeTeamId = EMPTY_TEAM_ID;
-        int awayTeamId = EMPTY_TEAM_ID;
-        if (args != null) {
-            fixtureId = args.getInt(BUNDLE_MATCH_FIXTURE_ID, EMPTY_FIXTURE_ID);
-            homeTeamId = args.getInt(BUNDLE_MATCH_HOME_TEAM_ID, EMPTY_TEAM_ID);
-            awayTeamId = args.getInt(BUNDLE_MATCH_AWAY_TEAM_ID, EMPTY_TEAM_ID);
+        if (args == null) return;
+        mFixture = args.getParcelable(BUNDLE_MATCH_FIXTURE);
+        mHomeTeam = args.getParcelable(BUNDLE_MATCH_HOME_TEAM);
+        mAwayTeam = args.getParcelable(BUNDLE_MATCH_AWAY_TEAM);
+
+        if (mFixture == null || mFixture.getId() <= 0 ||
+                mFixture.getHomeTeamId() <= 0 ||
+                mFixture.getAwayTeamId() <= 0) {
+            return;
         }
-        if (fixtureId <= 0) return;
+
+        Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
+                mFixture.getHomeTeamId(),mFixture.getAwayTeamId());
         Bundle bundle = new Bundle();
-        bundle.putInt(BUNDLE_MATCH_FIXTURE_ID, fixtureId);
-        getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures for both this teams
+        bundle.putString(BUNDLE_LOADER_DATA_URI,uri.toString());
 
-        if (homeTeamId <= 0 || awayTeamId <= 0) return;
-        bundle = new Bundle();
-        bundle.putInt(BUNDLE_MATCH_HOME_TEAM_ID, homeTeamId);
-        bundle.putInt(BUNDLE_MATCH_AWAY_TEAM_ID, awayTeamId);
-
-        getLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, bundle, this);  // teams
         getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
     }
 
@@ -210,22 +220,16 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         switch (loader.getId()) {
             case FDContract.FxEntry.LOADER_ID:
                 Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursor);
-                if(mapFixtures == null || mapFixtures.isEmpty()) {
+                if (mapFixtures == null || mapFixtures.isEmpty()) {
                     break;
                 }
                 mMapFixtures.putAll(mapFixtures);
-                bindViewsFixture();
+                bindViewsFixtures();
 
-            break;
+                break;
             case FDContract.TmEntry.LOADER_ID:
-                Map<Integer, FDTeam> mapTeams = FDUtils.readTeams(cursor);
-                if(mapTeams == null || mapTeams.isEmpty()) {
-                    break;
-                }
-                mMapTeams.putAll(mapTeams);
-                bindViewsTeams();
 
-            break;
+                break;
             default:
         }
 
@@ -245,17 +249,17 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         return args.getInt(BUNDLE_MATCH_FIXTURE_ID, EMPTY_FIXTURE_ID);
 
     }
-    private void bindViewsTeams() {
+
+    private void bindViewsFixtures() {
 
 
     }
 
 
-    private void bindViewsFixture() {
+    private void bindViews() {
 
 
     }
-
 
 
     private void startActivityLeague(int id) {

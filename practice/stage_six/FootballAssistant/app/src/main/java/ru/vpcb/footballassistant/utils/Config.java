@@ -241,22 +241,20 @@ public class Config {
     public static final int BUNDLE_LOADER_REQUEST_FIXTURES = 3;
 
     public static final String BUNDLE_LOADER_DATA_BUNDLE = "bundle_loader_data_bundle";
-    public static final String BUNDLE_LOADER_DATE_BEFORE = "bundle_loader_date_before";
-    public static final String BUNDLE_LOADER_DATE_AFTER = "bundle_loader_date_after";
+    public static final String BUNDLE_LOADER_DATA_ID = "bundle_loader_data_first_id";
+    public static final String BUNDLE_LOADER_DATA_ID2 = "bundle_loader_data_second_id";
     public static final String BUNDLE_LOADER_DATE_CENTER = "bundle_loader_date_center";
-
-    public static final String BUNDLE_LOADER_ITEM_ID = "bundle_loader_item_id";
-    public static final String BUNDLE_LOADER_ITEM_ID1 = "bundle_loader_item_id2";
-    public static final String BUNDLE_LOADER_ITEM_ID2 = "bundle_loader_item_id2";
-
+    public static final String BUNDLE_LOADER_DATA_URI = "bundle_loader_data_uri";
 
     // match fragment
     public static final String MATCH_FRAGMENT_TAG = "match_fragment";
+
     public static final String BUNDLE_MATCH_FIXTURE_ID = "bundle_match_fixture_id";
-    public static final String BUNDLE_MATCH_HOME_TEAM_ID = "bundle_match_home_team_id";
-    public static final String BUNDLE_MATCH_AWAY_TEAM_ID = "bundle_match_away_team_id";
     public static final String BUNDLE_APP_BAR_HEIGHT = "bundle_app_bar_height";
 
+    public static final String BUNDLE_MATCH_FIXTURE = "bundle_match_fixture";
+    public static final String BUNDLE_MATCH_HOME_TEAM = "bundle_match_home_team";
+    public static final String BUNDLE_MATCH_AWAY_TEAM = "bundle_match_away_team";
 
 
     // team activity
