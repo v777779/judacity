@@ -35,12 +35,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
@@ -49,7 +47,6 @@ import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -356,7 +353,7 @@ public class FavoritesActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this,list,null);
+        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this,list,null);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -440,7 +437,7 @@ public class FavoritesActivity extends AppCompatActivity
 
 
     private void setupRecycler() {
-        RecyclerAdapter adapter = new RecyclerAdapter(this, null, null);
+        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, null, null);
         adapter.setHasStableIds(true);
         mRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -449,7 +446,7 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
     private void setupRecycler(List<FDFixture> list) {
-        RecyclerAdapter adapter = new RecyclerAdapter(this, list,null);
+        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list,null);
         adapter.setHasStableIds(true);
         mRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -513,7 +510,7 @@ public class FavoritesActivity extends AppCompatActivity
         mViewPagerData = data;
 // test!!!
         List<FDFixture> list = data.getList().get(data.getList().size()/2);
-        ((RecyclerAdapter)mRecycler.getAdapter()).swap(list);
+        ((RecyclerDetailAdapter)mRecycler.getAdapter()).swap(list);
 
     }
 

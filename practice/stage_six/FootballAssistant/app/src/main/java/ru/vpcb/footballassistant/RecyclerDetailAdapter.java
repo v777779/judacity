@@ -43,7 +43,7 @@ import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchTime;
  * RecyclerView Adapter class
  * Used to create and show Item objects of RecyclerView
  */
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAdapter.ViewHolder> {
     /**
      * Cursor object source of data
      */
@@ -80,7 +80,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      *
      * @param context Context of calling activity
      */
-    public RecyclerAdapter(Context context, List<FDFixture> list, Map<Integer, FDTeam> map) {
+    public RecyclerDetailAdapter(Context context, List<FDFixture> list, Map<Integer, FDTeam> map) {
         mContext = context;
 
         mRes = context.getResources();
@@ -130,14 +130,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId;
         if (viewType == RM_HEAD_VIEW_TYPE) {
-            layoutId = R.layout.recycler_match_head;
+            layoutId = R.layout.detail_recycler_head;
         } else {
-            layoutId = R.layout.recycler_match_item;
+            layoutId = R.layout.detail_recycler_item;
         }
 
 
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
-                .inflate(R.layout.recycler_match_item, parent, false);
+                .inflate(R.layout.detail_recycler_item, parent, false);
 
 //        view.getLayoutParams().height = mSpan.getHeight();
         return new ViewHolder(view);

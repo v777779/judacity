@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
+    // TODO Options Add League Head Items to Detail Recycler
 
 
     private static boolean sIsTimber;

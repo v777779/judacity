@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.Calendar;
-import java.util.Collections;
 
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.notifications.NotificationUtils;
@@ -26,7 +25,6 @@ import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_LEAGUE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_INTENT_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
-import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
 
 public class MatchActivity extends AppCompatActivity {
 
@@ -40,7 +38,7 @@ public class MatchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_match);
+        setContentView(R.layout.match_activity);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

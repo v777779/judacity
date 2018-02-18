@@ -20,7 +20,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -80,12 +79,9 @@ import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_N
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
-import static ru.vpcb.footballassistant.utils.FDUtils.cPx;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLiteZeroTime;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateToSQLite;
-import static ru.vpcb.footballassistant.utils.FDUtils.getCalendarFromSQLite;
-import static ru.vpcb.footballassistant.utils.FDUtils.setDay;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class DetailActivity extends AppCompatActivity
@@ -140,7 +136,7 @@ public class DetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.detail_activity);
 
         // log
         if (!sIsTimber) {
@@ -545,7 +541,7 @@ public class DetailActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerAdapter adapter = new RecyclerAdapter(this, list,mMapTeams);
+        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list,mMapTeams);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
