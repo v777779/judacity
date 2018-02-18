@@ -187,6 +187,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         setupActionBar(savedInstanceState);
         setupListeners();
+        bindViews();
 
 
         return mRootView;
