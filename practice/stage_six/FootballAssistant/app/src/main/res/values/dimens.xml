@@ -60,6 +60,7 @@
     <dimen name="text_sm_item_start_header_size">14sp</dimen>
     <dimen name="text_sm_item_start_date_size">14sp</dimen>
     <dimen name="text_sm_item_start_time_size">32sp</dimen>
+    <dimen name="text_sm_item_start_time_width">36dp</dimen>
     <dimen name="text_sm_item_start_letter_size">18sp</dimen>
     <dimen name="text_sm_item_start_subscript_size">14sp</dimen>
     <!--bet-->

@@ -106,7 +106,7 @@ public class Config {
     public static final String PATTERN_MATCH_DATE = "dd/MM/yy";
     public static final String PATTERN_MATCH_TIME = "HH:mm";
     public static final String PATTERN_MATCH_DATETIME = "HH:mm,dd/MM/yy";
-
+    public static final String PATTERN_MATCH_DATE_START = "dd MMM yyyy HH:mm:ss";
 
     // update service
     public static final String UPDATE_SERVICE_TAG = "UpdaterService";

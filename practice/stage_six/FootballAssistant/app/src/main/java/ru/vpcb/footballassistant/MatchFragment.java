@@ -21,8 +21,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +46,10 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_AWAY_TEAM;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -85,7 +91,26 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @BindView(R.id.icon_match_share_action)
     ImageView mViewShare;
 
+    // match start
+    @BindView(R.id.match_start_date)
+    TextView mTextStartDate;
+    @BindView(R.id.match_time_day_high)
+    TextView mTextDayHigh;
+    @BindView(R.id.match_time_day_middle)
+    TextView mTextDayMddle;
+    @BindView(R.id.match_time_day_low)
+    TextView mTextDayLow;
+    @BindView(R.id.match_time_hour_high)
+    TextView mTextHourHigh;
+    @BindView(R.id.match_time_hour_low)
+    TextView mTextHourLow;
+    @BindView(R.id.match_time_min_high)
+    TextView mTextMinHigh;
+    @BindView(R.id.match_time_min_low)
+    TextView mTextMinLow;
 
+
+    // parameters
     private View mRootView;
     private DetailActivity mActivity;
     private Context mContext;
@@ -101,14 +126,13 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     private FDTeam mAwayTeam;
 
 
-
-    public static Fragment newInstance(FDFixture fixture,FDTeam homeTeam, FDTeam awayTeam) {
+    public static Fragment newInstance(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
         MatchFragment fragment = new MatchFragment();
         Bundle args = new Bundle();
         args.putParcelable(BUNDLE_MATCH_FIXTURE, fixture);
-        if(homeTeam != null)
+        if (homeTeam != null)
             args.putParcelable(BUNDLE_MATCH_HOME_TEAM, homeTeam);
-        if(awayTeam != null)
+        if (awayTeam != null)
             args.putParcelable(BUNDLE_MATCH_AWAY_TEAM, awayTeam);
         fragment.setArguments(args);
         return fragment;
@@ -132,7 +156,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         } else {
             mAppBarHeight = savedInstanceState.getInt(BUNDLE_APP_BAR_HEIGHT);
         }
-
+// args
         Bundle args = getArguments();
         if (args == null) return;
         mFixture = args.getParcelable(BUNDLE_MATCH_FIXTURE);
@@ -145,37 +169,20 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
             return;
         }
 
-
-// test!!! protrusion check
-// resolved with  set AppBarLayout.height to 0
-//        ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (Math.abs(verticalOffset) > 5) {
-//                    int k = 1;
-//                }
-//            }
-//        });
-
 // parameters
-
-            mRequestSvgH = GlideUtils.getRequestBuilderSvg(mContext,R.drawable.fc_logo_widget_home);
-            mRequestPngH = GlideUtils.getRequestBuilderPng(mContext,R.drawable.fc_logo_widget_home);
-            mRequestSvgA = GlideUtils.getRequestBuilderSvg(mContext,R.drawable.fc_logo_widget_away);
-            mRequestPngA = GlideUtils.getRequestBuilderPng(mContext,R.drawable.fc_logo_widget_away);
+        mRequestSvgH = GlideUtils.getRequestBuilderSvg(mContext, R.drawable.fc_logo_widget_home);  // four requests for image logo
+        mRequestPngH = GlideUtils.getRequestBuilderPng(mContext, R.drawable.fc_logo_widget_home);
+        mRequestSvgA = GlideUtils.getRequestBuilderSvg(mContext, R.drawable.fc_logo_widget_away);
+        mRequestPngA = GlideUtils.getRequestBuilderPng(mContext, R.drawable.fc_logo_widget_away);
 
         mMapTeams = new LinkedHashMap<>();
         mMapFixtures = new LinkedHashMap<>(); // fixed order
 
-
-
-
-// load fixtures from teams
+// loader
         Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
-                mFixture.getHomeTeamId(),mFixture.getAwayTeamId());
+                mFixture.getHomeTeamId(), mFixture.getAwayTeamId());
         Bundle bundle = new Bundle();
-        bundle.putParcelable(BUNDLE_LOADER_DATA_URI,uri);
-
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
         getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
     }
 
@@ -188,8 +195,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         setupActionBar(savedInstanceState);
         setupListeners();
         bindViews();
-
-
         return mRootView;
     }
 
@@ -256,6 +261,14 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
     }
 
+    private int[] getOrders(int value) {
+        int[] a = new int[3];
+        for (int i = 0; i < a.length; i++) {
+            a[i] = value % 10;
+            value /= 10;
+        }
+        return a;
+    }
 
     private void bindViews() {
 
@@ -263,26 +276,64 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         String country = FDUtils.getCountry(mFixture.getLeague());
         mTextCountry.setText(country);
         mViewLeague.setText(mFixture.getCompetitionName());
-        setTeamImage(mHomeTeam.getCrestURL(), mViewTeamHome,mRequestSvgH, mRequestPngH,
+        setTeamImage(mHomeTeam.getCrestURL(), mViewTeamHome, mRequestSvgH, mRequestPngH,
                 R.drawable.fc_logo_widget_home);
-        setTeamImage(mAwayTeam.getCrestURL(), mViewTeamAway,mRequestSvgA, mRequestPngA,
+        setTeamImage(mAwayTeam.getCrestURL(), mViewTeamAway, mRequestSvgA, mRequestPngA,
                 R.drawable.fc_logo_widget_away);
         mTextTime.setText(FDUtils.formatMatchTime(mFixture.getDate()));
         mTextTeamHome.setText(mFixture.getHomeTeamName());
         mTextTeamAway.setText(mFixture.getAwayTeamName());
         mTextDate.setText(FDUtils.formatMatchDate(mFixture.getDate()));
-        mTextScoreHome.setText(FDUtils.formatFromInt(mFixture.getGoalsHome()));
-        mTextScoreAway.setText(FDUtils.formatFromInt(mFixture.getGoalsAway()));
+        mTextScoreHome.setText(FDUtils.formatFromInt(mFixture.getGoalsHome(), EMPTY_DASH));
+        mTextScoreAway.setText(FDUtils.formatFromInt(mFixture.getGoalsAway(), EMPTY_DASH));
         mTextStatus.setText(mFixture.getStatus());
-        if(mFixture.isFavorite()) {
+        if (mFixture.isFavorite()) {
             mViewFavorite.setImageResource(R.drawable.ic_star);
         }
-        if(mFixture.isNotified()) {
+        if (mFixture.isNotified()) {
             mViewNotification.setImageResource(R.drawable.ic_notifications);
         }
+// start
+        Date date = FDUtils.formatDateFromSQLite(mFixture.getDate());
+        if (date != null) {
+            long current = Calendar.getInstance().getTimeInMillis();
+            long time = date.getTime();
+            mTextStartDate.setText(FDUtils.formatMatchDateStart(mFixture.getDate()));
+            if (current > time) {
+                mTextDayHigh.setText(EMPTY_STRING);
+                mTextDayMddle.setText(EMPTY_STRING);
+                mTextDayLow.setText(EMPTY_STRING);
+                mTextHourHigh.setText(EMPTY_STRING);
+                mTextHourLow.setText(EMPTY_STRING);
+                mTextMinHigh.setText(EMPTY_STRING);
+                mTextMinLow.setText(EMPTY_STRING);
+            } else {
+                long delta = time - current;
+                long days = delta / TimeUnit.DAYS.toMillis(1);
+                delta = delta - days * TimeUnit.DAYS.toMillis(1);
+                long hours = delta / TimeUnit.HOURS.toMillis(1);
+                delta = delta - hours * TimeUnit.HOURS.toMillis(1);
+                long minutes = delta / TimeUnit.MINUTES.toMillis(1);
+
+                int[] a = getOrders((int)days);
+                if (a[2] > 0) {
+                    mTextDayHigh.setVisibility(View.VISIBLE);
+                    mTextDayHigh.setText(FDUtils.formatFromInt(a[2], EMPTY_STRING));
+                }
+                mTextDayMddle.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
+                mTextDayLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
+
+                a = getOrders((int)hours);
+                mTextHourHigh.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
+                mTextHourLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
+
+                a = getOrders((int)minutes);
+                mTextMinHigh.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
+                mTextMinLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
 
 
-
+            }
+        }
     }
 
 
@@ -393,5 +444,15 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         appBarLayout.getLayoutParams().height = 0;
     }
 
+// test!!! protrusion check
+// resolved with  set AppBarLayout.height to 0
+//        ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                if (Math.abs(verticalOffset) > 5) {
+//                    int k = 1;
+//                }
+//            }
+//        });
 
 }

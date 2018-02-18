@@ -76,6 +76,7 @@ import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE_ZERO_TIME;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE;
+import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE_START;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
@@ -115,6 +116,10 @@ public class FDUtils {
             new SimpleDateFormat(PATTERN_MATCH_DATE, Locale.ENGLISH);
     private static final SimpleDateFormat formatMatchTime =
             new SimpleDateFormat(PATTERN_MATCH_TIME, Locale.ENGLISH);
+    private static final SimpleDateFormat formatMatchDateStart =
+            new SimpleDateFormat(PATTERN_MATCH_DATE_START, Locale.ENGLISH);
+
+
 
     private static final SimpleDateFormat formatSQLiteDate =
             new SimpleDateFormat(PATTERN_DATE_SQLITE, Locale.ENGLISH);
@@ -189,6 +194,14 @@ public class FDUtils {
         return formatMatchTime.format(date);
     }
 
+    public static String formatMatchDateStart(String s) {
+        if (s == null || s.isEmpty()) return EMPTY_LONG_DASH;
+        Date date = formatDateFromSQLite(s);
+        if (date == null) return EMPTY_LONG_DASH;
+        return formatMatchDateStart.format(date);
+    }
+
+
     public static String formatMatchScore(int home, int away) {
         if (home < 0 || away < 0) return EMPTY_MATCH_SCORE;
         return String.format(Locale.ENGLISH, FORMAT_MATCH_SCORE, home, away);
@@ -200,8 +213,8 @@ public class FDUtils {
         return s.replace("T", " ").replace("Z", "");
     }
 
-    public static String formatFromInt(int value) {
-        if (value < 0) return EMPTY_LONG_DASH;
+    public static String formatFromInt(int value,String emptyString) {
+        if (value < 0) return emptyString;
         return String.format(Locale.ENGLISH, "%d", value);
     }
 

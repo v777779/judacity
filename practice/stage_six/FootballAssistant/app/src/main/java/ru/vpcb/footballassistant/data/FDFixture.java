@@ -81,6 +81,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.notificationId = EMPTY_NOTIFICATION_ID;
         this.competitionName = EMPTY_LONG_DASH;
         this.league = EMPTY_LONG_DASH;
+
+        this.links = new FDLinks();
+        this.result = new FDResult();
+        this.odds = new FDOdds();
+
     }
 
     public FDFixture(int id, int competitionId, int homeTeamId, int awayTeamId,
@@ -224,11 +229,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
     private class FDHalfTime {
         @SerializedName("goalsHomeTeam")
         @Expose
-        private int goalsHomeTeam;
+        private Integer goalsHomeTeam;
 
         @SerializedName("goalsAwayTeam")
         @Expose
-        private int goalsAwayTeam;
+        private Integer goalsAwayTeam;
 
         FDHalfTime() {
             goalsHomeTeam = EMPTY_INT_VALUE;
@@ -240,11 +245,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
     private class FDResult {
         @SerializedName("goalsHomeTeam")
         @Expose
-        private int goalsHomeTeam;
+        private Integer goalsHomeTeam;
 
         @SerializedName("goalsAwayTeam")
         @Expose
-        private int goalsAwayTeam;
+        private Integer goalsAwayTeam;
 
         @SerializedName("halfTime")
         @Expose
@@ -266,20 +271,20 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
     private class FDOdds {
         @SerializedName("homeWin")
         @Expose
-        private double homeWin;
+        private Double homeWin;
 
         @SerializedName("draw")
         @Expose
-        private double draw;
+        private Double draw;
 
         @SerializedName("awayWin")
         @Expose
-        private double awayWin;
+        private Double awayWin;
 
         FDOdds() {
-            homeWin = EMPTY_INT_VALUE;
-            draw = EMPTY_INT_VALUE;
-            awayWin = EMPTY_INT_VALUE;
+            homeWin = (double)EMPTY_INT_VALUE;
+            draw = (double)EMPTY_INT_VALUE;
+            awayWin = (double)EMPTY_INT_VALUE;
         }
 
         FDOdds(double homeWin, double draw, double awayWin) {
@@ -304,6 +309,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         if (links.awayTeam != null) {
             this.awayTeamId = FDUtils.formatHrefToId(links.awayTeam.getHref());        // id teamAway
         }
+
+        if(odds == null) odds = new FDOdds();
+        if(result == null) result = new FDResult();
+        if(result.goalsHomeTeam == null) result.goalsHomeTeam = EMPTY_INT_VALUE;
+        if(result.goalsAwayTeam == null) result.goalsAwayTeam = EMPTY_INT_VALUE;
 
         date = FDUtils.formatDateToSQLite(date);
 
