@@ -436,7 +436,7 @@ public class DetailActivity extends AppCompatActivity
         bundle.putString(BUNDLE_LOADER_DATE_CENTER, dateCenter);
 
         Uri uri = FDProvider.buildLoaderIdUri(this, FDContract.FxEntry.LOADER_ID, dateBefore, dateAfter);
-        bundle.putString(BUNDLE_LOADER_DATA_URI, uri.toString());
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
         return bundle;
     }
 

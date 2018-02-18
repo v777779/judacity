@@ -22,27 +22,25 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_REQUEST_TEAMS
  * Email: vadim.v.voronov@gmail.com
  */
 public class FDLoader extends CursorLoader {
-    public FDLoader(Context context, Uri uri, String sortOrder, String selection) {
-        super(context, uri, null, selection, null, sortOrder);
+    public FDLoader(Context context, Uri uri, String sortOrder) {
+        super(context, uri, null, null, null, sortOrder);
     }
 
     public static FDLoader getInstance(Context context, int id, Bundle args) {
         Uri uri = FDProvider.buildLoaderIdUri(context, id);
         String sortOrder = FDProvider.buildLoaderIdSortOrder(context, id);
-        String selection = null;
 
-
-        if (args != null) {
-            String s = args.getString(BUNDLE_LOADER_DATA_URI);
-//                String itemId2 = args.getString(BUNDLE_LOADER_DATA_ID2);
-//                selection = FDContract.FxEntry.COLUMN_FIXTURE_DATE + " BETWEEN '" + dateBefore + "' AND '" + dateAfter + "'";
-//                uri = FDUtils.buildItemIdUri(FDContract.FxEntry.TABLE_NAME, dateBefore, dateAfter);
-            if (s != null && !s.isEmpty()) {
-                uri = Uri.parse(s);
-            }
+        if (args == null) {
+            return new FDLoader(context, uri, sortOrder);
         }
 
-        return new FDLoader(context, uri, sortOrder, selection);
+        uri = args.getParcelable(BUNDLE_LOADER_DATA_URI);
+        if (uri == null) {
+            uri = FDProvider.buildLoaderIdUri(context, id);
+        }
+        return new FDLoader(context, uri, sortOrder);
+
+
     }
 
 

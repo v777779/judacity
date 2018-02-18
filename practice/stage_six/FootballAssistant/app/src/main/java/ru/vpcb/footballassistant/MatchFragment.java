@@ -170,11 +170,11 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                 mFixture.getAwayTeamId() <= 0) {
             return;
         }
-
+// load fixtures from teams
         Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
                 mFixture.getHomeTeamId(),mFixture.getAwayTeamId());
         Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_LOADER_DATA_URI,uri.toString());
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI,uri);
 
         getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
     }
