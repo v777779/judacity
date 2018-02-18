@@ -212,6 +212,17 @@
     <color name="match_start_letter">#3a3a3a</color>
     <color name="match_start_subscript">#989898</color>
 
+    <!--<color name="image_rm_item_widget_bar_back">#b3226b55</color>-->
+    <color name="image_rm_item_widget_bar_back_light">#40226b55</color>
+    <color name="image_rm_item_widget_bar_back">#e0165945</color>
+    <color name="image_rm_item_widget_bar_back_dark">#20226b55</color>
+
+    <color name="text_rm_item_widget_bar">#ededed</color>
+
+
+    <!--<color name="image_rm_item_widget_bar_back_light">#2909266c</color>-->
+    <!--<color name="image_rm_item_widget_bar_back">#c3263e77</color>-->
+    <!--<color name="image_rm_item_widget_bar_back_dark">#2909266c</color>-->
 <!--betting-->
 
     <color name="match_bet_text">#3a3a3a</color>

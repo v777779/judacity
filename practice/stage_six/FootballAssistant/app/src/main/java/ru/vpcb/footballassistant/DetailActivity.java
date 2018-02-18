@@ -76,6 +76,7 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
+import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_INTENT_EXTRA;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
@@ -83,6 +84,8 @@ import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLiteZeroTime;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateToSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
+import static ru.vpcb.footballassistant.utils.FootballUtils.showMessage;
+import static ru.vpcb.footballassistant.utils.FootballUtils.showMessageLong;
 
 public class DetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -102,6 +105,7 @@ public class DetailActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private ImageView mViewPagerBack;
     private TabLayout mTabLayout;
+    private View mWidgetBar;
 
 
     private BottomNavigationView mBottomNavigation;
@@ -127,6 +131,7 @@ public class DetailActivity extends AppCompatActivity
     private Cursor[] mCursors;
     private Bundle mViewPagerBundle;
     private int mViewPagerPos;
+    private Bundle mBundleExtra;
 
 
     // test!!!
@@ -157,14 +162,13 @@ public class DetailActivity extends AppCompatActivity
         mViewPager = findViewById(R.id.viewpager_main);
         mViewPagerBack = findViewById(R.id.image_viewpager_back);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
+        mWidgetBar = findViewById(R.id.match_widget_toolbar);
 
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
-
-
-// progress
+        // progress
         setupActionBar();
         setupBottomNavigation();
         setupProgress();
@@ -173,14 +177,22 @@ public class DetailActivity extends AppCompatActivity
         setupViewPager();
 
         if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            if (intent != null && intent.hasExtra(WIDGET_INTENT_BUNDLE)) {
+                mBundleExtra = intent.getBundleExtra(WIDGET_INTENT_BUNDLE);
+            }
+
+
             mViewPagerBundle = getDatesSpanBundle(Calendar.getInstance());
-            mViewPagerPos =  -1; // center of -span 0 span+
+            mViewPagerPos = -1; // center of -span 0 span+
             mViewPagerBack.setVisibility(View.VISIBLE);
             mViewPager.setAlpha(0);
+            mTabLayout.setAlpha(0);
         } else {
             mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_VIEWPAGER_DATE_BUNDLE);
             mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS);
             mViewPagerBack.setVisibility(View.INVISIBLE);
+            mBundleExtra = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
         }
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
@@ -198,6 +210,7 @@ public class DetailActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBundle(BUNDLE_VIEWPAGER_DATE_BUNDLE, mViewPagerBundle);
         outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
+        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA,mBundleExtra);
     }
 
     @Override
@@ -311,12 +324,13 @@ public class DetailActivity extends AppCompatActivity
         Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 // temp!!!
+//TODO Add WIDGET BAR TO DETAIL ACTIVITY
 // widget
-        Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
-        if (bundle != null) {
-            int widgetId = bundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
-            int fixtureId = value;
-            MatchWidgetService.startFillWidgetAction(this, widgetId, fixtureId);
+        if (mBundleExtra != null) {
+            int widgetId = mBundleExtra.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
+            MatchWidgetService.startFillWidgetAction(this, widgetId, value);
+            mViewPagerBundle = null;
+            mWidgetBar.setVisibility(View.INVISIBLE);
         }
         startActivityMatch();
     }
@@ -340,6 +354,17 @@ public class DetailActivity extends AppCompatActivity
 
     // methods
 
+    public Map<Integer, FDCompetition> getMap() {
+        return mMap;
+    }
+
+    public Map<Integer, FDTeam> getMapTeams() {
+        return mMapTeams;
+    }
+
+    public Map<Integer, FDFixture> getMapFixtures() {
+        return mMapFixtures;
+    }
 
     // TODO Optimize loaders
     private void restartLoaders() {
@@ -370,9 +395,9 @@ public class DetailActivity extends AppCompatActivity
         try {
             dateSpan = Integer.valueOf(stringDateSpan);
 
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
         }
-         return dateSpan;
+        return dateSpan;
     }
 
     private Bundle getDatesSpanBundle(Calendar c) {
@@ -383,18 +408,18 @@ public class DetailActivity extends AppCompatActivity
         int dateSpan = getFixtureDatesSpan();
         setZeroTime(c);
 
-        if(dateSpan > 0) {
+        if (dateSpan > 0) {
 
             dateCenter = formatDateToSQLite(c.getTime());
             c.add(Calendar.DATE, -dateSpan / 2);
             dateBefore = formatDateToSQLite(c.getTime());
             c.add(Calendar.DATE, dateSpan + (1 - (dateSpan % 2)));
             dateAfter = formatDateToSQLite(c.getTime());
-        }else {
+        } else {
             dateCenter = formatDateToSQLite(c.getTime());
             c.add(Calendar.DATE, -BUNDLE_VIEWPAGER_SPAN_LIMITS);
             dateBefore = formatDateToSQLite(c.getTime());
-            c.add(Calendar.DATE, BUNDLE_VIEWPAGER_SPAN_LIMITS*2);
+            c.add(Calendar.DATE, BUNDLE_VIEWPAGER_SPAN_LIMITS * 2);
             dateAfter = formatDateToSQLite(c.getTime());
         }
 
@@ -541,7 +566,7 @@ public class DetailActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list,mMapTeams);
+        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list, mMapTeams);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -615,7 +640,7 @@ public class DetailActivity extends AppCompatActivity
 
         while (next < times.size() - 1) {
             date = formatDateFromSQLiteZeroTime(fixtures.get(next).getDate());
-            if(date == null)  {  // skip wrong date
+            if (date == null) {  // skip wrong date
                 next++;
                 continue;
             }
@@ -626,8 +651,8 @@ public class DetailActivity extends AppCompatActivity
             list.add(new ArrayList<>(fixtures.subList(last, next)));
             last = next;
             if (next == current) {
-                if(mViewPagerPos == -1)
-                mViewPagerPos = list.size();  // index of current day records
+                if (mViewPagerPos == -1)
+                    mViewPagerPos = list.size();  // index of current day records
             }
         }
 
@@ -783,17 +808,32 @@ public class DetailActivity extends AppCompatActivity
 // animation
         mViewPagerBack.animate().alpha(0).setStartDelay(VIEWPAGER_BACK_START_DELAY)
                 .setDuration(VIEWPAGER_BACK_DURATION).start();
-        mViewPager.animate()
-                .alpha(1)
-                .setStartDelay(VIEWPAGER_BACK_START_DELAY)
-                .setDuration(VIEWPAGER_BACK_DURATION).start();
+        if(mViewPager.getAlpha() == 0) {
+            mViewPager.animate()
+                    .alpha(1)
+                    .setStartDelay(VIEWPAGER_BACK_START_DELAY)
+                    .setDuration(VIEWPAGER_BACK_DURATION).start();
+            mTabLayout.animate()
+                    .alpha(1)
+                    .setStartDelay(VIEWPAGER_BACK_START_DELAY)
+                    .setDuration(VIEWPAGER_BACK_DURATION).start();
+        }
 // tab_layout scrolling
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mTabLayout.setScrollPosition(mViewPagerPos,0,false);
+                mTabLayout.setScrollPosition(mViewPagerPos, 0, false);
             }
         });
+
+// widget support
+        if (mBundleExtra != null && mBundleExtra.getInt(WIDGET_BUNDLE_WIDGET_ID) > 0) {
+            mWidgetBar.setVisibility(View.VISIBLE);
+            mWidgetBar.animate()
+                    .alpha(1)
+                    .setStartDelay(VIEWPAGER_BACK_START_DELAY)
+                    .setDuration(VIEWPAGER_BACK_DURATION).start();
+        }
 
     }
 

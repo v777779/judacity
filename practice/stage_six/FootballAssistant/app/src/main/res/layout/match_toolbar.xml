@@ -22,7 +22,7 @@
         android:layout_marginEnd="@dimen/margin_normal"
         android:layout_marginStart="@dimen/margin_normal"
         android:contentDescription="@string/image_rm_item_team_logo"
-        android:src="@drawable/logo_chelsea"
+        android:src="@drawable/fc_logo_widget_home"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
@@ -45,13 +45,11 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
-
-        android:src="@drawable/logo_stoke_city"
+        android:src="@drawable/fc_logo_widget_away"
         app:layout_constraintBottom_toBottomOf="@+id/text_sm_item_time"
         app:layout_constraintEnd_toStartOf="@+id/guide_v5"
         app:layout_constraintStart_toStartOf="@+id/guide_v5"
         app:layout_constraintTop_toTopOf="@+id/text_sm_item_time" />
-
 
     <TextView
         android:id="@+id/text_sm_item_country"

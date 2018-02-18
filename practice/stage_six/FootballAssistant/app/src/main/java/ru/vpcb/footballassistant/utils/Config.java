@@ -153,6 +153,7 @@ public class Config {
     // widgets
     public static final String WIDGET_BUNDLE_FIXTURE_ID = "widget_fixture_id";
     public static final String WIDGET_BUNDLE_WIDGET_ID = "widget_widget_id";
+    public static final String WIDGET_BUNDLE_INTENT_EXTRA = "widget_bundle_intent_extra";
     public static final String WIDGET_PACKAGE = MatchWidgetProvider.class.getPackage().getName() + ".";
 
     public static final String WIDGET_SERVICE_FILL_ACTION = WIDGET_PACKAGE + "ACTION_FILL";
@@ -232,6 +233,13 @@ public class Config {
 
     public static final int VIEWPAGER_BACK_START_DELAY = 0;
     public static final int VIEWPAGER_BACK_DURATION = 750;
+
+    public static final int MESSAGE_TOAST_SUPER_LONG = 30000;
+    public static final int MESSAGE_TOAST_TICK = 1000;
+
+    // match fragment
+    public static final String BUNDLE_MATCH_FIXTURE_ID = "bundle_match_fixture_id";
+
 
 
     // team activity

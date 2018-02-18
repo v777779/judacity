@@ -241,6 +241,13 @@
         <item name="android:lines">3</item>
     </style>
 
+    <style name="Bar.Widget.Match" parent="Match.Light.TextRecycler">
+        <item name="android:textColor">@color/text_rm_item_widget_bar</item>
+        <item name="android:textSize">@dimen/text_rm_item_widget_bar_size</item>
+
+    </style>
+
+
 
     <!--team-->
     <style name="Home.Team.TextRecycler" parent="Match.Light.TextRecycler">
