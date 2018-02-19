@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.vpcb.footballassistant.R;
@@ -82,6 +83,7 @@ import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_TIME_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_7;
 import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
+import static ru.vpcb.footballassistant.utils.Config.ND_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.ND_BASE_URI;
 import static ru.vpcb.footballassistant.utils.Config.ND_CATEGORY_SPORT;
 import static ru.vpcb.footballassistant.utils.Config.ND_LANGUAGE_EN;
@@ -1610,6 +1612,12 @@ public class FDUtils {
     }
 
     private static INDRetrofitAPI setupRetrofitNews() {
+//logging
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);     // set your desired log level  NONE, BASIC, HEADERS, BODY
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);  // <-- this is the important line!
+
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapterFactory(new PostProcessingEnabler())
@@ -1617,6 +1625,7 @@ public class FDUtils {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ND_BASE_URI)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(httpClient.build())
                 .build();
         return retrofit.create(INDRetrofitAPI.class);
     }
@@ -1626,7 +1635,7 @@ public class FDUtils {
             throws NullPointerException, IOException {
 
         INDRetrofitAPI retrofitAPI = setupRetrofitNews();
-        return retrofitAPI.getSources(ND_LANGUAGE_EN, ND_CATEGORY_SPORT).execute().body();
+        return retrofitAPI.getSources(ND_LANGUAGE_EN, ND_CATEGORY_SPORT,ND_API_KEY).execute().body();
     }
 
     private static NDNews loadListArticles(NDSource source, int page)
@@ -1636,7 +1645,7 @@ public class FDUtils {
         if (id == null || id.isEmpty()) return null;
 
         INDRetrofitAPI retrofitAPI = setupRetrofitNews();
-        return retrofitAPI.getEverything(id, Integer.toString(page), ND_QUERY_API_KEY).execute().body();
+        return retrofitAPI.getEverything(id, Integer.toString(page), ND_API_KEY).execute().body();
     }
 
     // competitions

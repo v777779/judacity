@@ -103,6 +103,7 @@
         </receiver>
         <service android:name=".widgets.MatchWidgetService"
             android:exported="false"/>
+        <service android:name=".services.NewsService" />
 
     </application>
 

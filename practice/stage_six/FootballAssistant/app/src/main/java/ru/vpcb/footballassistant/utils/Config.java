@@ -19,7 +19,7 @@ import ru.vpcb.footballassistant.widgets.MatchWidgetProvider;
 public class Config {
     // api_keys
     public static final String FD_API_KEY = "70e68c465fd24d2e84c17aa8d71ca9b3";
-    public static final String NEWS_API_KEY = "3dbbb32e16f747e582119f20967996bc";
+    public static final String ND_API_KEY = "3dbbb32e16f747e582119f20967996bc";
 
     // data
     public static final String FD_BASE_URI = "http://api.football-data.org/v1/";
@@ -63,14 +63,14 @@ public class Config {
     public static final String ND_BASE_URI = "https://newsapi.org/v2/";
     public static final String ND_HEADLINES_GET = "top-headlines";
     public static final String ND_EVERYTHING_GET = "everything";
-    public static final String ND_SOURCES_GET = "everything";
+    public static final String ND_SOURCES_GET = "sources";
     public static final String ND_QUERY_SOURCE = "sources";
     public static final String ND_QUERY_PAGE = "page";
-    public static final String ND_QUERY_LANGUAGE = "sources";
-    public static final String ND_QUERY_CATEGORY = "sources";
+    public static final String ND_QUERY_LANGUAGE = "language";
+    public static final String ND_QUERY_CATEGORY = "category";
     public static final String ND_QUERY_API_KEY = "apiKey";
     public static final String ND_LANGUAGE_EN = "en";
-    public static final String ND_CATEGORY_SPORT = "sport";
+    public static final String ND_CATEGORY_SPORT = "sports";
     public static final String ND_DEFAULT_SOURCE = "fox-sport"; // contain
 
 

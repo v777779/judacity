@@ -189,8 +189,8 @@ public class FDContract {
         public static final int TABLE_ID_MATCHER = 701;
         public static final int TABLE_ID_MATCHER2 = 702;
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
-        public static final String COLUMN_SOURCE_ID = "source_id";                          // string primary
-        public static final String COLUMN_SOURCE_NAME = "source_name";                      // string
+        public static final String COLUMN_SOURCE_ID = "id";                                 // string primary
+        public static final String COLUMN_SOURCE_NAME = "name";                             // string
         public static final String COLUMN_DESCRIPTION = "description";                      // string
         public static final String COLUMN_SOURCE_URL = "source_url";                        // string
         public static final String COLUMN_SOURCE_CATEGORY = "source_category";              // string

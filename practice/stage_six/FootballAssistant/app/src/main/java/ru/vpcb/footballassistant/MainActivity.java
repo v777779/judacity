@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import ru.vpcb.footballassistant.services.NewsService;
 import ru.vpcb.footballassistant.services.UpdateService;
 import timber.log.Timber;
 
@@ -268,6 +269,10 @@ public class MainActivity extends AppCompatActivity  {
     private void refresh(String action) {
         Intent intent = new Intent(action, null, this, UpdateService.class);
         startService(intent);
+
+        intent = new Intent(action, null, this, NewsService.class);
+        startService(intent);
+
     }
 
 
