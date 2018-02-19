@@ -82,7 +82,6 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.competitionName = EMPTY_LONG_DASH;
         this.league = EMPTY_LONG_DASH;
 
-        this.links = new FDLinks();
         this.result = new FDResult();
         this.odds = new FDOdds();
 

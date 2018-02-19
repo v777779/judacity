@@ -7,6 +7,7 @@ import java.util.List;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 
 /**
@@ -39,19 +40,19 @@ public class FDCompetition implements PostProcessingEnabler.PostProcessable {
 
     @SerializedName("currentMatchday")
     @Expose
-    private int currentMatchDay;
+    private Integer currentMatchDay;
 
     @SerializedName("numberOfMatchdays")
     @Expose
-    private int numberOfMatchDays;
+    private Integer numberOfMatchDays;
 
     @SerializedName("numberOfTeams")
     @Expose
-    private int numberOfTeams;
+    private Integer numberOfTeams;
 
     @SerializedName("numberOfGames")
     @Expose
-    private int numberOfGames;
+    private Integer numberOfGames;
 
     @SerializedName("lastUpdated")
     @Expose
@@ -60,6 +61,14 @@ public class FDCompetition implements PostProcessingEnabler.PostProcessable {
     private List<FDTeam> teams;
     private List<FDFixture> fixtures;
     private FDTable table;
+
+    public FDCompetition() {
+        this.id = EMPTY_INT_VALUE;
+        this.currentMatchDay = EMPTY_INT_VALUE;
+        this.numberOfMatchDays = EMPTY_INT_VALUE;
+        this.numberOfTeams = EMPTY_INT_VALUE;
+        this.numberOfGames = EMPTY_INT_VALUE;
+    }
 
     public FDCompetition(int id, String caption, String league, String year,
                          int currentMatchDay, int numberOfMatchDays,
@@ -103,8 +112,15 @@ public class FDCompetition implements PostProcessingEnabler.PostProcessable {
 
     private void setId() {
         lastUpdated = FDUtils.formatDateToSQLite(lastUpdated);
-        if (id > 0 || links.self == null) return;
+        if (id > 0 ) return;                               // here id is checked on =0 from load
+        if(links == null || links.self == null) return;    // id = -1 by constructor
         id = FDUtils.formatHrefToId(links.self.getHref());
+
+        if(currentMatchDay == null) currentMatchDay = EMPTY_INT_VALUE;
+        if(numberOfMatchDays == null) numberOfMatchDays = EMPTY_INT_VALUE;
+        if(numberOfTeams == null) numberOfTeams = EMPTY_INT_VALUE;
+        if(numberOfGames== null) numberOfGames = EMPTY_INT_VALUE;
+
     }
 
     public int getId() {
