@@ -1102,10 +1102,6 @@ public class DetailActivity extends AppCompatActivity
                 Map<Integer, List<Integer>> mapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
                 Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursors[0][4]);
 
-                for (Cursor cursor : cursors[0]) {
-                    if(cursor == null || cursor.isClosed())continue;
-                    cursor.close();
-                }
                 if (FDUtils.checkEmpty(map, mapTeamKeys, mapTeams, mapFixtureKeys, mapFixtures)) {
                     return null;
                 }
