@@ -44,10 +44,8 @@
         android:layout_width="@dimen/text_sm_item_start_time_width"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
-
-
         android:contentDescription="@string/text_sm_item_match_date_days"
-        android:text="@string/text_test_sm_item_match_number_1"
+        tools:text="@string/text_test_sm_item_match_number_1"
         app:layout_constraintEnd_toStartOf="@+id/match_time_day_low"
         app:layout_constraintTop_toTopOf="@+id/match_time_day_low" />
 
@@ -57,11 +55,11 @@
         android:layout_width="@dimen/text_sm_item_start_time_width"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
-        android:visibility="invisible"
         android:contentDescription="@string/text_sm_item_match_date_days"
-        android:text="@string/text_test_sm_item_match_number_1"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/match_time_day_middle"
-        app:layout_constraintTop_toTopOf="@+id/match_time_day_low" />
+        app:layout_constraintTop_toTopOf="@+id/match_time_day_low"
+        tools:text="@string/text_test_sm_item_match_number_1" />
 
     <TextView
         android:id="@+id/match_time_day_low"
@@ -73,7 +71,7 @@
         android:contentDescription="@string/text_sm_item_match_date_days"
         android:paddingEnd="@dimen/margin_normal"
         android:paddingStart="@dimen/margin_normal"
-        android:text="@string/text_test_sm_item_match_number_0"
+        tools:text="@string/text_test_sm_item_match_number_0"
         app:layout_constraintEnd_toStartOf="@+id/match_time_hour_high"
         app:layout_constraintTop_toTopOf="@+id/match_time_hour_high" />
 
@@ -96,7 +94,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:background="@drawable/match_time_back"
         android:contentDescription="@string/text_sm_item_match_date_hours"
-        android:text="@string/text_test_sm_item_match_number_1"
+        tools:text="@string/text_test_sm_item_match_number_1"
         app:layout_constraintEnd_toStartOf="@+id/guide_v2"
         app:layout_constraintTop_toBottomOf="@+id/match_start_header" />
 
@@ -107,9 +105,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_micro"
         android:layout_marginTop="@dimen/margin_large"
-
         android:contentDescription="@string/text_sm_item_match_date_hours"
-        android:text="@string/text_test_sm_item_match_number_0"
+        tools:text="@string/text_test_sm_item_match_number_0"
         app:layout_constraintStart_toEndOf="@+id/match_time_hour_high"
         app:layout_constraintTop_toBottomOf="@+id/match_start_header" />
 
@@ -131,9 +128,8 @@
         android:layout_width="@dimen/text_sm_item_start_time_width"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
-
         android:contentDescription="@string/text_sm_item_match_date_mins"
-        android:text="@string/text_test_sm_item_match_number_1"
+        tools:text="@string/text_test_sm_item_match_number_1"
         app:layout_constraintStart_toEndOf="@+id/match_time_hour_low"
         app:layout_constraintTop_toTopOf="@+id/match_time_hour_low" />
 
@@ -143,9 +139,8 @@
         android:layout_width="@dimen/text_sm_item_start_time_width"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_micro"
-
         android:contentDescription="@string/text_sm_item_match_date_mins"
-        android:text="@string/text_test_sm_item_match_number_0"
+        tools:text="@string/text_test_sm_item_match_number_0"
         app:layout_constraintStart_toEndOf="@+id/match_time_min_high"
         app:layout_constraintTop_toTopOf="@+id/match_time_min_high" />
 

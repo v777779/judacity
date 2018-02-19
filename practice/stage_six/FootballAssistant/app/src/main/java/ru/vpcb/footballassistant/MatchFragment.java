@@ -315,7 +315,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                 delta = delta - hours * TimeUnit.HOURS.toMillis(1);
                 long minutes = delta / TimeUnit.MINUTES.toMillis(1);
 
-                int[] a = getOrders((int)days);
+                int[] a = getOrders((int) days);
                 if (a[2] > 0) {
                     mTextDayHigh.setVisibility(View.VISIBLE);
                     mTextDayHigh.setText(FDUtils.formatFromInt(a[2], EMPTY_STRING));
@@ -323,17 +323,30 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                 mTextDayMddle.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
                 mTextDayLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
 
-                a = getOrders((int)hours);
+                a = getOrders((int) hours);
                 mTextHourHigh.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
                 mTextHourLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
 
-                a = getOrders((int)minutes);
+                a = getOrders((int) minutes);
                 mTextMinHigh.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
                 mTextMinLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
 
 
             }
+        } else {
+            mTextStartDate.setText(EMPTY_LONG_DASH);
+            mTextDayHigh.setText(EMPTY_DASH);
+            mTextDayMddle.setText(EMPTY_DASH);
+            mTextDayLow.setText(EMPTY_DASH);
+            mTextHourHigh.setText(EMPTY_DASH);
+            mTextHourLow.setText(EMPTY_DASH);
+            mTextMinHigh.setText(EMPTY_DASH);
+            mTextMinLow.setText(EMPTY_DASH);
         }
+
+// bet
+
+
     }
 
 
