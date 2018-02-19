@@ -212,7 +212,8 @@
         <item name="android:textSize">@dimen/text_sm_recycler_head_size</item>
         <item name="android:textColor">@color/match_recycler_head_text</item>
         <item name="android:gravity">center</item>
-        <item name="android:lines">2</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:lines">1</item>
     </style>
 
     <style name="Score.Item.Recycler.Match" parent="Match.TextRecycler">

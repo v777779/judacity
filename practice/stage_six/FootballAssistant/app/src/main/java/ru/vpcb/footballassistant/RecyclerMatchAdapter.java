@@ -4,7 +4,6 @@ package ru.vpcb.footballassistant;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.support.annotation.Nullable;
@@ -16,16 +15,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.bumptech.glide.RequestBuilder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.utils.Config;
@@ -35,15 +32,17 @@ import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderSvg;
 import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE_DARK;
-import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE_LIGHT;
+import static ru.vpcb.footballassistant.utils.Config.RT_HEAD_VIEW_TYPE;
+import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
+import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchDate;
-import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchTime;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatMatchScore;
 
 /**
  * RecyclerView Adapter class
  * Used to create and show Item objects of RecyclerView
  */
-public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAdapter.ViewHolder> {
+public class RecyclerMatchAdapter extends RecyclerView.Adapter<RecyclerMatchAdapter.ViewHolder> {
     /**
      * Cursor object source of data
      */
@@ -68,33 +67,30 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
      * Resources of activity
      */
     private Resources mRes;
+    // test!!!
+    private static int counter = 0;
 
     private List<FDFixture> mList;
-    private Map<Integer, FDTeam> mMap;
-    private DateFormat mDateFormat;
+    private Map<Integer, FDCompetition> mMap;
+    private Map<Integer, FDTeam> mMapTeams;
     private RequestBuilder<PictureDrawable> mRequestSvg;
     private RequestBuilder<Drawable> mRequestPng;
+
 
     /**
      * Constructor of RecyclerAdapter
      *
      * @param context Context of calling activity
      */
-    public RecyclerDetailAdapter(Context context, List<FDFixture> list, Map<Integer, FDTeam> map) {
+    public RecyclerMatchAdapter(Context context, List<FDFixture> list, Map<Integer, FDTeam> mapTeams) {
         mContext = context;
-
         mRes = context.getResources();
         mList = list;
-        mMap = map;
-
+        mMapTeams = mapTeams;
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
-        mDateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
-//        if(mRequestSvg == null) mRequestSvg = getRequestBuilderSvg(context);
-//        if(mRequestPng == null ) mRequestPng = getRequestBuilderPng(context);
-
         mRequestSvg = getRequestBuilderSvg(context);
-        mRequestPng = getRequestBuilderPng(context);
+         mRequestPng = getRequestBuilderPng(context);
 
     }
 
@@ -118,7 +114,8 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
 
     @Override
     public int getItemViewType(int position) {
-        return (position % 2 == 0) ? RM_ITEM_VIEW_TYPE_LIGHT : RM_ITEM_VIEW_TYPE_DARK;
+        if (position == 0) return RT_HEAD_VIEW_TYPE;
+        else return position % 2 == 0 ? RT_ITEM_VIEW_TYPE_DARK : RT_ITEM_VIEW_TYPE_LIGHT;
     }
 
     /**
@@ -131,17 +128,10 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layoutId;
-        if (viewType == RM_HEAD_VIEW_TYPE) {
-            layoutId = R.layout.detail_recycler_head;
-        } else {
-            layoutId = R.layout.detail_recycler_item;
-        }
-
-
+        int layoutId = R.layout.match_recycler_item;
+        if (viewType == RM_HEAD_VIEW_TYPE) layoutId = R.layout.match_recycler_head;
         View view = ((AppCompatActivity) mContext).getLayoutInflater()
-                .inflate(R.layout.detail_recycler_item, parent, false);
-
+                .inflate(layoutId, parent, false);
 //        view.getLayoutParams().height = mSpan.getHeight();
         return new ViewHolder(view);
     }
@@ -161,14 +151,7 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mList == null || pos < 0 || pos >= mList.size()) {
-                    return;
-                }
-                FDFixture fixture = mList.get(pos);
-                if (fixture == null || fixture.getId() <= 0) {
-                    return;
-                }
-                ((ICallback) mContext).onComplete(view, fixture.getId());
+                ((ICallback) mContext).onComplete(view, pos);
             }
         });
 
@@ -182,7 +165,7 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
     @Override
     public int getItemCount() {
         if (mList == null) return 0;
-        return mList.size();
+        return mList.size() + 1;
     }
 
     /**
@@ -203,43 +186,41 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
      */
     class ViewHolder extends RecyclerView.ViewHolder {
         @Nullable
-        @BindView(R.id.text_tm_item_home)
-        TextView mTextTeamHome;
-        @Nullable
-        @BindView(R.id.text_tm_item_away)
-        TextView mTextTeamAway;
-        @Nullable
-        @BindView(R.id.text_tm_item_time)
-        TextView mTextTime;
-        @Nullable
-        @BindView(R.id.text_rm_head_league)
-        TextView mTextLeague;
-        @Nullable
-        @BindView(R.id.image_rm_item_home)
+        @BindView(R.id.image_sm_team_home)
         ImageView mImageHome;
         @Nullable
-        @BindView(R.id.image_rm_item_away)
+        @BindView(R.id.image_sm_team_away)
         ImageView mImageAway;
         @Nullable
-        @BindView(R.id.image_rm_head_league)
-        ImageView mImageLeague;
+        @BindView(R.id.text_sm_item_home)
+        TextView mTextTeamHome;
         @Nullable
-        @BindView(R.id.text_rm_item_date)
+        @BindView(R.id.text_sm_item_away)
+        TextView mTextTeamAway;
+        @Nullable
+        @BindView(R.id.text_sm_item_score)
+        TextView mTextScore;
+        @Nullable
+        @BindView(R.id.text_sm_item_league)
+        TextView mTextLeague;
+        @Nullable
+        @BindView(R.id.text_sm_item_date)
         TextView mTextDate;
         @Nullable
-        @BindView(R.id.icon_rm_item_favorite)
+        @BindView(R.id.text_sm_item_status)
+        TextView mTextStatus;
+        @Nullable
+        @BindView(R.id.icon_sm_item_favorite)
         ImageView mImageFavorite;
         @Nullable
-        @BindView(R.id.icon_rm_item_notify)
+        @BindView(R.id.icon_sm_item_notify)
         ImageView mImageNotify;
-        @Nullable
-        @BindView(R.id.text_rm_item_status)
-        TextView mTextStatus;
         @Nullable
         @BindView(R.id.constraint_recycler_match_item)
         View mLayout;
 
         private int mColorDark;
+
 
         /**
          * Constructor
@@ -250,7 +231,7 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            mColorDark = ContextCompat.getColor(mContext, R.color.rm_item_card_back_dark);
+            mColorDark = ContextCompat.getColor(mContext, R.color.match_recycler_card_back_dark);
         }
 
         /**
@@ -260,61 +241,44 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
          * @param position int position of item in RecyclerView
          */
         private void fill(int position) {
-            if (mList == null) return;
+            if (mList == null || position < 0 || position > mList.size()) return;
+            if (getItemViewType() == RM_HEAD_VIEW_TYPE) {
+                return;
+            }
 
-            FDFixture fixture = mList.get(position);
-
-//            if (getItemViewType() == RM_HEAD_VIEW_TYPE) {
-//                if (position == 0) {
-//                setText( mTextLeague,mContext.getString(R.string.text_test_rm_item_favorites));
-//                    mImageLeague.setImageResource(R.drawable.ic_star);
-//                } else {
-//                setText(mTextLeague,mContext.getString(R.string.text_test_rm_item_league2));
-//                    mImageLeague.setImageResource(R.drawable.icon_ball);
-//                }
-//            }
 
             if (getItemViewType() == RM_ITEM_VIEW_TYPE_DARK && mLayout != null) {
                 mLayout.setBackgroundColor(mColorDark);
 
             }
+            FDFixture fixture = mList.get(position - 1);  // 1..n
+            if (fixture == null || fixture.getId() <= 0) return;
+
             setText(mTextTeamHome, fixture.getHomeTeamName());
             setText(mTextTeamAway, fixture.getAwayTeamName());
-            setText(mTextTime, formatMatchTime(fixture.getDate()));
+            setText(mTextScore, formatMatchScore(fixture.getGoalsHome(), fixture.getGoalsAway()));
             setText(mTextDate, formatMatchDate(fixture.getDate()));
             setText(mTextStatus, fixture.getStatus());
-            setTeamImage(fixture.getHomeTeamId(),
-                    mImageHome, mMap, mRequestSvg, mRequestPng,R.drawable.fc_logo);
-            setTeamImage(fixture.getAwayTeamId(),
-                    mImageAway, mMap, mRequestSvg, mRequestPng,R.drawable.fc_logo);
 
-            if(fixture.isFavorite()) {
+            setTeamImage(fixture.getHomeTeamId(), mImageHome, mMapTeams, mRequestSvg, mRequestPng, R.drawable.fc_logo);
+            setTeamImage(fixture.getAwayTeamId(), mImageAway, mMapTeams, mRequestSvg, mRequestPng, R.drawable.fc_logo);
+
+            if (fixture.isFavorite() && mImageFavorite != null) {
                 mImageFavorite.setImageResource(R.drawable.ic_star);
             }
-            if(fixture.isNotified()) {
+            if (fixture.isNotified()) {
                 mImageNotify.setImageResource(R.drawable.ic_notifications);
             }
-
 
         }
 
         private void setText(TextView textView, String s) {
-            if (textView == null || s == null || s.isEmpty()) return;
+            if (textView == null) return;
             textView.setText(s);
         }
 
+
     }
-//    mTextTeamHome = view.findViewById(R.id.text_tm_item_home);
-//    mTextTeamAway= view.findViewById(R.id.text_tm_item_away);
-//    mTextTime= view.findViewById(R.id.text_tm_item_time);
-//    mTextLeague= view.findViewById(R.id.text_rm_head_league);
-//    mImageHome= view.findViewById(R.id.image_rm_item_home);
-//    mImageAway= view.findViewById(R.id.image_rm_item_away);
-//    mImageLeague= view.findViewById(R.id.image_rm_head_league);
-//    mTextDate= view.findViewById(R.id.text_rm_item_date);
-//    mImageFavorite= view.findViewById(R.id.icon_rm_item_favorite);
-//    mImageNotify= view.findViewById(R.id.icon_rm_item_notify);
-//    mTextStatus= view.findViewById(R.id.text_rm_item_status);
-//    mLayout = view.findViewById(R.id.constraint_recycler_match_item);
+
 
 }

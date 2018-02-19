@@ -75,7 +75,7 @@ public class Config {
 
     // retrofit
     // competitions
-    public static final String EMPTY_TEAM_NAME = "-";
+
     public static final String EMPTY_TWO_DASH = "--";
     public static final String EMPTY_MATCH_TIME = "- : -";
     public static final String EMPTY_MATCH_SCORE = "- : -";

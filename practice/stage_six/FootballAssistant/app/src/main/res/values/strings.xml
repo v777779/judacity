@@ -161,7 +161,7 @@
     <string name="text_sm_item_match_bet_sub_loss">loss</string>
 
     <!--recycler-->
-    <string name="text_sm_item_meeting">Meetings</string>
+    <string name="text_sm_item_meeting">MEETINGS</string>
 
     <!--player-->
     <string name="text_tm_item_player_sub_birthday">birthday</string>
@@ -433,6 +433,7 @@
     <string name="text_test_lg_item_team_name_4">Team Name 4</string>
     <string name="text_test_lg_item_team_name_5">Team Name 5</string>
 
+    <string name="text_test_recycler_click">Recycler Item Clicked</string>
 
     <string name="text_test_news_item_head">Scotland fights back to beat France 32-26</string>
     <string name="text_test_news_item_body">EDINBURGH, Scotland (AP)  Scotland rebounded from its

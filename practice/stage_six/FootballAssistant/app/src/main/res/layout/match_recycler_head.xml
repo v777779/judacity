@@ -6,17 +6,17 @@
     android:id="@+id/constraint_recycler_match_head"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:background="@drawable/match_head_back">
+    android:background="@drawable/match_head_back"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp" >
 
 
     <TextView
         android:id="@+id/text_sm_match_prev_meetings"
-        style="@style/Head.Recycler.Match"
+        style="@style/StartHeader.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-
+        android:layout_marginBottom="@dimen/margin_normal"
         android:contentDescription="@string/text_sm_item_prev_meetings"
         android:text="@string/text_sm_item_meeting"
         app:layout_constraintBottom_toBottomOf="parent"

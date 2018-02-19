@@ -458,7 +458,6 @@ public class DetailActivity extends AppCompatActivity
         finish();
     }
 
-
     private void startActivityFavorites() {
         Intent intent = new Intent(this, FavoritesActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
@@ -501,7 +500,6 @@ public class DetailActivity extends AppCompatActivity
                 .replace(R.id.container_detail, fragment)
                 .addToBackStack(FRAGMENT_TEAM_TAG)
                 .commit();
-
     }
 
     private void startMatchFragment(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
@@ -523,14 +521,12 @@ public class DetailActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
             }
         });
-
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
-
     }
 
 
@@ -685,10 +681,8 @@ public class DetailActivity extends AppCompatActivity
             }
         }
 
-
         List<View> recyclers = new ArrayList<>();
         List<String> titles = new ArrayList<>();
-
 
         for (List<FDFixture> listFixtures : list) {
             recyclers.add(getRecycler(listFixtures));

@@ -12,7 +12,6 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_PLAYER_DATE;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TWO_DASH;
 
 /**

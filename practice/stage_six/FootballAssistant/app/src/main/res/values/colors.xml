@@ -200,7 +200,7 @@
     <!--<color name="match_status_back_light">#454545</color>-->
     <!--<color name="match_status_back_dark">#454545</color>-->
 
-    <color name="match_back">#f0f0f0</color>
+    <color name="match_back">#f8f8f8</color>
     <color name="match_card_back">#f8f8f8</color>
 
     <color name="match_time_back">#bdbdbd</color>
@@ -250,9 +250,9 @@
     <color name="match_recycler_date_text">#989898</color>
     <color name="match_recycler_team_text">#3a3a3a</color>
 
-    <color name="match_recycler_head_back">#efeeee</color>
-    <color name="match_recycler_head_back_light">#efeeee</color>
-    <color name="match_recycler_head_back_dark">#efeeee</color>
+    <color name="match_recycler_head_back_light">#f8f8f8</color>
+    <color name="match_recycler_head_back">#f8f8f8</color>
+<color name="match_recycler_head_back_dark">#f8f8f8</color>
 
     <color name="match_recycler_card_back_light">#ecf2e9</color>
     <color name="match_recycler_card_back_dark">#edf8fb</color>

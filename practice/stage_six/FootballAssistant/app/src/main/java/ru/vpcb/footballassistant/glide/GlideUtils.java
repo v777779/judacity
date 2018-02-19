@@ -56,8 +56,13 @@ public class GlideUtils {
                                     RequestBuilder<Drawable> requestBuilderCommon,
                                     int resourceId) {
         if (map == null || id <= 0) return;
+        if (imageView == null) return;
+
         FDTeam team = map.get(id);
-        if (team == null) return;
+        if(team == null) {
+            imageView.setImageResource(resourceId);
+            return;
+        }
 
         String imageURL = team.getCrestURL();
         if (imageURL == null || imageURL.isEmpty()) {

@@ -13,6 +13,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +23,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +41,9 @@ import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.glide.GlideUtils;
+import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 
 import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
@@ -51,7 +57,8 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 
-public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MatchFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
     private RequestBuilder<PictureDrawable> mRequestSvgH;
     private RequestBuilder<Drawable> mRequestPngH;
@@ -115,7 +122,9 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     TextView mTextBetDraw;
     @BindView(R.id.match_bet_away)
     TextView mTextBetAway;
-
+    // meetings
+    @BindView(R.id.match_recycler)
+    RecyclerView mRecycler;
 
     // parameters
     private View mRootView;
@@ -183,14 +192,17 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         mRequestPngA = GlideUtils.getRequestBuilderPng(mContext, R.drawable.fc_logo_widget_away);
 
         mMapTeams = new LinkedHashMap<>();
-        mMapFixtures = new LinkedHashMap<>(); // fixed order
+        mMapTeams.put(mHomeTeam.getId(), mHomeTeam);
+        mMapTeams.put(mAwayTeam.getId(), mAwayTeam);
 
 // loader
         Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
                 mFixture.getHomeTeamId(), mFixture.getAwayTeamId());
         Bundle bundle = new Bundle();
         bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
+        getLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);  // fixtures
         getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
+
     }
 
     @Nullable
@@ -201,6 +213,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         setupActionBar(savedInstanceState);
         setupListeners();
+        setupRecycler();
         bindViews();
         return mRootView;
     }
@@ -226,7 +239,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
         if (loader == null || loader.getId() <= 0 || cursor == null || cursor.getCount() == 0) {
             return;
         }
@@ -236,9 +248,19 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                 if (mapFixtures == null || mapFixtures.isEmpty()) {
                     break;
                 }
+                if (mMapFixtures == null) mMapFixtures = new LinkedHashMap<>(); // fixed order
                 mMapFixtures.putAll(mapFixtures);
                 bindViewsFixtures();
+                break;
+            case FDContract.CpEntry.LOADER_ID:
 
+                Map<Integer, FDCompetition> map = FDUtils.readCompetitions(cursor);
+                if (map == null || map.isEmpty()) {
+                    break;
+                }
+                if (mMap == null) mMap = new LinkedHashMap<>();
+                mMap.putAll(map);
+                bindViewsFixtures();
                 break;
             case FDContract.TmEntry.LOADER_ID:
 
@@ -254,7 +276,28 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
     }
 
+
+    @Override
+    public void onComplete(View view, int value) {
+        FootballUtils.showMessage(mContext, getString(R.string.text_test_recycler_click));
+    }
+
+    @Override
+    public void onComplete(int mode, Calendar calendar) {
+    }
+
     // methods
+    private void setupRecycler() {
+        RecyclerMatchAdapter adapter = new RecyclerMatchAdapter(mContext, null, mMapTeams);
+        adapter.setHasStableIds(true);
+        mRecycler.setAdapter(adapter);
+        mRecycler.setLayoutFrozen(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        mRecycler.setLayoutManager(layoutManager);
+
+    }
+
 
     private int getFixtureId() {
         Bundle args = getArguments();
@@ -264,6 +307,18 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     private void bindViewsFixtures() {
+        if (mMapFixtures == null || mMap == null) return;  // waits all loaders
+
+        for (FDFixture fixture : mMapFixtures.values()) {
+            FDCompetition competition = mMap.get(fixture.getCompetitionId());
+            if (competition == null) continue;
+            fixture.setLeague(competition.getLeague());
+            fixture.setCaption(competition.getCaption());
+        }
+        List<FDFixture> list = new ArrayList<>(mMapFixtures.values());
+        mRecycler.setLayoutFrozen(false);
+        ((RecyclerMatchAdapter) mRecycler.getAdapter()).swap(list);
+        mRecycler.setLayoutFrozen(true);
 
 
     }
@@ -471,6 +526,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
         appBarLayout.getLayoutParams().height = 0;
     }
+
 
 // test!!! protrusion check
 // resolved with  set AppBarLayout.height to 0

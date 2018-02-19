@@ -8,10 +8,10 @@ import com.google.gson.annotations.SerializedName;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_NAME;
 
 
 /**
@@ -347,14 +347,14 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
 
     public String getHomeTeamName() {
         if (homeTeamName == null || homeTeamName.isEmpty()) {
-            return EMPTY_TEAM_NAME;
+            return EMPTY_DASH;
         }
         return homeTeamName;
     }
 
     public String getAwayTeamName() {
         if (awayTeamName == null || awayTeamName.isEmpty()) {
-            return EMPTY_TEAM_NAME;
+            return EMPTY_DASH;
         }
         return awayTeamName;
     }
