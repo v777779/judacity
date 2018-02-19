@@ -3,6 +3,8 @@ package ru.vpcb.footballassistant.dbase;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.provider.BaseColumns;
 
 import static ru.vpcb.footballassistant.dbase.FDContract.DATABASE_NAME;
 import static ru.vpcb.footballassistant.dbase.FDContract.DATABASE_VERSION;
@@ -114,6 +116,25 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.PlEntry.COLUMN_PLAYER_DATE_CONTRACT + " TEXT, " +            // int from date
                 FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT);";              // string
 
+        final String CREATE_TABLE_ARTICLES = "CREATE TABLE " + FDContract.NaEntry.TABLE_NAME + " (" +
+                FDContract.NaEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                FDContract.NaEntry.COLUMN_SOURCE_ID + " TEXT NOT NULL, " +              // string
+                FDContract.NaEntry.COLUMN_SOURCE_NAME + " TEXT, " +                     // string
+                FDContract.NaEntry.COLUMN_AUTHOR + " TEXT, " +                          // string
+                FDContract.NaEntry.COLUMN_TITLE + " TEXT, " +                           // string
+                FDContract.NaEntry.COLUMN_DESCRIPTION + " TEXT, " +                     // string
+                FDContract.NaEntry.COLUMN_ARTICLE_URL + " TEXT, " +                     // string
+                FDContract.NaEntry.COLUMN_IMAGE_URL + " TEXT, " +                       // string
+                FDContract.NaEntry.COLUMN_PUBLISHED_AT + " TEXT);";                     // string from date
+
+        final String CREATE_TABLE_SOURCES = "CREATE TABLE " + FDContract.NsEntry.TABLE_NAME + " (" +
+                FDContract.NsEntry.COLUMN_SOURCE_ID + " TEXT PRIMARY KEY, " +           // string
+                FDContract.NsEntry.COLUMN_SOURCE_NAME + " TEXT, " +                     // string
+                FDContract.NsEntry.COLUMN_DESCRIPTION + " TEXT, " +                     // string
+                FDContract.NsEntry.COLUMN_SOURCE_URL + " TEXT, " +                      // string
+                FDContract.NsEntry.COLUMN_SOURCE_CATEGORY + " TEXT, " +                 // string
+                FDContract.NsEntry.COLUMN_SOURCE_LANGUAGE + " TEXT, " +                 // string
+                FDContract.NsEntry.COLUMN_COUNTRY + " TEXT);";                          // string
 
         db.execSQL(CREATE_TABLE_COMPETITIONS);
         db.execSQL(CREATE_TABLE_COMPETITION_TEAMS);
@@ -122,6 +143,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FIXTURES);
         db.execSQL(CREATE_TABLE_TABLES);
         db.execSQL(CREATE_TABLE_PLAYERS);
+        db.execSQL(CREATE_TABLE_ARTICLES);
+        db.execSQL(CREATE_TABLE_SOURCES);
 
     }
 
@@ -230,6 +253,29 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_PLAYER_DATE_CONTRACT = 7;    // int from date
         int COLUMN_PLAYER_MARKET_VALUE = 8;     // string
         int COLUMN_LAST_REFRESH = 9;            // int from date
+    }
+
+    public interface INaEntry {
+        int _ID = 0;                            // int
+        int COLUMN_SOURCE_ID = 1;               // string
+        int COLUMN_SOURCE_NAME = 2;             // string
+        int COLUMN_AUTHOR = 3;                  // string
+        int COLUMN_TITLE = 4;                   // string
+        int COLUMN_DESCRIPTION = 5;             // string
+        int COLUMN_ARTICLE_URL = 6;             // string
+        int COLUMN_IMAGE_URL = 7;               // string
+        int COLUMN_PUBLISHED_AT = 8;            // string int from date
+
+    }
+    public interface INsEntry {
+        int COLUMN_SOURCE_ID = 0;               // string
+        int COLUMN_SOURCE_NAME = 1;             // string
+        int COLUMN_DESCRIPTION = 2;             // string
+        int COLUMN_SOURCE_URL = 3;              // string
+        int COLUMN_SOURCE_CATEGORY = 4;         // string
+        int COLUMN_SOURCE_LANGUAGE = 5;         // string
+        int COLUMN_COUNTRY = 6;                 // string
+
     }
 
 }

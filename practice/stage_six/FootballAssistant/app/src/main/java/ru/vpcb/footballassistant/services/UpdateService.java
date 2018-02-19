@@ -3,7 +3,9 @@ package ru.vpcb.footballassistant.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.content.UriMatcher;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
@@ -22,6 +24,8 @@ import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
+import ru.vpcb.footballassistant.dbase.FDContract;
+import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
@@ -59,6 +63,7 @@ public class UpdateService extends IntentService {
     }
 
     private void onActionUpdate() {
+
         try {
             Map<Integer, FDCompetition> map = new HashMap<>();
             Map<Integer, List<Integer>> mapTeamKeys = new HashMap<>();
@@ -71,6 +76,17 @@ public class UpdateService extends IntentService {
             if (!FDUtils.checkEmpty(map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures) && FDUtils.isFootballDataRefreshed(this)) {
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+// test!!!
+                UriMatcher uriMatcher = FDProvider.buildUriMatcher();
+                Uri uri = FDUtils.buildItemIdUri(FDContract.NsEntry.TABLE_NAME, "fox-sports");
+                int match = uriMatcher.match(uri);                             // code for switch
+
+                uri = FDUtils.buildItemIdUri(FDContract.NaEntry.TABLE_NAME, "250");
+                match = uriMatcher.match(uri);                             // code for switch
+
+
+
+
                 return;
             }
 

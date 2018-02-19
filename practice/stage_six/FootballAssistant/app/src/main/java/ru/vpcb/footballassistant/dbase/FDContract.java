@@ -19,7 +19,8 @@ public class FDContract {
     public static final String TABLE_FIXTURES = "fixtures";
     public static final String TABLE_TABLES = "tables";
     public static final String TABLE_PLAYERS = "players";
-    public static final String TABLE_NEWS = "news";
+    public static final String TABLE_ARTICLES = "articles";
+    public static final String TABLE_SOURCES = "sources";
 
     public static final String DATABASE_NAME = "footballDb.db";
     public static final int DATABASE_VERSION = 1;
@@ -164,23 +165,39 @@ public class FDContract {
         public static final int LOADER_ID = 1226;                                       // int
     }
 
-    public static final class NewsEntry implements BaseColumns {
-        public static final String TABLE_NAME = TABLE_NEWS;
+    public static final class NaEntry implements BaseColumns {
+        public static final String TABLE_NAME = TABLE_ARTICLES;
         public static final int TABLE_MATCHER = 600;
         public static final int TABLE_ID_MATCHER = 601;
         public static final int TABLE_ID_MATCHER2 = 602;
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
-        public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
-        public static final String COLUMN_COMPETITION_CAPTION = "competition_caption";  // string
-        public static final String COLUMN_COMPETITION_LEAGUE = "competition_league";    // string
-        public static final String COLUMN_COMPETITION_YEAR = "competition_year";        // string
-        public static final String COLUMN_CURRENT_MATCHDAY = "current_matchday";        // int
-        public static final String COLUMN_NUMBER_MATCHDAYS = "number_matchdays";        // int
-        public static final String COLUMN_NUMBER_TEAMS = "number_teams";                // int
-        public static final String COLUMN_NUMBER_GAMES = "number_games";                // int
-        public static final String COLUMN_LAST_UPDATE = "last_update";                  // string int from date
+        public static final String COLUMN_SOURCE_ID = "source_id";                          // string
+        public static final String COLUMN_SOURCE_NAME = "source_name";                      // string
+        public static final String COLUMN_AUTHOR = "author";                                // string
+        public static final String COLUMN_TITLE = "title";                                  // string
+        public static final String COLUMN_DESCRIPTION = "description";                       // string
+        public static final String COLUMN_ARTICLE_URL = "article_url";                      // string
+        public static final String COLUMN_IMAGE_URL = "image_url";                          // string
+        public static final String COLUMN_PUBLISHED_AT = "published_at";                    // string dat sqlite
 
-        public static final int LOADER_ID = 1227;                                       // int
+        public static final int LOADER_ID = 1227;                                           // int
+    }
+
+    public static final class NsEntry implements BaseColumns {
+        public static final String TABLE_NAME = TABLE_SOURCES;
+        public static final int TABLE_MATCHER = 700;
+        public static final int TABLE_ID_MATCHER = 701;
+        public static final int TABLE_ID_MATCHER2 = 702;
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+        public static final String COLUMN_SOURCE_ID = "source_id";                          // string primary
+        public static final String COLUMN_SOURCE_NAME = "source_name";                      // string
+        public static final String COLUMN_DESCRIPTION = "description";                      // string
+        public static final String COLUMN_SOURCE_URL = "source_url";                        // string
+        public static final String COLUMN_SOURCE_CATEGORY = "source_category";              // string
+        public static final String COLUMN_SOURCE_LANGUAGE = "source_language";              // string
+        public static final String COLUMN_COUNTRY = "number_teams";                         // string
+
+        public static final int LOADER_ID = 1228;                                           // int
     }
 
 
@@ -188,7 +205,7 @@ public class FDContract {
             new FDParams(CpEntry.LOADER_ID, CpEntry.TABLE_NAME, CpEntry.TABLE_MATCHER,
                     CpEntry.TABLE_ID_MATCHER, CpEntry.COLUMN_COMPETITION_ID        // id?
 
-                    ),
+            ),
             new FDParams(CpTmEntry.LOADER_ID, CpTmEntry.TABLE_NAME,
                     CpTmEntry.TABLE_MATCHER,
                     CpTmEntry.TABLE_ID_MATCHER, CpTmEntry.COLUMN_COMPETITION_ID,    // id?
@@ -206,10 +223,10 @@ public class FDContract {
                     TmEntry.TABLE_ID_MATCHER2,
                     TmEntry.COLUMN_TEAM_ID, TmEntry.COLUMN_TEAM_ID                  // id? or id?
             ),
-            new FDParams(FxEntry.LOADER_ID, FxEntry.TABLE_NAME,FxEntry.TABLE_MATCHER,
+            new FDParams(FxEntry.LOADER_ID, FxEntry.TABLE_NAME, FxEntry.TABLE_MATCHER,
                     FxEntry.TABLE_ID_MATCHER, FxEntry.COLUMN_FIXTURE_ID,            // id?
                     FxEntry.TABLE_ID_MATCHER2,
-                    FxEntry.COLUMN_TEAM_HOME_ID,FxEntry.COLUMN_TEAM_AWAY_ID,        // id? and id?
+                    FxEntry.COLUMN_TEAM_HOME_ID, FxEntry.COLUMN_TEAM_AWAY_ID,        // id? and id?
                     FxEntry.TABLE_ID_MATCHER3,
                     FxEntry.COLUMN_FIXTURE_DATE, FxEntry.COLUMN_FIXTURE_DATE        // btw ? and ?
             ),
@@ -222,15 +239,24 @@ public class FDContract {
                     PlEntry.TABLE_ID_MATCHER, PlEntry.COLUMN_TEAM_ID               // id?
 
             ),
+
+            new FDParams(NaEntry.LOADER_ID, NaEntry.TABLE_NAME, NaEntry.TABLE_MATCHER,
+                    NaEntry.TABLE_ID_MATCHER, NaEntry.COLUMN_SOURCE_ID              // id?   //все новости по данному источнику
+            ),
+            new FDParams(NsEntry.LOADER_ID, NsEntry.TABLE_NAME, NsEntry.TABLE_MATCHER,
+                    NsEntry.TABLE_ID_MATCHER, NsEntry.COLUMN_SOURCE_ID              // id?   //запись по источнику
+            ),
     };
 
-    public static final int  MATCH_PARAMETERS_COMPETITIONS = 0;
+    public static final int MATCH_PARAMETERS_COMPETITIONS = 0;
     public static final int MATCH_PARAMETERS_CP_TEAMS = 1;
     public static final int MATCH_PARAMETERS_CP_FIXTURES = 2;
     public static final int MATCH_PARAMETERS_TEAMS = 3;
     public static final int MATCH_PARAMETERS_FIXTURES = 4;
     public static final int MATCH_PARAMETERS_TABLES = 5;
     public static final int MATCH_PARAMETERS_PLAYERS = 6;
+    public static final int MATCH_PARAMETERS_ARTICLES = 7;
+    public static final int MATCH_PARAMETERS_SOURCES = 8;
 
 
     public static final class FDParams {
@@ -263,7 +289,7 @@ public class FDContract {
 
         public FDParams(int id, String tableName, int tableMatcher, int tableIdMatcher, String columnId,
                         int tableIdMatcher2, String columnId2, String columnId3) {
-            this(id,tableName,tableMatcher,tableIdMatcher,columnId);
+            this(id, tableName, tableMatcher, tableIdMatcher, columnId);
             this.tableIdMatcher2 = tableIdMatcher2;
             this.columnId2 = columnId2;
             this.columnId3 = columnId3;
@@ -273,9 +299,9 @@ public class FDContract {
                         int tableIdMatcher, String columnId,
                         int tableIdMatcher2, String columnId2, String columnId3,
                         int tableIdMatcher3, String columnId4, String columnId5) {
-            this(id,tableName,tableMatcher,
-                    tableIdMatcher,columnId,
-                    tableIdMatcher2,columnId2, columnId3);
+            this(id, tableName, tableMatcher,
+                    tableIdMatcher, columnId,
+                    tableIdMatcher2, columnId2, columnId3);
             this.tableIdMatcher3 = tableIdMatcher3;
             this.columnId4 = columnId4;
             this.columnId5 = columnId5;
@@ -284,12 +310,14 @@ public class FDContract {
         public String getSortOrder() {
             if (columnId.equals(FxEntry.COLUMN_FIXTURE_ID)) {
                 return "datetime(" + FxEntry.COLUMN_FIXTURE_DATE + ") ASC";
-            } else {
-                return columnId + " ASC";
+            } else if (columnId.equals(NaEntry.COLUMN_SOURCE_ID)) {
+                return "datetime(" + NaEntry.COLUMN_PUBLISHED_AT + ") DESC";  // свежая запись первая
+            }  else{
+                    return columnId + " ASC";
+                }
+
             }
-
         }
+
+
     }
-
-
-}

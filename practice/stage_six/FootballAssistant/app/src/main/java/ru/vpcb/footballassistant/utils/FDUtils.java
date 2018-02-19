@@ -60,12 +60,16 @@ import ru.vpcb.footballassistant.data.PostProcessingEnabler;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
+import ru.vpcb.footballassistant.news.NDArticle;
+import ru.vpcb.footballassistant.news.NDSource;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_ARTICLES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_COMPETITIONS;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_FIXTURES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_TEAMS;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_FIXTURES;
+import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_SOURCES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TEAMS;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
@@ -391,6 +395,10 @@ public class FDUtils {
     public static Uri buildItemIdUri(String tableName, long id) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();
     }
+    public static Uri buildItemIdUri(String tableName, String id) {
+        return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(id).build();
+    }
+
 
     public static Uri buildItemIdUri(String tableName, long id, long id2) {
         return FDContract.BASE_CONTENT_URI.buildUpon()
@@ -518,6 +526,107 @@ public class FDUtils {
 
 
     // read
+    // news
+    // sources
+    private static NDSource readSource(Cursor cursor) {
+        String id = cursor.getString(FDDbHelper.INsEntry.COLUMN_SOURCE_ID);
+        if (id == null || id.isEmpty()) return null;
+
+
+        String source_name = cursor.getString(FDDbHelper.INsEntry.COLUMN_SOURCE_NAME);
+        String description = cursor.getString(FDDbHelper.INsEntry.COLUMN_DESCRIPTION);
+        String sourceURL = cursor.getString(FDDbHelper.INsEntry.COLUMN_SOURCE_URL);
+        String category = cursor.getString(FDDbHelper.INsEntry.COLUMN_SOURCE_CATEGORY);
+        String language = cursor.getString(FDDbHelper.INsEntry.COLUMN_SOURCE_LANGUAGE);
+        String country = cursor.getString(FDDbHelper.INsEntry.COLUMN_COUNTRY);
+
+        NDSource source = new NDSource(id, source_name, description, sourceURL,
+                category, language, category, country);
+
+        return source;
+    }
+
+    public static Map<String, NDSource> readSources(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+
+        Map<String, NDSource> map = new LinkedHashMap<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            NDSource source = readSource(cursor);
+            if (source == null) continue;
+            map.put(source.getId(), source);
+        }
+        return map;
+    }
+
+    // sources
+    public static Map<String, NDSource> readSources(Context context) {
+        Uri uri = FDContract.NsEntry.CONTENT_URI;                               // вся таблица
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_SOURCES].getSortOrder();
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+        if (cursor == null || cursor.getCount() == 0) return null;
+        Map<String, NDSource> map = readSources(cursor);
+        cursor.close();
+        return map;
+    }
+
+
+    // articles
+    private static NDArticle readArticle(Cursor cursor) {
+        int id = cursor.getInt(FDDbHelper.INaEntry._ID);
+        if (id <= 0) return null;
+
+        String source_id = cursor.getString(FDDbHelper.INaEntry.COLUMN_SOURCE_ID);
+        String source_name = cursor.getString(FDDbHelper.INaEntry.COLUMN_SOURCE_NAME);
+        String author = cursor.getString(FDDbHelper.INaEntry.COLUMN_AUTHOR);
+        String title = cursor.getString(FDDbHelper.INaEntry.COLUMN_TITLE);
+        String description = cursor.getString(FDDbHelper.INaEntry.COLUMN_DESCRIPTION);
+        String articleURL = cursor.getString(FDDbHelper.INaEntry.COLUMN_ARTICLE_URL);
+        String imageURL = cursor.getString(FDDbHelper.INaEntry.COLUMN_IMAGE_URL);
+        String publishedAt = cursor.getString(FDDbHelper.INaEntry.COLUMN_PUBLISHED_AT);
+
+        NDSource source = new NDSource(source_id, source_name, author);
+        NDArticle article = new NDArticle(id, source, author,
+                title, description, articleURL, imageURL, publishedAt);
+
+        return article;
+    }
+
+    public static Map<Integer, NDArticle> readArticles(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+
+        Map<Integer, NDArticle> map = new LinkedHashMap<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            NDArticle article = readArticle(cursor);
+            if (article == null) continue;
+            map.put(article.getId(), article);
+        }
+        return map;
+    }
+
+    // articles
+    public static Map<Integer, NDArticle> readArticles(Context context) {
+        Uri uri = FDContract.NaEntry.CONTENT_URI;                               // вся таблица
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_ARTICLES].getSortOrder();
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+        if (cursor == null || cursor.getCount() == 0) return null;
+        Map<Integer, NDArticle> map = readArticles(cursor);
+        cursor.close();
+        return map;
+    }
+
+
     // competitions
     public static Map<Integer, FDCompetition> readCompetitions(Context context) {
         Uri uri = FDContract.CpEntry.CONTENT_URI;                               // вся таблица
@@ -712,6 +821,19 @@ public class FDUtils {
         return fixture;
     }
 
+    // read news
+    public static void readDatabaseNews(Context context, Map<Integer, NDArticle> map,
+                                        Map<String, NDSource> mapSources) {
+
+        Map<Integer, NDArticle> readMap = readArticles(context);
+
+        if (readMap != null && readMap.size() > 0) {
+            map.clear();
+            map.putAll(readMap);
+        }
+
+    }
+
 
     // read database
     public static void readDatabase(
@@ -849,16 +971,121 @@ public class FDUtils {
     public static Map<Integer, FDFixture> readFixtures(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return null;
         Map<Integer, FDFixture> map = new LinkedHashMap<>();
-            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                FDFixture fixture = readFixture(cursor);
-                if (fixture == null) continue;
-                map.put(fixture.getId(), fixture);
-            }
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            FDFixture fixture = readFixture(cursor);
+            if (fixture == null) continue;
+            map.put(fixture.getId(), fixture);
+        }
         return map;
     }
 
 
     // write
+    //    source
+    public static ArrayList<ContentProviderOperation> writeSource( NDSource source, boolean forceDelete) {
+        if (source == null || source.getId()== null || source.getId().isEmpty()) return null;
+
+        Uri uri = buildItemIdUri(FDContract.NsEntry.TABLE_NAME, source.getId());
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        if (forceDelete) {
+            operations.add(ContentProviderOperation.newDelete(uri).build());  // delete one record from Competitions table
+        }
+
+        ContentValues values = new ContentValues();
+
+        values.put(FDContract.NsEntry.COLUMN_SOURCE_ID, source.getId());                        // string
+        values.put(FDContract.NsEntry.COLUMN_SOURCE_NAME, source.getName());                    // string
+        values.put(FDContract.NsEntry.COLUMN_DESCRIPTION, source.getDescription());             // string
+        values.put(FDContract.NsEntry.COLUMN_SOURCE_URL, source.getUrl());                      // string
+        values.put(FDContract.NsEntry.COLUMN_SOURCE_CATEGORY, source.getCategory());            // string
+        values.put(FDContract.NsEntry.COLUMN_SOURCE_LANGUAGE, source.getLanguage());            // string
+        values.put(FDContract.NsEntry.COLUMN_COUNTRY, source.getCountry());                     // string
+
+        operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+        return operations;
+    }
+
+    // source
+    public static ContentProviderResult[] writeSource(Context context, NDSource source, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeSource(source, forceDelete));
+    }
+
+    // sources
+    public static ContentProviderResult[] writeSources(
+            Context context, Map<Integer, NDSource>map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+
+        if (map == null || map.size() == 0) return null;
+        Uri uri = FDContract.NsEntry.CONTENT_URI;
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<>();
+        if (forceDelete) {
+            listOperations.add(ContentProviderOperation.newDelete(uri).build());    // delete all records from Competitions table
+        }
+
+        for (NDSource source : map.values()) {
+            List<ContentProviderOperation> operations = writeSource(source, false); // if true table already cleared
+            if (operations == null) continue;
+            listOperations.addAll(operations);
+        }
+
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
+    }
+
+    //    article
+    public static ArrayList<ContentProviderOperation> writeArticle( NDArticle article, boolean forceDelete) {
+        if (article == null || article.getId() <= 0) return null;
+        NDSource source = article.getSource();
+        if(source == null || source.getId() == null || source.getId().isEmpty()) return null;
+
+        Uri uri = buildItemIdUri(FDContract.NaEntry.TABLE_NAME, article.getId());
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        if (forceDelete) {
+            operations.add(ContentProviderOperation.newDelete(uri).build());  // delete one record from Competitions table
+        }
+
+        ContentValues values = new ContentValues();
+
+        values.put(FDContract.NaEntry.COLUMN_SOURCE_ID, source.getId());                    // string
+        values.put(FDContract.NaEntry.COLUMN_SOURCE_NAME, source.getName());                // string
+        values.put(FDContract.NaEntry.COLUMN_AUTHOR, source.getAuthor());                   // string
+        values.put(FDContract.NaEntry.COLUMN_TITLE, article.getTitle());                    // string
+        values.put(FDContract.NaEntry.COLUMN_DESCRIPTION, article.getDescription());        // string
+        values.put(FDContract.NaEntry.COLUMN_ARTICLE_URL, article.getUrl());                // string
+        values.put(FDContract.NaEntry.COLUMN_IMAGE_URL, article.getUrlToImage());           // string
+        values.put(FDContract.NaEntry.COLUMN_PUBLISHED_AT, article.getPublishedAt());       // string
+
+        operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
+        return operations;
+    }
+
+    // article
+    public static ContentProviderResult[] writeArticle(Context context, NDArticle article, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, writeArticle(article, forceDelete));
+    }
+
+    // articles
+    public static ContentProviderResult[] writeArticles(
+            Context context, Map<Integer, NDArticle>map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+
+        if (map == null || map.size() == 0) return null;
+        Uri uri = FDContract.NaEntry.CONTENT_URI;
+        ArrayList<ContentProviderOperation> listOperations = new ArrayList<>();
+        if (forceDelete) {
+            listOperations.add(ContentProviderOperation.newDelete(uri).build());    // delete all records from Competitions table
+        }
+
+        for (NDArticle article : map.values()) {
+            List<ContentProviderOperation> operations = writeArticle(article, false); // if true table already cleared
+            if (operations == null) continue;
+            listOperations.addAll(operations);
+        }
+
+        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
+    }
+
     // competition
     public static ArrayList<ContentProviderOperation> writeCompetition(
             FDCompetition competition, boolean forceDelete) {

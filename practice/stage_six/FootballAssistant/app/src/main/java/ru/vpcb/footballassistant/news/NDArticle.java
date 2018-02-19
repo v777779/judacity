@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DATE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 
@@ -42,9 +43,15 @@ public class NDArticle {
     @Expose
     private String publishedAt;
 
-    public NDArticle(NDSource source, String author, String title, String description,
-                     String url, String urlToImage, String publishedAt) {
+    private int id; // id in database
 
+    public NDArticle() {
+        this.id = EMPTY_INT_VALUE;
+    }
+
+    public NDArticle(int id, NDSource source, String author, String title, String description,
+                     String url, String urlToImage, String publishedAt) {
+        this.id = id;
         this.source = source;
         this.author = author;
         this.title = title;
@@ -58,33 +65,37 @@ public class NDArticle {
         return source;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getAuthor() {
-        if(author == null || author.isEmpty()) return EMPTY_LONG_DASH;
+        if (author == null || author.isEmpty()) return EMPTY_DASH;
         return author;
     }
 
     public String getTitle() {
-        if(title == null || title.isEmpty()) return EMPTY_LONG_DASH;
+        if (title == null || title.isEmpty()) return EMPTY_DASH;
         return title;
     }
 
     public String getDescription() {
-        if(description == null || description.isEmpty()) return EMPTY_LONG_DASH;
+        if (description == null || description.isEmpty()) return EMPTY_DASH;
         return description;
     }
 
     public String getUrl() {
-        if(url == null || url.isEmpty()) return EMPTY_DASH;
+        if (url == null || url.isEmpty()) return EMPTY_DASH;
         return url;
     }
 
     public String getUrlToImage() {
-        if(urlToImage == null || urlToImage.isEmpty()) return EMPTY_DASH;
+        if (urlToImage == null || urlToImage.isEmpty()) return EMPTY_DASH;
         return urlToImage;
     }
 
     public String getPublishedAt() {
-        if(publishedAt == null || publishedAt.isEmpty()) return EMPTY_DATE;
+        if (publishedAt == null || publishedAt.isEmpty()) return EMPTY_DATE;
         return publishedAt;
     }
 }

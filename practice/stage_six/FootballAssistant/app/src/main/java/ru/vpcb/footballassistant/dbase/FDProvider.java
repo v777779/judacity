@@ -58,6 +58,8 @@ public class FDProvider extends ContentProvider {
             if (p.columnId4 != null) {
                 uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/*/*", p.tableIdMatcher3);
             }
+// TODO Check BuildURI ???
+            uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/*", p.tableIdMatcher);  // for text
         }
         return uriMatcher;
     }
