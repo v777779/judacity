@@ -76,17 +76,6 @@ public class UpdateService extends IntentService {
             if (!FDUtils.checkEmpty(map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures) && FDUtils.isFootballDataRefreshed(this)) {
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
-// test!!!
-                UriMatcher uriMatcher = FDProvider.buildUriMatcher();
-                Uri uri = FDUtils.buildItemIdUri(FDContract.NsEntry.TABLE_NAME, "fox-sports");
-                int match = uriMatcher.match(uri);                             // code for switch
-
-                uri = FDUtils.buildItemIdUri(FDContract.NaEntry.TABLE_NAME, "250");
-                match = uriMatcher.match(uri);                             // code for switch
-
-
-
-
                 return;
             }
 
