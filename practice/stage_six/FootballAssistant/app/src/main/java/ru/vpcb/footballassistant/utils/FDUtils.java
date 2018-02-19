@@ -1175,7 +1175,7 @@ public class FDUtils {
         writeCompetitionFixtures(context, map, forceDelete);
         progress += step / 2;
         sendProgress(context, (int) progress);
-        writeFixtures(context, map, forceDelete);
+       writeFixtures(context, map, forceDelete);
 
     }
 

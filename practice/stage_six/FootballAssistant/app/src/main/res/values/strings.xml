@@ -205,7 +205,7 @@
     <string name="activity_same_message">You are already here</string>
 
     <!--exception-->
-    <string name="update_content_error">Update content error: </string>
+    <string name="update_content_error">Update content error: %1$s</string>
     <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
     <string name="load_database">LoadDatabase exception(%1$d,%2$d): %3$s</string>
     <string name="write_database">WriteDatabase exception(%1$d,%2$d): %3$s</string>
