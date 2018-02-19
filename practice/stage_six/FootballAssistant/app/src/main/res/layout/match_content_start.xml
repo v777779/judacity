@@ -91,12 +91,12 @@
         style="@style/Start.Time.Match.TextRecycler"
         android:layout_width="@dimen/text_sm_item_start_time_width"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="12dp"
         android:background="@drawable/match_time_back"
         android:contentDescription="@string/text_sm_item_match_date_hours"
-        tools:text="@string/text_test_sm_item_match_number_1"
         app:layout_constraintEnd_toStartOf="@+id/guide_v2"
-        app:layout_constraintTop_toBottomOf="@+id/match_start_header" />
+        app:layout_constraintTop_toBottomOf="@+id/match_start_header"
+        tools:text="@string/text_test_sm_item_match_number_1" />
 
     <TextView
         android:id="@+id/match_time_hour_low"
@@ -104,11 +104,11 @@
         android:layout_width="@dimen/text_sm_item_start_time_width"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_micro"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="12dp"
         android:contentDescription="@string/text_sm_item_match_date_hours"
-        tools:text="@string/text_test_sm_item_match_number_0"
         app:layout_constraintStart_toEndOf="@+id/match_time_hour_high"
-        app:layout_constraintTop_toBottomOf="@+id/match_start_header" />
+        app:layout_constraintTop_toBottomOf="@+id/match_start_header"
+        tools:text="@string/text_test_sm_item_match_number_0" />
 
 
     <TextView

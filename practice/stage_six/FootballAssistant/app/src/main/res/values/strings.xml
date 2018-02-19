@@ -161,7 +161,7 @@
     <string name="text_sm_item_match_bet_sub_loss">loss</string>
 
     <!--recycler-->
-    <string name="text_sm_item_prev_meeting">Previous Meetings</string>
+    <string name="text_sm_item_meeting">Meetings</string>
 
     <!--player-->
     <string name="text_tm_item_player_sub_birthday">birthday</string>

@@ -357,7 +357,9 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         mTextBetDraw.setText(FDUtils.formatMatchBet(mFixture.getDraw()));
         mTextBetAway.setText(FDUtils.formatMatchBet(mFixture.getAwayWin()));
 
-
+//        mTextBetHome.setText("27.1");
+//        mTextBetDraw.setText("32.2");
+//        mTextBetAway.setText("17.9");
 
 
     }

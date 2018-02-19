@@ -230,17 +230,17 @@
     <color name="match_bet_home_back_light">#dfd6e3</color>
     <color name="match_bet_home_back">#ded4e4</color>
     <color name="match_bet_home_back_dark">#cec5d4</color>
-    <color name="match_bet_home_text_back">#82ffffff</color>
+    <color name="match_bet_home_text_back">#40ffffff</color>
 
     <color name="match_bet_back_light">#e3e3d6</color>
     <color name="match_bet_back">#e4e3d4</color>
     <color name="match_bet_back_dark">#d4d4c5</color>
-    <color name="match_bet_text_back">#82ffffff</color>
+    <color name="match_bet_text_back">#40ffffff</color>
 
     <color name="match_bet_away_back_light">#d6e3db</color>
     <color name="match_bet_away_back">#d4e4da</color>
     <color name="match_bet_away_back_dark">#c5d4cb</color>
-    <color name="match_bet_away_text_back">#82ffffff</color>
+    <color name="match_bet_away_text_back">#40ffffff</color>
 <!--recycler-->
 
     <color name="match_recycler_head_text">#3a3a3a</color>
