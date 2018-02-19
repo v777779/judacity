@@ -208,7 +208,7 @@
     </style>
 
     <!--recycler-->
-    <style name="Head.Recycler.Match" parent="Match.TextRecycler">
+    <style name="Head.Recycler.Match" parent="Match.Light.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_recycler_head_size</item>
         <item name="android:textColor">@color/match_recycler_head_text</item>
         <item name="android:gravity">center</item>

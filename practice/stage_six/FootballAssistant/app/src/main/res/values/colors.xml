@@ -200,7 +200,8 @@
     <!--<color name="match_status_back_light">#454545</color>-->
     <!--<color name="match_status_back_dark">#454545</color>-->
 
-    <color name="match_back">#f8f8f8</color>
+    <color name="match_back">#f0f0f0</color>
+    <color name="match_card_back">#f8f8f8</color>
 
     <color name="match_time_back">#bdbdbd</color>
     <color name="match_time_back_light">#ededed</color>
