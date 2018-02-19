@@ -125,7 +125,7 @@ public class Config {
 
 
     // loaders
-    public static final int LOADERS_UPDATE_COUNTER = 5;
+    public static final int LOADERS_UPDATE_COUNTER = 3;
 
     // notifications
     public static final String NT_FB_JOB_DISPATCHER_ID = "nt_fb_job_dispatcher_id";

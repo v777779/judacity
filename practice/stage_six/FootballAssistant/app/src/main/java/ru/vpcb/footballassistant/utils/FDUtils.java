@@ -1161,20 +1161,20 @@ public class FDUtils {
             throws OperationApplicationException, RemoteException {
 
         double progress = UPDATE_SERVICE_PROGRESS * 0.8;
-        double step = 4;
+        double step = 5;
         sendProgress(context, (int) progress);
         writeCompetitions(context, map, forceDelete);
         progress += step;
         sendProgress(context, (int) progress);
-        writeCompetitionTeams(context, map, forceDelete);
-        progress += step / 2;
-        sendProgress(context, (int) progress);
+//        writeCompetitionTeams(context, map, forceDelete);
+//        progress += step / 2;
+//        sendProgress(context, (int) progress);
         writeTeams(context, map, forceDelete);
         progress += step;
         sendProgress(context, (int) progress);
-        writeCompetitionFixtures(context, map, forceDelete);
-        progress += step / 2;
-        sendProgress(context, (int) progress);
+//        writeCompetitionFixtures(context, map, forceDelete);
+//        progress += step / 2;
+//        sendProgress(context, (int) progress);
        writeFixtures(context, map, forceDelete);
 
     }

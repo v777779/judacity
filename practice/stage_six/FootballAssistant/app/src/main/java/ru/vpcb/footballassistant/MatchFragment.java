@@ -300,13 +300,13 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
             long time = date.getTime();
             mTextStartDate.setText(FDUtils.formatMatchDateStart(mFixture.getDate()));
             if (current > time) {
-                mTextDayHigh.setText(EMPTY_STRING);
-                mTextDayMddle.setText(EMPTY_STRING);
-                mTextDayLow.setText(EMPTY_STRING);
-                mTextHourHigh.setText(EMPTY_STRING);
-                mTextHourLow.setText(EMPTY_STRING);
-                mTextMinHigh.setText(EMPTY_STRING);
-                mTextMinLow.setText(EMPTY_STRING);
+                mTextDayHigh.setText(EMPTY_DASH);
+                mTextDayMddle.setText(EMPTY_DASH);
+                mTextDayLow.setText(EMPTY_DASH);
+                mTextHourHigh.setText(EMPTY_DASH);
+                mTextHourLow.setText(EMPTY_DASH);
+                mTextMinHigh.setText(EMPTY_DASH);
+                mTextMinLow.setText(EMPTY_DASH);
             } else {
                 long delta = time - current;
                 long days = delta / TimeUnit.DAYS.toMillis(1);

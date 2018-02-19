@@ -256,7 +256,7 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (loader == null || loader.getId() <= 0 || cursor == null || cursor.getCount() == 0)
+        if (loader == null || loader.getId() <= 0)
             return;
 
         switch (loader.getId()) {

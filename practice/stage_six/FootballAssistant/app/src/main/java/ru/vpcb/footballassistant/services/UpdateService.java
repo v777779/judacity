@@ -160,8 +160,11 @@ public class UpdateService extends IntentService {
                                Map<Integer, List<Integer>> mapFixtureKeys,
                                Map<Integer, FDFixture> mapFixtures) {
 
-        if (map.isEmpty() || mapTeamKeys.isEmpty() || mapTeams.isEmpty() ||
-                mapFixtureKeys.isEmpty() || mapFixtures.isEmpty()) {
+        if (map.isEmpty() ||
+//                mapTeamKeys.isEmpty() ||
+                mapTeams.isEmpty() ||
+//                mapFixtureKeys.isEmpty() ||
+                mapFixtures.isEmpty()) {
             return false;
         }
         return true;
