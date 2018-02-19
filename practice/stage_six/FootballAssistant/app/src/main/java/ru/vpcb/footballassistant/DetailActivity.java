@@ -341,7 +341,7 @@ public class DetailActivity extends AppCompatActivity
 
         FDCompetition competition = mMap.get(fixture.getCompetitionId());
         if (competition != null) {
-            fixture.setCompetitionName(competition.getCaption());
+            fixture.setCaption(competition.getCaption());
             fixture.setLeague(competition.getLeague());
         }
 

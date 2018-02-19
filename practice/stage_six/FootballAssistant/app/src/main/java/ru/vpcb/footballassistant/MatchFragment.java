@@ -282,7 +282,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 // toolbar
         String country = FDUtils.getCountry(mFixture.getLeague());
         mTextCountry.setText(country);
-        mViewLeague.setText(mFixture.getCompetitionName());
+        mViewLeague.setText(mFixture.getCaption());
         setTeamImage(mHomeTeam.getCrestURL(), mViewTeamHome, mRequestSvgH, mRequestPngH,
                 R.drawable.fc_logo_widget_home);
         setTeamImage(mAwayTeam.getCrestURL(), mViewTeamAway, mRequestSvgA, mRequestPngA,

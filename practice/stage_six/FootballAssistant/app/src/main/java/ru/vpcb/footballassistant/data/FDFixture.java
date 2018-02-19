@@ -67,7 +67,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
 
 
     // widgets
-    private String competitionName;
+    private String caption;
     private String league;
 
     public FDFixture() {
@@ -79,7 +79,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.isFavorite = false;
         this.isNotified = false;
         this.notificationId = EMPTY_NOTIFICATION_ID;
-        this.competitionName = EMPTY_LONG_DASH;
+        this.caption = EMPTY_LONG_DASH;
         this.league = EMPTY_LONG_DASH;
 
         this.result = new FDResult();
@@ -106,7 +106,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.isFavorite = isFavorite;
         this.isNotified = isNotified;
         this.notificationId = notificationId;
-        this.competitionName = EMPTY_LONG_DASH;
+        this.caption = EMPTY_LONG_DASH;
         this.league = EMPTY_LONG_DASH;
     }
 
@@ -123,7 +123,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         isFavorite = in.readByte() != 0;
         isNotified = in.readByte() != 0;
         notificationId = in.readInt();
-        competitionName = in.readString();
+        caption = in.readString();
         league = in.readString();
 // FDLink
         links = new FDLinks();
@@ -178,7 +178,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         parcel.writeByte((byte) (isFavorite ? 1 : 0));
         parcel.writeByte((byte) (isNotified ? 1 : 0));
         parcel.writeInt(notificationId);
-        parcel.writeString(competitionName);
+        parcel.writeString(caption);
         parcel.writeString(league);
 // FDLink
         if(links == null) links = new FDLinks();
@@ -398,13 +398,13 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
 
 
     // widgets
-    public String getCompetitionName() {
-        if (competitionName == null || competitionName.isEmpty()) return EMPTY_LONG_DASH;
-        return competitionName;
+    public String getCaption() {
+        if (caption == null || caption.isEmpty()) return EMPTY_LONG_DASH;
+        return caption;
     }
 
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
     public String getLeague() {
