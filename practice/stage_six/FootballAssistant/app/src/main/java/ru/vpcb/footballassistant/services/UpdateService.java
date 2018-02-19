@@ -162,8 +162,8 @@ public class UpdateService extends IntentService {
 
         if (map.isEmpty() ||
 //                mapTeamKeys.isEmpty() ||
-                mapTeams.isEmpty() ||
 //                mapFixtureKeys.isEmpty() ||
+                mapTeams.isEmpty() ||
                 mapFixtures.isEmpty()) {
             return false;
         }

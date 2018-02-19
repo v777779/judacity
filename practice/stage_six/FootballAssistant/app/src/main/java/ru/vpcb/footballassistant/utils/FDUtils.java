@@ -1169,13 +1169,13 @@ public class FDUtils {
 //        writeCompetitionTeams(context, map, forceDelete);
 //        progress += step / 2;
 //        sendProgress(context, (int) progress);
-        writeTeams(context, map, forceDelete);
-        progress += step;
-        sendProgress(context, (int) progress);
 //        writeCompetitionFixtures(context, map, forceDelete);
 //        progress += step / 2;
 //        sendProgress(context, (int) progress);
-       writeFixtures(context, map, forceDelete);
+        writeTeams(context, map, forceDelete);
+        progress += step;
+        sendProgress(context, (int) progress);
+        writeFixtures(context, map, forceDelete);
 
     }
 
