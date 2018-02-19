@@ -622,12 +622,6 @@ public class FDUtils {
     // fixture
     public static Map<Integer, FDFixture> readFixtures(Context context) {
         Uri uri = FDContract.FxEntry.CONTENT_URI;                               // вся таблица
-//        String sortOrder = FDContract.CpEntry.COLUMN_LAST_UPDATE + " ASC";
-//        String sortOrder = FDContract.FxEntry.COLUMN_FIXTURE_ID + " ASC";   // sort by id
-//        String sortOrder = "date("+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC LIMIT 1";    // sort by date
-//        String sortOrder = "datetime("+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC LIMIT 1"; // sort by date and time 1 record last
-//        String sortOrder = "strftime(%s,"+FDContract.FxEntry.COLUMN_FIXTURE_ID+")" + " DESC";      // sort by date and time all records backward
-//        String sortOrder = "datetime(" + FDContract.FxEntry.COLUMN_FIXTURE_DATE + ")" + " ASC"; // sort by date and time
         String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_FIXTURES].getSortOrder();
 
         Cursor cursor = context.getContentResolver().query(
