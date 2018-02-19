@@ -50,7 +50,7 @@ public class UpdateService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
-        if (intent != null) {
+        if (intent != null && intent.getAction() != null) {
             String action = intent.getAction();
             if (action.equals(getString(R.string.action_update))) {
                 onActionUpdate();
