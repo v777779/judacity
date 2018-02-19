@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import ru.vpcb.footballassistant.news.NDSources;
 
 import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_FIXTURES_GET;
 import static ru.vpcb.footballassistant.utils.Config.FD_COMPETITIONS_GET;
@@ -83,6 +84,10 @@ public interface IFDRetrofitAPI {
 
     @GET(FD_TEAM_PLAYERS_GET)
     Call<FDPlayers> getTeamPlayers(@Path(value = "id", encoded = true) String s);
+
+    @GET(FD_COMPETITIONS_GET)
+    Call<NDSources> getSources();
+
 
 }
 

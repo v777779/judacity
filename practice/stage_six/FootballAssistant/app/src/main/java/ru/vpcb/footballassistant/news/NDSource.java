@@ -3,6 +3,9 @@ package ru.vpcb.footballassistant.news;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
@@ -46,9 +49,12 @@ public class NDSource {
     @SerializedName("country")
     @Expose
     private String country;
+    private List<NDArticle>  articles;
+
 
     public NDSource() {
         this.id =EMPTY_STRING;  // no id
+
     }
 
 
@@ -103,5 +109,13 @@ public class NDSource {
 
     public String getCountry() {
         return country;
+    }
+
+    public List<NDArticle> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<NDArticle> articles) {
+        this.articles = articles;
     }
 }

@@ -60,8 +60,11 @@ import ru.vpcb.footballassistant.data.PostProcessingEnabler;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDDbHelper;
 import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
+import ru.vpcb.footballassistant.news.INDRetrofitAPI;
 import ru.vpcb.footballassistant.news.NDArticle;
+import ru.vpcb.footballassistant.news.NDNews;
 import ru.vpcb.footballassistant.news.NDSource;
+import ru.vpcb.footballassistant.news.NDSources;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_ARTICLES;
@@ -79,6 +82,10 @@ import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_TIME_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_7;
 import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
+import static ru.vpcb.footballassistant.utils.Config.ND_BASE_URI;
+import static ru.vpcb.footballassistant.utils.Config.ND_CATEGORY_SPORT;
+import static ru.vpcb.footballassistant.utils.Config.ND_LANGUAGE_EN;
+import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE_ZERO_TIME;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE;
@@ -144,6 +151,16 @@ public class FDUtils {
                 mapFixtureKeys == null || mapFixtureKeys.isEmpty() ||
                 mapTeams == null || mapTeams.isEmpty() ||
                 mapFixtures == null || mapFixtures.isEmpty()) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public static boolean checkEmpty(Map<String, NDSource> map,
+                                     Map<Integer, NDArticle> mapArticles) {
+        if (map == null || map.isEmpty() ||
+                mapArticles == null || mapArticles.isEmpty()) {
             return true;
         }
         return false;
@@ -395,6 +412,7 @@ public class FDUtils {
     public static Uri buildItemIdUri(String tableName, long id) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(Long.toString(id)).build();
     }
+
     public static Uri buildItemIdUri(String tableName, String id) {
         return FDContract.BASE_CONTENT_URI.buildUpon().appendPath(tableName).appendPath(id).build();
     }
@@ -450,6 +468,9 @@ public class FDUtils {
         return context.getString(R.string.load_database, code, id, message);
     }
 
+    private static String formatLoad(Context context, int code, String id, String message) {
+        return context.getString(R.string.load_database_news, code, id, message);
+    }
 
     private static String formatWrite(Context context, int code, int id, String message) {
         return context.getString(R.string.write_database, code, id, message);
@@ -822,16 +843,22 @@ public class FDUtils {
     }
 
     // read news
-    public static void readDatabaseNews(Context context, Map<Integer, NDArticle> map,
-                                        Map<String, NDSource> mapSources) {
+    public static void readDatabaseNews(Context context, Map<String, NDSource> map,
+                                        Map<Integer, NDArticle> mapArticles) {
 
-        Map<Integer, NDArticle> readMap = readArticles(context);
+        Map<String, NDSource> readMap = readSources(context);
 
         if (readMap != null && readMap.size() > 0) {
             map.clear();
             map.putAll(readMap);
         }
 
+        Map<Integer, NDArticle> readMapArticle = readArticles(context);
+
+        if (readMapArticle != null && readMapArticle.size() > 0) {
+            mapArticles.clear();
+            mapArticles.putAll(readMapArticle);
+        }
     }
 
 
@@ -982,8 +1009,8 @@ public class FDUtils {
 
     // write
     //    source
-    public static ArrayList<ContentProviderOperation> writeSource( NDSource source, boolean forceDelete) {
-        if (source == null || source.getId()== null || source.getId().isEmpty()) return null;
+    public static ArrayList<ContentProviderOperation> writeSource(NDSource source, boolean forceDelete) {
+        if (source == null || source.getId() == null || source.getId().isEmpty()) return null;
 
         Uri uri = buildItemIdUri(FDContract.NsEntry.TABLE_NAME, source.getId());
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
@@ -1013,7 +1040,7 @@ public class FDUtils {
 
     // sources
     public static ContentProviderResult[] writeSources(
-            Context context, Map<Integer, NDSource>map, boolean forceDelete)
+            Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 
         if (map == null || map.size() == 0) return null;
@@ -1033,10 +1060,10 @@ public class FDUtils {
     }
 
     //    article
-    public static ArrayList<ContentProviderOperation> writeArticle( NDArticle article, boolean forceDelete) {
+    public static ArrayList<ContentProviderOperation> writeArticle(NDArticle article, boolean forceDelete) {
         if (article == null || article.getId() <= 0) return null;
         NDSource source = article.getSource();
-        if(source == null || source.getId() == null || source.getId().isEmpty()) return null;
+        if (source == null || source.getId() == null || source.getId().isEmpty()) return null;
 
         Uri uri = buildItemIdUri(FDContract.NaEntry.TABLE_NAME, article.getId());
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
@@ -1067,7 +1094,7 @@ public class FDUtils {
 
     // articles
     public static ContentProviderResult[] writeArticles(
-            Context context, Map<Integer, NDArticle>map, boolean forceDelete)
+            Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 
         if (map == null || map.size() == 0) return null;
@@ -1077,12 +1104,16 @@ public class FDUtils {
             listOperations.add(ContentProviderOperation.newDelete(uri).build());    // delete all records from Competitions table
         }
 
-        for (NDArticle article : map.values()) {
-            List<ContentProviderOperation> operations = writeArticle(article, false); // if true table already cleared
-            if (operations == null) continue;
-            listOperations.addAll(operations);
+        for (NDSource source : map.values()) {
+            if (source == null) continue;
+            List<NDArticle> list = source.getArticles();
+            if (list == null || list.isEmpty()) continue;
+            for (NDArticle article : list) {
+                List<ContentProviderOperation> operations = writeArticle(article, false); // if true table already cleared
+                if (operations == null) continue;
+                listOperations.addAll(operations);
+            }
         }
-
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
@@ -1398,7 +1429,18 @@ public class FDUtils {
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
-    // write database
+// write database
+// news
+    public static void writeDatabaseNews(Context context, Map<String, NDSource> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+
+        writeSources(context, map, forceDelete);
+        writeArticles(context, map, forceDelete);
+
+    }
+
+// competitions
+
     public static void writeDatabase(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 
@@ -1567,6 +1609,37 @@ public class FDUtils {
         return retrofit.create(IFDRetrofitAPI.class);
     }
 
+    private static INDRetrofitAPI setupRetrofitNews() {
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new PostProcessingEnabler())
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ND_BASE_URI)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        return retrofit.create(INDRetrofitAPI.class);
+    }
+
+    // news
+    private static NDSources loadListSources()
+            throws NullPointerException, IOException {
+
+        INDRetrofitAPI retrofitAPI = setupRetrofitNews();
+        return retrofitAPI.getSources(ND_LANGUAGE_EN, ND_CATEGORY_SPORT).execute().body();
+    }
+
+    private static NDNews loadListArticles(NDSource source, int page)
+            throws NullPointerException, IOException {
+        if (source == null || page <= 0) return null;
+        String id = source.getId();
+        if (id == null || id.isEmpty()) return null;
+
+        INDRetrofitAPI retrofitAPI = setupRetrofitNews();
+        return retrofitAPI.getEverything(id, Integer.toString(page), ND_QUERY_API_KEY).execute().body();
+    }
+
+    // competitions
     private static List<FDCompetition> loadListCompetitions()
             throws NullPointerException, IOException {
 
@@ -1743,8 +1816,48 @@ public class FDUtils {
 //    }
 
 
-    // all maps read by loaders
-// load competitions
+// all maps read by loaders
+
+// news
+
+
+    public static boolean loadDatabaseNews(Context context, Map<String, NDSource> map,
+                                           Map<Integer, NDArticle> mapArticles) throws NullPointerException, IOException {
+
+// progress
+        double step;
+        double progress = 0;
+
+// load map
+        map.clear();
+
+        NDSources sources = loadListSources();  // NullPointerException, IOException
+        if (sources == null || sources.getSources() == null) return false;
+        List<NDSource> list = sources.getSources();
+
+        for (NDSource source : list) {
+            if (source == null || source.getId() == null || source.getId().isEmpty()) continue;
+            map.put(source.getId(), source);
+        }
+
+
+        for (NDSource source : map.values()) {
+            if (source == null || source.getId() == null || source.getId().isEmpty()) continue;
+// articles
+            try {
+                NDNews news = loadListArticles(source, 1);                    // load page 1
+                if (news == null || news.getArticles() == null || news.getArticles().isEmpty())
+                    continue;
+                source.setArticles(news.getArticles());
+            } catch (NullPointerException | NumberFormatException | IOException e) {
+                Timber.d(formatLoad(context, EXCEPTION_CODE_4, source.getId(), e.getMessage()));
+            }
+        }
+        return true;
+    }
+
+
+    // load competitions
     public static boolean loadDatabase(
             Context context, Map<Integer, FDCompetition> map,
             Map<Integer, List<Integer>> mapTeamKeys, Map<Integer, FDTeam> mapTeams,

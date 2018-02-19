@@ -50,7 +50,7 @@ public interface INDRetrofitAPI {
 
     // request with queries   "baseURL/sources?language=en&category=sports&apiKey=key_string"
     @GET(ND_SOURCES_GET)
-    Call<NDNews> getSources(@Query(ND_QUERY_LANGUAGE) String language,
+    Call<NDSources> getSources(@Query(ND_QUERY_LANGUAGE) String language,
                               @Query(ND_QUERY_CATEGORY) String category
     );
 }

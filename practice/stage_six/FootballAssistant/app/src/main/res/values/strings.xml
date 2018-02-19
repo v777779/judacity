@@ -209,7 +209,9 @@
     <string name="update_content_error">Update content error: %1$s</string>
     <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
     <string name="load_database">LoadDatabase exception(%1$d,%2$d): %3$s</string>
+    <string name="load_database_news">LoadDatabase exception(%1$d,%2$s): %3$s</string>
     <string name="write_database">WriteDatabase exception(%1$d,%2$d): %3$s</string>
+    <string name="write_database_news">WriteDatabase exception(%1$d,%2$s): %3$s</string>
     <string name="content_provider_insert">Content provider insert exception: </string>
     <string name="read_database_exception">ReadDatabase exception: %1$s</string>
 

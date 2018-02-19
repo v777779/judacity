@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
+import ru.vpcb.footballassistant.news.NDArticle;
+import ru.vpcb.footballassistant.news.NDSource;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
@@ -70,38 +73,47 @@ public class NewsService extends IntentService {
     }
 
     private void onActionUpdate() {
-        if (FDUtils.isNewsDataRefreshed(this)) {
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
-            return;  // data updated
-        }
+        try {
+// loader body
+            Map<String, NDSource> map = new LinkedHashMap<>();
+            Map<Integer, NDArticle> mapArticles = new LinkedHashMap<>();
+            FDUtils.readDatabaseNews(this, map, mapArticles);
 
-        if (!isOnline(this)) {                                     // no network
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_no_network)));
+            if (!FDUtils.checkEmpty(map, mapArticles) && FDUtils.isNewsDataRefreshed(this)) {
+                sendBroadcast(new Intent(getString(R.string.broadcast_news_update_finished)));
+
+                return;
+            }
+
+            if (!isOnline(this)) {                                     // no network
+                sendBroadcast(new Intent(getString(R.string.broadcast_news_no_network)));
+                return;
+            }
+            sendBroadcast(new Intent(getString(R.string.broadcast_news_update_started)));
+
+
+            boolean isUpdated = FDUtils.loadDatabaseNews(this, map, mapArticles);
+            if (isUpdated) {
+                FDUtils.writeDatabaseNews(this, map, false); //  true delete false update
+            }
+            FDUtils.setRefreshTime(this);
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+
+
+        } catch (IOException e) {
+// test !!!  catch errors
+            Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+            return;
+        } catch (NullPointerException | NumberFormatException e) {
+            Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+            return;
+        } catch (OperationApplicationException | RemoteException e) {
+            Timber.d(getString(R.string.update_content_error) + e.getMessage());
+            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
             return;
         }
-        sendBroadcast(new Intent(getString(R.string.broadcast_data_update_started)));
-
-//        try {
-// loader body
-
-
-
-
-//        } catch (IOException e) {
-//// test !!!  catch errors
-//            Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
-//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-//            return;
-//        } catch (NullPointerException | NumberFormatException e) {
-//            Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
-//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-//            return;
-//        } catch (OperationApplicationException | RemoteException e) {
-//            Timber.d(getString(R.string.update_content_error) + e.getMessage());
-//            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
-//            return;
-//        }
-//60%
         sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
     }
 
