@@ -108,6 +108,13 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     TextView mTextMinHigh;
     @BindView(R.id.match_time_min_low)
     TextView mTextMinLow;
+    // match bet
+    @BindView(R.id.match_bet_home)
+    TextView mTextBetHome;
+    @BindView(R.id.match_bet_draw)
+    TextView mTextBetDraw;
+    @BindView(R.id.match_bet_away)
+    TextView mTextBetAway;
 
 
     // parameters
@@ -345,6 +352,12 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         }
 
 // bet
+
+        mTextBetHome.setText(FDUtils.formatMatchBet(mFixture.getHomeWin()));
+        mTextBetDraw.setText(FDUtils.formatMatchBet(mFixture.getDraw()));
+        mTextBetAway.setText(FDUtils.formatMatchBet(mFixture.getAwayWin()));
+
+
 
 
     }

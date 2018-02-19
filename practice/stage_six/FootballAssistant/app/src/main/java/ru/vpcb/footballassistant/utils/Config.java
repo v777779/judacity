@@ -102,6 +102,7 @@ public class Config {
     public static final String FORMAT_MATCH_TIME_WIDGET = "%02d:%02d";
     public static final String FORMAT_MATCH_DATE = "%02d:%02d,%02d/%02d/%04d";
     public static final String FORMAT_MATCH_SCORE = "%d : % d";
+    public static final String FORMAT_MATCH_BET = "%.1f";
 
     public static final String PATTERN_MATCH_DATE = "dd/MM/yy";
     public static final String PATTERN_MATCH_TIME = "HH:mm";
@@ -125,7 +126,7 @@ public class Config {
 
 
     // loaders
-    public static final int LOADERS_UPDATE_COUNTER = 3;
+    public static final int LOADERS_UPDATE_COUNTER = 5;
 
     // notifications
     public static final String NT_FB_JOB_DISPATCHER_ID = "nt_fb_job_dispatcher_id";

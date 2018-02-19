@@ -67,8 +67,10 @@ import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_FIX
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_TEAMS;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_FIXTURES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TEAMS;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
+import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_BET;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_TIME_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_7;
@@ -120,13 +122,29 @@ public class FDUtils {
             new SimpleDateFormat(PATTERN_MATCH_DATE_START, Locale.ENGLISH);
 
 
-
     private static final SimpleDateFormat formatSQLiteDate =
             new SimpleDateFormat(PATTERN_DATE_SQLITE, Locale.ENGLISH);
 
     private static final SimpleDateFormat formatSQLiteDateZeroTime =
             new SimpleDateFormat(PATTERN_DATE_SQLITE_ZERO_TIME, Locale.ENGLISH);
 
+    // maps
+    public static boolean checkEmpty(Map<Integer, FDCompetition> map,
+                                     Map<Integer, List<Integer>> mapTeamKeys,
+                                     Map<Integer, FDTeam> mapTeams,
+                                     Map<Integer, List<Integer>> mapFixtureKeys,
+                                     Map<Integer, FDFixture> mapFixtures) {
+
+        if (map == null || map.isEmpty() ||
+                mapTeamKeys == null || mapTeamKeys.isEmpty() ||
+                mapFixtureKeys == null || mapFixtureKeys.isEmpty() ||
+                mapTeams == null || mapTeams.isEmpty() ||
+                mapFixtures == null || mapFixtures.isEmpty()) {
+            return true;
+        }
+        return false;
+
+    }
 
     // stings
     public static int formatHrefToId(String href) throws NumberFormatException {
@@ -213,11 +231,15 @@ public class FDUtils {
         return s.replace("T", " ").replace("Z", "");
     }
 
-    public static String formatFromInt(int value,String emptyString) {
+    public static String formatFromInt(int value, String emptyString) {
         if (value < 0) return emptyString;
         return String.format(Locale.ENGLISH, "%d", value);
     }
 
+    public static String formatMatchBet(double value) {
+        if (value <= 0) return EMPTY_DASH;
+        return String.format(Locale.ENGLISH, FORMAT_MATCH_BET, value);
+    }
 
     // int
 
@@ -827,12 +849,11 @@ public class FDUtils {
     public static Map<Integer, FDFixture> readFixtures(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return null;
         Map<Integer, FDFixture> map = new LinkedHashMap<>();
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            FDFixture fixture = readFixture(cursor);
-            if (fixture == null) continue;
-            map.put(fixture.getId(), fixture);
-        }
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                FDFixture fixture = readFixture(cursor);
+                if (fixture == null) continue;
+                map.put(fixture.getId(), fixture);
+            }
         return map;
     }
 
@@ -1155,19 +1176,19 @@ public class FDUtils {
             throws OperationApplicationException, RemoteException {
 
         double progress = UPDATE_SERVICE_PROGRESS * 0.8;
-        double step = 5;
+        double step = 4;
         sendProgress(context, (int) progress);
         writeCompetitions(context, map, forceDelete);
         progress += step;
         sendProgress(context, (int) progress);
-//        writeCompetitionTeams(context, map, forceDelete);
-//        progress += step / 2;
-//        sendProgress(context, (int) progress);
-//        writeCompetitionFixtures(context, map, forceDelete);
-//        progress += step / 2;
-//        sendProgress(context, (int) progress);
+        writeCompetitionTeams(context, map, forceDelete);
+        progress += step / 2;
+        sendProgress(context, (int) progress);
         writeTeams(context, map, forceDelete);
         progress += step;
+        sendProgress(context, (int) progress);
+        writeCompetitionFixtures(context, map, forceDelete);
+        progress += step / 2;
         sendProgress(context, (int) progress);
         writeFixtures(context, map, forceDelete);
 

@@ -120,11 +120,11 @@ public class DetailActivity extends AppCompatActivity
     private int mUpdateCounter;
 
     // mMap
-    private Map<Integer, FDCompetition> mMap = new HashMap<>();
-    private Map<Integer, List<Integer>> mMapTeamKeys = new HashMap<>();
-    private Map<Integer, FDTeam> mMapTeams = new HashMap<>();
-    private Map<Integer, List<Integer>> mMapFixtureKeys = new HashMap<>();
-    private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
+    private Map<Integer, FDCompetition> mMap;
+    private Map<Integer, List<Integer>> mMapTeamKeys;
+    private Map<Integer, FDTeam> mMapTeams;
+    private Map<Integer, List<Integer>> mMapFixtureKeys;
+    private Map<Integer, FDFixture> mMapFixtures;
 
 
     private Cursor[] mCursors;
@@ -193,6 +193,13 @@ public class DetailActivity extends AppCompatActivity
             mViewPagerBack.setVisibility(View.INVISIBLE);
             mBundleExtra = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
         }
+
+        mMap = new HashMap<>();
+        mMapTeamKeys = new HashMap<>();
+        mMapTeams = new HashMap<>();
+        mMapFixtureKeys = new HashMap<>();
+        mMapFixtures = new HashMap<>();
+
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
@@ -825,8 +832,9 @@ public class DetailActivity extends AppCompatActivity
 
 
         mViewPagerData = data;
+        int pos = mViewPagerPos;  // swap changes pos
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
-        mViewPager.setCurrentItem(mViewPagerPos);
+        mViewPager.setCurrentItem(pos);
 // animation
         mViewPagerBack.animate().alpha(0).setStartDelay(VIEWPAGER_BACK_START_DELAY)
                 .setDuration(VIEWPAGER_BACK_DURATION).start();
@@ -1088,24 +1096,38 @@ public class DetailActivity extends AppCompatActivity
         protected ViewPagerData doInBackground(Cursor[]... cursors) {
             try {
 
-                mMap = FDUtils.readCompetitions(cursors[0][0]);
-                mMapTeamKeys = FDUtils.readCompetitionTeams(cursors[0][1]);
-                mMapTeams = FDUtils.readTeams(cursors[0][2]);
-                mMapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
-                mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
+                Map<Integer, FDCompetition> map = FDUtils.readCompetitions(cursors[0][0]);
+                Map<Integer, List<Integer>> mapTeamKeys = FDUtils.readCompetitionTeams(cursors[0][1]);
+                Map<Integer, FDTeam> mapTeams = FDUtils.readTeams(cursors[0][2]);
+                Map<Integer, List<Integer>> mapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
+                Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursors[0][4]);
+
+                if (FDUtils.checkEmpty(map, mapTeamKeys, mapTeams, mapFixtureKeys, mapFixtures)) {
+                    return null;
+                }
+
+
+                mMap = map;
+                mMapTeamKeys = mapTeamKeys;
+                mMapTeams = mapTeams;
+                mMapFixtureKeys = mapFixtureKeys;
+                mMapFixtures = mapFixtures;
                 return getViewPagerData();
 
 
-            } catch (NullPointerException e) {
-                return null;
-
+            } catch (Exception e) {  // catch all exceptions from database
+                Timber.d(getString(R.string.read_database_exception, e.getMessage()));
             }
+            return null;
         }
 
         @Override
         protected void onPostExecute(ViewPagerData viewPagerData) {
             stopProgress();
-            if (viewPagerData == null) return;
+            if (viewPagerData == null) {
+                FootballUtils.showMessage(DetailActivity.this,getString(R.string.matches_no_data_message));
+                return;
+            }
 
             mViewPagerData = viewPagerData;
             updateViewPager(viewPagerData);

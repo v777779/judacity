@@ -68,7 +68,7 @@ public class UpdateService extends IntentService {
             FDUtils.readDatabase(this, map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures);
 
-            if (checkEmpty(map, mapTeamKeys, mapTeams,
+            if (!FDUtils.checkEmpty(map, mapTeamKeys, mapTeams,
                     mapFixtureKeys, mapFixtures) && FDUtils.isFootballDataRefreshed(this)) {
                 sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
                 return;
@@ -154,21 +154,6 @@ public class UpdateService extends IntentService {
 
     }
 
-    private boolean checkEmpty(Map<Integer, FDCompetition> map,
-                               Map<Integer, List<Integer>> mapTeamKeys,
-                               Map<Integer, FDTeam> mapTeams,
-                               Map<Integer, List<Integer>> mapFixtureKeys,
-                               Map<Integer, FDFixture> mapFixtures) {
 
-        if (map.isEmpty() ||
-//                mapTeamKeys.isEmpty() ||
-//                mapFixtureKeys.isEmpty() ||
-                mapTeams.isEmpty() ||
-                mapFixtures.isEmpty()) {
-            return false;
-        }
-        return true;
-
-    }
 
 }

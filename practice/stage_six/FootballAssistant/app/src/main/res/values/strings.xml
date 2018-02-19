@@ -203,6 +203,7 @@
 
     <!--messages-->
     <string name="activity_same_message">You are already here</string>
+    <string name="matches_no_data_message">There is no data on this date</string>
 
     <!--exception-->
     <string name="update_content_error">Update content error: %1$s</string>
@@ -210,6 +211,7 @@
     <string name="load_database">LoadDatabase exception(%1$d,%2$d): %3$s</string>
     <string name="write_database">WriteDatabase exception(%1$d,%2$d): %3$s</string>
     <string name="content_provider_insert">Content provider insert exception: </string>
+    <string name="read_database_exception">ReadDatabase exception: %1$s</string>
 
     <string name="unknown_uri">Unknown uri: %1$s"</string>
     <string name="unknown_loader_id">Unknown id: %1$d"</string>
