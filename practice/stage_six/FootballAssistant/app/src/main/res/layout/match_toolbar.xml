@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_icon_size"
         android:contentDescription="@string/text_sm_item_match_country"
-        tools:text="@string/text_test_sm_item_match_country"
+        android:text="@string/text_test_sm_item_match_country"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toTopOf="parent" />
@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/text_sm_item_match_league"
-        tools:text="@string/text_test_rm_item_league"
+        android:text="@string/text_test_rm_item_league"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
@@ -85,7 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/text_sm_item_match_time"
-        tools:text="@string/text_test_rm_item_match_time"
+        android:text="@string/text_test_rm_item_match_time"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintHorizontal_bias="0.46"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
@@ -99,7 +99,7 @@
 
         android:layout_marginTop="@dimen/margin_normal"
         android:contentDescription="@string/text_rm_item_team_name"
-        tools:text="@string/text_test_rm_item_team_home"
+        android:text="@string/text_test_rm_item_team_home"
         app:layout_constraintEnd_toStartOf="@+id/guide_v6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_sm_team_home" />
@@ -112,7 +112,7 @@
 
         android:layout_marginTop="@dimen/margin_normal"
         android:contentDescription="@string/text_rm_item_team_name"
-        tools:text="@string/text_test_rm_item_team_away"
+        android:text="@string/text_test_rm_item_team_away"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guide_v7"
         app:layout_constraintTop_toBottomOf="@+id/image_sm_team_away" />
@@ -123,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/text_sm_item_match_date"
-        tools:text="@string/text_test_sm_item_match_date"
+        android:text="@string/text_test_sm_item_match_date"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
@@ -139,7 +139,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:background="@drawable/match_score_red"
         android:contentDescription="@string/text_sm_item_match_score_home"
-        tools:text="@string/text_test_sm_item_match_number_1"
+        android:text="@string/text_test_sm_item_match_number_1"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_date" />
 
@@ -152,7 +152,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:background="@drawable/match_score_blue"
         android:contentDescription="@string/text_sm_item_match_score_away"
-        tools:text="@string/text_test_sm_item_match_number_0"
+        android:text="@string/text_test_sm_item_match_number_0"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"
         app:layout_constraintTop_toBottomOf="@+id/text_sm_item_date" />
 
@@ -168,7 +168,7 @@
         android:minEms="@integer/text_sm_item_status_min"
         android:paddingBottom="@dimen/margin_small"
         android:paddingTop="@dimen/margin_small"
-        tools:text="@string/text_test_sm_item_match_timed"
+        android:text="@string/text_test_sm_item_match_timed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guide_v1"
         app:layout_constraintStart_toStartOf="@+id/guide_v1"

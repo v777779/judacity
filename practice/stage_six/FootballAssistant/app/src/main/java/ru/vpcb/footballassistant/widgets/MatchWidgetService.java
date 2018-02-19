@@ -8,13 +8,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import ru.vpcb.footballassistant.R;
+import ru.vpcb.footballassistant.add.TempUtils;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.data.FDFixtures;
+import ru.vpcb.footballassistant.data.FDTeam;
+import ru.vpcb.footballassistant.data.FDTeams;
+import ru.vpcb.footballassistant.data.PostProcessingEnabler;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
@@ -80,7 +95,7 @@ public class MatchWidgetService extends IntentService {
             if (fixture != null) {
                 FDCompetition competition = FDUtils.readCompetition(this, fixture.getCompetitionId());
                 if (competition != null) {
-                    fixture.setCaption(competition.getCaption());
+                    fixture.setCompetitionName(competition.getCaption());
                 }
             }
 
@@ -105,7 +120,7 @@ public class MatchWidgetService extends IntentService {
             if (fixture == null) return;
             FDCompetition competition = FDUtils.readCompetition(this, fixture.getCompetitionId());
             if (competition != null) {
-                fixture.setCaption(competition.getCaption());
+                fixture.setCompetitionName(competition.getCaption());
             }
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);

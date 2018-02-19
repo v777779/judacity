@@ -30,14 +30,13 @@ public class FDLoader extends CursorLoader {
         Uri uri = FDProvider.buildLoaderIdUri(context, id);
         String sortOrder = FDProvider.buildLoaderIdSortOrder(context, id);
 
-        if (args != null) {
-            String s = args.getString(BUNDLE_LOADER_DATA_URI);
-            if (s != null) {
-                Uri itemUri = Uri.parse(s);
-                if (itemUri != null) {
-                    uri = itemUri;
-                }
-            }
+        if (args == null) {
+            return new FDLoader(context, uri, sortOrder);
+        }
+
+        uri = args.getParcelable(BUNDLE_LOADER_DATA_URI);
+        if (uri == null) {
+            uri = FDProvider.buildLoaderIdUri(context, id);
         }
         return new FDLoader(context, uri, sortOrder);
 

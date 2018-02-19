@@ -92,7 +92,7 @@ public class MatchWidgetProvider extends AppWidgetProvider {
 
 // test!!!
 // TODO Check Score formatter
-        views.setTextViewText(R.id.text_sm_item_league, fixture.getCaption());
+        views.setTextViewText(R.id.text_sm_item_league, fixture.getCompetitionName());
         views.setTextViewText(R.id.text_sm_team_home, fixture.getHomeTeamName());
         views.setTextViewText(R.id.text_sm_team_away, fixture.getAwayTeamName());
         views.setTextViewText(R.id.text_sm_item_time, formatMatchTimeWidget(fixture.getDate()));

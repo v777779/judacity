@@ -38,23 +38,18 @@ import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.glide.GlideUtils;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 
 import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_AWAY_TEAM;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_CAPTION;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_LEAGUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
-import static ru.vpcb.footballassistant.utils.Config.MATCH_LOADERS_UPDATE_COUNTER;
 
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -136,22 +131,16 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     private FDFixture mFixture;
     private FDTeam mHomeTeam;
     private FDTeam mAwayTeam;
-    private int mFixtureId;
-    private int mHomeTeamId;
-    private int mAwayTeamId;
-    private String mLeague;
-    private String mCaption;
-    private int mUpdateCounter;
 
 
-    public static Fragment newInstance(int id, int homeTeamId, int awayTeamId, String league, String caption) {
+    public static Fragment newInstance(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
         MatchFragment fragment = new MatchFragment();
         Bundle args = new Bundle();
-        args.putInt(BUNDLE_MATCH_FIXTURE, id);
-        args.putInt(BUNDLE_MATCH_HOME_TEAM, homeTeamId);
-        args.putInt(BUNDLE_MATCH_AWAY_TEAM, awayTeamId);
-        args.putString(BUNDLE_MATCH_LEAGUE, league);
-        args.putString(BUNDLE_MATCH_CAPTION, caption);
+        args.putParcelable(BUNDLE_MATCH_FIXTURE, fixture);
+        if (homeTeam != null)
+            args.putParcelable(BUNDLE_MATCH_HOME_TEAM, homeTeam);
+        if (awayTeam != null)
+            args.putParcelable(BUNDLE_MATCH_AWAY_TEAM, awayTeam);
         fragment.setArguments(args);
         return fragment;
     }
@@ -174,24 +163,16 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         } else {
             mAppBarHeight = savedInstanceState.getInt(BUNDLE_APP_BAR_HEIGHT);
         }
-
 // args
-
         Bundle args = getArguments();
-        if (args == null) {
-            mFixtureId = EMPTY_INT_VALUE;
-            mHomeTeamId = EMPTY_INT_VALUE;
-            mAwayTeamId = EMPTY_INT_VALUE;
-        } else {
-            mFixtureId = args.getInt(BUNDLE_MATCH_FIXTURE);
-            mHomeTeamId = args.getInt(BUNDLE_MATCH_HOME_TEAM);
-            mAwayTeamId = args.getInt(BUNDLE_MATCH_AWAY_TEAM);
-            mLeague = args.getString(BUNDLE_MATCH_LEAGUE);
-            mCaption = args.getString(BUNDLE_MATCH_CAPTION);
-        }
+        if (args == null) return;
+        mFixture = args.getParcelable(BUNDLE_MATCH_FIXTURE);
+        mHomeTeam = args.getParcelable(BUNDLE_MATCH_HOME_TEAM);
+        mAwayTeam = args.getParcelable(BUNDLE_MATCH_AWAY_TEAM);
 
-        if (mFixtureId <= 0 || mHomeTeamId <= 0 || mAwayTeamId <= 0) {
-            FootballUtils.showMessage(mContext, getString(R.string.matches_no_data_message));
+        if (mFixture == null || mFixture.getId() <= 0 ||
+                mFixture.getHomeTeamId() <= 0 ||
+                mFixture.getAwayTeamId() <= 0) {
             return;
         }
 
@@ -204,18 +185,12 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         mMapTeams = new LinkedHashMap<>();
         mMapFixtures = new LinkedHashMap<>(); // fixed order
 
-        mUpdateCounter = 0;
 // loader
-        Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.TmEntry.LOADER_ID, mHomeTeamId, mAwayTeamId);
+        Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
+                mFixture.getHomeTeamId(), mFixture.getAwayTeamId());
         Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_LOADER_DATA_URI, uri.toString());
-        getLoaderManager().initLoader(FDContract.TmEntry.LOADER_ID, bundle, this);  // fixtures
-
-        uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID, mHomeTeamId, mAwayTeamId);
-        bundle = new Bundle();
-        bundle.putString(BUNDLE_LOADER_DATA_URI, uri.toString());
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
         getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
-
     }
 
     @Nullable
@@ -226,7 +201,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         setupActionBar(savedInstanceState);
         setupListeners();
-
+        bindViews();
         return mRootView;
     }
 
@@ -258,35 +233,17 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         switch (loader.getId()) {
             case FDContract.FxEntry.LOADER_ID:
                 Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursor);
-                cursor.close();
-                if (mapFixtures == null) {
+                if (mapFixtures == null || mapFixtures.isEmpty()) {
                     break;
                 }
-                mUpdateCounter++;
                 mMapFixtures.putAll(mapFixtures);
-                mFixture = mMapFixtures.get(mFixtureId);
-                if(mFixture != null) {
-                    mFixture.setLeague(mLeague);
-                    mFixture.setCaption(mCaption);
-                }
+                bindViewsFixtures();
 
                 break;
             case FDContract.TmEntry.LOADER_ID:
-                Map<Integer, FDTeam> mapTeams = FDUtils.readTeams(cursor);
-                cursor.close();
-                if (mapTeams == null) {
-                    break;
-                }
-                mUpdateCounter++;
-                mHomeTeam = mapTeams.get(mHomeTeamId);
-                mAwayTeam = mapTeams.get(mAwayTeamId);
 
                 break;
             default:
-        }
-        if (mUpdateCounter == MATCH_LOADERS_UPDATE_COUNTER) {
-            bindViews();
-            mUpdateCounter = 0;
         }
 
 
@@ -321,18 +278,14 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     private void bindViews() {
-        if (mFixture == null || mFixture.getId() <= 0) {
-            FootballUtils.showMessage(mContext, getString(R.string.matches_no_data_message));
-            return;
-        }
 
 // toolbar
         String country = FDUtils.getCountry(mFixture.getLeague());
         mTextCountry.setText(country);
-        mViewLeague.setText(mFixture.getCaption());
-        setTeamImage(mHomeTeam, mViewTeamHome, mRequestSvgH, mRequestPngH,
+        mViewLeague.setText(mFixture.getCompetitionName());
+        setTeamImage(mHomeTeam.getCrestURL(), mViewTeamHome, mRequestSvgH, mRequestPngH,
                 R.drawable.fc_logo_widget_home);
-        setTeamImage(mAwayTeam, mViewTeamAway, mRequestSvgA, mRequestPngA,
+        setTeamImage(mAwayTeam.getCrestURL(), mViewTeamAway, mRequestSvgA, mRequestPngA,
                 R.drawable.fc_logo_widget_away);
         mTextTime.setText(FDUtils.formatMatchTime(mFixture.getDate()));
         mTextTeamHome.setText(mFixture.getHomeTeamName());
