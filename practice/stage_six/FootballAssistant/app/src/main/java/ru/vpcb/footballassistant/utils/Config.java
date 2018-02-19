@@ -127,6 +127,7 @@ public class Config {
 
     // loaders
     public static final int LOADERS_UPDATE_COUNTER = 5;
+    public static final int MATCH_LOADERS_UPDATE_COUNTER = 2;
 
     // notifications
     public static final String NT_FB_JOB_DISPATCHER_ID = "nt_fb_job_dispatcher_id";
@@ -256,7 +257,8 @@ public class Config {
     public static final String BUNDLE_MATCH_FIXTURE = "bundle_match_fixture";
     public static final String BUNDLE_MATCH_HOME_TEAM = "bundle_match_home_team";
     public static final String BUNDLE_MATCH_AWAY_TEAM = "bundle_match_away_team";
-
+    public static final String BUNDLE_MATCH_LEAGUE = "bundle_match_league";
+    public static final String BUNDLE_MATCH_CAPTION = "bundle_match_caption";
 
     // team activity
     public static final String BUNDLE_INTENT_TEAM_ID = "bundle_intent_team_id";

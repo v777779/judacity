@@ -31,11 +31,14 @@ import ru.vpcb.footballassistant.utils.Config;
 public class GlideUtils {
 
 
-    public static void setTeamImage( String imageURL,ImageView imageView,
+    public static void setTeamImage(FDTeam team, ImageView imageView,
                                     RequestBuilder<PictureDrawable> requestBuilder,
                                     RequestBuilder<Drawable> requestBuilderCommon,
-                                     int resourceId) {
-
+                                    int resourceId) {
+        if (team == null || team.getId() <= 0) {
+            imageView.setImageResource(resourceId);
+        }
+        String imageURL = team.getCrestURL();
         if (imageURL == null || imageURL.isEmpty()) {
             imageView.setImageResource(resourceId);
             return;
@@ -48,7 +51,6 @@ public class GlideUtils {
             requestBuilderCommon.load(imageURL).into(imageView);
         }
     }
-
 
 
     public static void setTeamImage(int id, ImageView imageView, Map<Integer, FDTeam> map,

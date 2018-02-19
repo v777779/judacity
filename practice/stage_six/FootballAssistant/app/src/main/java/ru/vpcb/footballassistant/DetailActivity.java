@@ -68,6 +68,7 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_DEFAU
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_LIMITS;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
@@ -336,16 +337,15 @@ public class DetailActivity extends AppCompatActivity
         }
 //        startActivityMatch();
         FDFixture fixture = mMapFixtures.get(fixtureId);
-        FDTeam homeTeam = mMapTeams.get(fixture.getHomeTeamId());
-        FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
-
+        String league = EMPTY_LONG_DASH;
+        String caption = EMPTY_LONG_DASH;
         FDCompetition competition = mMap.get(fixture.getCompetitionId());
         if (competition != null) {
-            fixture.setCompetitionName(competition.getCaption());
-            fixture.setLeague(competition.getLeague());
+            league = competition.getLeague();
+            caption = competition.getCaption();
         }
 
-        startMatchFragment(fixture, homeTeam, awayTeam);
+        startMatchFragment(fixture.getId(), fixture.getHomeTeamId(), fixture.getAwayTeamId(), league, caption);
     }
 
 
@@ -444,7 +444,7 @@ public class DetailActivity extends AppCompatActivity
         bundle.putString(BUNDLE_LOADER_DATE_CENTER, dateCenter);
 
         Uri uri = FDProvider.buildLoaderIdUri(this, FDContract.FxEntry.LOADER_ID, dateBefore, dateAfter);
-        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
+        bundle.putString(BUNDLE_LOADER_DATA_URI, uri.toString());
         return bundle;
     }
 
@@ -504,9 +504,9 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
-    private void startMatchFragment(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
+    private void startMatchFragment(int id, int homeTeamId, int awayTeamId, String league, String caption) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = MatchFragment.newInstance(fixture, homeTeam, awayTeam);
+        Fragment fragment = MatchFragment.newInstance(id, homeTeamId, awayTeamId, league, caption);
         fm.popBackStackImmediate(MATCH_FRAGMENT_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
                 .replace(R.id.container_detail, fragment)
@@ -1103,7 +1103,7 @@ public class DetailActivity extends AppCompatActivity
                 Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursors[0][4]);
 
                 for (Cursor cursor : cursors[0]) {
-                    if(cursor == null || cursor.isClosed())continue;
+                    if (cursor == null || cursor.isClosed()) continue;
                     cursor.close();
                 }
                 if (FDUtils.checkEmpty(map, mapTeamKeys, mapTeams, mapFixtureKeys, mapFixtures)) {
@@ -1129,7 +1129,7 @@ public class DetailActivity extends AppCompatActivity
         protected void onPostExecute(ViewPagerData viewPagerData) {
             stopProgress();
             if (viewPagerData == null) {
-                FootballUtils.showMessage(DetailActivity.this,getString(R.string.matches_no_data_message));
+                FootballUtils.showMessage(DetailActivity.this, getString(R.string.matches_no_data_message));
                 return;
             }
 
