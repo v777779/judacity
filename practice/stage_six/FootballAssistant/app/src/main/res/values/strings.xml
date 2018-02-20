@@ -100,7 +100,7 @@
 
     <string name="pref_news_update_time_key">pref_news_update_time_key</string>
     <string name="pref_news_update_time_default">0</string>
-    <string name="pref_news_delay_time_default">240</string>
+    <string name="pref_news_delay_time_default">1</string>
 
     <!--notifications-->
     <string name="notification_delay_time_min">Match already started</string>

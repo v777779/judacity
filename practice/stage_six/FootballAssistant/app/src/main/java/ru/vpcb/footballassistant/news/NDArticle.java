@@ -7,6 +7,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -43,13 +44,13 @@ public class NDArticle {
     @Expose
     private String publishedAt;
 
-    private int id; // id in database
+    private String id;
 
     public NDArticle() {
-        this.id = EMPTY_INT_VALUE;
+        this.id = null;
     }
 
-    public NDArticle(int id, NDSource source, String author, String title, String description,
+    public NDArticle(String id, NDSource source, String author, String title, String description,
                      String url, String urlToImage, String publishedAt) {
         this.id = id;
         this.source = source;
@@ -63,10 +64,6 @@ public class NDArticle {
 
     public NDSource getSource() {
         return source;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getAuthor() {

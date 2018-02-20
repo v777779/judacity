@@ -160,7 +160,7 @@ public class FDUtils {
     }
 
     public static boolean checkEmpty(Map<String, NDSource> map,
-                                     Map<Integer, NDArticle> mapArticles) {
+                                     Map<String, List<NDArticle>> mapArticles) {
         if (map == null || map.isEmpty() ||
                 mapArticles == null || mapArticles.isEmpty()) {
             return true;
@@ -378,6 +378,15 @@ public class FDUtils {
         if (time < 0 || delay < 0) return false;
 
         return FDUtils.currentTimeMinutes() - time < delay;
+    }
+
+    public static void setNewsRefreshTime(Context context) {
+        Resources res = context.getResources();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(res.getString(R.string.pref_news_update_time_key), String.valueOf(FDUtils.currentTimeMinutes()));
+        editor.apply();
     }
 
     public static boolean isNewsDataRefreshed(Context context) {
@@ -601,9 +610,7 @@ public class FDUtils {
 
     // articles
     private static NDArticle readArticle(Cursor cursor) {
-        int id = cursor.getInt(FDDbHelper.INaEntry._ID);
-        if (id <= 0) return null;
-
+        String id = cursor.getString(FDDbHelper.INaEntry.COLUMN_ARTICLE_ID);
         String source_id = cursor.getString(FDDbHelper.INaEntry.COLUMN_SOURCE_ID);
         String source_name = cursor.getString(FDDbHelper.INaEntry.COLUMN_SOURCE_NAME);
         String author = cursor.getString(FDDbHelper.INaEntry.COLUMN_AUTHOR);
@@ -620,20 +627,28 @@ public class FDUtils {
         return article;
     }
 
-    public static Map<Integer, NDArticle> readArticles(Cursor cursor) {
+    public static Map<String, List<NDArticle>> readArticles(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return null;
 
-        Map<Integer, NDArticle> map = new LinkedHashMap<>();
+        Map<String, List<NDArticle>> map = new HashMap<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             NDArticle article = readArticle(cursor);
             if (article == null) continue;
-            map.put(article.getId(), article);
+            String key = article.getSource().getId();
+            if (key == null) continue;
+            List<NDArticle> list = map.get(key);
+            if (list == null) {
+                list = new ArrayList<>();
+                map.put(key, list);
+            }
+            list.add(article);
+
         }
         return map;
     }
 
     // articles
-    public static Map<Integer, NDArticle> readArticles(Context context) {
+    public static Map<String, List<NDArticle>> readArticles(Context context) {
         Uri uri = FDContract.NaEntry.CONTENT_URI;                               // вся таблица
         String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_ARTICLES].getSortOrder();
         Cursor cursor = context.getContentResolver().query(
@@ -644,7 +659,7 @@ public class FDUtils {
                 sortOrder
         );
         if (cursor == null || cursor.getCount() == 0) return null;
-        Map<Integer, NDArticle> map = readArticles(cursor);
+        Map<String, List<NDArticle>> map = readArticles(cursor);
         cursor.close();
         return map;
     }
@@ -846,7 +861,7 @@ public class FDUtils {
 
     // read news
     public static void readDatabaseNews(Context context, Map<String, NDSource> map,
-                                        Map<Integer, NDArticle> mapArticles) {
+                                        Map<String, List<NDArticle>> mapArticles) {
 
         Map<String, NDSource> readMap = readSources(context);
 
@@ -855,7 +870,7 @@ public class FDUtils {
             map.putAll(readMap);
         }
 
-        Map<Integer, NDArticle> readMapArticle = readArticles(context);
+        Map<String, List<NDArticle>> readMapArticle = readArticles(context);
 
         if (readMapArticle != null && readMapArticle.size() > 0) {
             mapArticles.clear();
@@ -1063,11 +1078,18 @@ public class FDUtils {
 
     //    article
     public static ArrayList<ContentProviderOperation> writeArticle(NDArticle article, boolean forceDelete) {
-        if (article == null || article.getId() <= 0) return null;
+        if (article == null || article.getSource() == null ||
+                article.getTitle() == null || article.getDescription() == null) return null;
         NDSource source = article.getSource();
-        if (source == null || source.getId() == null || source.getId().isEmpty()) return null;
+        String sourceId = source.getId();
+        String title = article.getTitle();
+        String description = article.getDescription();
 
-        Uri uri = buildItemIdUri(FDContract.NaEntry.TABLE_NAME, article.getId());
+        if (sourceId == null || sourceId.isEmpty() || title == null || title.isEmpty() ||
+                description == null || description.isEmpty()) return null;
+        String id = sourceId.toLowerCase() + "_"+ title.toLowerCase();
+
+        Uri uri = buildItemIdUri(FDContract.NaEntry.TABLE_NAME, id);
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         if (forceDelete) {
             operations.add(ContentProviderOperation.newDelete(uri).build());  // delete one record from Competitions table
@@ -1075,6 +1097,7 @@ public class FDUtils {
 
         ContentValues values = new ContentValues();
 
+        values.put(FDContract.NaEntry.COLUMN_ARTICLE_ID, id);                               // string
         values.put(FDContract.NaEntry.COLUMN_SOURCE_ID, source.getId());                    // string
         values.put(FDContract.NaEntry.COLUMN_SOURCE_NAME, source.getName());                // string
         values.put(FDContract.NaEntry.COLUMN_AUTHOR, source.getAuthor());                   // string
@@ -1431,7 +1454,7 @@ public class FDUtils {
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
-// write database
+    // write database
 // news
     public static void writeDatabaseNews(Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
@@ -1635,7 +1658,7 @@ public class FDUtils {
             throws NullPointerException, IOException {
 
         INDRetrofitAPI retrofitAPI = setupRetrofitNews();
-        return retrofitAPI.getSources(ND_LANGUAGE_EN, ND_CATEGORY_SPORT,ND_API_KEY).execute().body();
+        return retrofitAPI.getSources(ND_LANGUAGE_EN, ND_CATEGORY_SPORT, ND_API_KEY).execute().body();
     }
 
     private static NDNews loadListArticles(NDSource source, int page)
@@ -1830,8 +1853,7 @@ public class FDUtils {
 // news
 
 
-    public static boolean loadDatabaseNews(Context context, Map<String, NDSource> map,
-                                           Map<Integer, NDArticle> mapArticles) throws NullPointerException, IOException {
+    public static boolean loadDatabaseNews(Context context, Map<String, NDSource> map) throws NullPointerException, IOException {
 
 // progress
         double step;

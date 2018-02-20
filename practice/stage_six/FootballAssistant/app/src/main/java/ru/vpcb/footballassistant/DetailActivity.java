@@ -914,7 +914,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void setupProgress() {
         mProgressValue.setIndeterminate(true);
-        mProgressValue.setVisibility(View.INVISIBLE);
+        mProgressValue.setVisibility(View.VISIBLE);
     }
 
 

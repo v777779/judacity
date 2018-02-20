@@ -75,8 +75,8 @@ public class NewsService extends IntentService {
     private void onActionUpdate() {
         try {
 // loader body
-            Map<String, NDSource> map = new LinkedHashMap<>();
-            Map<Integer, NDArticle> mapArticles = new LinkedHashMap<>();
+            Map<String, NDSource> map = new HashMap<>();
+            Map<String, List<NDArticle>> mapArticles = new HashMap<>();
             FDUtils.readDatabaseNews(this, map, mapArticles);
 
             if (!FDUtils.checkEmpty(map, mapArticles) && FDUtils.isNewsDataRefreshed(this)) {
@@ -92,11 +92,11 @@ public class NewsService extends IntentService {
             sendBroadcast(new Intent(getString(R.string.broadcast_news_update_started)));
 
 
-            boolean isUpdated = FDUtils.loadDatabaseNews(this, map, mapArticles);
+            boolean isUpdated = FDUtils.loadDatabaseNews(this, map);
             if (isUpdated) {
                 FDUtils.writeDatabaseNews(this, map, false); //  true delete false update
             }
-            FDUtils.setRefreshTime(this);
+            FDUtils.setNewsRefreshTime(this);
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
 
 
@@ -110,7 +110,7 @@ public class NewsService extends IntentService {
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
             return;
         } catch (OperationApplicationException | RemoteException e) {
-            Timber.d(getString(R.string.update_content_error) + e.getMessage());
+            Timber.d(getString(R.string.update_content_error,e.getMessage()));
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
             return;
         }

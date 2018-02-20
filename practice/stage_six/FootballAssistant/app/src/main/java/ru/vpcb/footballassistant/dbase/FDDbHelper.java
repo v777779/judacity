@@ -117,11 +117,11 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.PlEntry.COLUMN_PLAYER_MARKET_VALUE + " TEXT);";              // string
 
         final String CREATE_TABLE_ARTICLES = "CREATE TABLE " + FDContract.NaEntry.TABLE_NAME + " (" +
-                FDContract.NaEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                FDContract.NaEntry.COLUMN_ARTICLE_ID + " TEXT PRIMARY KEY, " +          // string key=source_id_title
                 FDContract.NaEntry.COLUMN_SOURCE_ID + " TEXT NOT NULL, " +              // string
                 FDContract.NaEntry.COLUMN_SOURCE_NAME + " TEXT, " +                     // string
                 FDContract.NaEntry.COLUMN_AUTHOR + " TEXT, " +                          // string
-                FDContract.NaEntry.COLUMN_TITLE + " TEXT, " +                           // string
+                FDContract.NaEntry.COLUMN_TITLE + " TEXT NOT NULL, " +                  // string
                 FDContract.NaEntry.COLUMN_DESCRIPTION + " TEXT, " +                     // string
                 FDContract.NaEntry.COLUMN_ARTICLE_URL + " TEXT, " +                     // string
                 FDContract.NaEntry.COLUMN_IMAGE_URL + " TEXT, " +                       // string
@@ -256,7 +256,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
     }
 
     public interface INaEntry {
-        int _ID = 0;                            // int
+        int COLUMN_ARTICLE_ID = 0;              // string source_id+title
         int COLUMN_SOURCE_ID = 1;               // string
         int COLUMN_SOURCE_NAME = 2;             // string
         int COLUMN_AUTHOR = 3;                  // string
