@@ -12,6 +12,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 
 
 /**
@@ -63,7 +64,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
 
     // notification
     private boolean isNotified;
-    private int notificationId;
+    private String notificationId;
 
 
     // widgets
@@ -78,7 +79,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
 
         this.isFavorite = false;
         this.isNotified = false;
-        this.notificationId = EMPTY_NOTIFICATION_ID;
+        this.notificationId = EMPTY_STRING;
         this.caption = EMPTY_LONG_DASH;
         this.league = EMPTY_LONG_DASH;
 
@@ -91,7 +92,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
                      String date, String status, int matchDay, String homeTeamName,
                      String awayTeamName, int goalsHomeTeam, int goalsAwayTeam,
                      double homeWin, double draw, double awayWin,
-                     boolean isFavorite, boolean isNotified, int notificationId) {
+                     boolean isFavorite, boolean isNotified, String notificationId) {
         this.id = id;
         this.competitionId = competitionId;
         this.homeTeamId = homeTeamId;
@@ -122,7 +123,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         awayTeamId = in.readInt();
         isFavorite = in.readByte() != 0;
         isNotified = in.readByte() != 0;
-        notificationId = in.readInt();
+        notificationId = in.readString();
         caption = in.readString();
         league = in.readString();
 // FDLink
@@ -177,7 +178,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         parcel.writeInt(awayTeamId);
         parcel.writeByte((byte) (isFavorite ? 1 : 0));
         parcel.writeByte((byte) (isNotified ? 1 : 0));
-        parcel.writeInt(notificationId);
+        parcel.writeString(notificationId);
         parcel.writeString(caption);
         parcel.writeString(league);
 // FDLink
@@ -443,11 +444,11 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         isNotified = notified;
     }
 
-    public int getNotificationId() {
+    public String getNotificationId() {
         return notificationId;
     }
 
-    public void setNotificationId(int notificationId) {
+    public void setNotificationId(String notificationId) {
         this.notificationId = notificationId;
     }
 

@@ -70,6 +70,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CREATE;
+import static ru.vpcb.footballassistant.utils.Config.NT_FB_JOB_DISPATCHER_ID;
 
 public class MatchFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -496,14 +497,10 @@ public class MatchFragment extends Fragment implements
         mViewShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if (mFixture == null || mFixture.getId() <= 0) {
                     FootballUtils.showMessage(mContext, getString(R.string.matches_share_no_data_message));
                     return;
                 }
-
-
                 int goalsHome = mFixture.getGoalsHome();
                 int goalsAway = mFixture.getGoalsHome();
 
@@ -514,15 +511,13 @@ public class MatchFragment extends Fragment implements
                         mFixture.getHomeTeamName() + ", Away: " +
                         mFixture.getAwayTeamName() + ", Score( " +
                         (goalsHome < 0 ? EMPTY_DASH : goalsHome) + ":" +
-                        (goalsAway <0 ? EMPTY_DASH:goalsAway) + " ), Status: " +
+                        (goalsAway < 0 ? EMPTY_DASH : goalsAway) + " ), Status: " +
                         mFixture.getStatus();
 
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                         .setType("text/plain")
                         .setText(shareText)
                         .getIntent(), getString(R.string.action_share)));
-
-
             }
         });
 
@@ -559,21 +554,42 @@ public class MatchFragment extends Fragment implements
                     return;
                 }
 
-                Calendar c = Calendar.getInstance();
                 Date date = FDUtils.formatDateFromSQLite(mFixture.getDate());
                 if (date == null) {
                     FootballUtils.showMessage(mContext, getString(R.string.notification_change_error));
                     return;
                 }
 
+                if(!mFixture.isNotified()) {
 // test!!!
-                c.add(Calendar.SECOND, -15);
-                String s = FDUtils.formatDateToSQLite(c.getTime());
-                mFixture.setDate(s);
+                    Calendar c = Calendar.getInstance();
+                    c.add(Calendar.SECOND, +15);
+                    String s = FDUtils.formatDateToSQLite(c.getTime());
+                    mFixture.setDate(s);
 //
-                NotificationUtils.scheduleReminder(mContext, mFixture);
+                    String id = NotificationUtils.scheduleReminder(mContext, mFixture);
+                    if (id == null || id.isEmpty() || !id.contains(NT_FB_JOB_DISPATCHER_ID)) return;
+                    mFixture.setNotified(true);
+                    mFixture.setNotificationId(id);
+                    mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
+                    mFavoriteTask.execute();
+                    FootballUtils.showMessage(mContext,getString(R.string.notification_set_message,
+                            FDUtils.formatMatchDateStart(mFixture.getDate())));
 
+                }else { // reset notification
 
+                    boolean isSuccess= NotificationUtils.scheduleRemover(mContext, mFixture);
+                    if(!isSuccess) {
+                        FootballUtils.showMessage(mContext, getString(R.string.notification_reset_error_message));
+                    }
+
+                    mFixture.setNotified(false);
+                    mFixture.setNotificationId(EMPTY_STRING);
+                    mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
+                    mFavoriteTask.execute();
+                    FootballUtils.showMessage(mContext,getString(R.string.notification_reset_message,
+                            FDUtils.formatMatchDateStart(mFixture.getDate())));
+                }
             }
         });
 

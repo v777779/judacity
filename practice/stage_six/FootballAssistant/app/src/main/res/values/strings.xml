@@ -111,7 +111,7 @@
 
 
     <!--notifications-->
-    <string name="notification_delay_time_min">Match already started</string>
+    <string name="notification_delay_time_min">Match already started or finished</string>
     <string name="notification_title">Match Reminder</string>
     <string name="notification_body">%1$s vs %2$s\nDate: %3$s </string>
     <string name="notification_time">%1$02d/%2$02d/%3$04d %4$02d:%5$02d</string>
@@ -126,6 +126,7 @@
     <string name="action_update">ru.vpcb.footballassistant.intent.action.ACTION_UPDATE</string>
     <string name="action_force_update">ru.vpcb.footballassistant.intent.action.ACTION_FORCE_UPDATE</string>
     <string name="action_refresh">ru.vpcb.footballassistant.intent.action.ACTION_REFRESH</string>
+    <string name="action_cancel">ru.vpcb.footballassistant.intent.action.ACTION_CANCEL</string>
 
     <!--extra-->
     <string name="extra_empty_cursor">ru.vpcb.footballassistant.intent.extra.EMPTY_CURSOR</string>
@@ -148,6 +149,8 @@
     <string name="broadcast_news_no_network_empty">ru.vpcb.footballassistant.intent.action.NEWS_NO_NETWORK_EMPTY</string>
     <string name="broadcast_news_update_progress">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_PROGRESS</string>
 
+    <string name="broadcast_notification_set">ru.vpcb.footballassistant.intent.action.DATA_NOTIFICATION_SET</string>
+    <string name="broadcast_notification_cancel">ru.vpcb.footballassistant.intent.action.DATA_NOTIFICATION_CANCEL</string>
 
 
     <!--match-->
@@ -219,6 +222,11 @@
     <string name="news_no_data_message">There is no news on this link</string>
     <string name="action_share_news_message">Football Assistant News: %1$  href:%2$s"</string>
     <string name="webview_error_page_loading">Error page loading detected</string>
+    <string name="notification_set_message">Notification set on date: %1$s</string>
+    <string name="notification_reset_message">Notification removed from date: %1$s</string>
+    <string name="notification_reset_error_message">Notification not set or something wrong</string>
+    <string name="notification_reset_id_message">Notification not set or wrong id</string>
+
 
     <!--exception-->
     <string name="update_content_error">Update content error: %1$s</string>

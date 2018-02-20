@@ -827,7 +827,7 @@ public class FDUtils {
         double awayWin = cursor.getDouble(FDDbHelper.IFxEntry.COLUMN_FIXTURE_ODDS_AWAY);
         boolean isFavorite = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FAVORITES_STATE) != 0;
         boolean isNotified = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_STATE) != 0;
-        int notificationId = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_ID);
+        String notificationId = cursor.getString(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_ID);
 
 
         FDFixture fixture = new FDFixture(id, competitionId, homeTeamId, awayTeamId,
@@ -1427,7 +1427,7 @@ public class FDUtils {
         values.put(FDContract.FxEntry.COLUMN_FIXTURE_ID, fixture.getId());                          // int
         values.put(FDContract.FxEntry.COLUMN_FAVORITES_STATE, fixture.isFavorite() ? 1 : 0);        // int
         values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_STATE, fixture.isNotified() ? 1 : 0);     // int
-        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_ID, fixture.getNotificationId());         // int
+        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_ID, fixture.getNotificationId());         // string
         operations.add(ContentProviderOperation.newUpdate(uri).withValues(values).build());
         return operations;
     }

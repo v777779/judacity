@@ -31,6 +31,7 @@ import ru.vpcb.footballassistant.MainActivity;
 import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.utils.FDUtils;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_ACTIVITY_PENDING_ID;
@@ -59,7 +60,23 @@ public class NotificationUtils {
 
     private static final Random rnd = new Random();
 
-    synchronized public static void scheduleReminder(@NonNull final Context context, FDFixture fixture) {
+    synchronized public static boolean scheduleRemover(@NonNull final Context context, FDFixture fixture) {
+        Driver driver = new GooglePlayDriver(context);
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
+        if (fixture == null || fixture.getId() <= 0 || !fixture.isNotified()) {
+
+            return false;
+        }
+        String id = fixture.getNotificationId();
+        if (id == null || id.isEmpty() || id.contains(NT_FB_JOB_DISPATCHER_ID)) {
+
+            return false;
+        }
+        int result = dispatcher.cancel(id);
+        return result == FirebaseJobDispatcher.CANCEL_RESULT_SUCCESS;
+    }
+
+    synchronized public static String scheduleReminder(@NonNull final Context context, FDFixture fixture) {
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
@@ -75,21 +92,21 @@ public class NotificationUtils {
 
         if (scheduleTime <= NT_DELAY_TIME_MINIMUM) {
             showMessage(context, context.getString(R.string.notification_delay_time_min));
-            return;
+            return null;
         }
 // unique ID for every job based on it time and current time seconds
         String id = NT_FB_JOB_DISPATCHER_ID + (matchTime + rnd.nextInt(NT_RANDOM_RANGE));
 
         String s = context.getString(R.string.notification_body, fixture.getHomeTeamName(),
-                fixture.getAwayTeamName(), formatStringDate(context,next));
+                fixture.getAwayTeamName(), formatStringDate(context, next));
 
         Bundle bundle = new Bundle();
         bundle.putString(NT_BUNDLE_INTENT_NOTIFICATION_BODY, s);
 
         Job constraintReminderJob = dispatcher.newJobBuilder()      // ВНИМАНИЕ. Работает если приложение запущено
                 /* The Service that will be used to write to preferences */
-                .setService(NotificationJobService.class)                      // служба для отработки NotificationUtils
-                .setTag(id)                            // уникальный тэг String
+                .setService(NotificationJobService.class)                    // служба для отработки NotificationUtils
+                .setTag(id)                                                  // уникальный тэг String
                 .setConstraints(Constraint.DEVICE_CHARGING)                 // диспетчер работает только во время зарядки
                 .setLifetime(Lifetime.FOREVER)                              // диспетчер работает всегда или до следующей загрузки
                 .setRecurring(false)                                                     // работать постоянно вызывая notifications
@@ -98,6 +115,7 @@ public class NotificationUtils {
                 .setExtras(bundle)
                 .build();
         dispatcher.schedule(constraintReminderJob);
+        return id;
     }
 
     private static String getParam(String[] params, int index) {
@@ -172,7 +190,7 @@ public class NotificationUtils {
 
     private static PendingIntent contentIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(
                 context,
                 NT_ACTION_ACTIVITY_PENDING_ID,

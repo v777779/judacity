@@ -68,6 +68,7 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_DEFAU
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_LIMITS;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
@@ -75,6 +76,8 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
+import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
@@ -335,18 +338,8 @@ public class DetailActivity extends AppCompatActivity
             mViewPagerBundle = null;
             mWidgetBar.setVisibility(View.INVISIBLE);
         }
-//        startActivityMatch();
-        FDFixture fixture = mMapFixtures.get(fixtureId);
-        FDTeam homeTeam = mMapTeams.get(fixture.getHomeTeamId());
-        FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
 
-        FDCompetition competition = mMap.get(fixture.getCompetitionId());
-        if (competition != null) {
-            fixture.setCaption(competition.getCaption());
-            fixture.setLeague(competition.getLeague());
-        }
-
-        startMatchFragment(fixture, homeTeam, awayTeam);
+        startMatchFragment(fixtureId);
     }
 
 
@@ -368,14 +361,27 @@ public class DetailActivity extends AppCompatActivity
     @Override
     public void onComplete(View view, String value, String title) {
         if (value == null || value.isEmpty()) return;
-        if(value.equals(MATCH_RESTART_LOADERS)) {
+        if (value.equals(MATCH_RESTART_LOADERS)) {
             restartLoaders();
         }
     }
 
 
     // methods
+    private void startMatchFragment(int fixtureId) {
 
+        FDFixture fixture = mMapFixtures.get(fixtureId);
+        FDTeam homeTeam = mMapTeams.get(fixture.getHomeTeamId());
+        FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
+
+        FDCompetition competition = mMap.get(fixture.getCompetitionId());
+        if (competition != null) {
+            fixture.setCaption(competition.getCaption());
+            fixture.setLeague(competition.getLeague());
+        }
+
+        startMatchFragment(fixture, homeTeam, awayTeam);
+    }
 
     public Map<Integer, FDCompetition> getMap() {
         return mMap;
@@ -980,6 +986,13 @@ public class DetailActivity extends AppCompatActivity
 
                 } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
                     FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
+
+
+                } else if (action.equals(getString(R.string.broadcast_notification_set))) {
+                    int fixtureId = intent.getIntExtra(NT_BUNDLE_INTENT_FIXTURE_ID,EMPTY_INT_VALUE);
+                    if(fixtureId <= 0) return;
+                    startMatchFragment(fixtureId);
+
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");
                 }

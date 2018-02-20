@@ -84,7 +84,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY + " REAL, " +               // real
                 FDContract.FxEntry.COLUMN_FAVORITES_STATE + " INTEGER, " +              // int
                 FDContract.FxEntry.COLUMN_NOTIFICATION_STATE  + " INTEGER, " +          // int
-                FDContract.FxEntry.COLUMN_NOTIFICATION_ID + " INTEGER);";               // int
+                FDContract.FxEntry.COLUMN_NOTIFICATION_ID + " TEXT);";                  // string
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +

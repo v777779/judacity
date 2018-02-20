@@ -132,7 +132,7 @@ public class UpdateService extends IntentService {
         FDUtils.updateFixtureProjection(this, fixture2, false); // update
 
         FDFixture fixture3 = FDUtils.readFixture(this, fixtureId);
-        fixture3.setNotificationId(12200);
+        fixture3.setNotificationId("12200");
         fixture3.setNotified(true);
         FDUtils.updateFixtureProjection(this, fixture3, false); // update
 
