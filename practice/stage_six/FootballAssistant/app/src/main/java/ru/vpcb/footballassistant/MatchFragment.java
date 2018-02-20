@@ -1,18 +1,25 @@
 package ru.vpcb.footballassistant;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.OperationApplicationException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +30,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,9 +49,12 @@ import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.glide.GlideUtils;
+import ru.vpcb.footballassistant.notifications.INotification;
+import ru.vpcb.footballassistant.notifications.NotificationUtils;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
+import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
@@ -55,11 +66,15 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
+import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
+import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CREATE;
 
 public class MatchFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
 
+    private static FavoriteAsyncTask mFavoriteTask;
     private RequestBuilder<PictureDrawable> mRequestSvgH;
     private RequestBuilder<Drawable> mRequestPngH;
     private RequestBuilder<PictureDrawable> mRequestSvgA;
@@ -90,9 +105,14 @@ public class MatchFragment extends Fragment implements
     @BindView(R.id.text_sm_item_status)
     TextView mTextStatus;
     @BindView(R.id.match_notification_back)
-    ImageView mViewNotification;
+    ImageView mViewNotificationBack;
     @BindView(R.id.match_favorite_back)
+    ImageView mViewFavoriteBack;
+    @BindView(R.id.match_notification)
+    ImageView mViewNotification;
+    @BindView(R.id.match_favorite)
     ImageView mViewFavorite;
+
     @BindView(R.id.icon_match_arrow_back)
     ImageView mViewArrowBack;
     @BindView(R.id.icon_match_share_action)
@@ -211,7 +231,7 @@ public class MatchFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.match_fragment, container, false);
         mUnbinder = ButterKnife.bind(this, mRootView);
 
-        setupActionBar(savedInstanceState);
+        setupActionBar();
         setupListeners();
         setupRecycler();
         bindViews();
@@ -229,6 +249,7 @@ public class MatchFragment extends Fragment implements
         super.onDestroyView();
         restoreActionBar();
         mUnbinder.unbind();
+
     }
 
     // callbacks
@@ -279,7 +300,12 @@ public class MatchFragment extends Fragment implements
 
     @Override
     public void onComplete(View view, int value) {
-        FootballUtils.showMessage(mContext, getString(R.string.text_test_recycler_click));
+        if (mFixture.isFavorite()) {
+            mViewFavorite.setImageResource(R.drawable.ic_star);
+        } else {
+            mViewFavorite.setImageResource(R.drawable.ic_star_border_white);
+        }
+
     }
 
     @Override
@@ -356,9 +382,13 @@ public class MatchFragment extends Fragment implements
         mTextStatus.setText(mFixture.getStatus());
         if (mFixture.isFavorite()) {
             mViewFavorite.setImageResource(R.drawable.ic_star);
+        } else {
+            mViewFavorite.setImageResource(R.drawable.ic_star_border_white);
         }
         if (mFixture.isNotified()) {
             mViewNotification.setImageResource(R.drawable.ic_notifications);
+        } else {
+            mViewNotification.setImageResource(R.drawable.ic_notifications_none_white);
         }
 // start
         Date date = FDUtils.formatDateFromSQLite(mFixture.getDate());
@@ -468,6 +498,31 @@ public class MatchFragment extends Fragment implements
             public void onClick(View view) {
 
 
+                if (mFixture == null || mFixture.getId() <= 0) {
+                    FootballUtils.showMessage(mContext, getString(R.string.matches_share_no_data_message));
+                    return;
+                }
+
+
+                int goalsHome = mFixture.getGoalsHome();
+                int goalsAway = mFixture.getGoalsHome();
+
+                String shareText = "Match: " +
+                        FDUtils.formatMatchDateStart(mFixture.getDate()) + ", League:" +
+                        mFixture.getLeague() + ", Competition: " +
+                        mFixture.getCaption() + ", Home: " +
+                        mFixture.getHomeTeamName() + ", Away: " +
+                        mFixture.getAwayTeamName() + ", Score( " +
+                        (goalsHome < 0 ? EMPTY_DASH : goalsHome) + ":" +
+                        (goalsAway <0 ? EMPTY_DASH:goalsAway) + " ), Status: " +
+                        mFixture.getStatus();
+
+                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setText(shareText)
+                        .getIntent(), getString(R.string.action_share)));
+
+
             }
         });
 
@@ -496,52 +551,101 @@ public class MatchFragment extends Fragment implements
             }
         });
 
-        mViewNotification.setOnClickListener(new View.OnClickListener() {
+        mViewNotificationBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mFixture == null || mFixture.getId() <= 0) {
+                    FootballUtils.showMessage(mContext, getString(R.string.notification_change_error));
+                    return;
+                }
+
+                Calendar c = Calendar.getInstance();
+                Date date = FDUtils.formatDateFromSQLite(mFixture.getDate());
+                if (date == null) {
+                    FootballUtils.showMessage(mContext, getString(R.string.notification_change_error));
+                    return;
+                }
+
 // test!!!
-//                Calendar c = Calendar.getInstance();
-//                c.add(Calendar.SECOND, 60);
-//                String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
-//                FDFixture fixture = new FDFixture();
-//                fixture.setDate(dateSQLite);
-//                NotificationUtils.scheduleReminder(MatchFragment.this, fixture);
-// test!!!
-// TODO add flag for notification, database field for notification status, set and clear procedure
+                c.add(Calendar.SECOND, -15);
+                String s = FDUtils.formatDateToSQLite(c.getTime());
+                mFixture.setDate(s);
+//
+                NotificationUtils.scheduleReminder(mContext, mFixture);
+
+
             }
         });
 
-        mViewFavorite.setOnClickListener(new View.OnClickListener() {
+        mViewFavoriteBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (mFixture == null || mFixture.getId() <= 0) return;
+                mFixture.setFavorite(!mFixture.isFavorite());  // check/uncheck
+                mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
+                mFavoriteTask.execute();
             }
         });
 
     }
 
     private void restoreActionBar() {
-        mActivity.getSupportActionBar().show();
+        ActionBar actionBar = mActivity.getSupportActionBar();
+        if (actionBar != null) actionBar.show();
+
         AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
         appBarLayout.getLayoutParams().height = mAppBarHeight;
     }
 
-    private void setupActionBar(Bundle savedInstance) {
-        mActivity.getSupportActionBar().hide();
+    private void setupActionBar() {
+        ActionBar actionBar = mActivity.getSupportActionBar();
+        if (actionBar != null) actionBar.hide();
+
         AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
         appBarLayout.getLayoutParams().height = 0;
     }
 
 
-// test!!! protrusion check
-// resolved with  set AppBarLayout.height to 0
-//        ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (Math.abs(verticalOffset) > 5) {
-//                    int k = 1;
-//                }
-//            }
-//        });
+    public static class FavoriteAsyncTask extends AsyncTask<Void, Void, FDFixture> {
+        private final WeakReference<Context> weakContext;
+        private FDFixture mFixture;
+        private ICallback mCallback;
 
+        FavoriteAsyncTask(Context context, FDFixture fixture, ICallback callback) {
+            this.weakContext = new WeakReference<>(context);
+            this.mFixture = fixture;
+            this.mCallback = callback;
+        }
+
+        @Override
+        protected FDFixture doInBackground(Void... params) {
+            Context context = weakContext.get();
+            if (context == null || mFixture == null || mFixture.getId() <= 0) return null;
+            try {
+                FDUtils.updateFixtureProjection(context, mFixture, false); // update
+                return FDUtils.readFixture(context, mFixture.getId());
+
+
+            } catch (OperationApplicationException | RemoteException e) {
+                Timber.d(context.getString(R.string.favorites_database_exception, e.getMessage()));
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(FDFixture fixture) {
+            Context context = weakContext.get();
+            if (fixture == null || context == null) return;
+
+            if (mFixture.getId() != fixture.getId() || mFixture.isFavorite() != fixture.isFavorite() ||
+                    mFixture.isNotified() != fixture.isNotified() ||
+                    mFixture.getNotificationId() != fixture.getNotificationId()) {
+                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                return;
+            }
+
+            mCallback.onComplete(null, 0);
+            ((ICallback) context).onComplete(null, MATCH_RESTART_LOADERS, null); // viewpager refresh
+        }
+    }
 }

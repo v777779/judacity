@@ -74,6 +74,7 @@ import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
+import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
@@ -362,12 +363,14 @@ public class DetailActivity extends AppCompatActivity
         } catch (NullPointerException e) {
             Timber.d(getString(R.string.calendar_set_date_exception, e.getMessage()));
         }
-
     }
 
     @Override
-    public void onComplete(View view, String link, String title) {
-
+    public void onComplete(View view, String value, String title) {
+        if (value == null || value.isEmpty()) return;
+        if(value.equals(MATCH_RESTART_LOADERS)) {
+            restartLoaders();
+        }
     }
 
 
@@ -1124,7 +1127,7 @@ public class DetailActivity extends AppCompatActivity
         protected void onPostExecute(ViewPagerData viewPagerData) {
             stopProgress();
             if (viewPagerData == null) {
-                FootballUtils.showMessage(DetailActivity.this,getString(R.string.matches_no_data_message));
+                FootballUtils.showMessage(DetailActivity.this, getString(R.string.matches_no_data_message));
                 return;
             }
 

@@ -743,8 +743,7 @@ public class NewsActivity extends AppCompatActivity
                                 startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
-                                Toast.makeText(context, getString(R.string.activity_same_message),
-                                        Toast.LENGTH_SHORT).show();
+                               FootballUtils.showMessage(context, getString(R.string.activity_same_message));
                                 return true;
                             case R.id.navigation_favorites:
                                 startActivityFavorites();

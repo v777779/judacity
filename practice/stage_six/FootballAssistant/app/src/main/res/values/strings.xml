@@ -214,6 +214,7 @@
     <!--messages-->
     <string name="activity_same_message">You are already here</string>
     <string name="matches_no_data_message">There is no data on this date</string>
+    <string name="matches_share_no_data_message">There is no data on this match</string>
     <string name="matches_no_network_message">Error network connection</string>
     <string name="news_no_data_message">There is no news on this link</string>
     <string name="action_share_news_message">Football Assistant News: %1$  href:%2$s"</string>
@@ -228,6 +229,10 @@
     <string name="write_database_news">WriteDatabase exception(%1$d,%2$s): %3$s</string>
     <string name="content_provider_insert">Content provider insert exception: </string>
     <string name="read_database_exception">ReadDatabase exception: %1$s</string>
+    <string name="favorites_database_exception">Favorites or Notification database exception: %1$s</string>
+    <string name="favorites_change_error">Favorite state not changed!</string>
+    <string name="notification_change_error">Notification state not changed!</string>
+    <string name="notification_date_passed">Notification cannot be set, match already finished.</string>
 
     <string name="unknown_uri">Unknown uri: %1$s"</string>
     <string name="unknown_loader_id">Unknown id: %1$d"</string>

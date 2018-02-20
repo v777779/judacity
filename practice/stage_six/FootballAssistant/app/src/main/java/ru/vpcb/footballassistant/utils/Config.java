@@ -258,6 +258,7 @@ public class Config {
     public static final String BUNDLE_MATCH_FIXTURE = "bundle_match_fixture";
     public static final String BUNDLE_MATCH_HOME_TEAM = "bundle_match_home_team";
     public static final String BUNDLE_MATCH_AWAY_TEAM = "bundle_match_away_team";
+    public static final String MATCH_RESTART_LOADERS = "match_restart_loaders";
 
     // news activity
     public static final String ND_SOURCE_SELECTED = "fox";

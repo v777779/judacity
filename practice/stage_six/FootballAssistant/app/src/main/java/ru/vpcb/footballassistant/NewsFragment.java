@@ -198,7 +198,7 @@ public class NewsFragment extends Fragment implements ICallback {
     private void bindViews() {
         mTextToolbar.setText(mTitle);
         mWebView.loadUrl(mLink);
-        WebSettings webSettings = mWebView.getSettings();
+//        WebSettings webSettings = mWebView.getSettings();
 //        webSettings.setJavaScriptEnabled(true);
     }
 
@@ -249,6 +249,15 @@ public class NewsFragment extends Fragment implements ICallback {
         });
 
         mWebView.setWebViewClient(new WebViewClient() {   // without client issues an  Exception on readdress
+
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//                super.shouldOverrideUrlLoading(view, request);
+                view.loadUrl(request.getUrl().toString());  // intercepts request
+                return true;
+            }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
