@@ -258,6 +258,8 @@ public class Config {
     public static final String BUNDLE_MATCH_HOME_TEAM = "bundle_match_home_team";
     public static final String BUNDLE_MATCH_AWAY_TEAM = "bundle_match_away_team";
 
+    // news activity
+    public static final String ND_SOURCE_SELECTED = "fox";
 
     // team activity
     public static final String BUNDLE_INTENT_TEAM_ID = "bundle_intent_team_id";

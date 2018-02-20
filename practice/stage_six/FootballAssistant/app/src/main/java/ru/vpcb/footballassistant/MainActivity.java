@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Widget FDFixture добавить CompetitionID, TeamHomeID, TeamAwayID в FDFixture Database
     // TODO Widget FDFixture все даты хранить только в String Database
     // TODO News last refresh завести свою preference
-
+    // TODO Settings добавить опцию выбора источника новостей по умолчанию
 
 
     // TODO Options Add Widget Bar to Add

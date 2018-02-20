@@ -63,6 +63,7 @@ import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPL
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
+import static ru.vpcb.footballassistant.utils.Config.ND_SOURCE_SELECTED;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
@@ -107,6 +108,8 @@ public class NewsActivity extends AppCompatActivity
     // test!!!
 // TODO  make parcelable for ViewPager and rotation
     private static ViewPagerData mViewPagerData;
+
+    private int mViewPagerPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +160,8 @@ public class NewsActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
-      }
+            mViewPagerPos = 0;
+        }
 
         startLoaders();
 
@@ -218,7 +222,7 @@ public class NewsActivity extends AppCompatActivity
                 break;
             case FDContract.NaEntry.LOADER_ID:
                 Map<String, List<NDArticle>> mapArticles = FDUtils.readArticles(cursor);
-                if(mapArticles == null || mapArticles.isEmpty()) {
+                if (mapArticles == null || mapArticles.isEmpty()) {
                     break;
                 }
                 mMapArticles = new HashMap<>();
@@ -276,7 +280,7 @@ public class NewsActivity extends AppCompatActivity
 
     // methods
     private void bindViews() {
-        if(mMap == null || mMap.isEmpty() || mMapArticles == null || mMapArticles.isEmpty()) {
+        if (mMap == null || mMap.isEmpty() || mMapArticles == null || mMapArticles.isEmpty()) {
             return;
         }
 
@@ -465,6 +469,30 @@ public class NewsActivity extends AppCompatActivity
 
     private ViewPagerData getViewPagerData() {
 // news
+// sources
+        List<View> recyclers = new ArrayList<>();
+        List<String> titles = new ArrayList<>();
+        int pos = 0;
+        int selected = 0;
+        for (NDSource source : mMap.values()) {
+            if (source == null) continue;
+            String id = source.getId();
+            if (id == null || id.isEmpty()) continue;
+            if (id.contains(ND_SOURCE_SELECTED)) selected = pos;
+            List<NDArticle> list = mMapArticles.get(id);
+            if (list == null || list.isEmpty()) continue;
+            recyclers.add(getRecycler(list));
+            titles.add(pos++, id);
+
+        }
+        mViewPagerPos = selected;
+
+        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, 3, null, null);
+        return viewPagerData;
+    }
+
+    private ViewPagerData getViewPagerDataTest() {
+// news
         String json = TempUtils.readFileAssets(this, "everything.json");
         NDNews news = new Gson().fromJson(json, NDNews.class);
         List<NDArticle> list = news.getArticles();
@@ -528,6 +556,7 @@ public class NewsActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
+                mViewPagerPos = position;
             }
 
             @Override
@@ -590,34 +619,35 @@ public class NewsActivity extends AppCompatActivity
     private void updateViewPager(final ViewPagerData data) {
         stopProgress();
         if (mViewPager == null || data == null) return;
-        int pos = mViewPager.getCurrentItem();
+//        int pos = mViewPager.getCurrentItem();
 
 
-        if (pos == 0) {
-            pos = data.mPos;                    // current day
-        } else {
-
-// test!!!
-// TODO CHECK MAP  AFTER deletion  all works but Map
-//            data.getList().remove(210);
-//            data.getList().remove(211);
-//            data.getList().remove(212);
-//            data.getRecyclers().remove(210);
-//            data.getRecyclers().remove(211);
-//            data.getRecyclers().remove(212);
-//            data.getTitles().remove(210);
-//            data.getTitles().remove(211);
-//            data.getTitles().remove(212);
-//            List<Long> keys = new ArrayList<>(data.getMap().keySet());
-//            data.getMap().remove(keys.get(210));
-//            data.getMap().remove(keys.get(212));
-//            data.getMap().remove(keys.get(214));
-// end test!!!
-
-            updateTabLayout(data, mViewPagerData);
-            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
-        }
+//        if (pos == 0) {
+//            pos = data.mPos;                    // current day
+//        } else {
+//
+//// test!!!
+//// TODO CHECK MAP  AFTER deletion  all works but Map
+////            data.getList().remove(210);
+////            data.getList().remove(211);
+////            data.getList().remove(212);
+////            data.getRecyclers().remove(210);
+////            data.getRecyclers().remove(211);
+////            data.getRecyclers().remove(212);
+////            data.getTitles().remove(210);
+////            data.getTitles().remove(211);
+////            data.getTitles().remove(212);
+////            List<Long> keys = new ArrayList<>(data.getMap().keySet());
+////            data.getMap().remove(keys.get(210));
+////            data.getMap().remove(keys.get(212));
+////            data.getMap().remove(keys.get(214));
+//// end test!!!
+//
+//            updateTabLayout(data, mViewPagerData);
+//            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
+//        }
         mViewPagerData = data;
+        int pos = mViewPagerPos;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(pos);
 
