@@ -66,25 +66,32 @@ public class NewsService extends IntentService {
 
         if (intent != null) {
             String action = intent.getAction();
+            if (action == null) return;
             if (action.equals(getString(R.string.action_update))) {
-                onActionUpdate();
+                onActionUpdate(false);
+                return;
+            }
+            if (action.equals(getString(R.string.action_force_update))) {
+                onActionUpdate(true);
+
             }
         }
     }
 
-    private void onActionUpdate() {
+
+    private void onActionUpdate(boolean forceUpdate) {
         try {
 // loader body
             Map<String, NDSource> map = new HashMap<>();
             Map<String, List<NDArticle>> mapArticles = new HashMap<>();
-            FDUtils.readDatabaseNews(this, map, mapArticles);
+            if (!forceUpdate) {
+                FDUtils.readDatabaseNews(this, map, mapArticles);
+                if (!FDUtils.checkEmpty(map, mapArticles) && FDUtils.isNewsDataRefreshed(this)) {
+                    sendBroadcast(new Intent(getString(R.string.broadcast_news_update_finished)));
 
-            if (!FDUtils.checkEmpty(map, mapArticles) && FDUtils.isNewsDataRefreshed(this)) {
-                sendBroadcast(new Intent(getString(R.string.broadcast_news_update_finished)));
-
-                return;
+                    return;
+                }
             }
-
             if (!isOnline(this)) {                                     // no network
                 sendBroadcast(new Intent(getString(R.string.broadcast_news_no_network)));
                 return;
@@ -115,7 +122,7 @@ public class NewsService extends IntentService {
             sendBroadcast(new Intent(getString(R.string.broadcast_news_update_error)));
             return;
         } catch (OperationApplicationException | RemoteException e) {
-            Timber.d(getString(R.string.update_content_error,e.getMessage()));
+            Timber.d(getString(R.string.update_content_error, e.getMessage()));
             sendBroadcast(new Intent(getString(R.string.broadcast_news_update_error)));
             return;
         }

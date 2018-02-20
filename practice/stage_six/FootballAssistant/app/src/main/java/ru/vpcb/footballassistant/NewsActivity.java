@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -39,15 +38,11 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import ru.vpcb.footballassistant.add.TempUtils;
-import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
-import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.news.NDArticle;
@@ -55,18 +50,17 @@ import ru.vpcb.footballassistant.news.NDNews;
 import ru.vpcb.footballassistant.news.NDSource;
 import ru.vpcb.footballassistant.news.NDSources;
 import ru.vpcb.footballassistant.services.NewsService;
-import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
+import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
-import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
+import static ru.vpcb.footballassistant.utils.Config.ND_LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.ND_SOURCE_SELECTED;
 import static ru.vpcb.footballassistant.utils.Config.NEWS_FRAGMENT_TAG;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
@@ -144,6 +138,7 @@ public class NewsActivity extends AppCompatActivity
         mMap = new HashMap<>();
         mMapArticles = new HashMap<>();
         mViewPagerPos = EMPTY_INT_VALUE;
+        mUpdateCounter = 0;
 
 // progress
         setupActionBar();
@@ -156,6 +151,7 @@ public class NewsActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
+
 
         }
 
@@ -174,10 +170,11 @@ public class NewsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_reload) {
-            Snackbar.make(getWindow().getDecorView(), "Action Reload", Snackbar.LENGTH_SHORT).show();
+            refresh(getString(R.string.action_force_update));
+            setupProgress();
             return true;
         }
-        refresh(getString(R.string.action_share));
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -215,7 +212,7 @@ public class NewsActivity extends AppCompatActivity
                 }
                 mMap = new HashMap<>(); // fixed order
                 mMap.putAll(map);
-                bindViews();
+                mUpdateCounter++;
                 break;
             case FDContract.NaEntry.LOADER_ID:
                 Map<String, List<NDArticle>> mapArticles = FDUtils.readArticles(cursor);
@@ -224,11 +221,16 @@ public class NewsActivity extends AppCompatActivity
                 }
                 mMapArticles = new HashMap<>();
                 mMapArticles.putAll(mapArticles);
-                bindViews();
+                mUpdateCounter++;
                 break;
 
             default:
                 throw new IllegalArgumentException("Unknown id: " + loader.getId());
+        }
+
+        if(mUpdateCounter == ND_LOADERS_UPDATE_COUNTER) {  // protect from async load
+            bindViews();
+            mUpdateCounter = 0;
         }
 
     }

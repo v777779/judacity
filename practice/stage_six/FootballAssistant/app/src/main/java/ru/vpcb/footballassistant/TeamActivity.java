@@ -61,7 +61,7 @@ import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPL
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TEAM_ID;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
-import static ru.vpcb.footballassistant.utils.Config.LOADERS_UPDATE_COUNTER;
+import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
@@ -284,7 +284,7 @@ public class TeamActivity extends AppCompatActivity
         }
 
 
-        if (mUpdateCounter == LOADERS_UPDATE_COUNTER) {
+        if (mUpdateCounter == FD_LOADERS_UPDATE_COUNTER) {
 //            setupViewPagerSource();
 //            setupViewPager();
 //            stopProgress();
