@@ -171,7 +171,7 @@ public class NewsFragment extends Fragment implements ICallback {
             FootballUtils.showMessage(mContext, getString(R.string.news_no_data_message));
             return;
         }
-        String shareText = "SportNews:"+ mTitle+" Link:"+mLink;
+        String shareText = "SportNews:" + mTitle + " Link:" + mLink;
         startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                 .setType("text/plain")
                 .setText(shareText)
@@ -248,13 +248,8 @@ public class NewsFragment extends Fragment implements ICallback {
 
         mWebView.setWebViewClient(new WebViewClient() {   // without client issues an  Exception on readdress
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return false;
-            }
-
-            @Override
             public void onPageFinished(WebView view, String url) {
-//                super.onPageFinished(view, url);
+                super.onPageFinished(view, url);
                 stopProgress();
             }
 
@@ -277,4 +272,10 @@ public class NewsFragment extends Fragment implements ICallback {
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+     mWebView.setWebViewClient(null);  // prevents call progressbar=null from listener
+
+    }
 }
