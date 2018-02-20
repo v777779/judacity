@@ -1,6 +1,6 @@
 package ru.vpcb.footballassistant;
 
-import android.app.ActionBar;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -265,12 +266,12 @@ public class NewsFragment extends Fragment implements ICallback {
     }
 
     private void restoreActionBar() {
-        ActionBar actionBar = mActivity.getActionBar();
+        ActionBar actionBar = mActivity.getSupportActionBar();
         if (actionBar != null) actionBar.show();
     }
 
     private void setupActionBar(Bundle savedInstance) {
-        ActionBar actionBar = mActivity.getActionBar();
+        ActionBar actionBar = mActivity.getSupportActionBar();
         if (actionBar != null) actionBar.hide();
 
     }
