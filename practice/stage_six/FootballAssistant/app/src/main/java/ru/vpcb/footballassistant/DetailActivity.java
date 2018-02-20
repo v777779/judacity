@@ -914,7 +914,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void setupProgress() {
         mProgressValue.setIndeterminate(true);
-        mProgressValue.setVisibility(View.VISIBLE);
+        mProgressValue.setVisibility(View.INVISIBLE);
     }
 
 
@@ -971,7 +971,7 @@ public class DetailActivity extends AppCompatActivity
                 } else if (action.equals(context.getString(R.string.broadcast_data_update_progress))) {
 
                 } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
-                    Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
+                    FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");
                 }

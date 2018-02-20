@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import ru.vpcb.footballassistant.services.NewsService;
 import ru.vpcb.footballassistant.services.UpdateService;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
@@ -317,7 +318,7 @@ public class MainActivity extends AppCompatActivity  {
                         setProgressValue();
                     }
                 } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
-                    Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
+                    FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");
                 }

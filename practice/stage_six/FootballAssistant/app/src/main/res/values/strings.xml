@@ -204,6 +204,7 @@
     <!--messages-->
     <string name="activity_same_message">You are already here</string>
     <string name="matches_no_data_message">There is no data on this date</string>
+    <string name="matches_no_network_message">Error network connection</string>
 
     <!--exception-->
     <string name="update_content_error">Update content error: %1$s</string>

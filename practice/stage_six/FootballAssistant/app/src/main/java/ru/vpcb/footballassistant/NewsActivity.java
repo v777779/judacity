@@ -38,6 +38,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -51,8 +52,10 @@ import ru.vpcb.footballassistant.news.NDArticle;
 import ru.vpcb.footballassistant.news.NDNews;
 import ru.vpcb.footballassistant.news.NDSource;
 import ru.vpcb.footballassistant.news.NDSources;
+import ru.vpcb.footballassistant.services.NewsService;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.FDUtils;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -96,8 +99,8 @@ public class NewsActivity extends AppCompatActivity
     private int mUpdateCounter;
 
     // mMap
-    private Map<Integer, FDCompetition> mMap = new HashMap<>();
-    private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
+    private Map<String, NDSource> mMap;
+    private Map<String, List<NDArticle>> mMapArticles;
 
 
     private Cursor[] mCursors;
@@ -133,6 +136,8 @@ public class NewsActivity extends AppCompatActivity
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
+        mMap = new HashMap<>();
+        mMapArticles = new HashMap<>();
 
 
 // progress
@@ -152,10 +157,9 @@ public class NewsActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
-            getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-            getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
-        }
+      }
 
+        startLoaders();
 
     }
 
@@ -203,29 +207,27 @@ public class NewsActivity extends AppCompatActivity
             return;
 
         switch (loader.getId()) {
-            case FDContract.CpEntry.LOADER_ID:
-                mCursors[0] = cursor;
-//                mMap = FDUtils.readCompetitions(cursor);
-                mUpdateCounter++;
+            case FDContract.NsEntry.LOADER_ID:
+                Map<String, NDSource> map = FDUtils.readSources(cursor);
+                if (map == null || map.isEmpty()) {
+                    break;
+                }
+                mMap = new HashMap<>(); // fixed order
+                mMap.putAll(map);
+                bindViews();
                 break;
-            case FDContract.FxEntry.LOADER_ID:
-                mCursors[4] = cursor;
-//                mMapFixtures = FDUtils.readFixtures(cursor);
-                mUpdateCounter++;
+            case FDContract.NaEntry.LOADER_ID:
+                Map<String, List<NDArticle>> mapArticles = FDUtils.readArticles(cursor);
+                if(mapArticles == null || mapArticles.isEmpty()) {
+                    break;
+                }
+                mMapArticles = new HashMap<>();
+                mMapArticles.putAll(mapArticles);
+                bindViews();
                 break;
 
             default:
                 throw new IllegalArgumentException("Unknown id: " + loader.getId());
-        }
-
-
-        if (mUpdateCounter == 2) {
-//            setupViewPagerSource();
-//            setupViewPager();
-//            stopProgress();
-            new DataLoader().execute(mCursors);
-
-            mUpdateCounter = 0;
         }
 
     }
@@ -273,6 +275,30 @@ public class NewsActivity extends AppCompatActivity
 
 
     // methods
+    private void bindViews() {
+        if(mMap == null || mMap.isEmpty() || mMapArticles == null || mMapArticles.isEmpty()) {
+            return;
+        }
+
+
+        updateViewPager(getViewPagerData());
+    }
+
+    private void restartLoaders() {
+        mMap = null;
+        mMapArticles = null;
+        getSupportLoaderManager().restartLoader(FDContract.NsEntry.LOADER_ID, null, this);
+        getSupportLoaderManager().restartLoader(FDContract.NaEntry.LOADER_ID, null, this);
+    }
+
+    private void startLoaders() {
+        mMap = null;
+        mMapArticles = null;
+        getSupportLoaderManager().initLoader(FDContract.NsEntry.LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(FDContract.NaEntry.LOADER_ID, null, this);
+    }
+
+
     private void startActivitySettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
@@ -657,7 +683,7 @@ public class NewsActivity extends AppCompatActivity
     }
 
     private void refresh(String action) {
-        Intent intent = new Intent(action, null, this, UpdateService.class);
+        Intent intent = new Intent(action, null, this, NewsService.class);
         startService(intent);
     }
 
@@ -667,10 +693,10 @@ public class NewsActivity extends AppCompatActivity
 
     private void registerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getString(R.string.broadcast_data_update_started));
-        intentFilter.addAction(getString(R.string.broadcast_data_update_finished));
-        intentFilter.addAction(getString(R.string.broadcast_data_no_network));
-        intentFilter.addAction(getString(R.string.broadcast_data_update_progress));
+        intentFilter.addAction(getString(R.string.broadcast_news_update_started));
+        intentFilter.addAction(getString(R.string.broadcast_news_update_finished));
+        intentFilter.addAction(getString(R.string.broadcast_news_no_network));
+        intentFilter.addAction(getString(R.string.broadcast_news_update_progress));
         registerReceiver(mMessageReceiver, intentFilter);
     }
 
@@ -687,14 +713,14 @@ public class NewsActivity extends AppCompatActivity
             // an Intent broadcast.
             if (intent != null) {
                 String action = intent.getAction();
-                if (action.equals(context.getString(R.string.broadcast_data_update_started))) {
+                if (action.equals(context.getString(R.string.broadcast_news_update_started))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_data_update_finished))) {
+                } else if (action.equals(context.getString(R.string.broadcast_news_update_finished))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_data_update_progress))) {
+                } else if (action.equals(context.getString(R.string.broadcast_news_update_progress))) {
 
-                } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
-                    Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
+                } else if (action.equals(context.getString(R.string.broadcast_news_no_network))) {
+                    FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");
                 }
@@ -813,8 +839,8 @@ public class NewsActivity extends AppCompatActivity
         protected ViewPagerData doInBackground(Cursor[]... cursors) {
             try {
 
-                mMap = FDUtils.readCompetitions(cursors[0][0]);
-                mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
+//                mMap = FDUtils.readCompetitions(cursors[0][0]);
+//                mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
                 return getViewPagerData();
 
 
