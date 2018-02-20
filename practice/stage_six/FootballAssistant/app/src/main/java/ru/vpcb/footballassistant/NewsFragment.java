@@ -1,5 +1,6 @@
 package ru.vpcb.footballassistant;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -264,18 +265,20 @@ public class NewsFragment extends Fragment implements ICallback {
     }
 
     private void restoreActionBar() {
-        mActivity.getSupportActionBar().show();
+        ActionBar actionBar = mActivity.getActionBar();
+        if (actionBar != null) actionBar.show();
     }
 
     private void setupActionBar(Bundle savedInstance) {
-        mActivity.getSupportActionBar().hide();
+        ActionBar actionBar = mActivity.getActionBar();
+        if (actionBar != null) actionBar.hide();
 
     }
 
     @Override
     public void onStop() {
         super.onStop();
-     mWebView.setWebViewClient(null);  // prevents call progressbar=null from listener
+        mWebView.setWebViewClient(null);  // prevents call progressbar=null from listener
 
     }
 }
