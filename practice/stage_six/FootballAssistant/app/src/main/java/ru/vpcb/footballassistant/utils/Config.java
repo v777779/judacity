@@ -264,6 +264,7 @@ public class Config {
     // news fragment
     public static final String NEWS_FRAGMENT_TAG = "news_fragment";
     public static final String BUNDLE_NEWS_LINK = "bundle_news_link";
+    public static final String BUNDLE_NEWS_TITLE = "bundle_news_title";
 
     // team activity
     public static final String BUNDLE_INTENT_TEAM_ID = "bundle_intent_team_id";

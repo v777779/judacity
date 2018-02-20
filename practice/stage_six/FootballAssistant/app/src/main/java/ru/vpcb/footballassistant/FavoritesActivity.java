@@ -246,7 +246,7 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
     @Override
-    public void onComplete(View view, String value) {
+    public void onComplete(View view, String link, String title) {
 
     }
 

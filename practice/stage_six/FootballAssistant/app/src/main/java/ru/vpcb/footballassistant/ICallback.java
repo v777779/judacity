@@ -29,6 +29,6 @@ public interface ICallback {
      */
     void onComplete(int mode, Calendar calendar);
 
-    void onComplete(View view, String value);
+    void onComplete(View view, String link, String title);
 
 }

@@ -46,6 +46,8 @@ import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderPng;
 import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderSvg;
 import static ru.vpcb.footballassistant.utils.Config.DATE_FULL_PATTERN;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE_LIGHT;
 
@@ -166,12 +168,14 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
             @Override
             public void onClick(View view) {
                 String link = getLink(pos);
-                if(link == null) {
+                String title = getTitle(pos);
+                if (link == null) {
                     FootballUtils.showMessage(mContext,
                             mContext.getString(R.string.news_no_data_message));
                     return;
                 }
-                ((ICallback) mContext).onComplete(view, link);
+
+                ((ICallback) mContext).onComplete(view, link, title);
             }
         });
 
@@ -257,6 +261,15 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
 
     }
 
+    private String getTitle(int pos) {
+        if (mList == null || pos < 0 || pos >= mList.size()) return EMPTY_STRING;
+        NDArticle article = mList.get(pos);
+        if (article == null) return EMPTY_STRING;
+        String title = article.getTitle();
+        if (title == null || title.isEmpty()) return EMPTY_STRING;
+        return title;
+    }
+
     private String getLink(int pos) {
         if (mList == null || pos < 0 || pos >= mList.size()) return null;
         NDArticle article = mList.get(pos);
@@ -265,6 +278,7 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         if (url == null || url.isEmpty()) return null;
         return url;
     }
+
 
     private String getTimeAgo(String s) {
         String time = null;

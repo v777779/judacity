@@ -249,7 +249,14 @@
 
     </style>
 
-
+    <!--news-->
+    <style name="News.TextToolbar" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">@dimen/text_news_item_appbar_size</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:lines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
     <!--team-->
     <style name="Home.Team.TextRecycler" parent="Match.Light.TextRecycler">

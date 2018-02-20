@@ -164,19 +164,18 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
-            return true;
-        }
-
+//        int id = item.getItemId();
+//
+//        if (id == R.id.action_settings) {
+//            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -247,8 +246,8 @@ public class NewsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onComplete(View view, String link) {
-        startNewsFragment(link);
+    public void onComplete(View view, String link, String title) {
+        startNewsFragment(link, title);
 
     }
 
@@ -343,9 +342,9 @@ public class NewsActivity extends AppCompatActivity
 
     }
 
-    private void startNewsFragment(String link) {
+    private void startNewsFragment(String link, String title) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = NewsFragment.newInstance(link);
+        Fragment fragment = NewsFragment.newInstance(link, title);
         fm.popBackStackImmediate(NEWS_FRAGMENT_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
                 .replace(R.id.container_news, fragment)

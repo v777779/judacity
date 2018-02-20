@@ -10,8 +10,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.webkit.DownloadListener;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
 
@@ -29,16 +36,20 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_NEWS_LINK;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_NEWS_TITLE;
 
 public class NewsFragment extends Fragment implements ICallback {
 
-
+    @BindView(R.id.webview_news)
+    WebView mWebView;
     @BindView(R.id.icon_news_arrow_back)
     ImageView mViewArrowBack;
     @BindView(R.id.icon_news_share_action)
     ImageView mViewShare;
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+    @BindView(R.id.toolbar_text)
+    TextView mTextToolbar;
 
 
     private RequestBuilder<PictureDrawable> mRequestSvgH;
@@ -66,12 +77,14 @@ public class NewsFragment extends Fragment implements ICallback {
     private FDTeam mHomeTeam;
     private FDTeam mAwayTeam;
     private String mLink;
+    private String mTitle;
 
 
-    public static Fragment newInstance(String link) {
+    public static Fragment newInstance(String link, String title) {
         NewsFragment fragment = new NewsFragment();
         Bundle args = new Bundle();
         args.putString(BUNDLE_NEWS_LINK, link);
+        args.putString(BUNDLE_NEWS_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,16 +101,14 @@ public class NewsFragment extends Fragment implements ICallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-//            AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
-//            mAppBarHeight = appBarLayout.getHeight();
-        } else {
-//            mAppBarHeight = savedInstanceState.getInt(BUNDLE_APP_BAR_HEIGHT);
-        }
+//        if (savedInstanceState == null) {
+//        } else {
+//        }
 // args
         Bundle args = getArguments();
         if (args == null) return;
         mLink = args.getString(BUNDLE_NEWS_LINK);
+        mTitle = args.getString(BUNDLE_NEWS_TITLE);
 
         if (mLink == null || mLink.isEmpty()) {
             FootballUtils.showMessage(mContext,getString(R.string.news_no_data_message));
@@ -116,7 +127,10 @@ public class NewsFragment extends Fragment implements ICallback {
 
         setupActionBar(savedInstanceState);
         setupListeners();
+        setupProgress();
         bindViews();
+
+
         return mRootView;
     }
 
@@ -144,107 +158,31 @@ public class NewsFragment extends Fragment implements ICallback {
     }
 
     @Override
-    public void onComplete(View view, String value) {
+    public void onComplete(View view, String value, String title) {
 
     }
 
     // methods
     private void stopProgress() {
+// test!!!
+        if(mProgressBar != null)
         mProgressBar.setVisibility(View.INVISIBLE);
+        else
+            FootballUtils.showMessage(mContext,"ProgressBar Attention");
     }
 
 
     private void setupProgress() {
         mProgressBar.setIndeterminate(true);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
 
     private void bindViews() {
-
-//// toolbar
-//        String country = FDUtils.getCountry(mFixture.getLeague());
-//        mTextCountry.setText(country);
-//        mViewLeague.setText(mFixture.getCaption());
-//        setTeamImage(mHomeTeam.getCrestURL(), mViewTeamHome, mRequestSvgH, mRequestPngH,
-//                R.drawable.fc_logo_widget_home);
-//        setTeamImage(mAwayTeam.getCrestURL(), mViewTeamAway, mRequestSvgA, mRequestPngA,
-//                R.drawable.fc_logo_widget_away);
-//        mTextTime.setText(FDUtils.formatMatchTime(mFixture.getDate()));
-//        mTextTeamHome.setText(mFixture.getHomeTeamName());
-//        mTextTeamAway.setText(mFixture.getAwayTeamName());
-//        mTextDate.setText(FDUtils.formatMatchDate(mFixture.getDate()));
-//        mTextScoreHome.setText(FDUtils.formatFromInt(mFixture.getGoalsHome(), EMPTY_DASH));
-//        mTextScoreAway.setText(FDUtils.formatFromInt(mFixture.getGoalsAway(), EMPTY_DASH));
-//        mTextStatus.setText(mFixture.getStatus());
-//        if (mFixture.isFavorite()) {
-//            mViewFavorite.setImageResource(R.drawable.ic_star);
-//        }
-//        if (mFixture.isNotified()) {
-//            mViewNotification.setImageResource(R.drawable.ic_notifications);
-//        }
-//// start
-//        Date date = FDUtils.formatDateFromSQLite(mFixture.getDate());
-//        if (date != null) {
-//            long current = Calendar.getInstance().getTimeInMillis();
-//            long time = date.getTime();
-//            mTextStartDate.setText(FDUtils.formatMatchDateStart(mFixture.getDate()));
-//            if (current > time) {
-//                mTextDayHigh.setText(EMPTY_DASH);
-//                mTextDayMddle.setText(EMPTY_DASH);
-//                mTextDayLow.setText(EMPTY_DASH);
-//                mTextHourHigh.setText(EMPTY_DASH);
-//                mTextHourLow.setText(EMPTY_DASH);
-//                mTextMinHigh.setText(EMPTY_DASH);
-//                mTextMinLow.setText(EMPTY_DASH);
-//            } else {
-//                long delta = time - current;
-//                long days = delta / TimeUnit.DAYS.toMillis(1);
-//                delta = delta - days * TimeUnit.DAYS.toMillis(1);
-//                long hours = delta / TimeUnit.HOURS.toMillis(1);
-//                delta = delta - hours * TimeUnit.HOURS.toMillis(1);
-//                long minutes = delta / TimeUnit.MINUTES.toMillis(1);
-//
-//                int[] a = getOrders((int) days);
-//                if (a[2] > 0) {
-//                    mTextDayHigh.setVisibility(View.VISIBLE);
-//                    mTextDayHigh.setText(FDUtils.formatFromInt(a[2], EMPTY_STRING));
-//                }
-//                mTextDayMddle.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
-//                mTextDayLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
-//
-//                a = getOrders((int) hours);
-//                mTextHourHigh.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
-//                mTextHourLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
-//
-//                a = getOrders((int) minutes);
-//                mTextMinHigh.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
-//                mTextMinLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
-//
-//
-//            }
-//        } else {
-//            mTextStartDate.setText(EMPTY_LONG_DASH);
-//            mTextDayHigh.setText(EMPTY_DASH);
-//            mTextDayMddle.setText(EMPTY_DASH);
-//            mTextDayLow.setText(EMPTY_DASH);
-//            mTextHourHigh.setText(EMPTY_DASH);
-//            mTextHourLow.setText(EMPTY_DASH);
-//            mTextMinHigh.setText(EMPTY_DASH);
-//            mTextMinLow.setText(EMPTY_DASH);
-//        }
-//
-//// bet
-//
-//        mTextBetHome.setText(FDUtils.formatMatchBet(mFixture.getHomeWin()));
-//        mTextBetDraw.setText(FDUtils.formatMatchBet(mFixture.getDraw()));
-//        mTextBetAway.setText(FDUtils.formatMatchBet(mFixture.getAwayWin()));
-//
-////        mTextBetHome.setText("27.1");
-////        mTextBetDraw.setText("32.2");
-////        mTextBetAway.setText("17.9");
-//
-
+        mTextToolbar.setText(mTitle);
+        mWebView.loadUrl(mLink);
+        WebSettings webSettings = mWebView.getSettings();
+//        webSettings.setJavaScriptEnabled(true);
     }
 
 
@@ -293,30 +231,28 @@ public class NewsFragment extends Fragment implements ICallback {
             }
         });
 
+        mWebView.setWebViewClient(new WebViewClient(){   // without client issues an  Exception on readdress
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+               stopProgress();
+            }
+        });
+
     }
 
     private void restoreActionBar() {
         mActivity.getSupportActionBar().show();
-//        AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
-//        appBarLayout.getLayoutParams().height = mAppBarHeight;
     }
 
     private void setupActionBar(Bundle savedInstance) {
         mActivity.getSupportActionBar().hide();
-//        AppBarLayout appBarLayout = mActivity.getWindow().getDecorView().findViewById(R.id.app_bar);
-//        appBarLayout.getLayoutParams().height = 0;
+
     }
-
-
-// test!!! protrusion check
-// resolved with  set AppBarLayout.height to 0
-//        ((AppBarLayout) findViewById(R.id.app_bar)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (Math.abs(verticalOffset) > 5) {
-//                    int k = 1;
-//                }
-//            }
-//        });
 
 }
