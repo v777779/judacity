@@ -60,6 +60,7 @@ import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
@@ -138,7 +139,7 @@ public class NewsActivity extends AppCompatActivity
         mCursors = new Cursor[5];
         mMap = new HashMap<>();
         mMapArticles = new HashMap<>();
-
+        mViewPagerPos = EMPTY_INT_VALUE;
 
 // progress
         setupActionBar();
@@ -151,7 +152,7 @@ public class NewsActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
-            mViewPagerPos = 0;
+
         }
 
         startLoaders();
@@ -611,37 +612,11 @@ public class NewsActivity extends AppCompatActivity
     private void updateViewPager(final ViewPagerData data) {
         stopProgress();
         if (mViewPager == null || data == null) return;
-//        int pos = mViewPager.getCurrentItem();
 
-
-//        if (pos == 0) {
-//            pos = data.mPos;                    // current day
-//        } else {
-//
-//// test!!!
-//// TODO CHECK MAP  AFTER deletion  all works but Map
-////            data.getList().remove(210);
-////            data.getList().remove(211);
-////            data.getList().remove(212);
-////            data.getRecyclers().remove(210);
-////            data.getRecyclers().remove(211);
-////            data.getRecyclers().remove(212);
-////            data.getTitles().remove(210);
-////            data.getTitles().remove(211);
-////            data.getTitles().remove(212);
-////            List<Long> keys = new ArrayList<>(data.getMap().keySet());
-////            data.getMap().remove(keys.get(210));
-////            data.getMap().remove(keys.get(212));
-////            data.getMap().remove(keys.get(214));
-//// end test!!!
-//
-//            updateTabLayout(data, mViewPagerData);
-//            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
-//        }
         mViewPagerData = data;
-        final int pos = mViewPagerPos;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
-        mViewPager.setCurrentItem(pos);
+        mViewPager.setCurrentItem(mViewPagerPos);  // works if viewpager is empty only
+
 
 
     }

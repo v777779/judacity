@@ -36,10 +36,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDFixture;
 
+import ru.vpcb.footballassistant.glide.GlideUtils;
 import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.news.NDArticle;
 import ru.vpcb.footballassistant.utils.Config;
 
+import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderPng;
+import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderSvg;
 import static ru.vpcb.footballassistant.utils.Config.DATE_FULL_PATTERN;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
@@ -77,8 +80,8 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
     private Resources mRes;
 
     private List<NDArticle> mList;
-    private RequestBuilder<PictureDrawable> mRequestBuilder;
-    private RequestBuilder<Drawable> mRequestBuilderCommon;
+    private RequestBuilder<PictureDrawable> mRequestSvg;
+    private RequestBuilder<Drawable> mRequestPng;
     private SimpleDateFormat mDateFormat;
 
     /**
@@ -95,7 +98,10 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
         mDateFormat = new SimpleDateFormat(DATE_FULL_PATTERN);
-        setupRequestBuilder();
+
+        mRequestSvg = getRequestBuilderSvg(context,R.drawable.fc_logo_news);
+        mRequestPng = getRequestBuilderPng(context,R.drawable.fc_logo_news);
+
 
 
     }
@@ -233,14 +239,16 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
             if (article == null) return;
 
             String imageURL = article.getUrlToImage();
-            loadImage(imageURL, mImagePoster);
+            GlideUtils.setTeamImage(imageURL,mImagePoster,mRequestSvg,mRequestPng,R.drawable.fc_logo_news);
+
+//            loadImage(imageURL, mImagePoster);
 
 //            SpannableString content = new SpannableString(article.getTitle());
 //            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 //            mTextHead.setText(content);
             mTextHead.setText(article.getTitle());
             mTextBody.setText(article.getDescription());
-            mTextSource.setText(article.getAuthor());
+            mTextSource.setText(article.getSource().getName());
             mTextTime.setText(getTimeAgo(article.getPublishedAt()));
 
         }
@@ -248,38 +256,23 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
 
     }
 
-    private void loadImage(String imageURL, ImageView imageView) {
-        if (imageURL == null || imageURL.isEmpty() || imageView == null) return;
+//    private void loadImage(String imageURL, ImageView imageView) {
+//        if(imageView == null) return;
+//        if (imageURL == null || imageURL.isEmpty()) {
+//            imageView.setImageResource(R.drawable.fc_logo_news);
+//            return;
+//        }
+//
+//        if (imageURL.toLowerCase().endsWith("svg")) {
+//            mRequestBuilder.load(imageURL).into(imageView);
+//
+//        } else {
+//            mRequestBuilderCommon.load(imageURL).into(imageView);
+//        }
+//    }
 
-        if (imageURL.toLowerCase().endsWith("svg")) {
-            mRequestBuilder.load(imageURL).into(imageView);
-
-        } else {
-            mRequestBuilderCommon.load(imageURL).into(imageView);
-        }
-    }
 
 
-    private void setupRequestBuilder() {
-        mRequestBuilder = Glide.with(mContext)
-                .as(PictureDrawable.class)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.fc_logo_loading)
-                        .error(R.drawable.fc_logo)
-                )
-//                .transition(withCrossFade())
-                .listener(new SvgSoftwareLayerSetter());
-
-        mRequestBuilderCommon = Glide.with(mContext)
-                .as(Drawable.class)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.fc_logo_loading)
-                        .error(R.drawable.fc_logo)
-                )
-//                .transition(withCrossFade())
-                .listener(new CommonRequestListener());
-
-    }
 
     private String getTimeAgo(String s) {
         String time = null;

@@ -102,24 +102,24 @@ public class NewsService extends IntentService {
             }
 
             FDUtils.setNewsRefreshTime(this);
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_news_update_finished)));
 
 
         } catch (IOException e) {
 // test !!!  catch errors
             Timber.d(getString(R.string.retrofit_response_exception), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_news_update_error)));
             return;
         } catch (NullPointerException | NumberFormatException e) {
             Timber.d(getString(R.string.retrofit_response_empty), e.getMessage());
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_news_update_error)));
             return;
         } catch (OperationApplicationException | RemoteException e) {
             Timber.d(getString(R.string.update_content_error,e.getMessage()));
-            sendBroadcast(new Intent(getString(R.string.broadcast_data_update_error)));
+            sendBroadcast(new Intent(getString(R.string.broadcast_news_update_error)));
             return;
         }
-        sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
+        sendBroadcast(new Intent(getString(R.string.broadcast_news_update_finished)));
     }
 
 

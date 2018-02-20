@@ -1658,23 +1658,34 @@ public class FDUtils {
     }
 
     private static INDRetrofitAPI setupRetrofitNews() {
-//logging
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);     // set your desired log level  NONE, BASIC, HEADERS, BODY
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);  // <-- this is the important line!
-
-
         Gson gson = new GsonBuilder()
                 .registerTypeAdapterFactory(new PostProcessingEnabler())
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ND_BASE_URI)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(httpClient.build())
                 .build();
         return retrofit.create(INDRetrofitAPI.class);
     }
+
+//    private static INDRetrofitAPI setupRetrofitNews() {
+//logging
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);     // set your desired log level  NONE, BASIC, HEADERS, BODY
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+//        httpClient.addInterceptor(logging);  // <-- this is the important line!
+//
+//
+//        Gson gson = new GsonBuilder()
+//                .registerTypeAdapterFactory(new PostProcessingEnabler())
+//                .create();
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(ND_BASE_URI)
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .client(httpClient.build())
+//                .build();
+//        return retrofit.create(INDRetrofitAPI.class);
+//    }
 
     // news
     private static NDSources loadListSources()
