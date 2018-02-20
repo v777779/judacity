@@ -165,18 +165,20 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_news, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_settings) {
-//            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
-//            return true;
-//        }
+        int id = item.getItemId();
+
+        if (id == R.id.action_reload) {
+            Snackbar.make(getWindow().getDecorView(), "Action Reload", Snackbar.LENGTH_SHORT).show();
+            return true;
+        }
+        refresh(getString(R.string.action_share));
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -23,6 +23,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_calendar">Calendar</string>
     <string name="action_share">Share</string>
+    <string name="action_reload">Reload</string>
 
     <!--navigation-->
     <string name="title_matches">Matches</string>
@@ -123,6 +124,7 @@
 
     <!--action-->
     <string name="action_update">ru.vpcb.footballassistant.intent.action.ACTION_UPDATE</string>
+    <string name="action_force_update">ru.vpcb.footballassistant.intent.action.ACTION_FORCE_UPDATE</string>
     <string name="action_refresh">ru.vpcb.footballassistant.intent.action.ACTION_REFRESH</string>
 
     <!--extra-->
