@@ -245,6 +245,11 @@ public class FavoritesActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onComplete(View view, String value) {
+
+    }
+
 
     // methods
     private void startActivitySettings() {

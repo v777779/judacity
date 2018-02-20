@@ -365,6 +365,11 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onComplete(View view, String value) {
+
+    }
+
 
     // methods
 

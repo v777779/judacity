@@ -261,6 +261,10 @@ public class Config {
     // news activity
     public static final String ND_SOURCE_SELECTED = "fox";
 
+    // news fragment
+    public static final String NEWS_FRAGMENT_TAG = "news_fragment";
+    public static final String BUNDLE_NEWS_LINK = "bundle_news_link";
+
     // team activity
     public static final String BUNDLE_INTENT_TEAM_ID = "bundle_intent_team_id";
     public static final String BUNDLE_TEAM_ID = "bundle_team_id";

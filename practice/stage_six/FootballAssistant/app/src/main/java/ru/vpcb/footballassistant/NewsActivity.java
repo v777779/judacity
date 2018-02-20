@@ -46,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 import ru.vpcb.footballassistant.add.TempUtils;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
+import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.news.NDArticle;
@@ -64,7 +65,9 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
+import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
 import static ru.vpcb.footballassistant.utils.Config.ND_SOURCE_SELECTED;
+import static ru.vpcb.footballassistant.utils.Config.NEWS_FRAGMENT_TAG;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
@@ -236,36 +239,16 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public void onComplete(View view, int pos) {
-        Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-        startMatchActivity();
+
     }
 
     @Override
     public void onComplete(int mode, Calendar calendar) {
+    }
 
-        try {
-            if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
-                setZeroTime(calendar);
-                long time = calendar.getTimeInMillis();
-                long first = getViewPagerDate(0);
-                long last = getViewPagerDate(mViewPagerData.getList().size() - 1);
-                if (first > 0 && time < first) time = first;
-                if (last > 0 && time > last) time = last;
-
-
-                Integer pos = mViewPagerData.getMap().get(time);
-
-                while (pos == null && time < last) {
-                    time += TimeUnit.DAYS.toMillis(1);
-                    pos = mViewPagerData.getMap().get(time);
-                }
-                if (pos != null) mViewPager.setCurrentItem(pos, true);
-            }
-
-        } catch (NullPointerException e) {
-            Timber.d(getString(R.string.calendar_set_date_exception, e.getMessage()));
-        }
+    @Override
+    public void onComplete(View view, String link) {
+        startNewsFragment(link);
 
     }
 
@@ -360,6 +343,15 @@ public class NewsActivity extends AppCompatActivity
 
     }
 
+    private void startNewsFragment(String link) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = NewsFragment.newInstance(link);
+        fm.popBackStackImmediate(NEWS_FRAGMENT_TAG, POP_BACK_STACK_INCLUSIVE);
+        fm.beginTransaction()
+                .replace(R.id.container_news, fragment)
+                .addToBackStack(NEWS_FRAGMENT_TAG)
+                .commit();
+    }
 
     private void startMatchActivity() {
         Intent intent = new Intent(this, MatchActivity.class);

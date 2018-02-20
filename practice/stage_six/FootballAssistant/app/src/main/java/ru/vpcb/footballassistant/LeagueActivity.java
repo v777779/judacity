@@ -363,6 +363,11 @@ public class LeagueActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onComplete(View view, String value) {
+
+    }
+
 
     // methods
     private void startActivitySettings() {

@@ -286,6 +286,11 @@ public class MatchFragment extends Fragment implements
     public void onComplete(int mode, Calendar calendar) {
     }
 
+    @Override
+    public void onComplete(View view, String value) {
+
+    }
+
     // methods
     private void setupRecycler() {
         RecyclerMatchAdapter adapter = new RecyclerMatchAdapter(mContext, null, mMapTeams);

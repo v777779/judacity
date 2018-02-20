@@ -40,6 +40,7 @@ import ru.vpcb.footballassistant.glide.GlideUtils;
 import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.news.NDArticle;
 import ru.vpcb.footballassistant.utils.Config;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 
 import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderPng;
 import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderSvg;
@@ -99,9 +100,8 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         mIsLand = mRes.getBoolean(R.bool.is_land);
         mDateFormat = new SimpleDateFormat(DATE_FULL_PATTERN);
 
-        mRequestSvg = getRequestBuilderSvg(context,R.drawable.fc_logo_news);
-        mRequestPng = getRequestBuilderPng(context,R.drawable.fc_logo_news);
-
+        mRequestSvg = getRequestBuilderSvg(context, R.drawable.fc_logo_news);
+        mRequestPng = getRequestBuilderPng(context, R.drawable.fc_logo_news);
 
 
     }
@@ -165,7 +165,13 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ICallback) mContext).onComplete(view, pos);
+                String link = getLink(pos);
+                if(link == null) {
+                    FootballUtils.showMessage(mContext,
+                            mContext.getString(R.string.news_no_data_message));
+                    return;
+                }
+                ((ICallback) mContext).onComplete(view, link);
             }
         });
 
@@ -239,13 +245,8 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
             if (article == null) return;
 
             String imageURL = article.getUrlToImage();
-            GlideUtils.setTeamImage(imageURL,mImagePoster,mRequestSvg,mRequestPng,R.drawable.fc_logo_news);
+            GlideUtils.setTeamImage(imageURL, mImagePoster, mRequestSvg, mRequestPng, R.drawable.fc_logo_news);
 
-//            loadImage(imageURL, mImagePoster);
-
-//            SpannableString content = new SpannableString(article.getTitle());
-//            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-//            mTextHead.setText(content);
             mTextHead.setText(article.getTitle());
             mTextBody.setText(article.getDescription());
             mTextSource.setText(article.getSource().getName());
@@ -256,23 +257,14 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
 
     }
 
-//    private void loadImage(String imageURL, ImageView imageView) {
-//        if(imageView == null) return;
-//        if (imageURL == null || imageURL.isEmpty()) {
-//            imageView.setImageResource(R.drawable.fc_logo_news);
-//            return;
-//        }
-//
-//        if (imageURL.toLowerCase().endsWith("svg")) {
-//            mRequestBuilder.load(imageURL).into(imageView);
-//
-//        } else {
-//            mRequestBuilderCommon.load(imageURL).into(imageView);
-//        }
-//    }
-
-
-
+    private String getLink(int pos) {
+        if (mList == null || pos < 0 || pos >= mList.size()) return null;
+        NDArticle article = mList.get(pos);
+        if (article == null) return null;
+        String url = article.getUrl();
+        if (url == null || url.isEmpty()) return null;
+        return url;
+    }
 
     private String getTimeAgo(String s) {
         String time = null;
@@ -293,19 +285,6 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
         if (time == null || time.isEmpty())
             time = mContext.getString(R.string.text_news_item_time_empty);
         return time;
-    }
-
-
-    private class CommonRequestListener implements RequestListener<Drawable> {
-        @Override
-        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-            return false;
-        }
-
-        @Override
-        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-            return false;
-        }
     }
 
 
