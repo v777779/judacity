@@ -105,10 +105,7 @@ public class NewsActivity extends AppCompatActivity
 
 
     private Cursor[] mCursors;
-    // test!!!
-// TODO  make parcelable for ViewPager and rotation
-    private static ViewPagerData mViewPagerData;
-
+    private ViewPagerData mViewPagerData;
     private int mViewPagerPos;
 
     @Override
@@ -149,13 +146,7 @@ public class NewsActivity extends AppCompatActivity
         setupProgress();
         setupReceiver();
         setupListeners();
-
-        if (savedInstanceState == null && mViewPagerData == null) {
-            setupViewPager();
-        } else {
-// test!!!  check data
-            setupViewPager(mViewPagerData);
-        }
+        setupViewPager();
 
 
         if (savedInstanceState == null) {
@@ -534,6 +525,7 @@ public class NewsActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
+                mViewPagerPos = position;
             }
 
             @Override
@@ -647,9 +639,10 @@ public class NewsActivity extends AppCompatActivity
 //            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
 //        }
         mViewPagerData = data;
-        int pos = mViewPagerPos;
+        final int pos = mViewPagerPos;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(pos);
+
 
     }
 
