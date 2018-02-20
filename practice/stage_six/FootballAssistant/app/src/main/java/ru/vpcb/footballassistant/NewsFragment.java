@@ -1,17 +1,20 @@
 package ru.vpcb.footballassistant;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.DownloadListener;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -111,7 +114,7 @@ public class NewsFragment extends Fragment implements ICallback {
         mTitle = args.getString(BUNDLE_NEWS_TITLE);
 
         if (mLink == null || mLink.isEmpty()) {
-            FootballUtils.showMessage(mContext,getString(R.string.news_no_data_message));
+            FootballUtils.showMessage(mContext, getString(R.string.news_no_data_message));
         }
 
 // parameters
@@ -163,12 +166,24 @@ public class NewsFragment extends Fragment implements ICallback {
     }
 
     // methods
+    private void startActivityShare() {
+        if (mLink == null || mLink.isEmpty()) {
+            FootballUtils.showMessage(mContext, getString(R.string.news_no_data_message));
+            return;
+        }
+        String shareText = "SportNews:"+ mTitle+" Link:"+mLink;
+        startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                .setType("text/plain")
+                .setText(shareText)
+                .getIntent(), getString(R.string.action_share)));
+    }
+
     private void stopProgress() {
 // test!!!
-        if(mProgressBar != null)
-        mProgressBar.setVisibility(View.INVISIBLE);
+        if (mProgressBar != null)
+            mProgressBar.setVisibility(View.INVISIBLE);
         else
-            FootballUtils.showMessage(mContext,"ProgressBar Attention");
+            FootballUtils.showMessage(mContext, "ProgressBar Attention");
     }
 
 
@@ -227,11 +242,11 @@ public class NewsFragment extends Fragment implements ICallback {
         mViewShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivityShare();
             }
         });
 
-        mWebView.setWebViewClient(new WebViewClient(){   // without client issues an  Exception on readdress
+        mWebView.setWebViewClient(new WebViewClient() {   // without client issues an  Exception on readdress
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return false;
@@ -239,10 +254,17 @@ public class NewsFragment extends Fragment implements ICallback {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-               stopProgress();
+//                super.onPageFinished(view, url);
+                stopProgress();
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+//                FootballUtils.showMessage(mContext,getString(R.string.webview_error_page_loading));
             }
         });
+
 
     }
 

@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Settings добавить опцию выбора источника новостей по умолчанию
 
 
+    // TODO Options News запоминать в preference последний источник
+
     // TODO Options Add Widget Bar to Add
     // TODO Options Add League Head Items to Detail Recycler
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency

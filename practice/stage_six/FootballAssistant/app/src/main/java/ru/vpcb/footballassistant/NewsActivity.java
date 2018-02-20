@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -247,7 +248,13 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public void onComplete(View view, String link, String title) {
-        startNewsFragment(link, title);
+        if(link == null || link.isEmpty()) return;
+        if (!FootballUtils.isWebViewAction(this)) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(intent);
+        }else {
+            startNewsFragment(link, title);
+        }
 
     }
 
@@ -257,7 +264,6 @@ public class NewsActivity extends AppCompatActivity
         if (mMap == null || mMap.isEmpty() || mMapArticles == null || mMapArticles.isEmpty()) {
             return;
         }
-
 
         updateViewPager(getViewPagerData());
     }
@@ -607,7 +613,6 @@ public class NewsActivity extends AppCompatActivity
         mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(mViewPagerPos);  // works if viewpager is empty only
-
 
 
     }

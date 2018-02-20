@@ -76,10 +76,17 @@ public class FootballUtils {
                 c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
     }
 
-    private static boolean isSnackbarStyle(Context context) {
-
+    public static boolean isWebViewAction(Context context) {
+        boolean default_value = context.getString(R.string.pref_webview_action_default).equals("true");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean(context.getString(R.string.pref_snackbar_key), false);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_webview_action_key), default_value);
+    }
+
+
+    private static boolean isSnackbarStyle(Context context) {
+       boolean default_value = context.getString(R.string.pref_snackbar_default).equals("true");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_snackbar_key), default_value);
     }
 
 

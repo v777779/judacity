@@ -3,12 +3,13 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_match">MatchActivity</string>
 
+
+
     <string name="title_activity_team">TeamActivity</string>
     <string name="title_activity_league">LeagueActivity</string>
     <string name="title_activity_news">NewsActivity</string>
     <string name="title_activity_favorites">FavoritesActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
 
     <!--titles-->
     <string name="screen_match">Matches</string>
@@ -31,21 +32,27 @@
 
     <!--preferences-->
 <!--switch    -->
-    <string name="pref_notifications_key">pref_notifications_key</string>
-    <string name="pref_notifications_off">Disabled</string>
-    <string name="pref_notifications_on">Enabled</string>
-    <string name="pref_notifications_title">Notifications</string>
+    <string name="pref_webview_action_key">pref_webview_action_key</string>
+    <string name="pref_webview_action_off">Default Browser</string>
+    <string name="pref_webview_action_on">Built In Browser</string>
+    <string name="pref_webview_action_title">News Browser</string>
+    <string name="pref_webview_action_default">true</string>
+
     <!--switch    -->
     <string name="pref_snackbar_key">pref_snackbar_key</string>
     <string name="pref_snackbar_off">Toast</string>
     <string name="pref_snackbar_on">Snackbar</string>
     <string name="pref_snackbar_title">Messages style</string>
+    <string name="pref_snackbar_default">true</string>
+
 <!--list-->
     <string name="pref_data_delay_time_key">pref_data_delay_time_key</string>
     <string name="pref_data_delay_time_title">Update Matches</string>
+    <string name="pref_data_delay_time_default">480</string>
 <!--list-->
     <string name="pref_news_delay_time_key">pref_news_delay_time_key</string>
     <string name="pref_news_delay_time_title">Update News</string>
+    <string name="pref_news_delay_time_default">30</string>
 <!--list-->
     <string name="pref_date_span_key">pref_fixture_dates_span_key</string>
     <string name="pref_date_span_title">Calendar width</string>
@@ -96,11 +103,11 @@
     <!--preference values-->
     <string name="pref_data_update_time_key">pref_data_update_time_key</string>
     <string name="pref_data_update_time_default">0</string>
-    <string name="pref_data_delay_time_default">240</string>
+
 
     <string name="pref_news_update_time_key">pref_news_update_time_key</string>
     <string name="pref_news_update_time_default">0</string>
-    <string name="pref_news_delay_time_default">1</string>
+
 
     <!--notifications-->
     <string name="notification_delay_time_min">Match already started</string>
@@ -187,6 +194,7 @@
     <string name="text_news_item_time_empty">\u2014</string>
     <string name="text_news_item_separator">|</string>
 
+
     <!--widget-->
     <string name="widget_empty_dash">-</string>
     <string name="widget_empty_long_dash">\u2014</string>
@@ -206,6 +214,8 @@
     <string name="matches_no_data_message">There is no data on this date</string>
     <string name="matches_no_network_message">Error network connection</string>
     <string name="news_no_data_message">There is no news on this link</string>
+    <string name="action_share_news_message">Football Assistant News: %1$  href:%2$s"</string>
+    <string name="webview_error_page_loading">Error page loading detected</string>
 
     <!--exception-->
     <string name="update_content_error">Update content error: %1$s</string>
