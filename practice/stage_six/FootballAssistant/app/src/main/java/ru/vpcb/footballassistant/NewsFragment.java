@@ -130,7 +130,7 @@ public class NewsFragment extends Fragment implements ICallback {
         mRootView = inflater.inflate(R.layout.news_fragment, container, false);
         mUnbinder = ButterKnife.bind(this, mRootView);
 
-        setupActionBar(savedInstanceState);
+        setupActionBar();
         setupListeners();
         setupProgress();
         bindViews();
@@ -270,7 +270,7 @@ public class NewsFragment extends Fragment implements ICallback {
         if (actionBar != null) actionBar.show();
     }
 
-    private void setupActionBar(Bundle savedInstance) {
+    private void setupActionBar() {
         ActionBar actionBar = mActivity.getSupportActionBar();
         if (actionBar != null) actionBar.hide();
 
