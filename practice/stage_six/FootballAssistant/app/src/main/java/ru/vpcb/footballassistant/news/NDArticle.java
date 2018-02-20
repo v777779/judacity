@@ -95,4 +95,9 @@ public class NDArticle {
         if (publishedAt == null || publishedAt.isEmpty()) return EMPTY_DATE;
         return publishedAt;
     }
+
+    public void setSource(String sourceId) {
+        if(source == null) source = new NDSource();
+        source.setId(sourceId);
+    }
 }

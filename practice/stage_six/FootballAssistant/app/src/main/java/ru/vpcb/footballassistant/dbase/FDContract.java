@@ -243,7 +243,7 @@ public class FDContract {
             ),
 
             new FDParams(NaEntry.LOADER_ID, NaEntry.TABLE_NAME, NaEntry.TABLE_MATCHER,
-                    NaEntry.TABLE_ID_MATCHER, NaEntry.COLUMN_SOURCE_ID              // id?   //все новости по данному источнику
+                    NaEntry.TABLE_ID_MATCHER, NaEntry.COLUMN_ARTICLE_ID              // id?   //все новости по данному источнику
             ),
             new FDParams(NsEntry.LOADER_ID, NsEntry.TABLE_NAME, NsEntry.TABLE_MATCHER,
                     NsEntry.TABLE_ID_MATCHER, NsEntry.COLUMN_SOURCE_ID              // id?   //запись по источнику
@@ -313,8 +313,8 @@ public class FDContract {
         public String getSortOrder() {
             if (columnId.equals(FxEntry.COLUMN_FIXTURE_ID)) {
                 return "datetime(" + FxEntry.COLUMN_FIXTURE_DATE + ") ASC";
-            } else if (columnId.equals(NaEntry.COLUMN_SOURCE_ID)) {
-                return "datetime(" + NaEntry.COLUMN_PUBLISHED_AT + ") DESC";  // свежая запись первая
+            } else if (columnId.equals(NaEntry.COLUMN_ARTICLE_ID)) {
+                return "datetime(" + NaEntry.COLUMN_PUBLISHED_AT + ") DESC";  // fresh record firstсвежая запись первая
             }  else{
                     return columnId + " ASC";
                 }

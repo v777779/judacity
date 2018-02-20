@@ -92,10 +92,15 @@ public class NewsService extends IntentService {
             sendBroadcast(new Intent(getString(R.string.broadcast_news_update_started)));
 
 
-            boolean isUpdated = FDUtils.loadDatabaseNews(this, map);
+            boolean isUpdated = FDUtils.loadDatabaseSources(this, map);
             if (isUpdated) {
-                FDUtils.writeDatabaseNews(this, map, false); //  true delete false update
+                FDUtils.writeDatabaseSources(this, map, false); //  true delete false update
             }
+            isUpdated = FDUtils.loadDatabaseArticles(this, map);
+            if (isUpdated) {
+                FDUtils.writeDatabaseArticles(this, map, false); //  true delete false update
+            }
+
             FDUtils.setNewsRefreshTime(this);
             sendBroadcast(new Intent(getString(R.string.broadcast_data_update_finished)));
 

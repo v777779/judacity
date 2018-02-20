@@ -1084,10 +1084,18 @@ public class FDUtils {
         String sourceId = source.getId();
         String title = article.getTitle();
         String description = article.getDescription();
+        String url = article.getUrl();
+        String urlToImage = article.getUrlToImage();
+        String publishedAt = article.getPublishedAt();
 
         if (sourceId == null || sourceId.isEmpty() || title == null || title.isEmpty() ||
-                description == null || description.isEmpty()) return null;
-        String id = sourceId.toLowerCase() + "_"+ title.toLowerCase();
+                description == null || description.isEmpty() ||
+                url == null || url.isEmpty() ||
+                urlToImage == null || urlToImage.isEmpty() ||
+                publishedAt == null || publishedAt.isEmpty()
+                ) return null;
+
+        String id = sourceId.toLowerCase() + "_" + title.toLowerCase();
 
         Uri uri = buildItemIdUri(FDContract.NaEntry.TABLE_NAME, id);
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
@@ -1098,13 +1106,13 @@ public class FDUtils {
         ContentValues values = new ContentValues();
 
         values.put(FDContract.NaEntry.COLUMN_ARTICLE_ID, id);                               // string
-        values.put(FDContract.NaEntry.COLUMN_SOURCE_ID, source.getId());                    // string
+        values.put(FDContract.NaEntry.COLUMN_SOURCE_ID, sourceId);                    // string
         values.put(FDContract.NaEntry.COLUMN_SOURCE_NAME, source.getName());                // string
         values.put(FDContract.NaEntry.COLUMN_AUTHOR, source.getAuthor());                   // string
-        values.put(FDContract.NaEntry.COLUMN_TITLE, article.getTitle());                    // string
+        values.put(FDContract.NaEntry.COLUMN_TITLE, title);                    // string
         values.put(FDContract.NaEntry.COLUMN_DESCRIPTION, article.getDescription());        // string
-        values.put(FDContract.NaEntry.COLUMN_ARTICLE_URL, article.getUrl());                // string
-        values.put(FDContract.NaEntry.COLUMN_IMAGE_URL, article.getUrlToImage());           // string
+        values.put(FDContract.NaEntry.COLUMN_ARTICLE_URL, url);                // string
+        values.put(FDContract.NaEntry.COLUMN_IMAGE_URL, urlToImage);           // string
         values.put(FDContract.NaEntry.COLUMN_PUBLISHED_AT, article.getPublishedAt());       // string
 
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
@@ -1132,8 +1140,12 @@ public class FDUtils {
         for (NDSource source : map.values()) {
             if (source == null) continue;
             List<NDArticle> list = source.getArticles();
+
             if (list == null || list.isEmpty()) continue;
+            String sourceId = source.getId();
             for (NDArticle article : list) {
+                if (article == null || article.getSource() == null) continue;
+                article.setSource(sourceId);
                 List<ContentProviderOperation> operations = writeArticle(article, false); // if true table already cleared
                 if (operations == null) continue;
                 listOperations.addAll(operations);
@@ -1454,7 +1466,18 @@ public class FDUtils {
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
-    // write database
+// write database
+// sources
+    public static void writeDatabaseSources(Context context, Map<String, NDSource> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+        writeSources(context, map, forceDelete);
+    }
+// articles
+    public static void writeDatabaseArticles(Context context, Map<String, NDSource> map, boolean forceDelete)
+            throws OperationApplicationException, RemoteException {
+        writeArticles(context, map, forceDelete);
+    }
+
 // news
     public static void writeDatabaseNews(Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
@@ -1850,18 +1873,49 @@ public class FDUtils {
 
 // all maps read by loaders
 
-// news
-
-
-    public static boolean loadDatabaseNews(Context context, Map<String, NDSource> map) throws NullPointerException, IOException {
-
-// progress
-        double step;
-        double progress = 0;
+    // news
+    public static boolean loadDatabaseSources(Context context, Map<String, NDSource> map)
+            throws NullPointerException, IOException {
 
 // load map
         map.clear();
+        NDSources sources = loadListSources();  // NullPointerException, IOException
+        if (sources == null || sources.getSources() == null) return false;
+        List<NDSource> list = sources.getSources();
 
+        for (NDSource source : list) {
+            if (source == null || source.getId() == null || source.getId().isEmpty()) continue;
+            map.put(source.getId(), source);
+        }
+        return true;
+    }
+
+    public static boolean loadDatabaseArticles(Context context, Map<String, NDSource> map)
+            throws NullPointerException, IOException {
+// load map
+        if (map.isEmpty()) {
+            loadDatabaseSources(context, map);
+        }
+
+        for (NDSource source : map.values()) {
+            if (source == null || source.getId() == null || source.getId().isEmpty()) continue;
+// articles
+            try {
+                NDNews news = loadListArticles(source, 1);                    // load page 1
+                if (news == null || news.getArticles() == null || news.getArticles().isEmpty())
+                    continue;
+                source.setArticles(news.getArticles());
+            } catch (NullPointerException | NumberFormatException | IOException e) {
+                Timber.d(formatLoad(context, EXCEPTION_CODE_4, source.getId(), e.getMessage()));
+            }
+        }
+        return true;
+    }
+
+    public static boolean loadDatabaseNews(Context context, Map<String, NDSource> map) throws NullPointerException, IOException {
+// load map
+        map.clear();
+// sources
         NDSources sources = loadListSources();  // NullPointerException, IOException
         if (sources == null || sources.getSources() == null) return false;
         List<NDSource> list = sources.getSources();

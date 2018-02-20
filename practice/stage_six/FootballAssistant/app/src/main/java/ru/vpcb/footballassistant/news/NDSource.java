@@ -118,4 +118,8 @@ public class NDSource {
     public void setArticles(List<NDArticle> articles) {
         this.articles = articles;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
