@@ -61,15 +61,15 @@
 
     <style name="Left.Item.TextRecycler" parent="Item.TextRecycler">
         <item name="android:textSize">@dimen/text_rm_item_team_size</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:gravity">top|center</item>
+        <item name="android:lines">2</item>
 
     </style>
 
     <style name="Right.Item.TextRecycler" parent="Item.TextRecycler">
         <item name="android:textSize">@dimen/text_rm_item_team_size</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:gravity">top|center</item>
+        <item name="android:lines">2</item>
     </style>
 
     <style name="Time.Item.TextRecycler" parent="Item.TextRecycler">
