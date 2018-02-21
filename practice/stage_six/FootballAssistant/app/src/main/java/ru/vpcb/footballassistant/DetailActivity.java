@@ -35,6 +35,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -144,6 +146,9 @@ public class DetailActivity extends AppCompatActivity
     // notification
     private int mNotificationFixtureId;
 
+    // analytics
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     // test!!!
 // TODO  make parcelable for ViewPager and rotation
@@ -182,7 +187,7 @@ public class DetailActivity extends AppCompatActivity
         mWidgetWidgetId = EMPTY_INT_VALUE;
         mWidgetFixtureId = EMPTY_INT_VALUE;
         mNotificationFixtureId = EMPTY_INT_VALUE;
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 //        mWidgetBundle = null;            // from widget
 
@@ -199,8 +204,8 @@ public class DetailActivity extends AppCompatActivity
             if (intent != null && intent.hasExtra(WIDGET_INTENT_BUNDLE)) {
                 Bundle widgetBundle = intent.getBundleExtra(WIDGET_INTENT_BUNDLE);
                 if (widgetBundle != null) {
-                    mWidgetWidgetId = widgetBundle.getInt(WIDGET_BUNDLE_WIDGET_ID,EMPTY_INT_VALUE);
-                    mWidgetFixtureId = widgetBundle.getInt(WIDGET_BUNDLE_FIXTURE_ID,EMPTY_INT_VALUE);
+                    mWidgetWidgetId = widgetBundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_INT_VALUE);
+                    mWidgetFixtureId = widgetBundle.getInt(WIDGET_BUNDLE_FIXTURE_ID, EMPTY_INT_VALUE);
                 }
             }
             if (intent != null && intent.hasExtra(NT_BUNDLE_INTENT_FIXTURE_ID)) {
@@ -229,12 +234,8 @@ public class DetailActivity extends AppCompatActivity
 
         mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
 
-
 //            refresh(getString(R.string.action_update));
-
         startLoaders();
-
-
     }
 
     @Override
@@ -280,7 +281,6 @@ public class DetailActivity extends AppCompatActivity
     }
 
 // callbacks
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return FDLoader.getInstance(this, id, args);
@@ -392,10 +392,20 @@ public class DetailActivity extends AppCompatActivity
 
 
     // methods
+    private void fireBasePageAnalytics(String s) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "fabID");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "List of records on date:");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Football matches data");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+
+    }
+
     private void startMatchFragment(int fixtureId) {
 
         FDFixture fixture = mMapFixtures.get(fixtureId);
-        if(fixture == null || fixture.getId() <= 0) return;
+        if (fixture == null || fixture.getId() <= 0) return;
 
         FDTeam homeTeam = mMapTeams.get(fixture.getHomeTeamId());
         FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
@@ -903,7 +913,7 @@ public class DetailActivity extends AppCompatActivity
                     .setStartDelay(VIEWPAGER_BACK_START_DELAY)
                     .setDuration(VIEWPAGER_BACK_DURATION).start();
         }
-        if(mWidgetFixtureId > 0) {
+        if (mWidgetFixtureId > 0) {
             startMatchFragment(mWidgetFixtureId);
             mWidgetFixtureId = EMPTY_INT_VALUE;
         }

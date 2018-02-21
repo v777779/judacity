@@ -51,4 +51,8 @@ dependencies {
     implementation 'com.caverock:androidsvg:1.2.1'
     // firebase dispatcher
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    // google
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.android.gms:play-services-analytics:11.8.0'
+
 }
