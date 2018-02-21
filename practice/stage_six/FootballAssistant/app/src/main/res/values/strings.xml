@@ -266,12 +266,17 @@
     <string name="fb_widget_id">Widget</string>
     <string name="fb_widget">Widget on Match created</string>
 
+    <string name="fb_share_id">Share</string>
+    <string name="fb_share_match">Share Action Match Info</string>
+    <string name="fb_share_news">Share Action Sport News</string>
+
+
     <string name="fb_news_page_id">NewsPage</string>
     <string name="fb_news_page">News Page: %1$s</string>
 
     <string name="fb_news_item_id">NewsItem</string>
-    <string name="fb_news_item">News from: %1$s on %2$s</string>
-
+    <string name="fb_news_item">News item opened</string>
+    <string name="fb_news_content">Football news content</string>
 
 
 

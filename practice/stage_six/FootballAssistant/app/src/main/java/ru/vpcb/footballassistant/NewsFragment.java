@@ -42,6 +42,8 @@ import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_NEWS_LINK;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_NEWS_TITLE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
 
 public class NewsFragment extends Fragment implements ICallback {
 
@@ -178,6 +180,8 @@ public class NewsFragment extends Fragment implements ICallback {
                 .setType("text/plain")
                 .setText(shareText)
                 .getIntent(), getString(R.string.action_share)));
+
+        mActivity.fireBaseEvent(FIREBASE_SHARE);
     }
 
     private void stopProgress() {

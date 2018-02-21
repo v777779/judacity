@@ -76,13 +76,14 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCHES;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
-import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
+
 import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
@@ -142,6 +143,7 @@ public class DetailActivity extends AppCompatActivity
     private Bundle mViewPagerBundle;
     private int mViewPagerPos;
     private MatchFragment mMatchFragment;
+    private ViewPagerAdapter mAdapter;
 
 
     // widget
@@ -152,7 +154,7 @@ public class DetailActivity extends AppCompatActivity
     // notification
     private int mNotificationFixtureId;
 
-    private ViewPagerAdapter mAdapter;
+
     // analytics
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -368,12 +370,14 @@ public class DetailActivity extends AppCompatActivity
             FootballUtils.showMessage(this, getString(R.string.widget_button_update));
             mWidgetWidgetId = EMPTY_INT_VALUE;
 
-            firebaseEvent(FIREBASE_WIDGET);  // analytics
+            fireBaseEvent(FIREBASE_WIDGET);  // analytics
             return;
         }
 
         startMatchFragment(fixtureId);
-        firebaseEvent(FIREBASE_MATCH);
+
+        fireBaseEvent(FIREBASE_MATCH);
+
     }
 
 
@@ -392,17 +396,13 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onComplete(View view, String value, String title) { // from fragment
-        if (value == null || value.isEmpty()) return;
-        if (value.equals(MATCH_RESTART_LOADERS)) {
-            restartLoaders();
-        }
+    public void onComplete(View view, String value, String title) {
+
     }
 
 
     // methods
-
-    private void firebaseEvent(int code) {
+    public void fireBaseEvent(int code) {
         switch (code) {
             case FIREBASE_MATCHES:
                 fireBaseEvent();
@@ -413,9 +413,11 @@ public class DetailActivity extends AppCompatActivity
             case FIREBASE_WIDGET:
                 fireBaseEvent(getString(R.string.fb_widget_id), getString(R.string.fb_widget));
                 break;
+            case FIREBASE_SHARE:
+                fireBaseEvent(getString(R.string.fb_share_id), getString(R.string.fb_share_match));
+                break;
 
         }
-
     }
 
     private void fireBaseEvent(String action, String name) {
@@ -435,7 +437,7 @@ public class DetailActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, getString(R.string.fb_matches_id));
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getString(R.string.fb_matches, s));
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, getString(R.string.fb_matches_id));
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, getString(R.string.fb_matches_content));
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
@@ -687,36 +689,6 @@ public class DetailActivity extends AppCompatActivity
         return recyclerView;
     }
 
-
-//    private void setupViewPagerSource() {
-//        int last = 0;
-//        int next = 0;
-//        int current = 0;
-//        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
-//        Map<Long, Integer> map = new HashMap<>();
-//
-//        Collections.sort(fixtures, cFx);
-//        List<List<FDFixture>> list = new ArrayList<>();
-//
-//        Calendar c = Calendar.getInstance();
-//        setZeroTime(c);
-//        current = getIndex(fixtures, c);  // index of current day
-//
-//        while (next < fixtures.size()) {
-//            setDay(c, fixtures.get(next).getDate());
-//            map.put(c.getTimeInMillis(), list.size());
-//            c.add(Calendar.DATE, 1);  // next day
-//            next = getIndex(fixtures, c);
-//            list.add(new ArrayList<>(fixtures.subList(last, next)));
-//            last = next;
-//            if (next == current) current = list.size();  // index of current day records
-//        }
-//
-//        mViewPagerPos = current;
-//        mViewPagerList = list;
-//        mViewPagerMap = map;
-//    }
-
     private List<Long> getTimesList(List<FDFixture> fixtures) {
         List<Long> list = new ArrayList<>();
         for (int i = 0; i < fixtures.size(); i++) {
@@ -805,7 +777,7 @@ public class DetailActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 mViewPagerPos = position;
-                firebaseEvent(FIREBASE_MATCH);
+                fireBaseEvent(FIREBASE_MATCH);
             }
 
             @Override

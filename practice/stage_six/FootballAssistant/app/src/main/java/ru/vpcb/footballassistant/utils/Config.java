@@ -260,7 +260,7 @@ public class Config {
     public static final String BUNDLE_MATCH_FIXTURE = "bundle_match_fixture";
     public static final String BUNDLE_MATCH_HOME_TEAM = "bundle_match_home_team";
     public static final String BUNDLE_MATCH_AWAY_TEAM = "bundle_match_away_team";
-    public static final String MATCH_RESTART_LOADERS = "match_restart_loaders";
+
     public static final boolean SHOW_MESSAGE_INFINITE = true;
 
     // news activity
@@ -278,7 +278,10 @@ public class Config {
     public static final int FIREBASE_MATCHES = 0;
     public static final int FIREBASE_MATCH = 1;
     public static final int FIREBASE_WIDGET = 2;
-
+    public static final int FIREBASE_NEWS= 3;
+    public static final int FIREBASE_NEWS_ITEM = 4;
+    public static final int FIREBASE_SHARE = 5;
+    public static final int FIREBASE_NEWS_SIZE = 20;
 
 
     // team activity

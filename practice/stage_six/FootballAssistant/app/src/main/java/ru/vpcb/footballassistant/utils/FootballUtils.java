@@ -30,7 +30,6 @@ import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DATE;
 import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
-import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
 import static ru.vpcb.footballassistant.utils.Config.MESSAGE_TOAST_SUPER_LONG;
 import static ru.vpcb.footballassistant.utils.Config.MESSAGE_TOAST_TICK;
 import static ru.vpcb.footballassistant.utils.Config.SHOW_MESSAGE_INFINITE;

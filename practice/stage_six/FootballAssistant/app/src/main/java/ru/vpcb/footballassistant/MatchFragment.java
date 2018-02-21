@@ -70,9 +70,8 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
-import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
-import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CREATE;
-import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
 import static ru.vpcb.footballassistant.utils.Config.NT_FB_JOB_DISPATCHER_ID;
 import static ru.vpcb.footballassistant.utils.Config.SHOW_MESSAGE_INFINITE;
 
@@ -234,6 +233,7 @@ public class MatchFragment extends Fragment implements
         setupListeners();
         setupRecycler();
         bindViews();
+
         return mRootView;
     }
 
@@ -548,6 +548,8 @@ public class MatchFragment extends Fragment implements
                         .setType("text/plain")
                         .setText(shareText)
                         .getIntent(), getString(R.string.action_share)));
+
+                mActivity.fireBaseEvent(FIREBASE_SHARE);
             }
         });
 
@@ -588,10 +590,10 @@ public class MatchFragment extends Fragment implements
                 if (!mFixture.isNotified()) {
 //TODO Notification Text
 // notification text
-                    Calendar c = Calendar.getInstance();
-                    c.add(Calendar.SECOND, +15);
-                    String s = FDUtils.formatDateToSQLite(c.getTime());
-                    mFixture.setDate(s);
+//                    Calendar c = Calendar.getInstance();
+//                    c.add(Calendar.SECOND, +15);
+//                    String s = FDUtils.formatDateToSQLite(c.getTime());
+//                    mFixture.setDate(s);
 //
                     String id = NotificationUtils.scheduleReminder(mContext, mFixture);
                     if (id == null || id.isEmpty() || !id.contains(NT_FB_JOB_DISPATCHER_ID)) return;

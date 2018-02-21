@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -54,8 +55,16 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCHES;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_NEWS;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_NEWS_ITEM;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_NEWS_SIZE;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.ND_LOADERS_UPDATE_COUNTER;
@@ -104,6 +113,11 @@ public class NewsActivity extends AppCompatActivity
     private Cursor[] mCursors;
     private ViewPagerData mViewPagerData;
     private int mViewPagerPos;
+    private ViewPagerAdapter mAdapter;
+
+    // analytics
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +151,7 @@ public class NewsActivity extends AppCompatActivity
         mMapArticles = new HashMap<>();
         mViewPagerPos = EMPTY_INT_VALUE;
         mUpdateCounter = 0;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 // progress
         setupActionBar();
@@ -226,7 +241,7 @@ public class NewsActivity extends AppCompatActivity
                 throw new IllegalArgumentException("Unknown id: " + loader.getId());
         }
 
-        if(mUpdateCounter == ND_LOADERS_UPDATE_COUNTER) {  // protect from async load
+        if (mUpdateCounter == ND_LOADERS_UPDATE_COUNTER) {  // protect from async load
             bindViews();
             mUpdateCounter = 0;
         }
@@ -250,18 +265,54 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public void onComplete(View view, String link, String title) {
-        if(link == null || link.isEmpty()) return;
+        if (link == null || link.isEmpty()) return;
         if (!FootballUtils.isWebViewAction(this)) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                startActivity(intent);
-        }else {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+            startActivity(intent);
+        } else {
             startNewsFragment(link, title);
         }
 
+        fireBaseEvent(FIREBASE_NEWS_ITEM);
     }
 
-
     // methods
+    public void fireBaseEvent(int code) {
+        switch (code) {
+            case FIREBASE_NEWS:
+                fireBaseEvent();
+                break;
+            case FIREBASE_NEWS_ITEM:
+                fireBaseEvent(getString(R.string.fb_news_item_id), getString(R.string.fb_news_item));
+                break;
+            case FIREBASE_SHARE:
+                fireBaseEvent(getString(R.string.fb_share_id),
+                        getString(R.string.fb_share_news));
+                break;
+        }
+    }
+
+    private void fireBaseEvent(String action, String name) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, action);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, getString(R.string.fb_matches_content));
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+    }
+
+    private void fireBaseEvent() {
+        if (mAdapter == null || mViewPagerPos < 0) return;
+        CharSequence charSequence = mAdapter.getPageTitle(mViewPagerPos);
+        String s = EMPTY_DASH;
+        if (charSequence != null) s = charSequence.toString();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, getString(R.string.fb_news_page_id));
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getString(R.string.fb_news_page, s));
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, getString(R.string.fb_news_content));
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+    }
+
     private void bindViews() {
         if (mMap == null || mMap.isEmpty() || mMapArticles == null || mMapArticles.isEmpty()) {
             return;
@@ -515,8 +566,8 @@ public class NewsActivity extends AppCompatActivity
     }
 
     private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
-        mViewPager.setAdapter(adapter);
+        mAdapter = new ViewPagerAdapter(this, null, null);
+        mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -526,6 +577,7 @@ public class NewsActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 mViewPagerPos = position;
+                fireBaseEvent(FIREBASE_NEWS);
             }
 
             @Override
@@ -675,7 +727,6 @@ public class NewsActivity extends AppCompatActivity
             actionBar.setTitle("");
             actionBar.show();
         }
-
     }
 
     private void refresh(String action) {
@@ -741,7 +792,7 @@ public class NewsActivity extends AppCompatActivity
                                 startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
-                               FootballUtils.showMessage(context, getString(R.string.activity_same_message));
+                                FootballUtils.showMessage(context, getString(R.string.activity_same_message));
                                 return true;
                             case R.id.navigation_favorites:
                                 startActivityFavorites();
