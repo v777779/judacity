@@ -134,7 +134,7 @@ public class Config {
     public static final String NT_FB_JOB_DISPATCHER_ID = "nt_fb_job_dispatcher_id";
     public static final String NT_FB_JOB_CHANNEL_ID = "nt_fb_job_channel_id";
     public static final int NT_NOTIFICATION_ID = 1240;
-// test!!!
+    // test!!!
     public static final int NT_FLEXTIME_SECONDS = 1; // seconds
     public static final int NT_DELAY_TIME_MINIMUM = 1; // seconds
 
@@ -274,6 +274,10 @@ public class Config {
     // favorites activity
 
     public static final String CP_IS_FAVORITE_SEARCH_KEY = "1";   // is_favorite = 1
+    // analytics
+    public static final int FIREBASE_MATCHES = 0;
+    public static final int FIREBASE_MATCH = 1;
+    public static final int FIREBASE_WIDGET = 2;
 
 
 

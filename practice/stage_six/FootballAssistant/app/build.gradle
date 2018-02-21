@@ -54,5 +54,6 @@ dependencies {
     // google
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.android.gms:play-services-analytics:11.8.0'
-
 }
+
+apply plugin: 'com.google.gms.google-services'

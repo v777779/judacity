@@ -69,9 +69,14 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_DEFAU
 
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_LIMITS;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCHES;
+import static ru.vpcb.footballassistant.utils.Config.FIREBASE_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
@@ -138,6 +143,7 @@ public class DetailActivity extends AppCompatActivity
     private int mViewPagerPos;
     private MatchFragment mMatchFragment;
 
+
     // widget
 //    private Bundle mWidgetBundle;
     private int mWidgetWidgetId;
@@ -146,6 +152,7 @@ public class DetailActivity extends AppCompatActivity
     // notification
     private int mNotificationFixtureId;
 
+    private ViewPagerAdapter mAdapter;
     // analytics
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -280,7 +287,7 @@ public class DetailActivity extends AppCompatActivity
         unregisterReceiver();
     }
 
-// callbacks
+    // callbacks
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return FDLoader.getInstance(this, id, args);
@@ -360,16 +367,18 @@ public class DetailActivity extends AppCompatActivity
             mWidgetBar.setVisibility(View.INVISIBLE);
             FootballUtils.showMessage(this, getString(R.string.widget_button_update));
             mWidgetWidgetId = EMPTY_INT_VALUE;
+
+            firebaseEvent(FIREBASE_WIDGET);  // analytics
             return;
         }
 
         startMatchFragment(fixtureId);
+        firebaseEvent(FIREBASE_MATCH);
     }
 
 
     @Override
     public void onComplete(int mode, Calendar calendar) {
-
         try {
             if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
                 mViewPagerBundle = getDatesSpanBundle(calendar);
@@ -392,14 +401,42 @@ public class DetailActivity extends AppCompatActivity
 
 
     // methods
-    private void fireBasePageAnalytics(String s) {
+
+    private void firebaseEvent(int code) {
+        switch (code) {
+            case FIREBASE_MATCHES:
+                fireBaseEvent();
+                break;
+            case FIREBASE_MATCH:
+                fireBaseEvent(getString(R.string.fb_match_id), getString(R.string.fb_match));
+                break;
+            case FIREBASE_WIDGET:
+                fireBaseEvent(getString(R.string.fb_widget_id), getString(R.string.fb_widget));
+                break;
+
+        }
+
+    }
+
+    private void fireBaseEvent(String action, String name) {
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "fabID");
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "List of records on date:");
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Football matches data");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, action);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, getString(R.string.fb_matches_content));
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+    }
 
+    private void fireBaseEvent() {
+        if (mAdapter == null || mViewPagerPos < 0) return;
+        CharSequence charSequence = mAdapter.getPageTitle(mViewPagerPos);
+        String s = EMPTY_DASH;
+        if (charSequence != null) s = charSequence.toString();
 
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, getString(R.string.fb_matches_id));
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, getString(R.string.fb_matches, s));
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, getString(R.string.fb_matches_id));
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     private void startMatchFragment(int fixtureId) {
@@ -755,10 +792,10 @@ public class DetailActivity extends AppCompatActivity
             return EMPTY_FIXTURE_DATE;
         }
     }
-
+//D:\__cources\_sandbox\clone\google\google-services\android
     private void setupViewPager() {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, null, null);
-        mViewPager.setAdapter(adapter);
+        mAdapter = new ViewPagerAdapter(this, null, null);
+        mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -768,6 +805,7 @@ public class DetailActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 mViewPagerPos = position;
+                firebaseEvent(FIREBASE_MATCH);
             }
 
             @Override

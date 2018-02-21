@@ -255,6 +255,25 @@
     <!--widgets-->
     <string name="widget_read_fixture_exception">Widget read fixture exception:%1$s</string>
 
+    <!--analythics-->
+    <string name="fb_matches_id">Matches</string>
+    <string name="fb_matches">Opened page of matches on date: %1$s</string>
+    <string name="fb_matches_content">Football matches data</string>
+
+    <string name="fb_match_id">Match</string>
+    <string name="fb_match">Opened Match details on match</string>
+
+    <string name="fb_widget_id">Widget</string>
+    <string name="fb_widget">Widget on Match created</string>
+
+    <string name="fb_news_page_id">NewsPage</string>
+    <string name="fb_news_page">News Page: %1$s</string>
+
+    <string name="fb_news_item_id">NewsItem</string>
+    <string name="fb_news_item">News from: %1$s on %2$s</string>
+
+
+
 
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>
