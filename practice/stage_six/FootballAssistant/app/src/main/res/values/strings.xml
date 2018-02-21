@@ -267,6 +267,7 @@
     <string name="fb_widget">Widget on Match created</string>
 
     <string name="fb_share_id">Share</string>
+    <string name="fb_action_id">Action</string>
     <string name="fb_share_match">Share Action Match Info</string>
     <string name="fb_share_news">Share Action Sport News</string>
 

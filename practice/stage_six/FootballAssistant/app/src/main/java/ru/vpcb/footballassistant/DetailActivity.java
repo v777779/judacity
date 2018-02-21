@@ -35,6 +35,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -157,6 +159,7 @@ public class DetailActivity extends AppCompatActivity
 
     // analytics
     private FirebaseAnalytics mFirebaseAnalytics;
+    private Tracker mTracker;
 
 
     // test!!!
@@ -197,6 +200,8 @@ public class DetailActivity extends AppCompatActivity
         mWidgetFixtureId = EMPTY_INT_VALUE;
         mNotificationFixtureId = EMPTY_INT_VALUE;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
 //        mWidgetBundle = null;            // from widget
 
@@ -406,18 +411,35 @@ public class DetailActivity extends AppCompatActivity
         switch (code) {
             case FIREBASE_MATCHES:
                 fireBaseEvent();
+                analyticsPage(getString(R.string.fb_matches));
                 break;
             case FIREBASE_MATCH:
                 fireBaseEvent(getString(R.string.fb_match_id), getString(R.string.fb_match));
+                analyticsEvent(getString(R.string.fb_match));
                 break;
             case FIREBASE_WIDGET:
                 fireBaseEvent(getString(R.string.fb_widget_id), getString(R.string.fb_widget));
+                analyticsEvent(getString(R.string.fb_widget));
                 break;
             case FIREBASE_SHARE:
                 fireBaseEvent(getString(R.string.fb_share_id), getString(R.string.fb_share_match));
+                analyticsEvent(getString(R.string.fb_share_match));
                 break;
 
         }
+    }
+
+    private void analyticsPage(String name) {
+        mTracker.setScreenName(name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    private void analyticsEvent(String name) {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory(getString(R.string.fb_action_id))
+                .setAction(name)
+                .build());
+
     }
 
     private void fireBaseEvent(String action, String name) {
@@ -764,7 +786,8 @@ public class DetailActivity extends AppCompatActivity
             return EMPTY_FIXTURE_DATE;
         }
     }
-//D:\__cources\_sandbox\clone\google\google-services\android
+
+    //D:\__cources\_sandbox\clone\google\google-services\android
     private void setupViewPager() {
         mAdapter = new ViewPagerAdapter(this, null, null);
         mViewPager.setAdapter(mAdapter);
@@ -777,7 +800,7 @@ public class DetailActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 mViewPagerPos = position;
-                fireBaseEvent(FIREBASE_MATCH);
+                fireBaseEvent(FIREBASE_MATCHES);
             }
 
             @Override

@@ -32,6 +32,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
@@ -117,6 +119,7 @@ public class NewsActivity extends AppCompatActivity
 
     // analytics
     private FirebaseAnalytics mFirebaseAnalytics;
+    private Tracker mTracker;
 
 
     @Override
@@ -152,6 +155,8 @@ public class NewsActivity extends AppCompatActivity
         mViewPagerPos = EMPTY_INT_VALUE;
         mUpdateCounter = 0;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
 // progress
         setupActionBar();
@@ -281,16 +286,33 @@ public class NewsActivity extends AppCompatActivity
         switch (code) {
             case FIREBASE_NEWS:
                 fireBaseEvent();
+                analyticsPage(getString(R.string.fb_news_page));
                 break;
             case FIREBASE_NEWS_ITEM:
                 fireBaseEvent(getString(R.string.fb_news_item_id), getString(R.string.fb_news_item));
+                analyticsEvent(getString(R.string.fb_news_item));
                 break;
             case FIREBASE_SHARE:
                 fireBaseEvent(getString(R.string.fb_share_id),
                         getString(R.string.fb_share_news));
+                analyticsEvent(getString(R.string.fb_share_news));
                 break;
         }
     }
+
+    private void analyticsPage(String name) {
+        mTracker.setScreenName(name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    private void analyticsEvent(String name) {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory(getString(R.string.fb_action_id))
+                .setAction(name)
+                .build());
+
+    }
+
 
     private void fireBaseEvent(String action, String name) {
         Bundle bundle = new Bundle();
