@@ -1,5 +1,6 @@
 package ru.vpcb.footballassistant;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
@@ -65,16 +66,18 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CREATE;
+import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.NT_FB_JOB_DISPATCHER_ID;
 import static ru.vpcb.footballassistant.utils.Config.SHOW_MESSAGE_INFINITE;
 
 public class MatchFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, ICallback {
+        LoaderManager.LoaderCallbacks<Cursor>, ICallback, IReload {
 
     private static FavoriteAsyncTask mFavoriteTask;
     private RequestBuilder<PictureDrawable> mRequestSvgH;
@@ -164,7 +167,7 @@ public class MatchFragment extends Fragment implements
     private FDTeam mAwayTeam;
 
 
-    public static Fragment newInstance(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
+    public static MatchFragment newInstance(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
         MatchFragment fragment = new MatchFragment();
         Bundle args = new Bundle();
         args.putParcelable(BUNDLE_MATCH_FIXTURE, fixture);
@@ -218,13 +221,7 @@ public class MatchFragment extends Fragment implements
         mMapTeams.put(mAwayTeam.getId(), mAwayTeam);
 
 // loader
-        Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
-                mFixture.getHomeTeamId(), mFixture.getAwayTeamId());
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
-        getLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);  // fixtures
-        getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
-
+        startLoaders();
     }
 
     @Nullable
@@ -273,6 +270,7 @@ public class MatchFragment extends Fragment implements
                 }
                 if (mMapFixtures == null) mMapFixtures = new LinkedHashMap<>(); // fixed order
                 mMapFixtures.putAll(mapFixtures);
+                updateFixture();
                 bindViewsFixtures();
                 break;
             case FDContract.CpEntry.LOADER_ID:
@@ -311,11 +309,44 @@ public class MatchFragment extends Fragment implements
     }
 
     @Override
-    public void onComplete(View view, String link, String title) {
+    public void onComplete(View view, String link, String title) {  // from detail activity
+    }
 
+    @Override
+    public void onReload() {
+        restartLoaders();
     }
 
     // methods
+    private void updateFixture() {
+        if (mFixture == null || mMapFixtures == null) return;
+        FDFixture fixture = mMapFixtures.get(mFixture.getId());
+
+        if (fixture == null || fixture.getId() != mFixture.getId()) return;
+        fixture.setLeague(mFixture.getLeague());
+        fixture.setCaption(mFixture.getCaption());
+        mFixture = fixture;
+    }
+
+    private void restartLoaders() {
+        Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
+                mFixture.getHomeTeamId(), mFixture.getAwayTeamId());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
+        getLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);  // fixtures
+        getLoaderManager().restartLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
+    }
+
+    private void startLoaders() {
+        Uri uri = FDProvider.buildLoaderIdUri(mContext, FDContract.FxEntry.LOADER_ID,
+                mFixture.getHomeTeamId(), mFixture.getAwayTeamId());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);
+        getLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);  // fixtures
+        getLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);  // fixtures
+
+    }
+
     private void setupRecycler() {
         RecyclerMatchAdapter adapter = new RecyclerMatchAdapter(mContext, null, mMapTeams);
         adapter.setHasStableIds(true);
@@ -349,7 +380,7 @@ public class MatchFragment extends Fragment implements
 
     private void bindViewsFixtures() {
         if (mMapFixtures == null || mMap == null) return;  // waits all loaders
-
+        setupIcons();
         for (FDFixture fixture : mMapFixtures.values()) {
             FDCompetition competition = mMap.get(fixture.getCompetitionId());
             if (competition == null) continue;
@@ -667,8 +698,10 @@ public class MatchFragment extends Fragment implements
                 return;
             }
 
-            mCallback.onComplete(null, 0);
-            ((ICallback) context).onComplete(null, MATCH_RESTART_LOADERS, null); // restart loaders
+            mCallback.onComplete(null, 0);    // setup icons
+            ((IReload) context).onReload();             // restart activity loaders
         }
     }
+
+
 }

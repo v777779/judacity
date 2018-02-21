@@ -10,10 +10,12 @@ import com.firebase.jobdispatcher.JobService;
 
 import java.lang.ref.WeakReference;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CREATE;
 import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
+import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
 
 
 /**
@@ -29,13 +31,14 @@ public class NotificationJobService extends JobService implements INotification 
     public boolean onStartJob(com.firebase.jobdispatcher.JobParameters job) {
         Bundle bundle = job.getExtras();
         String s = EMPTY_NOTIFICATION;
+        int id = EMPTY_INT_VALUE;
         if (bundle != null) {
-            s = job.getExtras().getString(NT_BUNDLE_INTENT_NOTIFICATION_BODY);
-
+            s = bundle.getString(NT_BUNDLE_INTENT_NOTIFICATION_BODY);
+            id = bundle.getInt(NT_BUNDLE_INTENT_NOTIFICATION_ID);
         }
 
-        mBackgroundTask = new NotificationAsyncTask(this, job);
-        mBackgroundTask.execute(s);
+        mBackgroundTask = new NotificationAsyncTask(this, job, s, id);
+        mBackgroundTask.execute();
 
 
         return true;
@@ -52,20 +55,26 @@ public class NotificationJobService extends JobService implements INotification 
         jobFinished(jobParameters, false);
     }
 
-    public static class NotificationAsyncTask extends AsyncTask<String, Void, Void> {
+    public static class NotificationAsyncTask extends AsyncTask<Void, Void, Void> {
         private final WeakReference<Context> weakContext;
         private com.firebase.jobdispatcher.JobParameters jobParameters;
+        private String s;
+        private int id;
 
-        NotificationAsyncTask(Context context, com.firebase.jobdispatcher.JobParameters jobParameters) {
+        NotificationAsyncTask(Context context,
+                              com.firebase.jobdispatcher.JobParameters jobParameters,
+                              String s, int id) {
             this.weakContext = new WeakReference<>(context);
             this.jobParameters = jobParameters;
+            this.s = s;
+            this.id = id;
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
             Context context = weakContext.get();
             if (context != null) {
-                NotificationUtils.executeTask(context, NT_ACTION_CREATE, params[0], EMPTY_NOTIFICATION_ID);
+                NotificationUtils.executeTask(context, NT_ACTION_CREATE, s, id);
             }
             return null;
         }

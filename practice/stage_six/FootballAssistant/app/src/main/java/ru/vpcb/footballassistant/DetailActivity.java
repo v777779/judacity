@@ -91,7 +91,7 @@ import static ru.vpcb.footballassistant.utils.FDUtils.formatDateToSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class DetailActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
+        implements LoaderManager.LoaderCallbacks<Cursor>, ICallback, IReload {
 
     private static boolean sIsTimber;
     private static Handler mHandler;
@@ -135,6 +135,7 @@ public class DetailActivity extends AppCompatActivity
     private Bundle mViewPagerBundle;
     private int mViewPagerPos;
     private Bundle mBundleExtra;
+    private MatchFragment mMatchFragment;
 
 
     // test!!!
@@ -359,7 +360,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onComplete(View view, String value, String title) {
+    public void onComplete(View view, String value, String title) { // from fragment
         if (value == null || value.isEmpty()) return;
         if (value.equals(MATCH_RESTART_LOADERS)) {
             restartLoaders();
@@ -518,10 +519,10 @@ public class DetailActivity extends AppCompatActivity
 
     private void startMatchFragment(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = MatchFragment.newInstance(fixture, homeTeam, awayTeam);
+        mMatchFragment = MatchFragment.newInstance(fixture, homeTeam, awayTeam);
         fm.popBackStackImmediate(MATCH_FRAGMENT_TAG, POP_BACK_STACK_INCLUSIVE);
         fm.beginTransaction()
-                .replace(R.id.container_detail, fragment)
+                .replace(R.id.container_detail, mMatchFragment)
                 .addToBackStack(MATCH_FRAGMENT_TAG)
                 .commit();
     }
@@ -962,11 +963,17 @@ public class DetailActivity extends AppCompatActivity
         intentFilter.addAction(getString(R.string.broadcast_data_update_finished));
         intentFilter.addAction(getString(R.string.broadcast_data_no_network));
         intentFilter.addAction(getString(R.string.broadcast_data_update_progress));
+        intentFilter.addAction(getString(R.string.broadcast_notification_change));
         registerReceiver(mMessageReceiver, intentFilter);
     }
 
     private void unregisterReceiver() {
         unregisterReceiver(mMessageReceiver);
+    }
+
+    @Override
+    public void onReload() {
+        restartLoaders();
     }
 
 
@@ -988,10 +995,14 @@ public class DetailActivity extends AppCompatActivity
                     FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
 
 
-                } else if (action.equals(getString(R.string.broadcast_notification_set))) {
+                } else if (action.equals(getString(R.string.broadcast_notification_change))) {
                     int fixtureId = intent.getIntExtra(NT_BUNDLE_INTENT_FIXTURE_ID,EMPTY_INT_VALUE);
                     if(fixtureId <= 0) return;
-                    startMatchFragment(fixtureId);
+                    restartLoaders();                                           // update activity loaders
+                    if(mMatchFragment != null && mMatchFragment.isVisible()) {
+//                        mMatchFragment.onComplete(null, getString(R.string.broadcast_notification_change), null);
+                        mMatchFragment.onReload();
+                    }
 
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");

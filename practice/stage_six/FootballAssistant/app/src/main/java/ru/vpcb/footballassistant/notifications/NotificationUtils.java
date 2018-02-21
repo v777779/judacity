@@ -42,6 +42,7 @@ import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_ACTIVITY_PENDING_
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CANCEL;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CREATE;
+import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_BODY;
 import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.NT_DELAY_TIME_MINIMUM;
@@ -80,6 +81,7 @@ public class NotificationUtils {
     }
 
     synchronized public static String scheduleReminder(@NonNull final Context context, FDFixture fixture) {
+        if(fixture == null || fixture.getId() <= 0) return null ;
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
@@ -105,6 +107,7 @@ public class NotificationUtils {
 
         Bundle bundle = new Bundle();
         bundle.putString(NT_BUNDLE_INTENT_NOTIFICATION_BODY, s);
+        bundle.putInt(NT_BUNDLE_INTENT_NOTIFICATION_ID,fixture.getId());
 
         Job constraintReminderJob = dispatcher.newJobBuilder()      // ВНИМАНИЕ. Работает если приложение запущено
                 /* The Service that will be used to write to preferences */
@@ -127,7 +130,7 @@ public class NotificationUtils {
         return s;
     }
 
-    private static void writeNotification(Context context, String id) {
+    private static void writeNotification(Context context, int id) {
 
         FDFixture fixture = FDUtils.readFixture(context, id);
         if (fixture == null || fixture.getId() <= 0) return;
@@ -135,12 +138,19 @@ public class NotificationUtils {
         fixture.setNotificationId(EMPTY_STRING);
         try {
             FDUtils.updateFixtureProjection(context, fixture, false); // update
+            FDFixture newFixture = FDUtils.readFixture(context, id);
+            if(newFixture == null || newFixture.getId() != fixture.getId()) return;
+// send message to detail activity
+            Intent intent = new Intent(context.getString(R.string.broadcast_notification_change));
+            intent.putExtra(NT_BUNDLE_INTENT_FIXTURE_ID, fixture.getId());
+            context.sendBroadcast(intent);
+
         } catch (OperationApplicationException  |RemoteException e) {
             Timber.d(context.getString(R.string.favorites_database_exception));
         }
     }
 
-    public static void sendNotification(Context context, String sMatch) {
+    public static void sendNotification(Context context, String sMatch, int fixtureId) {
 
         int id = (int) TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis()) + rnd.nextInt(NT_RANDOM_RANGE);
 
@@ -169,7 +179,7 @@ public class NotificationUtils {
 
         notificationManager.notify(id, notificationBuilder.build());
 // test!!!
-        writeNotification(context,null);
+        writeNotification(context,fixtureId);
 
     }
 
@@ -242,7 +252,7 @@ public class NotificationUtils {
         } else if (NT_ACTION_CANCEL.equals(action)) {
             clearNotifications(context, id);
         } else if (NT_ACTION_CREATE.equals(action)) {
-            sendNotification(context, s);
+            sendNotification(context, s, id);
         }
     }
 

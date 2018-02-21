@@ -26,8 +26,8 @@ public class NotifyIntentService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         String action = intent.getAction();
         String s = intent.getStringExtra(NT_BUNDLE_INTENT_NOTIFICATION_BODY);
-        int id =  intent.getIntExtra(NT_BUNDLE_INTENT_NOTIFICATION_ID,EMPTY_NOTIFICATION_ID);
-        NotificationUtils.executeTask(this, action, s,id);
+        int id = intent.getIntExtra(NT_BUNDLE_INTENT_NOTIFICATION_ID, EMPTY_NOTIFICATION_ID);
+        NotificationUtils.executeTask(this, action, s, id);
 
     }
 }
