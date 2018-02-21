@@ -274,10 +274,10 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
 //                }
 //            }
 
-            if (getItemViewType() == RM_ITEM_VIEW_TYPE_DARK && mLayout != null) {
-                mLayout.setBackgroundColor(mColorDark);
-
-            }
+//            if (getItemViewType() == RM_ITEM_VIEW_TYPE_DARK && mLayout != null) {
+//                mLayout.setBackgroundColor(mColorDark);
+//
+//            }
             setText(mTextTeamHome, fixture.getHomeTeamName());
             setText(mTextTeamAway, fixture.getAwayTeamName());
             setText(mTextTime, formatMatchTime(fixture.getDate()));

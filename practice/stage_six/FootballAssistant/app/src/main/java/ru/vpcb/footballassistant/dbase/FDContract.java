@@ -101,6 +101,7 @@ public class FDContract {
         public static final int TABLE_ID_MATCHER2 = 302;  // date between ? and ?
         public static final int TABLE_ID_MATCHER3 = 303;  // team ? and ?
         public static final int TABLE_ID_MATCHER4 = 304;  // notificationId ?
+        public static final int TABLE_ID_MATCHER5 = 305;  // notificationId ?
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
         public static final String COLUMN_FIXTURE_ID = "fixture_id";                    // int
         public static final String COLUMN_COMPETITION_ID = "competition_id";            // int
@@ -206,7 +207,6 @@ public class FDContract {
         public static final int LOADER_ID = 1228;                                           // int
     }
 
-
     public static final FDParams[] MATCH_PARAMETERS = new FDParams[]{
             new FDParams(CpEntry.LOADER_ID, CpEntry.TABLE_NAME, CpEntry.TABLE_MATCHER,
                     CpEntry.TABLE_ID_MATCHER, CpEntry.COLUMN_COMPETITION_ID        // id?
@@ -236,7 +236,10 @@ public class FDContract {
                     FxEntry.TABLE_ID_MATCHER3,
                     FxEntry.COLUMN_FIXTURE_DATE, FxEntry.COLUMN_FIXTURE_DATE,        // btw ? and ?
                     FxEntry.TABLE_ID_MATCHER4,
-                    FxEntry.COLUMN_NOTIFICATION_ID                                   // id?
+                    FxEntry.COLUMN_NOTIFICATION_ID,                                   // id4?  check this  used for news
+                    FxEntry.TABLE_ID_MATCHER5,
+                    FxEntry.COLUMN_FAVORITES_STATE                                    // id?
+
             ),
             new FDParams(TbEntry.LOADER_ID, TbEntry.TABLE_NAME, TbEntry.TABLE_MATCHER,
                     TbEntry.TABLE_ID_MATCHER, TbEntry.COLUMN_COMPETITION_ID         // id?
@@ -250,16 +253,17 @@ public class FDContract {
 
             new FDParams(NaEntry.LOADER_ID, NaEntry.TABLE_NAME, NaEntry.TABLE_MATCHER,
                     NaEntry.TABLE_ID_MATCHER, NaEntry.COLUMN_ARTICLE_ID,              // id?   //все новости по данному источнику
-                    EMPTY_INT_VALUE,null,null,
-                    EMPTY_INT_VALUE,null,null,
-                    NaEntry.TABLE_ID_MATCHER4,NaEntry.COLUMN_ARTICLE_ID
+                    EMPTY_INT_VALUE, null, null,
+                    EMPTY_INT_VALUE, null, null,
+                    NaEntry.TABLE_ID_MATCHER4, NaEntry.COLUMN_ARTICLE_ID
             ),
             new FDParams(NsEntry.LOADER_ID, NsEntry.TABLE_NAME, NsEntry.TABLE_MATCHER,
                     NsEntry.TABLE_ID_MATCHER, NsEntry.COLUMN_SOURCE_ID,              // id?   //запись по источнику
-                    EMPTY_INT_VALUE,null,null,
-                    EMPTY_INT_VALUE,null,null,
-                    NsEntry.TABLE_ID_MATCHER4,NaEntry.COLUMN_SOURCE_ID
+                    EMPTY_INT_VALUE, null, null,
+                    EMPTY_INT_VALUE, null, null,
+                    NsEntry.TABLE_ID_MATCHER4, NsEntry.COLUMN_SOURCE_ID             // id4?
             ),
+
     };
 
     public static final int MATCH_PARAMETERS_COMPETITIONS = 0;
@@ -287,6 +291,9 @@ public class FDContract {
         String columnId5;
         int tableIdMatcher4;
         String columnId6;
+        int tableIdMatcher5;
+        String columnId7;
+
 
         public FDParams(int id, String tableName, int tableMatcher, int tableIdMatcher, String coolumnId) {
             this.id = id;
@@ -330,9 +337,23 @@ public class FDContract {
                         int tableIdMatcher4, String columnId6) {
             this(id, tableName, tableMatcher,
                     tableIdMatcher, columnId,
-                    tableIdMatcher2, columnId2, columnId3,tableIdMatcher3,columnId4,columnId5);
+                    tableIdMatcher2, columnId2, columnId3, tableIdMatcher3, columnId4, columnId5);
             this.tableIdMatcher4 = tableIdMatcher4;
             this.columnId6 = columnId6;
+        }
+
+        public FDParams(int id, String tableName, int tableMatcher,
+                        int tableIdMatcher, String columnId,
+                        int tableIdMatcher2, String columnId2, String columnId3,
+                        int tableIdMatcher3, String columnId4, String columnId5,
+                        int tableIdMatcher4, String columnId6,
+                        int tableIdMatcher5, String columnId7) {
+            this(id, tableName, tableMatcher,
+                    tableIdMatcher, columnId,
+                    tableIdMatcher2, columnId2, columnId3, tableIdMatcher3, columnId4, columnId5,
+                    tableIdMatcher4,columnId6);
+            this.tableIdMatcher5 = tableIdMatcher5;
+            this.columnId7 = columnId7;
         }
 
 
@@ -341,12 +362,12 @@ public class FDContract {
                 return "datetime(" + FxEntry.COLUMN_FIXTURE_DATE + ") ASC";
             } else if (columnId.equals(NaEntry.COLUMN_ARTICLE_ID)) {
                 return "datetime(" + NaEntry.COLUMN_PUBLISHED_AT + ") DESC";  // fresh record firstсвежая запись первая
-            }  else{
-                    return columnId + " ASC";
-                }
-
+            } else {
+                return columnId + " ASC";
             }
+
         }
-
-
     }
+
+
+}

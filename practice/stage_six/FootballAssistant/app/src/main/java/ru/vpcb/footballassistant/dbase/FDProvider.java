@@ -62,13 +62,17 @@ public class FDProvider extends ContentProvider {
             if (p.columnId6 != null) {   //   news.Id  fx.notificationId
                 uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/*", p.tableIdMatcher4);  // for text
             }
+// support uri/table/100/txt
+            if (p.columnId7 != null) {   //   news.Id  fx.notificationId
+                uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/#/*", p.tableIdMatcher5);
+            }
         }
         return uriMatcher;
     }
 
 
     @Override
-    public boolean onCreate() {
+    synchronized public boolean onCreate() {
         Context context = getContext();
         mFDDbHelper = new FDDbHelper(context);
 // test!!!  // possible static final ???
@@ -268,14 +272,20 @@ public class FDProvider extends ContentProvider {
                 }
                 return sel;
             }
-            if (match == p.tableIdMatcher4) {
+            if (match == p.tableIdMatcher4) {  // add here table selection if needed
                 List<String> paths = uri.getPathSegments();
                 String _id = paths.get(1);
                 return new Selection(p.tableName,
-                        p.columnId + "=?",
+                        p.columnId6 + "=?",
                         new String[]{_id});
             }
-
+            if (match == p.tableIdMatcher5) {
+                List<String> paths = uri.getPathSegments();
+                String _id = paths.get(1);
+                return new Selection(p.tableName,
+                        p.columnId7 + "=?",
+                        new String[]{_id});
+            }
         }
         throw new UnsupportedOperationException(getContext().getString(R.string.unknown_uri, uri.toString()));
     }

@@ -31,7 +31,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
      * @param db SQLiteDatabse database
      */
     @Override
-    public void onCreate(SQLiteDatabase db) {
+   synchronized public void onCreate(SQLiteDatabase db) {
         final String CREATE_TABLE_COMPETITIONS = "CREATE TABLE " + FDContract.CpEntry.TABLE_NAME + " (" +
 //                FDContract.CpEntry._ID + " INTEGER PRIMARY KEY, " +
                 FDContract.CpEntry.COLUMN_COMPETITION_ID + " INTEGER PRIMARY KEY, " +       // int

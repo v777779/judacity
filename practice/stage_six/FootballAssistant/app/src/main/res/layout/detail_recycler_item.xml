@@ -8,17 +8,16 @@
     android:layout_marginBottom="@dimen/margin_micro"
     android:layout_marginEnd="@dimen/margin_small"
     android:layout_marginStart="@dimen/margin_small"
-
-    android:backgroundTint="@android:color/transparent"
+    android:backgroundTint="@color/rm_item_card_back_light"
     app:cardCornerRadius="@dimen/card_corner_rm_item_radius">
-    <!--background solid-->
-    <!--android:backgroundTint=""/> = null-->
+
+    <!--android:backgroundTint="@android:color/transparent"-->
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_recycler_match_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/rm_item_card_back_light"
+        android:background="?attr/selectableItemBackground"
         android:paddingEnd="@dimen/margin_normal"
         android:paddingStart="@dimen/margin_normal">
 

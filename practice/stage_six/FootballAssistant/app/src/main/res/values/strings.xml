@@ -242,7 +242,7 @@
     <string name="favorites_change_error">Favorite state not changed!</string>
     <string name="notification_change_error">Notification state not changed!</string>
     <string name="notification_date_passed">Notification cannot be set, match already finished.</string>
-
+    <string name="favorites_database_empty">Favorites list is empty!</string>
     <string name="unknown_uri">Unknown uri: %1$s"</string>
     <string name="unknown_loader_id">Unknown id: %1$d"</string>
 

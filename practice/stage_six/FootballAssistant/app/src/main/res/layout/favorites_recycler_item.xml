@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recycler_match_item"
@@ -10,8 +10,7 @@
     android:layout_marginStart="@dimen/margin_small"
 
     android:backgroundTint="@android:color/transparent"
-    app:cardCornerRadius="@dimen/card_corner_rm_item_radius"
-    >
+    app:cardCornerRadius="@dimen/card_corner_rm_item_radius">
     <!--background solid-->
     <!--android:backgroundTint=""/> = null-->
 
@@ -21,7 +20,7 @@
         android:layout_height="wrap_content"
         android:background="@color/rm_item_card_back"
         android:paddingEnd="@dimen/margin_normal"
-        android:paddingStart="@dimen/margin_normal"      >
+        android:paddingStart="@dimen/margin_normal">
 
 
         <ImageView

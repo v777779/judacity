@@ -1,14 +1,15 @@
 package ru.vpcb.footballassistant;
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -30,13 +31,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,12 +46,17 @@ import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
+import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
+import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
+import static ru.vpcb.footballassistant.utils.Config.CP_IS_FAVORITE_SEARCH_KEY;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
@@ -58,10 +65,11 @@ import static ru.vpcb.footballassistant.utils.FDUtils.setDay;
 import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class FavoritesActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, ICallback {
+        implements LoaderManager.LoaderCallbacks<Cursor>, ICallback, IReload {
 
     private static boolean sIsTimber;
     private static Handler mHandler;
+    private static FavoriteAsyncTask mFavoriteTask;
 
     private FloatingActionButton mFab;
     private FloatingActionButton mFab2;
@@ -74,30 +82,12 @@ public class FavoritesActivity extends AppCompatActivity
     private RecyclerView mRecycler;
 
 
-    private TabLayout mTabLayout;
-
-
     private BottomNavigationView mBottomNavigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigationListener;
 
-    // receiver
-    private MessageReceiver mMessageReceiver;
-    // progress
-    private boolean mIsProgressEinished;
-    private int mActivityProgress;
-    private int mServiceProgress;
-    private int mState;
-    private int mUpdateCounter;
 
-    // mMap
-    private Map<Integer, FDCompetition> mMap = new HashMap<>();
-    private Map<Integer, FDFixture> mMapFixtures = new HashMap<>();
+    private Map<Integer, FDFixture> mMapFixtures;
 
-
-    private Cursor[] mCursors;
-    // test!!!
-// TODO  make parcelable for ViewPager and rotation
-    private static ViewPagerData mViewPagerData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,12 +112,10 @@ public class FavoritesActivity extends AppCompatActivity
 
         mBottomNavigation = findViewById(R.id.bottom_navigation);
         mRecycler = findViewById(R.id.recyclerview_main);
-        mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
+
 
 // params
-        mState = MAIN_ACTIVITY_INDEFINITE;
-        mCursors = new Cursor[5];
-
+        mMapFixtures = new LinkedHashMap<>();
 
 // progress
         setupActionBar();
@@ -137,52 +125,29 @@ public class FavoritesActivity extends AppCompatActivity
         setupRecycler();
 
 
-        if (savedInstanceState == null) {
-
-        }
-
-
-        if (savedInstanceState == null) {
-//            refresh(getString(R.string.action_update));
-        }
-
         startLoaders();
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
-            return true;
-        }
-
-
+//        int id = item.getItemId();
+//
+//        if (id == R.id.action_settings) {
+//            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver();
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver();
-    }
-
-// callbacks
-
+    // callbacks
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return FDLoader.getInstance(this, id, args);
@@ -191,19 +156,28 @@ public class FavoritesActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (loader == null || loader.getId() <= 0 || cursor == null || cursor.getCount() == 0)
+        if (loader == null || loader.getId() <= 0 || cursor == null) {
             return;
+        }
 
+        if (cursor.getCount() == 0) {
+            stopProgress();
+            FootballUtils.showMessage(this, getString(R.string.favorites_database_empty));
+            return;
+        }
         switch (loader.getId()) {
-            case FDContract.CpEntry.LOADER_ID:
-                mCursors[0] = cursor;
-//                mMap = FDUtils.readCompetitions(cursor);
-                mUpdateCounter++;
-                break;
             case FDContract.FxEntry.LOADER_ID:
-                mCursors[4] = cursor;
-//                mMapFixtures = FDUtils.readFixtures(cursor);
-                mUpdateCounter++;
+                Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursor);
+                if (mapFixtures == null || mapFixtures.isEmpty()) {
+                    break;
+                }
+                if (mMapFixtures == null) mMapFixtures = new LinkedHashMap<>(); // fixed order
+                mMapFixtures.putAll(mapFixtures);
+                if (mRecycler == null) return;
+
+
+                bindViews();
+
                 break;
 
             default:
@@ -211,28 +185,23 @@ public class FavoritesActivity extends AppCompatActivity
         }
 
 
-        if (mUpdateCounter == 2) {
-//            setupViewPagerSource();
-//            setupViewPager();
-//            stopProgress();
-            new DataLoader().execute(mCursors);
-
-            mUpdateCounter = 0;
-        }
-
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 // cursors will be closed by supportLoaderManager().CursorLoader()
-
     }
 
     @Override
-    public void onComplete(View view, int pos) {
-        Snackbar.make(view, "Recycler item clicked", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-        startMatchActivity();
+    public void onComplete(View view, int fixtureId) {
+        FDFixture fixture = mMapFixtures.get(fixtureId);
+        if (fixture == null || fixture.getId() <= 0) return;
+
+
+        fixture.setFavorite(!fixture.isFavorite());  // check/uncheck
+        mFavoriteTask = new FavoriteAsyncTask(this, fixture, this);
+        mFavoriteTask.execute();
+
     }
 
     @Override
@@ -245,11 +214,57 @@ public class FavoritesActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onReload() {
+        bindViews();
+    }
+
 
     // methods
+    private List<FDFixture> getList(Map<Integer, FDFixture> map) {
+        List<FDFixture> list = new ArrayList<>();
+
+        for (FDFixture fixture : map.values()) {
+            if (fixture == null || fixture.getId() <= 0) continue;
+            list.add(fixture);
+        }
+        return list;
+    }
+
+    private int count = 0;
+
+    private void bindViews() {
+        stopProgress();
+        if (mMapFixtures == null || mRecycler == null) return;
+
+        final List<FDFixture> list = getList(mMapFixtures);
+
+        RecyclerDetailAdapter adapter = (RecyclerDetailAdapter) mRecycler.getAdapter();
+        adapter.swap(list);
+
+    }
+
+
+    private void restartLoaders() {
+
+        Uri uri = FDProvider.buildLoaderIdUri(this, FDContract.FxEntry.LOADER_ID,
+                CP_IS_FAVORITE_SEARCH_KEY, EMPTY_DASH);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);              // uri/#/*
+
+
+        getSupportLoaderManager().restartLoader(FDContract.FxEntry.LOADER_ID, bundle, this);
+
+    }
+
     private void startLoaders() {
-        getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+
+        Uri uri = FDProvider.buildLoaderIdUri(this, FDContract.FxEntry.LOADER_ID,
+                CP_IS_FAVORITE_SEARCH_KEY, EMPTY_DASH);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_LOADER_DATA_URI, uri);              // uri/#/*
+
+        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, bundle, this);
 
     }
 
@@ -398,46 +413,6 @@ public class FavoritesActivity extends AppCompatActivity
 //        mViewPagerMap = map;
 //    }
 
-    private ViewPagerData getViewPagerData() {
-        int last = 0;
-        int next = 0;
-        int current = 0;
-        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
-        Map<Long, Integer> map = new HashMap<>();
-
-        Collections.sort(fixtures, cFx);
-        List<List<FDFixture>> list = new ArrayList<>();
-
-        Calendar c = Calendar.getInstance();
-        setZeroTime(c);
-        current = getIndex(fixtures, c);  // index of current day
-
-        while (next < fixtures.size()) {
-            Date date = formatDateFromSQLite(fixtures.get(next).getDate());
-
-            setDay(c, date);
-            map.put(c.getTimeInMillis(), list.size());
-            c.add(Calendar.DATE, 1);  // next day
-            next = getIndex(fixtures, c);
-            list.add(new ArrayList<>(fixtures.subList(last, next)));
-            last = next;
-            if (next == current) current = list.size();  // index of current day records
-        }
-
-
-        List<View> recyclers = new ArrayList<>();
-        List<String> titles = new ArrayList<>();
-
-
-        for (List<FDFixture> listFixtures : list) {
-            recyclers.add(getRecycler(listFixtures));
-
-        }
-
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, list, map);
-        return viewPagerData;
-    }
-
 
     private void setupRecycler() {
         RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, null, null);
@@ -480,76 +455,6 @@ public class FavoritesActivity extends AppCompatActivity
 //        mTabLayout.setupWithViewPager(mViewPager);
 //    }
 
-// test!!!  update mTabLayout workaround
-// TODO Check workaround of TabLayout update for better solution
-
-    private void updateTabLayout(ViewPagerData data, ViewPagerData last) {
-        try {
-
-            List<String> titles = data.getTitles();
-            int lastSize = last.getTitles().size();
-
-            int size = data.getTitles().size();
-            if (size < lastSize) {
-                for (int i = size; i < lastSize; i++) {
-                    mTabLayout.removeTabAt(size);
-                }
-            } else {
-                for (int i = lastSize; i < size; i++) {
-                    mTabLayout.addTab(mTabLayout.newTab());
-                }
-            }
-            for (int i = 0; i < size; i++) {
-                mTabLayout.getTabAt(i).setText(titles.get(i));
-            }
-        } catch (NullPointerException e) {
-            Timber.d(getString(R.string.viewpager_tab_exception, e.getMessage()));
-        }
-    }
-
-    private void updateViewPager(final ViewPagerData data) {
-        stopProgress();
-        mViewPagerData = data;
-// test!!!
-        List<FDFixture> list = data.getList().get(data.getList().size() / 2);
-        ((RecyclerDetailAdapter) mRecycler.getAdapter()).swap(list);
-
-    }
-
-//    private void setupViewPager2() {
-//        if (mViewPagerList == null) return;
-//
-//        List<View> recyclers = new ArrayList<>();
-//        List<String> titles = new ArrayList<>();
-//
-//
-//        for (List<FDFixture> list : mViewPagerList) {
-//            recyclers.add(getRecycler(list));
-//            titles.add(getRecyclerTitle(list));
-//        }
-//
-//        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers, titles);
-//        mViewPager.setAdapter(listPagerAdapter);
-//        mViewPager.setCurrentItem(mViewPagerPos, true);
-//        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//        mTabLayout.setupWithViewPager(mViewPager);
-//    }
-
 
     private void stopProgress() {
         mProgressValue.setVisibility(View.INVISIBLE);
@@ -580,48 +485,6 @@ public class FavoritesActivity extends AppCompatActivity
         startService(intent);
     }
 
-    private void setupReceiver() {
-        mMessageReceiver = new MessageReceiver();
-    }
-
-    private void registerReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(getString(R.string.broadcast_data_update_started));
-        intentFilter.addAction(getString(R.string.broadcast_data_update_finished));
-        intentFilter.addAction(getString(R.string.broadcast_data_no_network));
-        intentFilter.addAction(getString(R.string.broadcast_data_update_progress));
-        registerReceiver(mMessageReceiver, intentFilter);
-    }
-
-    private void unregisterReceiver() {
-        unregisterReceiver(mMessageReceiver);
-    }
-
-
-    // classes
-    private class MessageReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // an Intent broadcast.
-            if (intent != null) {
-                String action = intent.getAction();
-                if (action.equals(context.getString(R.string.broadcast_data_update_started))) {
-
-                } else if (action.equals(context.getString(R.string.broadcast_data_update_finished))) {
-
-                } else if (action.equals(context.getString(R.string.broadcast_data_update_progress))) {
-
-                } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
-                    Toast.makeText(context, "Broadcast message: no network", Toast.LENGTH_SHORT).show();
-                } else {
-                    throw new UnsupportedOperationException("Not yet implemented");
-                }
-
-            }
-
-        }
-    }
 
     private void setupBottomNavigation() {
         mBottomNavigation = findViewById(R.id.bottom_navigation);
@@ -641,8 +504,8 @@ public class FavoritesActivity extends AppCompatActivity
                                 startActivityNews();
                                 return true;
                             case R.id.navigation_favorites:
-                                Toast.makeText(context, getString(R.string.activity_same_message),
-                                        Toast.LENGTH_SHORT).show();
+                                FootballUtils.showMessage(context, getString(R.string.activity_same_message));
+//                                restartLoaders();
                                 return true;
                             case R.id.navigation_settings:
                                 startActivitySettings();
@@ -652,6 +515,7 @@ public class FavoritesActivity extends AppCompatActivity
                     }
                 });
     }
+
 
     private class TransitionAdapter implements Transition.TransitionListener {
         @Override
@@ -724,34 +588,98 @@ public class FavoritesActivity extends AppCompatActivity
         }
     }
 
-    // TODO Make encapsulation data and maps to ViewPager and other Activities
-    private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {
 
+    private static class FavoriteAsyncTask extends AsyncTask<Void, Void, FDFixture> {
+        private final WeakReference<Context> weakContext;
+        private FDFixture mFixture;
+        private ICallback mCallback;
+
+        FavoriteAsyncTask(Context context, FDFixture fixture, ICallback callback) {
+            this.weakContext = new WeakReference<>(context);
+            this.mFixture = fixture;
+            this.mCallback = callback;
+        }
 
         @Override
-        protected ViewPagerData doInBackground(Cursor[]... cursors) {
+        protected FDFixture doInBackground(Void... params) {
+            Context context = weakContext.get();
+            if (context == null || mFixture == null || mFixture.getId() <= 0) return null;
             try {
-
-                mMap = FDUtils.readCompetitions(cursors[0][0]);
-                mMapFixtures = FDUtils.readFixtures(cursors[0][4]);
-                return getViewPagerData();
+                FDUtils.updateFixtureProjection(context, mFixture, false); // update
+                return FDUtils.readFixture(context, mFixture.getId());
 
 
-            } catch (NullPointerException e) {
-                return null;
-
+            } catch (OperationApplicationException | RemoteException e) {
+                Timber.d(context.getString(R.string.favorites_database_exception, e.getMessage()));
             }
+            return null;
         }
 
         @Override
-        protected void onPostExecute(ViewPagerData viewPagerData) {
+        protected void onPostExecute(FDFixture fixture) {
+            Context context = weakContext.get();
+            if (fixture == null || context == null) return;
 
-            updateViewPager(viewPagerData);
+            if (mFixture.getId() != fixture.getId() || mFixture.isFavorite() != fixture.isFavorite() ||
+                    mFixture.isNotified() != fixture.isNotified()) {
+                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                return;
+            }
+// notificationID does not updated when load database fisrst time and =null
+            String id = mFixture.getNotificationId();
+            String newId = fixture.getNotificationId();
+            if (id != null && newId != null && !id.equals(newId)) {
+                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                return;
+            }
 
 
+            ((IReload) context).onReload();             // restart activity loaders
         }
-
     }
+
+
+//    private static class FavoritesTask extends AsyncTask<Void, Void, ViewPagerData> {
+//        private final WeakReference<Context> weakContext;
+//        private Cursor[] mCursors;
+//        private ICallback mCallback;
+//
+//        public FavoritesTask(Context context, Cursor[] cursors, ICallback mCallback) {
+//            this.weakContext = new WeakReference<>(context);
+//            this.mCursors = cursors;
+//            this.mCallback = mCallback;
+//        }
+//
+//        @Override
+//        protected ViewPagerData doInBackground(Void... params) {
+//            Context context = weakContext.get();
+//            if (context == null || mCursors == null || mCursors.length < 2) return null;
+//            for (Cursor cursor : mCursors) {
+//                if (cursor == null || cursor.getCount() == 0) return null;
+//            }
+//
+//            try {
+//
+//                Map<Integer, FDCompetition> map = FDUtils.readCompetitions(mCursors[0]);
+//                Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(mCursors[1]);
+//                return getViewPagerData(mapFixtures);
+//
+//
+//            } catch (NullPointerException e) {
+//                return null;
+//
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(ViewPagerData viewPagerData) {
+//
+////            updateViewPager(viewPagerData);
+//            mCallback.onComplete(null,1);
+//
+//        }
+//
+//    }
 
 
 }
