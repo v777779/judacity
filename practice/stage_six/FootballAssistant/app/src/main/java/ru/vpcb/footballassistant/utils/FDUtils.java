@@ -828,12 +828,13 @@ public class FDUtils {
         boolean isFavorite = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_FAVORITES_STATE) != 0;
         boolean isNotified = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_STATE) != 0;
         String notificationId = cursor.getString(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_ID);
-
+        String league = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_LEAGUE);
+        String caption= cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_CAPTION);
 
         FDFixture fixture = new FDFixture(id, competitionId, homeTeamId, awayTeamId,
                 date, status, matchday, homeTeamName, awayTeamName,
                 goalsHomeTeam, goalsAwayTeam, homeWin, draw, awayWin,
-                isFavorite, isNotified, notificationId);
+                isFavorite, isNotified, notificationId, league, caption);
 
         return fixture;
     }
@@ -1401,7 +1402,8 @@ public class FDUtils {
     }
 
     // fixture
-    public static ArrayList<ContentProviderOperation> writeFixture(FDFixture fixture, boolean forceDelete) {
+    public static ArrayList<ContentProviderOperation> writeFixture(FDFixture fixture,
+                                                                   FDCompetition competition, boolean forceDelete) {
 
         if (fixture == null || fixture.getId() <= 0) return null;
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
@@ -1431,6 +1433,9 @@ public class FDUtils {
 //        values.put(FDContract.FxEntry.COLUMN_FAVORITES_STATE, fixture.isFavorite() ? 1 : 0);        // int
 //        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_STATE, fixture.isNotified() ? 1 : 0);     // int
 //        values.put(FDContract.FxEntry.COLUMN_NOTIFICATION_ID, fixture.getNotificationId());         // int
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_LEAGUE, competition.getLeague());              // string
+        values.put(FDContract.FxEntry.COLUMN_FIXTURE_CAPTION, competition.getCaption());          // string
+
         operations.add(ContentProviderOperation.newInsert(uri).withValues(values).build());
         return operations;
     }
@@ -1477,7 +1482,7 @@ public class FDUtils {
             List<FDFixture> fixtures = competition.getFixtures();
             if (fixtures == null || fixtures.size() == 0) continue;
             for (FDFixture fixture : fixtures) {
-                List<ContentProviderOperation> operations = writeFixture(fixture, forceDelete);
+                List<ContentProviderOperation> operations = writeFixture(fixture,competition, forceDelete);
                 if (operations == null) continue;
                 listOperations.addAll(operations);
             }

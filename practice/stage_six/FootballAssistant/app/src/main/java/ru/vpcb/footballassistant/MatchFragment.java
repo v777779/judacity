@@ -321,9 +321,9 @@ public class MatchFragment extends Fragment implements
         if (mFixture == null || mMapFixtures == null) return;
         FDFixture fixture = mMapFixtures.get(mFixture.getId());
 
-        if (fixture == null || fixture.getId() != mFixture.getId()) return;
-        fixture.setLeague(mFixture.getLeague());
-        fixture.setCaption(mFixture.getCaption());
+//        if (fixture == null || fixture.getId() != mFixture.getId()) return;
+//        fixture.set_League(mFixture.getLeague());
+//        fixture.set_Caption(mFixture.getCaption());
         mFixture = fixture;
     }
 
@@ -380,12 +380,12 @@ public class MatchFragment extends Fragment implements
     private void bindViewsFixtures() {
         if (mMapFixtures == null || mMap == null) return;  // waits all loaders
         setupIcons();
-        for (FDFixture fixture : mMapFixtures.values()) {
-            FDCompetition competition = mMap.get(fixture.getCompetitionId());
-            if (competition == null) continue;
-            fixture.setLeague(competition.getLeague());
-            fixture.setCaption(competition.getCaption());
-        }
+//        for (FDFixture fixture : mMapFixtures.values()) {
+//            FDCompetition competition = mMap.get(fixture.getCompetitionId());
+//            if (competition == null) continue;
+//            fixture.set_League(competition.getLeague());
+//            fixture.set_Caption(competition.getCaption());
+//        }
         List<FDFixture> list = new ArrayList<>(mMapFixtures.values());
         mRecycler.setLayoutFrozen(false);
         ((RecyclerMatchAdapter) mRecycler.getAdapter()).swap(list);
@@ -586,11 +586,12 @@ public class MatchFragment extends Fragment implements
                 }
 
                 if (!mFixture.isNotified()) {
+//TODO Notification Text
 // notification text
-//                    Calendar c = Calendar.getInstance();
-//                    c.add(Calendar.SECOND, +5);
-//                    String s = FDUtils.formatDateToSQLite(c.getTime());
-//                    mFixture.setDate(s);
+                    Calendar c = Calendar.getInstance();
+                    c.add(Calendar.SECOND, +5);
+                    String s = FDUtils.formatDateToSQLite(c.getTime());
+                    mFixture.setDate(s);
 //
                     String id = NotificationUtils.scheduleReminder(mContext, mFixture);
                     if (id == null || id.isEmpty() || !id.contains(NT_FB_JOB_DISPATCHER_ID)) return;

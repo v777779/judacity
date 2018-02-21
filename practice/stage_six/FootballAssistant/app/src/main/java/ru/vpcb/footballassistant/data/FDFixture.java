@@ -80,8 +80,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.isFavorite = false;
         this.isNotified = false;
         this.notificationId = EMPTY_STRING;
-        this.caption = EMPTY_LONG_DASH;
-        this.league = EMPTY_LONG_DASH;
+        this.caption = EMPTY_DASH;
+        this.league = EMPTY_DASH;
 
         this.result = new FDResult();
         this.odds = new FDOdds();
@@ -92,7 +92,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
                      String date, String status, int matchDay, String homeTeamName,
                      String awayTeamName, int goalsHomeTeam, int goalsAwayTeam,
                      double homeWin, double draw, double awayWin,
-                     boolean isFavorite, boolean isNotified, String notificationId) {
+                     boolean isFavorite, boolean isNotified, String notificationId,
+                     String league, String caption) {
         this.id = id;
         this.competitionId = competitionId;
         this.homeTeamId = homeTeamId;
@@ -107,8 +108,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         this.isFavorite = isFavorite;
         this.isNotified = isNotified;
         this.notificationId = notificationId;
-        this.caption = EMPTY_LONG_DASH;
-        this.league = EMPTY_LONG_DASH;
+        this.league = league;
+        this.caption = caption;
     }
 
     protected FDFixture(Parcel in) {
@@ -124,8 +125,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         isFavorite = in.readByte() != 0;
         isNotified = in.readByte() != 0;
         notificationId = in.readString();
-        caption = in.readString();
         league = in.readString();
+        caption = in.readString();
 // FDLink
         links = new FDLinks();
         links.self.setHref(in.readString());
@@ -179,8 +180,8 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         parcel.writeByte((byte) (isFavorite ? 1 : 0));
         parcel.writeByte((byte) (isNotified ? 1 : 0));
         parcel.writeString(notificationId);
-        parcel.writeString(caption);
         parcel.writeString(league);
+        parcel.writeString(caption);
 // FDLink
         if(links == null) links = new FDLinks();
         parcel.writeString(links.self.getHref());
@@ -400,7 +401,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
 
     // widgets
     public String getCaption() {
-        if (caption == null || caption.isEmpty()) return EMPTY_LONG_DASH;
+        if (caption == null || caption.isEmpty()) return EMPTY_DASH;
         return caption;
     }
 
@@ -409,6 +410,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
     }
 
     public String getLeague() {
+        if(league == null|| league.isEmpty())return EMPTY_DASH;
         return league;
     }
 

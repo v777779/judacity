@@ -83,8 +83,10 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_DRAW + " REAL, " +               // real
                 FDContract.FxEntry.COLUMN_FIXTURE_ODDS_AWAY + " REAL, " +               // real
                 FDContract.FxEntry.COLUMN_FAVORITES_STATE + " INTEGER, " +              // int
-                FDContract.FxEntry.COLUMN_NOTIFICATION_STATE  + " INTEGER, " +          // int
-                FDContract.FxEntry.COLUMN_NOTIFICATION_ID + " TEXT);";                  // string
+                FDContract.FxEntry.COLUMN_NOTIFICATION_STATE + " INTEGER, " +           // int
+                FDContract.FxEntry.COLUMN_NOTIFICATION_ID + " TEXT, " +                 // string
+                FDContract.FxEntry.COLUMN_FIXTURE_LEAGUE + " TEXT, " +                  // string
+                FDContract.FxEntry.COLUMN_FIXTURE_CAPTION + " TEXT);";                  // string
 
 
         final String CREATE_TABLE_TABLES = "CREATE TABLE " + FDContract.TbEntry.TABLE_NAME + " (" +
@@ -220,6 +222,8 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_FAVORITES_STATE = 14;        // int
         int COLUMN_NOTIFICATION_STATE = 15;     // int
         int COLUMN_NOTIFICATION_ID = 16;        // int
+        int COLUMN_FIXTURE_LEAGUE = 17;         // string
+        int COLUMN_FIXTURE_CAPTION = 18;        // string
     }
 
     public interface ITbEntry {
@@ -267,6 +271,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
         int COLUMN_PUBLISHED_AT = 8;            // string int from date
 
     }
+
     public interface INsEntry {
         int COLUMN_SOURCE_ID = 0;               // string
         int COLUMN_SOURCE_NAME = 1;             // string

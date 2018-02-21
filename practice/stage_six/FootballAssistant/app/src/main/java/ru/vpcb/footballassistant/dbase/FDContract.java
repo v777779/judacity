@@ -119,6 +119,8 @@ public class FDContract {
         public static final String COLUMN_FAVORITES_STATE = "favorites_state";          // int
         public static final String COLUMN_NOTIFICATION_STATE = "notification_state";    // int
         public static final String COLUMN_NOTIFICATION_ID = "notification_id";          // int
+        public static final String COLUMN_FIXTURE_LEAGUE = "fixture_league";            // string
+        public static final String COLUMN_FIXTURE_CAPTION = "fixture_caption";          // string
 
         public static final int LOADER_ID = 1224;                                       // int
     }

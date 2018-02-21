@@ -380,11 +380,11 @@ public class DetailActivity extends AppCompatActivity
         FDTeam homeTeam = mMapTeams.get(fixture.getHomeTeamId());
         FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
 
-        FDCompetition competition = mMap.get(fixture.getCompetitionId());
-        if (competition != null) {
-            fixture.setCaption(competition.getCaption());
-            fixture.setLeague(competition.getLeague());
-        }
+//        FDCompetition competition = mMap.get(fixture.getCompetitionId());
+//        if (competition != null) {
+//            fixture.set_Caption(competition.getCaption());
+//            fixture.set_League(competition.getLeague());
+//        }
 
         startMatchFragment(fixture, homeTeam, awayTeam);
     }

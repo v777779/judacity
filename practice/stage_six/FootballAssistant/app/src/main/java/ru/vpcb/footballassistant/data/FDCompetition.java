@@ -7,6 +7,7 @@ import java.util.List;
 
 import ru.vpcb.footballassistant.utils.FDUtils;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 
@@ -128,7 +129,7 @@ public class FDCompetition implements PostProcessingEnabler.PostProcessable {
     }
 
     public String getCaption() {
-        if (caption == null || caption.isEmpty()) return EMPTY_LONG_DASH;
+        if (caption == null || caption.isEmpty()) return EMPTY_DASH;
         return caption;
     }
 
@@ -157,7 +158,7 @@ public class FDCompetition implements PostProcessingEnabler.PostProcessable {
     }
 
     public String getLeague() {
-        if (league == null || league.isEmpty()) return EMPTY_LONG_DASH;
+        if (league == null || league.isEmpty()) return EMPTY_DASH;
         return league;
     }
 

@@ -77,12 +77,12 @@ public class MatchWidgetService extends IntentService {
             int fixtureId = MatchWidgetProvider.getWidgetFixtureId(this, widgetId);
 
             FDFixture fixture = FDUtils.readFixture(this, fixtureId);
-            if (fixture != null) {
-                FDCompetition competition = FDUtils.readCompetition(this, fixture.getCompetitionId());
-                if (competition != null) {
-                    fixture.setCaption(competition.getCaption());
-                }
-            }
+//            if (fixture != null) {
+//                FDCompetition competition = FDUtils.readCompetition(this, fixture.getCompetitionId());
+//                if (competition != null) {
+//                    fixture.setCaption(competition.getCaption());
+//                }
+//            }
 
             MatchWidgetProvider.updateWidget(this, appWidgetManager, widgetId, fixture);
         }
@@ -102,11 +102,11 @@ public class MatchWidgetService extends IntentService {
             int fixtureId = bundle.getInt(WIDGET_BUNDLE_FIXTURE_ID, EMPTY_FIXTURE_ID);
 
             FDFixture fixture = FDUtils.readFixture(this, fixtureId);
-            if (fixture == null) return;
-            FDCompetition competition = FDUtils.readCompetition(this, fixture.getCompetitionId());
-            if (competition != null) {
-                fixture.setCaption(competition.getCaption());
-            }
+//            if (fixture == null) return;
+//            FDCompetition competition = FDUtils.readCompetition(this, fixture.getCompetitionId());
+//            if (competition != null) {
+//                fixture.setCaption(competition.getCaption());
+//            }
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
             MatchWidgetProvider.fillWidget(this, appWidgetManager, widgetId, fixture);

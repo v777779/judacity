@@ -118,7 +118,7 @@ public class UpdateService extends IntentService {
 
     }
 
-
+// TODO check text
     private void testWriteFixtures(Map<Integer, FDCompetition> map,
                                    Map<Integer, FDFixture> mapFixture) throws OperationApplicationException, RemoteException {
 
@@ -148,7 +148,8 @@ public class UpdateService extends IntentService {
                 fixture5.getStatus(), fixture5.getMatchDay(), fixture5.getHomeTeamName(),
                 fixture5.getAwayTeamName(), fixture5.getGoalsHomeTeam(), fixture5.getGoalsAwayTeam(),
                 fixture5.getHomeWin(), fixture5.getDraw(), fixture5.getAwayWin(),
-                fixture5.isFavorite(), fixture5.isNotified(), fixture5.getNotificationId());
+                fixture5.isFavorite(), fixture5.isNotified(), fixture5.getNotificationId(),
+                fixture5.getLeague(),fixture5.getCaption());
 
 
 
