@@ -1000,8 +1000,7 @@ public class DetailActivity extends AppCompatActivity
                     if(fixtureId <= 0) return;
                     restartLoaders();                                           // update activity loaders
                     if(mMatchFragment != null && mMatchFragment.isVisible()) {
-//                        mMatchFragment.onComplete(null, getString(R.string.broadcast_notification_change), null);
-                        mMatchFragment.onReload();
+                       mMatchFragment.onReload();
                     }
 
                 } else {
