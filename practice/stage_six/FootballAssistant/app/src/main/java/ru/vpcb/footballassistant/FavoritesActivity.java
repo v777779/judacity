@@ -133,25 +133,20 @@ public class FavoritesActivity extends AppCompatActivity
         setupActionBar();
         setupBottomNavigation();
         setupProgress();
-        setupReceiver();
         setupListeners();
+        setupRecycler();
 
-        if (savedInstanceState == null && mViewPagerData == null) {
-            setupRecycler();
-        } else {
-// test!!!  check data
-            List<List<FDFixture>> list = mViewPagerData.getList();
-            List<FDFixture> listFixtures = list.get(list.size()/2);
-            setupRecycler(listFixtures);
+
+        if (savedInstanceState == null) {
+
         }
 
 
         if (savedInstanceState == null) {
 //            refresh(getString(R.string.action_update));
-            getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
-            getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
         }
 
+        startLoaders();
 
     }
 
@@ -252,13 +247,19 @@ public class FavoritesActivity extends AppCompatActivity
 
 
     // methods
+    private void startLoaders() {
+        getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(FDContract.FxEntry.LOADER_ID, null, this);
+
+    }
+
     private void startActivitySettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // clear stack  top parent remained
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
                 android.R.anim.fade_in, android.R.anim.fade_out)
                 .toBundle();
-        startActivity(intent,bundle);
+        startActivity(intent, bundle);
         finish();
     }
 
@@ -338,7 +339,7 @@ public class FavoritesActivity extends AppCompatActivity
 //    }
 
 
- // test!!!
+    // test!!!
 // TODO SQLIte Date Check
     private int getIndex(List<FDFixture> list, Calendar c) {
         String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
@@ -358,7 +359,7 @@ public class FavoritesActivity extends AppCompatActivity
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
-        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this,list,null);
+        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list, null);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
 
@@ -366,8 +367,6 @@ public class FavoritesActivity extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
         return recyclerView;
     }
-
-
 
 
 //    private void setupViewPagerSource() {
@@ -440,7 +439,6 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
 
-
     private void setupRecycler() {
         RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, null, null);
         adapter.setHasStableIds(true);
@@ -451,14 +449,13 @@ public class FavoritesActivity extends AppCompatActivity
     }
 
     private void setupRecycler(List<FDFixture> list) {
-        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list,null);
+        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list, null);
         adapter.setHasStableIds(true);
         mRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(layoutManager);
 
     }
-
 
 
 //    private void setupViewPager(ViewPagerDataExt data) {
@@ -514,8 +511,8 @@ public class FavoritesActivity extends AppCompatActivity
         stopProgress();
         mViewPagerData = data;
 // test!!!
-        List<FDFixture> list = data.getList().get(data.getList().size()/2);
-        ((RecyclerDetailAdapter)mRecycler.getAdapter()).swap(list);
+        List<FDFixture> list = data.getList().get(data.getList().size() / 2);
+        ((RecyclerDetailAdapter) mRecycler.getAdapter()).swap(list);
 
     }
 
