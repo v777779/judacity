@@ -838,6 +838,25 @@ public class FDUtils {
         return fixture;
     }
 
+    public static FDFixture readFixture(Context context, String id) {
+        if (id  == null || id.isEmpty()) return null;
+        Uri uri = FDContract.FxEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
+
+        String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_FIXTURES].getSortOrder();
+
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+        if (cursor == null || cursor.getCount() == 0) return null;
+        cursor.moveToFirst();
+        FDFixture fixture = readFixture(cursor);
+        cursor.close();     // disables notifications
+        return fixture;
+    }
 
     public static FDFixture readFixture(Context context, int id) {
         if (id <= 0) return null;

@@ -51,15 +51,17 @@ public class FDProvider extends ContentProvider {
             uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/#", p.tableIdMatcher);
 
 // support uri/table/100/200
-            if (p.columnId2 != null ) {
+            if (p.columnId2 != null) {
                 uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/#/#", p.tableIdMatcher2);
             }
 // support uri/table/txt/txt
             if (p.columnId4 != null) {
                 uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/*/*", p.tableIdMatcher3);
             }
-// TODO Check BuildURI ???
-            uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/*", p.tableIdMatcher);  // for text
+// support uri/table/txt
+            if (p.columnId6 != null) {   //   news.Id  fx.notificationId
+                uriMatcher.addURI(FDContract.CONTENT_AUTHORITY, p.tableName + "/*", p.tableIdMatcher4);  // for text
+            }
         }
         return uriMatcher;
     }
@@ -237,14 +239,14 @@ public class FDProvider extends ContentProvider {
                 Selection sel;
                 // team
                 if (p.tableName.equals(FDContract.TmEntry.TABLE_NAME)) {
-                    sel = new Selection(p.tableName, p.columnId2 + "=? OR "+p.columnId3+"=?",
+                    sel = new Selection(p.tableName, p.columnId2 + "=? OR " + p.columnId3 + "=?",
                             new String[]{_id, _id2});
-                } else if(p.tableName.equals(FDContract.FxEntry.TABLE_NAME)) {
+                } else if (p.tableName.equals(FDContract.FxEntry.TABLE_NAME)) {
                     sel = new Selection(p.tableName,
-                            p.columnId2 + "=?" + " AND " + p.columnId3 + "=?"+ " OR "+
-                            p.columnId2 + "=?" + " AND " + p.columnId3 + "=?",
-                            new String[]{_id, _id2,_id2,_id});
-                }else {
+                            p.columnId2 + "=?" + " AND " + p.columnId3 + "=?" + " OR " +
+                                    p.columnId2 + "=?" + " AND " + p.columnId3 + "=?",
+                            new String[]{_id, _id2, _id2, _id});
+                } else {
 
                     sel = new Selection(p.tableName, p.columnId2 + "=?" + " AND " + p.columnId3 + "=?",
                             new String[]{_id, _id2});
@@ -266,6 +268,13 @@ public class FDProvider extends ContentProvider {
                 }
                 return sel;
             }
+            if (match == p.tableIdMatcher4) {
+                List<String> paths = uri.getPathSegments();
+                String _id = paths.get(1);
+                return new Selection(p.tableName,
+                        p.columnId + "=?",
+                        new String[]{_id});
+            }
 
         }
         throw new UnsupportedOperationException(getContext().getString(R.string.unknown_uri, uri.toString()));
@@ -274,7 +283,7 @@ public class FDProvider extends ContentProvider {
     public static Uri buildLoaderIdUri(Context context, int id, String itemId, String itemId2) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             if (id == p.id) {
-                return  FDUtils.buildItemIdUri(p.tableName,itemId,itemId2);
+                return FDUtils.buildItemIdUri(p.tableName, itemId, itemId2);
             }
         }
         throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
@@ -284,7 +293,7 @@ public class FDProvider extends ContentProvider {
     public static Uri buildLoaderIdUri(Context context, int id, long itemId, long itemId2) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             if (id == p.id) {
-                return  FDUtils.buildItemIdUri(p.tableName,itemId,itemId2);
+                return FDUtils.buildItemIdUri(p.tableName, itemId, itemId2);
             }
         }
         throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
@@ -298,7 +307,6 @@ public class FDProvider extends ContentProvider {
         }
         throw new UnsupportedOperationException(context.getString(R.string.unknown_loader_id, id));
     }
-
 
 
     public static String buildLoaderIdSortOrder(Context context, int id) {

@@ -5,10 +5,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -32,8 +34,10 @@ import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FootballUtils;
+import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_ACTIVITY_PENDING_ID;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CANCEL;
@@ -123,6 +127,18 @@ public class NotificationUtils {
         return s;
     }
 
+    private static void writeNotification(Context context, String id) {
+
+        FDFixture fixture = FDUtils.readFixture(context, id);
+        if (fixture == null || fixture.getId() <= 0) return;
+        fixture.setNotified(false);
+        fixture.setNotificationId(EMPTY_STRING);
+        try {
+            FDUtils.updateFixtureProjection(context, fixture, false); // update
+        } catch (OperationApplicationException  |RemoteException e) {
+            Timber.d(context.getString(R.string.favorites_database_exception));
+        }
+    }
 
     public static void sendNotification(Context context, String sMatch) {
 
@@ -152,6 +168,8 @@ public class NotificationUtils {
 
 
         notificationManager.notify(id, notificationBuilder.build());
+// test!!!
+        writeNotification(context,null);
 
     }
 
