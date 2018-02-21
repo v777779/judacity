@@ -301,11 +301,7 @@ public class MatchFragment extends Fragment implements
 
     @Override
     public void onComplete(View view, int value) {
-        if (mFixture.isFavorite()) {
-            mViewFavorite.setImageResource(R.drawable.ic_star);
-        } else {
-            mViewFavorite.setImageResource(R.drawable.ic_star_border_white);
-        }
+        setupIcons();
 
     }
 
@@ -330,6 +326,18 @@ public class MatchFragment extends Fragment implements
 
     }
 
+    private void setupIcons() {
+        if (mFixture.isFavorite()) {
+            mViewFavorite.setImageResource(R.drawable.ic_star);
+        } else {
+            mViewFavorite.setImageResource(R.drawable.ic_star_border_white);
+        }
+        if (mFixture.isNotified()) {
+            mViewNotification.setImageResource(R.drawable.ic_notifications);
+        } else {
+            mViewNotification.setImageResource(R.drawable.ic_notifications_none_white);
+        }
+    }
 
     private int getFixtureId() {
         Bundle args = getArguments();
@@ -381,16 +389,8 @@ public class MatchFragment extends Fragment implements
         mTextScoreHome.setText(FDUtils.formatFromInt(mFixture.getGoalsHome(), EMPTY_DASH));
         mTextScoreAway.setText(FDUtils.formatFromInt(mFixture.getGoalsAway(), EMPTY_DASH));
         mTextStatus.setText(mFixture.getStatus());
-        if (mFixture.isFavorite()) {
-            mViewFavorite.setImageResource(R.drawable.ic_star);
-        } else {
-            mViewFavorite.setImageResource(R.drawable.ic_star_border_white);
-        }
-        if (mFixture.isNotified()) {
-            mViewNotification.setImageResource(R.drawable.ic_notifications);
-        } else {
-            mViewNotification.setImageResource(R.drawable.ic_notifications_none_white);
-        }
+        setupIcons();
+
 // start
         Date date = FDUtils.formatDateFromSQLite(mFixture.getDate());
         if (date != null) {
@@ -560,10 +560,11 @@ public class MatchFragment extends Fragment implements
                     return;
                 }
 
-                if(!mFixture.isNotified()) {
+                if (!mFixture.isNotified()) {
 // test!!!
+
                     Calendar c = Calendar.getInstance();
-                    c.add(Calendar.SECOND, +15);
+                    c.add(Calendar.SECOND, +60);
                     String s = FDUtils.formatDateToSQLite(c.getTime());
                     mFixture.setDate(s);
 //
@@ -573,13 +574,13 @@ public class MatchFragment extends Fragment implements
                     mFixture.setNotificationId(id);
                     mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
                     mFavoriteTask.execute();
-                    FootballUtils.showMessage(mContext,getString(R.string.notification_set_message,
+                    FootballUtils.showMessage(mContext, getString(R.string.notification_set_message,
                             FDUtils.formatMatchDateStart(mFixture.getDate())));
 
-                }else { // reset notification
+                } else { // reset notification
 
-                    boolean isSuccess= NotificationUtils.scheduleRemover(mContext, mFixture);
-                    if(!isSuccess) {
+                    boolean isSuccess = NotificationUtils.scheduleRemover(mContext, mFixture);
+                    if (!isSuccess) {
                         FootballUtils.showMessage(mContext, getString(R.string.notification_reset_error_message));
                     }
 
@@ -587,7 +588,7 @@ public class MatchFragment extends Fragment implements
                     mFixture.setNotificationId(EMPTY_STRING);
                     mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
                     mFavoriteTask.execute();
-                    FootballUtils.showMessage(mContext,getString(R.string.notification_reset_message,
+                    FootballUtils.showMessage(mContext, getString(R.string.notification_reset_message,
                             FDUtils.formatMatchDateStart(mFixture.getDate())));
                 }
             }
@@ -655,13 +656,13 @@ public class MatchFragment extends Fragment implements
 
             if (mFixture.getId() != fixture.getId() || mFixture.isFavorite() != fixture.isFavorite() ||
                     mFixture.isNotified() != fixture.isNotified() ||
-                    mFixture.getNotificationId() != fixture.getNotificationId()) {
+                    !mFixture.getNotificationId().equals(fixture.getNotificationId())) {
                 FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }
 
             mCallback.onComplete(null, 0);
-            ((ICallback) context).onComplete(null, MATCH_RESTART_LOADERS, null); // viewpager refresh
+            ((ICallback) context).onComplete(null, MATCH_RESTART_LOADERS, null); // restart loaders
         }
     }
 }

@@ -75,6 +75,7 @@
     <dimen name="text_sm_recycler_league_size">14sp</dimen>
     <dimen name="text_sm_recycler_date_size">10sp</dimen>
     <dimen name="text_sm_recycler_team_size">10sp</dimen>
+    <dimen name="icon_sm_recycler_size">24dp</dimen>
 
 
     <!--screen team-->
@@ -119,7 +120,7 @@
     <dimen name="text_news_item_body_size">12sp</dimen>
     <dimen name="text_news_item_source_size">10sp</dimen>
     <dimen name="text_news_item_time_size">10sp</dimen>
-    <dimen name="text_news_item_appbar_size">16sp</dimen>
+    <dimen name="text_news_item_appbar_size">22sp</dimen>
 
     <!--widgets-->
     <dimen name="widget_margin">8dp</dimen>

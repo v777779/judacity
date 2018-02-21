@@ -171,8 +171,8 @@
 
     <ImageView
         android:id="@+id/match_notification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/image_sm_head_icon_size"
+        android:layout_height="@dimen/image_sm_head_icon_size"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_notifications_none_white"
