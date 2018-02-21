@@ -587,10 +587,10 @@ public class MatchFragment extends Fragment implements
 
                 if (!mFixture.isNotified()) {
 // notification text
-                    Calendar c = Calendar.getInstance();
-                    c.add(Calendar.SECOND, +5);
-                    String s = FDUtils.formatDateToSQLite(c.getTime());
-                    mFixture.setDate(s);
+//                    Calendar c = Calendar.getInstance();
+//                    c.add(Calendar.SECOND, +5);
+//                    String s = FDUtils.formatDateToSQLite(c.getTime());
+//                    mFixture.setDate(s);
 //
                     String id = NotificationUtils.scheduleReminder(mContext, mFixture);
                     if (id == null || id.isEmpty() || !id.contains(NT_FB_JOB_DISPATCHER_ID)) return;
