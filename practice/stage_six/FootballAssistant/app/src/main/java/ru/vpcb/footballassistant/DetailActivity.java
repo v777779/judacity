@@ -80,6 +80,7 @@ import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
+import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_INTENT_EXTRA;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
@@ -133,8 +134,14 @@ public class DetailActivity extends AppCompatActivity
     private Cursor[] mCursors;
     private Bundle mViewPagerBundle;
     private int mViewPagerPos;
-    private Bundle mWidgetBundle;
     private MatchFragment mMatchFragment;
+
+    // widget
+//    private Bundle mWidgetBundle;
+    private int mWidgetWidgetId;
+    private int mWidgetFixtureId;
+
+    // notification
     private int mNotificationFixtureId;
 
 
@@ -172,7 +179,12 @@ public class DetailActivity extends AppCompatActivity
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
-        mWidgetBundle = null;            // from widget
+        mWidgetWidgetId = EMPTY_INT_VALUE;
+        mWidgetFixtureId = EMPTY_INT_VALUE;
+        mNotificationFixtureId = EMPTY_INT_VALUE;
+
+
+//        mWidgetBundle = null;            // from widget
 
         // progress
         setupActionBar();
@@ -185,9 +197,13 @@ public class DetailActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             if (intent != null && intent.hasExtra(WIDGET_INTENT_BUNDLE)) {
-                mWidgetBundle = intent.getBundleExtra(WIDGET_INTENT_BUNDLE);
+                Bundle widgetBundle = intent.getBundleExtra(WIDGET_INTENT_BUNDLE);
+                if (widgetBundle != null) {
+                    mWidgetWidgetId = widgetBundle.getInt(WIDGET_BUNDLE_WIDGET_ID,EMPTY_INT_VALUE);
+                    mWidgetFixtureId = widgetBundle.getInt(WIDGET_BUNDLE_FIXTURE_ID,EMPTY_INT_VALUE);
+                }
             }
-            if(intent!= null && intent.hasExtra(NT_BUNDLE_INTENT_FIXTURE_ID)) {
+            if (intent != null && intent.hasExtra(NT_BUNDLE_INTENT_FIXTURE_ID)) {
                 mNotificationFixtureId = intent.getIntExtra(NT_BUNDLE_INTENT_FIXTURE_ID, EMPTY_INT_VALUE);
             }
 
@@ -200,8 +216,8 @@ public class DetailActivity extends AppCompatActivity
             mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_LOADER_DATA_BUNDLE);
             mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS);
             mViewPagerBack.setVisibility(View.INVISIBLE);
-            mWidgetBundle = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
-            mNotificationFixtureId = EMPTY_INT_VALUE;
+//            mWidgetBundle = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
+//            mWidgetBundle = null;
         }
 
         mMap = new HashMap<>();
@@ -226,7 +242,7 @@ public class DetailActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBundle(BUNDLE_LOADER_DATA_BUNDLE, mViewPagerBundle);
         outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
-        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA, mWidgetBundle);
+//        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA, mWidgetBundle);
     }
 
     @Override
@@ -338,11 +354,13 @@ public class DetailActivity extends AppCompatActivity
     @Override
     public void onComplete(View view, int fixtureId) {
 // widget
-        if (mWidgetBundle != null) {
-            int widgetId = mWidgetBundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
-            MatchWidgetService.startFillWidgetAction(this, widgetId, fixtureId);
+        if (mWidgetWidgetId > 0) {
+            MatchWidgetService.startFillWidgetAction(this, mWidgetWidgetId, fixtureId);
             mViewPagerBundle = null;
             mWidgetBar.setVisibility(View.INVISIBLE);
+            FootballUtils.showMessage(this, getString(R.string.widget_button_update));
+            mWidgetWidgetId = EMPTY_INT_VALUE;
+            return;
         }
 
         startMatchFragment(fixtureId);
@@ -377,6 +395,8 @@ public class DetailActivity extends AppCompatActivity
     private void startMatchFragment(int fixtureId) {
 
         FDFixture fixture = mMapFixtures.get(fixtureId);
+        if(fixture == null || fixture.getId() <= 0) return;
+
         FDTeam homeTeam = mMapTeams.get(fixture.getHomeTeamId());
         FDTeam awayTeam = mMapTeams.get(fixture.getAwayTeamId());
 
@@ -677,8 +697,13 @@ public class DetailActivity extends AppCompatActivity
 
 //        Collections.sort(fixtures, cFx);
         List<List<FDFixture>> list = new ArrayList<>();
-
-        Date date = formatDateFromSQLiteZeroTime(mViewPagerBundle.getString(BUNDLE_LOADER_DATE_CENTER));
+//TODO bundle == null
+        Date date;
+        if (mViewPagerBundle != null) {
+            date = formatDateFromSQLiteZeroTime(mViewPagerBundle.getString(BUNDLE_LOADER_DATE_CENTER));
+        } else {
+            date = Calendar.getInstance().getTime();
+        }
 
         List<Long> times = getTimesList(fixtures);
         current = getIndex(times, date.getTime());
@@ -871,15 +896,19 @@ public class DetailActivity extends AppCompatActivity
         });
 
 // widget support
-        if (mWidgetBundle != null && mWidgetBundle.getInt(WIDGET_BUNDLE_WIDGET_ID) > 0) {
+        if (mWidgetWidgetId > 0) {
             mWidgetBar.setVisibility(View.VISIBLE);
             mWidgetBar.animate()
                     .alpha(1)
                     .setStartDelay(VIEWPAGER_BACK_START_DELAY)
                     .setDuration(VIEWPAGER_BACK_DURATION).start();
         }
+        if(mWidgetFixtureId > 0) {
+            startMatchFragment(mWidgetFixtureId);
+            mWidgetFixtureId = EMPTY_INT_VALUE;
+        }
 // notification support
-        if(mNotificationFixtureId > 0) {
+        if (mNotificationFixtureId > 0) {
             startMatchFragment(mNotificationFixtureId);
             mNotificationFixtureId = EMPTY_INT_VALUE;
         }
@@ -1006,11 +1035,11 @@ public class DetailActivity extends AppCompatActivity
 
 
                 } else if (action.equals(getString(R.string.broadcast_notification_change))) {
-                    int fixtureId = intent.getIntExtra(NT_BUNDLE_INTENT_FIXTURE_ID,EMPTY_INT_VALUE);
-                    if(fixtureId <= 0) return;
+                    int fixtureId = intent.getIntExtra(NT_BUNDLE_INTENT_FIXTURE_ID, EMPTY_INT_VALUE);
+                    if (fixtureId <= 0) return;
                     restartLoaders();                                           // update activity loaders
-                    if(mMatchFragment != null && mMatchFragment.isVisible()) {
-                       mMatchFragment.onReload();
+                    if (mMatchFragment != null && mMatchFragment.isVisible()) {
+                        mMatchFragment.onReload();
                     }
 
                 } else {

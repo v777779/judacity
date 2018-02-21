@@ -364,7 +364,7 @@ public class MatchFragment extends Fragment implements
             mViewFavorite.setImageResource(R.drawable.ic_star_border_white);
         }
         if (mFixture.isNotified()) {
-            mViewNotification.setImageResource(R.drawable.ic_notifications);
+            mViewNotification.setImageResource(R.drawable.ic_notifications_match);
         } else {
             mViewNotification.setImageResource(R.drawable.ic_notifications_none_white);
         }
@@ -589,7 +589,7 @@ public class MatchFragment extends Fragment implements
 //TODO Notification Text
 // notification text
                     Calendar c = Calendar.getInstance();
-                    c.add(Calendar.SECOND, +5);
+                    c.add(Calendar.SECOND, +15);
                     String s = FDUtils.formatDateToSQLite(c.getTime());
                     mFixture.setDate(s);
 //
@@ -688,8 +688,14 @@ public class MatchFragment extends Fragment implements
             if (fixture == null || context == null) return;
 
             if (mFixture.getId() != fixture.getId() || mFixture.isFavorite() != fixture.isFavorite() ||
-                    mFixture.isNotified() != fixture.isNotified() ||
-                    !mFixture.getNotificationId().equals(fixture.getNotificationId())) {
+                    mFixture.isNotified() != fixture.isNotified()) {
+                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                return;
+            }
+// notificationID does not updated when load database fisrst time and =null
+            String id =     mFixture.getNotificationId();
+            String newId =  fixture.getNotificationId();
+            if(id != null && newId != null && !id.equals(newId)){
                 FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }

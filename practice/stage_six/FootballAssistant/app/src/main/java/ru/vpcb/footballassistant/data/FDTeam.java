@@ -147,6 +147,9 @@ public class FDTeam implements PostProcessingEnabler.PostProcessable, Parcelable
         parcel.writeInt(id);
 // links
         if(links == null) links = new FDLinks();
+        if(links.self == null) links.self = new FDLink();
+        if(links.players == null) links.players = new FDLink();
+        if(links.fixtures == null) links.fixtures = new FDLink();
         parcel.writeString(links.self.getHref());
         parcel.writeString(links.players.getHref());
         parcel.writeString(links.fixtures.getHref());

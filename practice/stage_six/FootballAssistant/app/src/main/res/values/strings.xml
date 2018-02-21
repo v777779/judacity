@@ -208,6 +208,7 @@
     <string name="widget_head_text">Click to choose match</string>
     <string name="widget_body_text">Ingredients List</string>
     <string name="widget_button">Select and Click on Match to fill widget</string>
+    <string name="widget_button_update">Widget has been updated</string>
 
 
 

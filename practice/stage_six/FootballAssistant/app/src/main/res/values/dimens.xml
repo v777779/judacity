@@ -138,7 +138,8 @@
     <dimen name="widget_image_score_size">32dp</dimen>
     <dimen name="widget_text_score_size">16sp</dimen>
     <dimen name="widget_text_status_size">12sp</dimen>
-    <dimen name="widget_icon_size">36dp</dimen>
+    <dimen name="widget_button_size">36dp</dimen>
+    <dimen name="widget_icon_size">24dp</dimen>
 
 
 

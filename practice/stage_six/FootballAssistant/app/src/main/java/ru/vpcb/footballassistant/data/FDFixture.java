@@ -197,6 +197,7 @@ public class FDFixture implements PostProcessingEnabler.PostProcessable, Parcela
         if(result == null) result = new FDResult();
         parcel.writeInt(result.goalsHomeTeam);
         parcel.writeInt(result.goalsAwayTeam);
+        if(result.halfTime == null) result.halfTime = new FDHalfTime();
         parcel.writeInt(result.halfTime.goalsHomeTeam);
         parcel.writeInt(result.halfTime.goalsAwayTeam);
 

@@ -17,11 +17,11 @@
         style="@style/League.Match.Widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_small"
         android:contentDescription="@string/text_sm_item_match_league"
         android:text="@string/widget_head_text" />
     <!--android:background="?attr/selectableItemBackgroundBorderless"-->
@@ -30,11 +30,11 @@
         android:id="@+id/widget_linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:baselineAligned="false"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_large"
         android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_large"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
 
@@ -65,18 +65,42 @@
                 android:contentDescription="@string/text_rm_item_team_name"
                 android:text="@string/widget_empty_long_dash" />
 
-            <ImageView
-                android:id="@+id/match_notification"
-                android:layout_width="@dimen/widget_icon_size"
-                android:layout_height="@dimen/widget_icon_size"
-                android:layout_gravity="center"
 
-                android:layout_marginTop="@dimen/margin_small"
-                android:clickable="true"
-                android:contentDescription="@string/text_sm_item_match_icon_favorite"
-                android:focusable="true"
-                android:src="@drawable/ic_notifications_none_white" />
             <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+            <LinearLayout
+                android:id="@+id/widget_linear_icons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/match_favorite"
+                    android:layout_width="@dimen/widget_icon_size"
+                    android:layout_height="@dimen/widget_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/text_sm_item_match_icon_favorite"
+                    android:src="@drawable/ic_star_border_white"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/margin_normal"
+
+                    />
+
+                <ImageView
+                    android:id="@+id/match_notification"
+                    android:layout_width="@dimen/widget_icon_size"
+                    android:layout_height="@dimen/widget_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/text_sm_item_match_icon_favorite"
+                    android:src="@drawable/ic_notifications_none_white"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/margin_normal"
+
+                    />
+
+            </LinearLayout>
+
         </LinearLayout>
 
 
@@ -84,8 +108,8 @@
             android:id="@+id/widget_linear_center"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.35"
             android:layout_marginTop="@dimen/margin_micro"
+            android:layout_weight="1.35"
             android:orientation="vertical">
 
             <TextView
@@ -147,8 +171,7 @@
                 android:minEms="@integer/text_sm_item_status_min"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
-                android:text="@string/widget_empty_long_dash"
-                />
+                android:text="@string/widget_empty_long_dash" />
         </LinearLayout>
 
         <LinearLayout
@@ -183,8 +206,8 @@
 
             <ImageView
                 android:id="@+id/match_refresh"
-                android:layout_width="@dimen/widget_icon_size"
-                android:layout_height="@dimen/widget_icon_size"
+                android:layout_width="@dimen/widget_button_size"
+                android:layout_height="@dimen/widget_button_size"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_small"
                 android:clickable="true"
@@ -193,6 +216,7 @@
                 android:src="@drawable/ic_refresh_white" />
             <!--android:background="?attr/selectableItemBackgroundBorderless"-->
         </LinearLayout>
+
 
     </LinearLayout>
 

@@ -102,6 +102,16 @@ public class MatchWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.text_sm_item_status, fixture.getStatus());
         views.setOnClickPendingIntent(R.id.app_widget_container, pendingIntent);
         views.setOnClickPendingIntent(R.id.match_refresh, getPendingIntent(context, widgetId, fixtureId));
+        if(fixture.isNotified()) {
+          views.setImageViewResource(R.id.match_notification,R.drawable.ic_notifications_white);
+        }else {
+            views.setImageViewResource(R.id.match_notification,R.drawable.ic_notifications_none_white);
+        }
+        if(fixture.isFavorite()) {
+            views.setImageViewResource(R.id.match_favorite,R.drawable.ic_star_white);
+        }else{
+            views.setImageViewResource(R.id.match_favorite,R.drawable.ic_star_border_white);
+        }
 
         views.setInt(R.id.app_widget_container, "setBackgroundResource", R.drawable.widget_back_light);
         new Thread(new Runnable() {
