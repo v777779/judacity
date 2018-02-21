@@ -71,6 +71,7 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
 import static ru.vpcb.footballassistant.utils.Config.NT_ACTION_CREATE;
 import static ru.vpcb.footballassistant.utils.Config.NT_FB_JOB_DISPATCHER_ID;
+import static ru.vpcb.footballassistant.utils.Config.SHOW_MESSAGE_INFINITE;
 
 public class MatchFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback {
@@ -549,22 +550,16 @@ public class MatchFragment extends Fragment implements
         mViewNotificationBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFixture == null || mFixture.getId() <= 0) {
-                    FootballUtils.showMessage(mContext, getString(R.string.notification_change_error));
-                    return;
-                }
 
                 Date date = FDUtils.formatDateFromSQLite(mFixture.getDate());
                 if (date == null) {
-                    FootballUtils.showMessage(mContext, getString(R.string.notification_change_error));
                     return;
                 }
 
                 if (!mFixture.isNotified()) {
 // test!!!
-
                     Calendar c = Calendar.getInstance();
-                    c.add(Calendar.SECOND, +60);
+                    c.add(Calendar.SECOND, +5);
                     String s = FDUtils.formatDateToSQLite(c.getTime());
                     mFixture.setDate(s);
 //
@@ -574,27 +569,38 @@ public class MatchFragment extends Fragment implements
                     mFixture.setNotificationId(id);
                     mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
                     mFavoriteTask.execute();
-                    FootballUtils.showMessage(mContext, getString(R.string.notification_set_message,
-                            FDUtils.formatMatchDateStart(mFixture.getDate())));
+                    FootballUtils.showMessage(mContext,
+                            getString(R.string.notification_set_message,
+                                    FDUtils.formatMatchDateStart(mFixture.getDate())));
 
                 } else { // reset notification
-
                     boolean isSuccess = NotificationUtils.scheduleRemover(mContext, mFixture);
                     if (!isSuccess) {
-                        FootballUtils.showMessage(mContext, getString(R.string.notification_reset_error_message));
+                        FootballUtils.showMessage(mContext,
+                                getString(R.string.notification_reset_error_message));
                     }
 
                     mFixture.setNotified(false);
                     mFixture.setNotificationId(EMPTY_STRING);
                     mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
                     mFavoriteTask.execute();
-                    FootballUtils.showMessage(mContext, getString(R.string.notification_reset_message,
-                            FDUtils.formatMatchDateStart(mFixture.getDate())));
+
+                    String message;
+                    if (isSuccess) {
+                        message = getString(R.string.notification_reset_message,
+                                FDUtils.formatMatchDateStart(mFixture.getDate()));
+                    } else {
+                        message = getString(R.string.notification_reset_error_message);
+                    }
+                    FootballUtils.showMessage(mContext, message);
+
                 }
             }
         });
 
-        mViewFavoriteBack.setOnClickListener(new View.OnClickListener() {
+        mViewFavoriteBack.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 if (mFixture == null || mFixture.getId() <= 0) return;
@@ -623,7 +629,7 @@ public class MatchFragment extends Fragment implements
     }
 
 
-    public static class FavoriteAsyncTask extends AsyncTask<Void, Void, FDFixture> {
+    private static class FavoriteAsyncTask extends AsyncTask<Void, Void, FDFixture> {
         private final WeakReference<Context> weakContext;
         private FDFixture mFixture;
         private ICallback mCallback;

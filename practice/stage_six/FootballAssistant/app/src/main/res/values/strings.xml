@@ -222,9 +222,9 @@
     <string name="news_no_data_message">There is no news on this link</string>
     <string name="action_share_news_message">Football Assistant News: %1$  href:%2$s"</string>
     <string name="webview_error_page_loading">Error page loading detected</string>
-    <string name="notification_set_message">Notification set on date: %1$s</string>
-    <string name="notification_reset_message">Notification removed from date: %1$s</string>
-    <string name="notification_reset_error_message">Notification not set or something wrong</string>
+    <string name="notification_set_message">Notification: %1$s</string>
+    <string name="notification_reset_message">Removed: %1$s</string>
+    <string name="notification_reset_error_message">Notification cannot be removed</string>
     <string name="notification_reset_id_message">Notification not set or wrong id</string>
 
 

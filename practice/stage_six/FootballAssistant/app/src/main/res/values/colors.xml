@@ -318,4 +318,6 @@
     <color name="widget_back_light_color">#29a27e</color>
     <color name="widget_back_stroke_color">#f8f8f8</color>
 
+    <!--message-->
+    <color name="message_snackbar_action">#80bbc7</color>
 </resources>

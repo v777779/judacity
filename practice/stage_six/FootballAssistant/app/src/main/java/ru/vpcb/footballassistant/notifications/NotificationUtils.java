@@ -68,8 +68,7 @@ public class NotificationUtils {
             return false;
         }
         String id = fixture.getNotificationId();
-        if (id == null || id.isEmpty() || id.contains(NT_FB_JOB_DISPATCHER_ID)) {
-
+        if (id == null || id.isEmpty() || !id.contains(NT_FB_JOB_DISPATCHER_ID)) {
             return false;
         }
         int result = dispatcher.cancel(id);
