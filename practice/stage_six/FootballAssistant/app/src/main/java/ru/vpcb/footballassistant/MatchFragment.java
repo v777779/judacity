@@ -586,11 +586,11 @@ public class MatchFragment extends Fragment implements
                 }
 
                 if (!mFixture.isNotified()) {
-// test!!!
-                    Calendar c = Calendar.getInstance();
-                    c.add(Calendar.SECOND, +5);
-                    String s = FDUtils.formatDateToSQLite(c.getTime());
-                    mFixture.setDate(s);
+// notification text
+//                    Calendar c = Calendar.getInstance();
+//                    c.add(Calendar.SECOND, +5);
+//                    String s = FDUtils.formatDateToSQLite(c.getTime());
+//                    mFixture.setDate(s);
 //
                     String id = NotificationUtils.scheduleReminder(mContext, mFixture);
                     if (id == null || id.isEmpty() || !id.contains(NT_FB_JOB_DISPATCHER_ID)) return;
@@ -598,30 +598,27 @@ public class MatchFragment extends Fragment implements
                     mFixture.setNotificationId(id);
                     mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
                     mFavoriteTask.execute();
-//                    FootballUtils.showMessage(mContext,
-//                            getString(R.string.notification_set_message,
-//                                    FDUtils.formatMatchDateStart(mFixture.getDate())));
+                    FootballUtils.showMessage(mContext,
+                            getString(R.string.notification_set_message,
+                                    FDUtils.formatMatchDateStart(mFixture.getDate())));
 
                 } else { // reset notification
                     boolean isSuccess = NotificationUtils.scheduleRemover(mContext, mFixture);
-//                    if (!isSuccess) {
-//                        FootballUtils.showMessage(mContext,
-//                                getString(R.string.notification_reset_error_message));
-//                    }
+
 
                     mFixture.setNotified(false);
                     mFixture.setNotificationId(EMPTY_STRING);
                     mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
                     mFavoriteTask.execute();
 
-//                    String message;
-//                    if (isSuccess) {
-//                        message = getString(R.string.notification_reset_message,
-//                                FDUtils.formatMatchDateStart(mFixture.getDate()));
-//                    } else {
-//                        message = getString(R.string.notification_reset_error_message);
-//                    }
-//                    FootballUtils.showMessage(mContext, message);
+                    String message;
+                    if (isSuccess) {
+                        message = getString(R.string.notification_reset_message,
+                                FDUtils.formatMatchDateStart(mFixture.getDate()));
+                    } else {
+                        message = getString(R.string.notification_reset_error_message);
+                    }
+                    FootballUtils.showMessage(mContext, message);
 
                 }
             }
