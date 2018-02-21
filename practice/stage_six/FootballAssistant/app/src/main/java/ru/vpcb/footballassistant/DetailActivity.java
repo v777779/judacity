@@ -77,7 +77,6 @@ import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_RESTART_LOADERS;
 import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
-import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
@@ -134,8 +133,9 @@ public class DetailActivity extends AppCompatActivity
     private Cursor[] mCursors;
     private Bundle mViewPagerBundle;
     private int mViewPagerPos;
-    private Bundle mBundleExtra;
+    private Bundle mWidgetBundle;
     private MatchFragment mMatchFragment;
+    private int mNotificationFixtureId;
 
 
     // test!!!
@@ -172,6 +172,8 @@ public class DetailActivity extends AppCompatActivity
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
+        mWidgetBundle = null;            // from widget
+
         // progress
         setupActionBar();
         setupBottomNavigation();
@@ -183,9 +185,11 @@ public class DetailActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             if (intent != null && intent.hasExtra(WIDGET_INTENT_BUNDLE)) {
-                mBundleExtra = intent.getBundleExtra(WIDGET_INTENT_BUNDLE);
+                mWidgetBundle = intent.getBundleExtra(WIDGET_INTENT_BUNDLE);
             }
-
+            if(intent!= null && intent.hasExtra(NT_BUNDLE_INTENT_FIXTURE_ID)) {
+                mNotificationFixtureId = intent.getIntExtra(NT_BUNDLE_INTENT_FIXTURE_ID, EMPTY_INT_VALUE);
+            }
 
             mViewPagerBundle = getDatesSpanBundle(Calendar.getInstance());
             mViewPagerPos = -1; // center of -span 0 span+
@@ -196,7 +200,8 @@ public class DetailActivity extends AppCompatActivity
             mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_LOADER_DATA_BUNDLE);
             mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS);
             mViewPagerBack.setVisibility(View.INVISIBLE);
-            mBundleExtra = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
+            mWidgetBundle = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
+            mNotificationFixtureId = EMPTY_INT_VALUE;
         }
 
         mMap = new HashMap<>();
@@ -221,7 +226,7 @@ public class DetailActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBundle(BUNDLE_LOADER_DATA_BUNDLE, mViewPagerBundle);
         outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
-        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA, mBundleExtra);
+        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA, mWidgetBundle);
     }
 
     @Override
@@ -333,8 +338,8 @@ public class DetailActivity extends AppCompatActivity
     @Override
     public void onComplete(View view, int fixtureId) {
 // widget
-        if (mBundleExtra != null) {
-            int widgetId = mBundleExtra.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
+        if (mWidgetBundle != null) {
+            int widgetId = mWidgetBundle.getInt(WIDGET_BUNDLE_WIDGET_ID, EMPTY_WIDGET_ID);
             MatchWidgetService.startFillWidgetAction(this, widgetId, fixtureId);
             mViewPagerBundle = null;
             mWidgetBar.setVisibility(View.INVISIBLE);
@@ -866,12 +871,17 @@ public class DetailActivity extends AppCompatActivity
         });
 
 // widget support
-        if (mBundleExtra != null && mBundleExtra.getInt(WIDGET_BUNDLE_WIDGET_ID) > 0) {
+        if (mWidgetBundle != null && mWidgetBundle.getInt(WIDGET_BUNDLE_WIDGET_ID) > 0) {
             mWidgetBar.setVisibility(View.VISIBLE);
             mWidgetBar.animate()
                     .alpha(1)
                     .setStartDelay(VIEWPAGER_BACK_START_DELAY)
                     .setDuration(VIEWPAGER_BACK_DURATION).start();
+        }
+// notification support
+        if(mNotificationFixtureId > 0) {
+            startMatchFragment(mNotificationFixtureId);
+            mNotificationFixtureId = EMPTY_INT_VALUE;
         }
 
     }

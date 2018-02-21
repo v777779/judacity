@@ -26,11 +26,13 @@ import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
+import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     // TODO использовать ViewPagerFragment_003
     // TODO  MainActivity остальные Fragments FrameLayout индивидуальные toolbar и replacement
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity  {
     // TODO Options Add Widget Bar to Add
     // TODO Options Add League Head Items to Detail Recycler
     // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
-
 
 
     private static boolean sIsTimber;
@@ -183,7 +184,6 @@ public class MainActivity extends AppCompatActivity  {
 // methods
 
 
-
     private void makeTransition() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
@@ -208,13 +208,18 @@ public class MainActivity extends AppCompatActivity  {
                 Bundle options = ActivityOptionsCompat.makeCustomAnimation(MainActivity.this,
                         android.R.anim.fade_in, android.R.anim.fade_out)
                         .toBundle();
+                if (getIntent() != null) {
+// widget
+                    Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
+                    if (bundle != null) {
+                        intent.putExtra(WIDGET_INTENT_BUNDLE, bundle);
+                    }
+// notification
+                    int fixtureId = getIntent().getIntExtra(NT_BUNDLE_INTENT_FIXTURE_ID, EMPTY_INT_VALUE);
+                    intent.putExtra(NT_BUNDLE_INTENT_FIXTURE_ID, fixtureId);
 
-                Bundle bundle = getIntent().getBundleExtra(WIDGET_INTENT_BUNDLE);
-                if (bundle != null) {
-                    intent.putExtra(WIDGET_INTENT_BUNDLE, bundle);
                 }
                 startActivity(intent, options);
-
             }
         }, 250);
 

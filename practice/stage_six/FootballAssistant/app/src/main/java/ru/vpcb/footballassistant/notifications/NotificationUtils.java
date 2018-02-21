@@ -81,7 +81,7 @@ public class NotificationUtils {
     }
 
     synchronized public static String scheduleReminder(@NonNull final Context context, FDFixture fixture) {
-        if(fixture == null || fixture.getId() <= 0) return null ;
+        if (fixture == null || fixture.getId() <= 0) return null;
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
@@ -107,7 +107,7 @@ public class NotificationUtils {
 
         Bundle bundle = new Bundle();
         bundle.putString(NT_BUNDLE_INTENT_NOTIFICATION_BODY, s);
-        bundle.putInt(NT_BUNDLE_INTENT_NOTIFICATION_ID,fixture.getId());
+        bundle.putInt(NT_BUNDLE_INTENT_NOTIFICATION_ID, fixture.getId());
 
         Job constraintReminderJob = dispatcher.newJobBuilder()      // ВНИМАНИЕ. Работает если приложение запущено
                 /* The Service that will be used to write to preferences */
@@ -139,13 +139,13 @@ public class NotificationUtils {
         try {
             FDUtils.updateFixtureProjection(context, fixture, false); // update
             FDFixture newFixture = FDUtils.readFixture(context, id);
-            if(newFixture == null || newFixture.getId() != fixture.getId()) return;
+            if (newFixture == null || newFixture.getId() != fixture.getId()) return;
 // send message to detail activity
             Intent intent = new Intent(context.getString(R.string.broadcast_notification_change));
             intent.putExtra(NT_BUNDLE_INTENT_FIXTURE_ID, fixture.getId());
             context.sendBroadcast(intent);
 
-        } catch (OperationApplicationException  |RemoteException e) {
+        } catch (OperationApplicationException | RemoteException e) {
             Timber.d(context.getString(R.string.favorites_database_exception));
         }
     }
@@ -162,7 +162,7 @@ public class NotificationUtils {
                 .setContentText(sMatch)                                // time
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(sMatch))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setContentIntent(contentIntent(context))
+                .setContentIntent(contentIntent(context, fixtureId))
                 .addAction(applyAction(context, id))
                 .addAction(cancelAction(context, id))
                 .setAutoCancel(true);
@@ -179,7 +179,7 @@ public class NotificationUtils {
 
         notificationManager.notify(id, notificationBuilder.build());
 // test!!!
-        writeNotification(context,fixtureId);
+        writeNotification(context, fixtureId);
 
     }
 
@@ -215,9 +215,10 @@ public class NotificationUtils {
         return action;
     }
 
-    private static PendingIntent contentIntent(Context context) {
+    private static PendingIntent contentIntent(Context context, int id) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(NT_BUNDLE_INTENT_FIXTURE_ID, id);
         return PendingIntent.getActivity(
                 context,
                 NT_ACTION_ACTIVITY_PENDING_ID,
