@@ -131,18 +131,18 @@ public class FavoritesActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_reload, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_settings) {
-//            Snackbar.make(getWindow().getDecorView(), "Action Settings", Snackbar.LENGTH_SHORT).show();
-//            return true;
-//        }
+        int id = item.getItemId();
+
+        if (id == R.id.action_reload) {
+            restartLoaders();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -172,6 +172,7 @@ public class FavoritesActivity extends AppCompatActivity
                     break;
                 }
                 if (mMapFixtures == null) mMapFixtures = new LinkedHashMap<>(); // fixed order
+                mMapFixtures.clear();
                 mMapFixtures.putAll(mapFixtures);
                 if (mRecycler == null) return;
 

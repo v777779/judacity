@@ -290,9 +290,13 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
 
             if(fixture.isFavorite()) {
                 mImageFavorite.setImageResource(R.drawable.ic_star);
+            }else{
+                mImageFavorite.setImageResource(R.drawable.ic_star_border);
             }
             if(fixture.isNotified()) {
                 mImageNotify.setImageResource(R.drawable.ic_notifications);
+            }else{
+                mImageNotify.setImageResource(R.drawable.ic_notifications_none);
             }
 
 

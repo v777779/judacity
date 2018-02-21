@@ -8,6 +8,7 @@
         android:title="@string/action_reload"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_refresh_white"
+
         />
 
 
