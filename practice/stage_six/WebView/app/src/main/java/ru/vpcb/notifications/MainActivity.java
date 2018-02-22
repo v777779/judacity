@@ -3,6 +3,7 @@ package ru.vpcb.notifications;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -25,6 +29,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
+import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,12 +40,23 @@ public class MainActivity extends AppCompatActivity {
 
     private int click;
 
+    private static Random mRnd;
+    private BottomNavigationView mBottomNavigationView;
+    private static Handler mHandler;
+
+    // adMob
+    private AdView mAdView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mAdView = findViewById(R.id.adview_banner);
+        mBottomNavigationView = findViewById(R.id.bottom_navigation);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +159,20 @@ public class MainActivity extends AppCompatActivity {
         mTracker = application.getDefaultTracker();
 
 
+
+        if (mRnd == null) mRnd = new Random();
+        if(savedInstanceState == null) {
+            if (mRnd.nextInt(100) < 30) {
+                mAdView.setAlpha(1);
+                mBottomNavigationView.setAlpha(0);
+                mAdView.animate().setStartDelay(30000).setDuration(750).alpha(0).start();
+                mBottomNavigationView.animate().setStartDelay(30000).setDuration(750).alpha(1).start();
+            }
+        }else{
+            mAdView.setVisibility(View.INVISIBLE);
+        }
+        setAdMob();
+
     }
 
     @Override
@@ -168,6 +199,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     // methods
+    private void setAdMob() {
+        MobileAds.initialize(this, getString(R.string.banner_ad_app_id));
+// banner
+//        mAdView = findViewById(R.id.adview_banner);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+    }
 
     private void openWebView(String URL) {
         android.webkit.WebView webView = findViewById(R.id.webview);

@@ -9,4 +9,12 @@
     <string name="title_phone">Phone</string>
     <string name="title_input">Input</string>
 
+    <!--banner test-->
+    <string name="banner_ad_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_size">BANNER</string>
+
+    <!--<string name="banner_size">FULL_BANNER</string>-->
+    <!--<string name="banner_size">LEADERBOARD</string>-->
+
 </resources>
