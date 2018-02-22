@@ -26,7 +26,7 @@ import com.google.android.gms.analytics.Tracker;
  * This is a subclass of {@link Application} used to provide shared objects for this app, such as
  * the {@link Tracker}.
  */
-public class AnalyticsApplication extends Application {
+public class WebView extends Application {
 
   private static GoogleAnalytics sAnalytics;
   private static Tracker sTracker;

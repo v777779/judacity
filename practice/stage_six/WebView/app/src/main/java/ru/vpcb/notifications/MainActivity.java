@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
         // tracker
         // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        WebView application = (WebView) getApplication();
         mTracker = application.getDefaultTracker();
 
 
