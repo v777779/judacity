@@ -88,6 +88,7 @@ import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_BET;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_TIME_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_7;
+import static ru.vpcb.footballassistant.utils.Config.IMAGE_IDS;
 import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
 import static ru.vpcb.footballassistant.utils.Config.ND_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.ND_BASE_URI;
@@ -204,7 +205,6 @@ public class FDUtils {
     }
 
 
-
     public static void showMessage(Context context, String s) {
         if (!(context instanceof Activity) || s == null || s.isEmpty()) return;
 
@@ -218,6 +218,7 @@ public class FDUtils {
             Timber.d(context.getString(R.string.notification_empty_activity_exception, e.getMessage()));
         }
     }
+
     // stings
     public static int formatHrefToId(String href) throws NumberFormatException {
         try {
@@ -319,9 +320,9 @@ public class FDUtils {
         return getRnd(RANDOM_BASE_DEFAULT) < ADMOB_SHOW_THRESHOLD;
     }
 
-    public static int getRnd(int base){
-        if(rnd == null) rnd = new Random();
-        if(base <= 0) base = RANDOM_BASE_DEFAULT;
+    public static int getRnd(int base) {
+        if (rnd == null) rnd = new Random();
+        if (base <= 0) base = RANDOM_BASE_DEFAULT;
         return rnd.nextInt(base);
     }
 
@@ -396,6 +397,11 @@ public class FDUtils {
 
         }
         return EMPTY_STRING;
+    }
+
+    // images
+    public static int getImageBackId() {
+        return IMAGE_IDS[rnd.nextInt(IMAGE_IDS.length)];
     }
 
     // shared preferences
@@ -901,7 +907,7 @@ public class FDUtils {
         boolean isNotified = cursor.getInt(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_STATE) != 0;
         String notificationId = cursor.getString(FDDbHelper.IFxEntry.COLUMN_NOTIFICATION_ID);
         String league = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_LEAGUE);
-        String caption= cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_CAPTION);
+        String caption = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_CAPTION);
 
         FDFixture fixture = new FDFixture(id, competitionId, homeTeamId, awayTeamId,
                 date, status, matchday, homeTeamName, awayTeamName,
@@ -912,7 +918,7 @@ public class FDUtils {
     }
 
     public static FDFixture readFixture(Context context, String id) {
-        if (id  == null || id.isEmpty()) return null;
+        if (id == null || id.isEmpty()) return null;
         Uri uri = FDContract.FxEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();                               // вся таблица
 
         String sortOrder = FDContract.MATCH_PARAMETERS[MATCH_PARAMETERS_FIXTURES].getSortOrder();
@@ -1554,7 +1560,7 @@ public class FDUtils {
             List<FDFixture> fixtures = competition.getFixtures();
             if (fixtures == null || fixtures.size() == 0) continue;
             for (FDFixture fixture : fixtures) {
-                List<ContentProviderOperation> operations = writeFixture(fixture,competition, forceDelete);
+                List<ContentProviderOperation> operations = writeFixture(fixture, competition, forceDelete);
                 if (operations == null) continue;
                 listOperations.addAll(operations);
             }
@@ -1562,19 +1568,20 @@ public class FDUtils {
         return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
-// write database
+    // write database
 // sources
     public static void writeDatabaseSources(Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
         writeSources(context, map, forceDelete);
     }
-// articles
+
+    // articles
     public static void writeDatabaseArticles(Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
         writeArticles(context, map, forceDelete);
     }
 
-// news
+    // news
     public static void writeDatabaseNews(Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 

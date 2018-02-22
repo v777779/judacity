@@ -254,7 +254,7 @@ public class DetailActivity extends AppCompatActivity
         mMapFixtures = new HashMap<>();
 
 
-//        mViewPagerBack.setImageResource(FDUtils.getImageBackId());
+        mViewPagerBack.setImageResource(FDUtils.getImageBackId());
 
 //            refresh(getString(R.string.action_update));
         startLoaders();
