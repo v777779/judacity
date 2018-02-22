@@ -65,13 +65,9 @@ import static ru.vpcb.footballassistant.utils.Config.ADMOB_SHOW_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
-import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCHES;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_NEWS;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_NEWS_ITEM;
-import static ru.vpcb.footballassistant.utils.Config.FIREBASE_NEWS_SIZE;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
-import static ru.vpcb.footballassistant.utils.Config.FIREBASE_WIDGET;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
 import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.Config.ND_LOADERS_UPDATE_COUNTER;
@@ -163,7 +159,7 @@ public class NewsActivity extends AppCompatActivity
         mViewPagerPos = EMPTY_INT_VALUE;
         mUpdateCounter = 0;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        FootballAssistant application = (FootballAssistant) getApplication();
         mTracker = application.getDefaultTracker();
 
 // progress

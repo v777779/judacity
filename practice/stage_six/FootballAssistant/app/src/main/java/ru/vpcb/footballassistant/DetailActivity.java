@@ -79,8 +79,6 @@ import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPL
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCHES;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
@@ -96,7 +94,6 @@ import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_NUMBER;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_FIXTURE_ID;
-import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_INTENT_EXTRA;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
@@ -207,7 +204,7 @@ public class DetailActivity extends AppCompatActivity
         mWidgetFixtureId = EMPTY_INT_VALUE;
         mNotificationFixtureId = EMPTY_INT_VALUE;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        FootballAssistant application = (FootballAssistant) getApplication();
         mTracker = application.getDefaultTracker();
 
 //        mWidgetBundle = null;            // from widget
