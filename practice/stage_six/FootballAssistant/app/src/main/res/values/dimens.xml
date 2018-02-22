@@ -122,7 +122,7 @@
     <dimen name="text_news_item_body_size">12sp</dimen>
     <dimen name="text_news_item_source_size">10sp</dimen>
     <dimen name="text_news_item_time_size">10sp</dimen>
-    <dimen name="text_news_item_appbar_size">22sp</dimen>
+    <dimen name="text_news_item_appbar_size">16sp</dimen>
 
     <!--widgets-->
     <dimen name="widget_margin">8dp</dimen>
