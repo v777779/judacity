@@ -289,120 +289,13 @@ public class FavoritesActivity extends AppCompatActivity
         finish();
     }
 
-    private void startFragmentLeague() {
 
-    }
 
-    private void startFragmentTeam() {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = TeamFragment.newInstance();
-
-        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
-        fm.beginTransaction()
-                .replace(R.id.container_favorites, fragment)
-                .addToBackStack(FRAGMENT_TEAM_TAG)
-                .commit();
-
-    }
 
     private void setupListeners() {
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-            }
-        });
-
-        mFab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
 
     }
 
-
-    private void startMatchActivity() {
-        Intent intent = new Intent(this, MatchActivity.class);
-        startActivity(intent);
-    }
-
-//    // test!!!
-//// TODO Check SQLite Date Format
-//    private long getViewPagerDate(int index) {
-//        try {
-//            String s = mViewPagerData.mList.get(index).get(0).getDate();
-//            Calendar c = FDUtils.getCalendarFromSQLite(s);
-//            if (c == null) return -1;
-//            setZeroTime(c);
-//            return c.getTimeInMillis();
-//        } catch (NullPointerException | IndexOutOfBoundsException e) {
-//            return -1;
-//        }
-//    }
-
-
-    // test!!!
-// TODO SQLIte Date Check
-    private int getIndex(List<FDFixture> list, Calendar c) {
-        String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
-        FDFixture fixture = new FDFixture();
-        fixture.setDate(dateSQLite);
-        int index = Collections.binarySearch(list, fixture, cFx);  // for givent day
-        if (index < 0) index = -index - 1;
-        if (index > list.size()) index = list.size() - 1;
-        return index;
-
-    }
-
-    // test!!!
-    private RecyclerView getRecycler(List<FDFixture> list) {
-        Config.Span sp = Config.getDisplayMetrics(this);
-
-        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
-        RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
-
-        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list, null);
-        adapter.setHasStableIds(true);
-        recyclerView.setAdapter(adapter);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        return recyclerView;
-    }
-
-
-//    private void setupViewPagerSource() {
-//        int last = 0;
-//        int next = 0;
-//        int current = 0;
-//        List<FDFixture> fixtures = new ArrayList<>(mMapFixtures.values()); // sorted by date
-//        Map<Long, Integer> map = new HashMap<>();
-//
-//        Collections.sort(fixtures, cFx);
-//        List<List<FDFixture>> list = new ArrayList<>();
-//
-//        Calendar c = Calendar.getInstance();
-//        setZeroTime(c);
-//        current = getIndex(fixtures, c);  // index of current day
-//
-//        while (next < fixtures.size()) {
-//            setDay(c, fixtures.get(next).getDate());
-//            map.put(c.getTimeInMillis(), list.size());
-//            c.add(Calendar.DATE, 1);  // next day
-//            next = getIndex(fixtures, c);
-//            list.add(new ArrayList<>(fixtures.subList(last, next)));
-//            last = next;
-//            if (next == current) current = list.size();  // index of current day records
-//        }
-//
-//        mViewPagerPos = current;
-//        mViewPagerList = list;
-//        mViewPagerMap = map;
-//    }
 
 
     private void setupRecycler() {
@@ -413,38 +306,6 @@ public class FavoritesActivity extends AppCompatActivity
         mRecycler.setLayoutManager(layoutManager);
 
     }
-
-    private void setupRecycler(List<FDFixture> list) {
-        RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list, null);
-        adapter.setHasStableIds(true);
-        mRecycler.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecycler.setLayoutManager(layoutManager);
-
-    }
-
-
-//    private void setupViewPager(ViewPagerDataExt data) {
-//        ViewPagerAdapter adapter = new ViewPagerAdapter(data.mRecyclers, data.mTitles);
-//        mViewPager.setAdapter(adapter);
-//        mViewPager.setCurrentItem(data.mPos, true);
-//        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//        mTabLayout.setupWithViewPager(mViewPager);
-//    }
 
 
     private void stopProgress() {
@@ -469,11 +330,6 @@ public class FavoritesActivity extends AppCompatActivity
             actionBar.show();
         }
 
-    }
-
-    private void refresh(String action) {
-        Intent intent = new Intent(action, null, this, UpdateService.class);
-        startService(intent);
     }
 
 
@@ -505,78 +361,6 @@ public class FavoritesActivity extends AppCompatActivity
                         return false;
                     }
                 });
-    }
-
-
-    private class TransitionAdapter implements Transition.TransitionListener {
-        @Override
-        public void onTransitionStart(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
-    }
-
-    private class DataParam {
-        private Cursor[] cursors;
-
-    }
-
-    private class ViewPagerData {
-        private List<View> mRecyclers;
-        private List<String> mTitles;
-        private int mPos;
-        private List<List<FDFixture>> mList;
-        private Map<Long, Integer> mMap;
-
-
-        public ViewPagerData(List<View> recyclers, List<String> titles, int pos,
-                             List<List<FDFixture>> list,
-                             Map<Long, Integer> map) {
-            this.mRecyclers = recyclers;
-            this.mTitles = titles;
-            this.mPos = pos;
-            this.mList = list;
-            this.mMap = map;
-
-        }
-
-        public List<View> getRecyclers() {
-            return mRecyclers;
-        }
-
-        public List<String> getTitles() {
-            return mTitles;
-        }
-
-        public int getPos() {
-            return mPos;
-        }
-
-        public List<List<FDFixture>> getList() {
-            return mList;
-        }
-
-        public Map<Long, Integer> getMap() {
-            return mMap;
-        }
     }
 
 
@@ -629,48 +413,6 @@ public class FavoritesActivity extends AppCompatActivity
         }
     }
 
-
-//    private static class FavoritesTask extends AsyncTask<Void, Void, ViewPagerData> {
-//        private final WeakReference<Context> weakContext;
-//        private Cursor[] mCursors;
-//        private ICallback mCallback;
-//
-//        public FavoritesTask(Context context, Cursor[] cursors, ICallback mCallback) {
-//            this.weakContext = new WeakReference<>(context);
-//            this.mCursors = cursors;
-//            this.mCallback = mCallback;
-//        }
-//
-//        @Override
-//        protected ViewPagerData doInBackground(Void... params) {
-//            Context context = weakContext.get();
-//            if (context == null || mCursors == null || mCursors.length < 2) return null;
-//            for (Cursor cursor : mCursors) {
-//                if (cursor == null || cursor.getCount() == 0) return null;
-//            }
-//
-//            try {
-//
-//                Map<Integer, FDCompetition> map = FDUtils.readCompetitions(mCursors[0]);
-//                Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(mCursors[1]);
-//                return getViewPagerData(mapFixtures);
-//
-//
-//            } catch (NullPointerException e) {
-//                return null;
-//
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(ViewPagerData viewPagerData) {
-//
-////            updateViewPager(viewPagerData);
-//            mCallback.onComplete(null,1);
-//
-//        }
-//
-//    }
 
 
 }

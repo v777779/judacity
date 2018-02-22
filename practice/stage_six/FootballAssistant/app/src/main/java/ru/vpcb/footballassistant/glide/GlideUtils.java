@@ -17,7 +17,6 @@ import com.bumptech.glide.request.target.Target;
 import java.util.Map;
 
 import ru.vpcb.footballassistant.R;
-import ru.vpcb.footballassistant.RecyclerLeagueAdapter;
 import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.utils.Config;
 

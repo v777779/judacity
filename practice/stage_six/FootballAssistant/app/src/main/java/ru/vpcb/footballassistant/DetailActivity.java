@@ -633,20 +633,7 @@ public class DetailActivity extends AppCompatActivity
         finish();
     }
 
-    private void startFragmentLeague() {
 
-    }
-
-    private void startFragmentTeam() {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = TeamFragment.newInstance();
-
-        fm.popBackStackImmediate(FRAGMENT_TEAM_TAG, POP_BACK_STACK_INCLUSIVE);
-        fm.beginTransaction()
-                .replace(R.id.container_detail, fragment)
-                .addToBackStack(FRAGMENT_TEAM_TAG)
-                .commit();
-    }
 
     private void startMatchFragment(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
         FragmentManager fm = getSupportFragmentManager();
@@ -676,24 +663,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-    private void startActivityMatch() {
-        Intent intent = new Intent(this, MatchActivity.class);
-        startActivity(intent);
-    }
 
-    // test!!!
-// TODO Check SQLite Date Format
-    private long getViewPagerDate(int index) {
-        try {
-            String s = mViewPagerData.mList.get(index).get(0).getDate();
-            Calendar c = FDUtils.getCalendarFromSQLite(s);
-            if (c == null) return -1;
-            setZeroTime(c);
-            return c.getTimeInMillis();
-        } catch (NullPointerException | IndexOutOfBoundsException e) {
-            return -1;
-        }
-    }
 
     // test!!!
 // TODO Check SQLite Date Format
@@ -709,18 +679,7 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
-    // test!!!
-// TODO SQLIte Date Check
-    private int getIndex(List<FDFixture> list, Calendar c) {
-        String dateSQLite = FDUtils.formatDateToSQLite(c.getTime());
-        FDFixture fixture = new FDFixture();
-        fixture.setDate(dateSQLite);
-        int index = Collections.binarySearch(list, fixture, cFx);  // for givent day
-        if (index < 0) index = -index - 1;
-        if (index > list.size()) index = list.size() - 1;
-        return index;
 
-    }
 
     private void startCalendar() {
         FragmentManager fm = getSupportFragmentManager();
@@ -773,7 +732,7 @@ public class DetailActivity extends AppCompatActivity
 
 //        Collections.sort(fixtures, cFx);
         List<List<FDFixture>> list = new ArrayList<>();
-//TODO bundle == null
+
         Date date;
         if (mViewPagerBundle != null) {
             date = formatDateFromSQLiteZeroTime(mViewPagerBundle.getString(BUNDLE_LOADER_DATE_CENTER));
@@ -822,7 +781,7 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
-    //D:\__cources\_sandbox\clone\google\google-services\android
+
     private void setupViewPager() {
         mAdapter = new ViewPagerAdapter(this, null, null);
         mViewPager.setAdapter(mAdapter);
@@ -846,106 +805,10 @@ public class DetailActivity extends AppCompatActivity
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    private void setupViewPager(ViewPagerData viewPagerData) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, viewPagerData.getRecyclers(), viewPagerData.getTitles());
-        mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(mViewPagerData.getPos());
-        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
 
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-        mTabLayout.setupWithViewPager(mViewPager, false);
-    }
-
-//    private void setupViewPager(ViewPagerDataExt data) {
-//        ViewPagerAdapter adapter = new ViewPagerAdapter(data.mRecyclers, data.mTitles);
-//        mViewPager.setAdapter(adapter);
-//        mViewPager.setCurrentItem(data.mPos, true);
-//        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//        mTabLayout.setupWithViewPager(mViewPager);
-//    }
-
-// test!!!  update mTabLayout workaround
-// TODO Check workaround of TabLayout update for better solution
-
-    private void updateTabLayout(ViewPagerData data, ViewPagerData last) {
-        try {
-
-            List<String> titles = data.getTitles();
-            int lastSize = last.getTitles().size();
-
-            int size = data.getTitles().size();
-            if (size < lastSize) {
-                for (int i = size; i < lastSize; i++) {
-                    mTabLayout.removeTabAt(size);
-                }
-            } else {
-                for (int i = lastSize; i < size; i++) {
-                    mTabLayout.addTab(mTabLayout.newTab());
-                }
-            }
-            for (int i = 0; i < size; i++) {
-                mTabLayout.getTabAt(i).setText(titles.get(i));
-            }
-        } catch (NullPointerException e) {
-            Timber.d(getString(R.string.viewpager_tab_exception, e.getMessage()));
-        }
-    }
 
     private void updateViewPager(final ViewPagerData data) {
         if (mViewPager == null || data == null) return;
-//        int pos = mViewPager.getCurrentItem();
-//
-//
-//        if (pos == 0) {
-//            pos = data.mPos;                    // current day
-//        } else {
-//
-//// test!!!
-//// TODO CHECK MAP  AFTER deletion  all works but Map
-////            data.getList().remove(210);
-////            data.getList().remove(211);
-////            data.getList().remove(212);
-////            data.getRecyclers().remove(210);
-////            data.getRecyclers().remove(211);
-////            data.getRecyclers().remove(212);
-////            data.getTitles().remove(210);
-////            data.getTitles().remove(211);
-////            data.getTitles().remove(212);
-////            List<Long> keys = new ArrayList<>(data.getMap().keySet());
-////            data.getMap().remove(keys.get(210));
-////            data.getMap().remove(keys.get(212));
-////            data.getMap().remove(keys.get(214));
-//// end test!!!
-//
-//            updateTabLayout(data, mViewPagerData);
-//            if (pos >= data.mRecyclers.size()) pos = data.mRecyclers.size() - 1;
-//        }
 
 
         mViewPagerData = data;
@@ -993,51 +856,8 @@ public class DetailActivity extends AppCompatActivity
 
     }
 
-//    private void setupViewPager2() {
-//        if (mViewPagerList == null) return;
-//
-//        List<View> recyclers = new ArrayList<>();
-//        List<String> titles = new ArrayList<>();
-//
-//
-//        for (List<FDFixture> list : mViewPagerList) {
-//            recyclers.add(getRecycler(list));
-//            titles.add(getRecyclerTitle(list));
-//        }
-//
-//        ViewPagerAdapter listPagerAdapter = new ViewPagerAdapter(recyclers, titles);
-//        mViewPager.setAdapter(listPagerAdapter);
-//        mViewPager.setCurrentItem(mViewPagerPos, true);
-//        mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//        mTabLayout.setupWithViewPager(mViewPager);
-//    }
 
 
-    private int checkProgress() {
-        int count = 0;
-        int step = MAIN_ACTIVITY_PROGRESS / 5;
-        if (!mMap.isEmpty()) count += step;
-        if (!mMapTeamKeys.isEmpty()) count += step;
-        if (!mMapTeams.isEmpty()) count += step;
-        if (!mMapFixtureKeys.isEmpty()) count += step;
-        if (!mMapFixtures.isEmpty()) count += step;
-        return count;
-    }
 
     private void stopProgress() {
         mProgressValue.setVisibility(View.INVISIBLE);
@@ -1062,11 +882,6 @@ public class DetailActivity extends AppCompatActivity
             actionBar.show();
         }
 
-    }
-
-    private void refresh(String action) {
-        Intent intent = new Intent(action, null, this, UpdateService.class);
-        startService(intent);
     }
 
 
@@ -1159,36 +974,6 @@ public class DetailActivity extends AppCompatActivity
                 });
     }
 
-    private class TransitionAdapter implements Transition.TransitionListener {
-        @Override
-        public void onTransitionStart(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
-    }
-
-    private class DataParam {
-        private Cursor[] cursors;
-
-    }
 
     private class ViewPagerData {
         private List<View> mRecyclers;
@@ -1209,18 +994,6 @@ public class DetailActivity extends AppCompatActivity
 
         }
 
-        public List<View> getRecyclers() {
-            return mRecyclers;
-        }
-
-        public List<String> getTitles() {
-            return mTitles;
-        }
-
-        public int getPos() {
-            return mPos;
-        }
-
         public List<List<FDFixture>> getList() {
             return mList;
         }
@@ -1230,7 +1003,6 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
-    // TODO Make encapsulation data and maps to ViewPager and other Activities
     private class DataLoader extends AsyncTask<Cursor[], Void, ViewPagerData> {
 
 
