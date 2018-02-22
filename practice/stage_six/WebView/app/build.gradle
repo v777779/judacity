@@ -10,19 +10,22 @@ android {
 //            storePassword '1234567'
 //        }
 
-        signingConfigs {
-            debug {
-                keyAlias 'MyAndroidKey'
-                keyPassword '111111'
-                storeFile file('keystore/android.jks')
-                storePassword '1234567'
-            }
-            release {
-                keyAlias 'MyAndroidKey'
-                keyPassword '111111'
-                storeFile file('keystore/android.jks')
-                storePassword '1234567'
-            }
+        debug {
+            keyAlias 'MyAndroidKey'
+            keyPassword '111111'
+            storeFile file('keystore/android.jks')
+            storePassword '1234567'
+        }
+        release {
+            keyAlias 'MyAndroidKey'
+            keyPassword '111111'
+            storeFile file('keystore/android.jks')
+            storePassword '1234567'
+        }
+
+        config {
+        }
+        config1 {
         }
     }
     compileSdkVersion 27
