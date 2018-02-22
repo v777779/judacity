@@ -34,51 +34,9 @@ import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 
 public class MainActivity extends AppCompatActivity {
 
-    // TODO использовать ViewPagerFragment_003
-    // TODO  MainActivity остальные Fragments FrameLayout индивидуальные toolbar и replacement
-    // TODO MainActivity  NewsAPI 1. Add link or similar  "powered by NewsAPI.org"
-    // TODO CalendarView and API 17
-    // TODO ViewPager Detail сделать один источник данных, RecyclerView перенести внутрь ViewPager
-    // TODO ViewPager Rotation загружать ViewPager в onCreate() то есть Activity и все Fragments
-    // TODO Calendar auto select Date и выбор по dismiss, double click или OK
-    // TODO проставить FDFixture competition при загрузке
-    // TODO Player Date Content Provider remove conversion
-    // TODO Сделать управление через  DPad по Accessibility
-    // TODO Database Loading Date сделать String и убрать конвертацию при сохранении и чтении Db
-    // TODO Database Dates и Links добавить и сделать полностью текстовыми
-
-    // _TODO Football-data  1. Key 70e68c465fd24d2e84c17aa8d71ca9b3
-    //                2. Key 3dbbb32e16f747e582119f20967996bc
-    // TODO Database News Contract and Table
-
-
-    // TODO Database Favorites Contract and Table
-
-    // TODO Match Screen add BottomNavigation Menu
-    // TODO Check Activity to Activity Stack
-    // TODO Notifications set minimum delay and flex time
-    // TODO Notifications add flag for notification, database field for notification status, set and clear procedure
-    // TODO Notifications cut names of teams to 20 characters and add ... at the end
-    // TODO Widget FDFixture изменить класс, имена команд и соревнования
-    // TODO Widget FDFixture FDTeam добавить пост обработку в Gson
-    // TODO Widget FDFixture добавить CompetitionID, TeamHomeID, TeamAwayID в FDFixture Database
-    // TODO Widget FDFixture все даты хранить только в String Database
-    // TODO News last refresh завести свою preference
-    // TODO Settings добавить опцию выбора источника новостей по умолчанию
-
-
-    // TODO Options News запоминать в preference последний источник
-
-    // TODO Options Add Widget Bar to Add
-    // TODO Options Add League Head Items to Detail Recycler
-    // TODO Options  Add Logo Transition to Collapsed Toolbar  see Collapsing Toolbar dependency
-
-
     private static boolean sIsTimber;
     private static Handler mHandler;
 
-    private FloatingActionButton mFab;
-    private FloatingActionButton mFab2;
     private TextView mPoweredNewsApi;
 
     private ProgressBar mProgressBar;
@@ -107,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 // bind
-        mFab = findViewById(R.id.fab);
-        mFab2 = findViewById(R.id.fab2);
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressText = findViewById(R.id.progress_text);
         mProgressValue = findViewById(R.id.progress_value);
@@ -118,23 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
 // params
 
-
-// fab
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
-            }
-        });
-
-        mFab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
 // progress
         setupActionBar();

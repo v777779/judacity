@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.vpcb.footballassistant.add.TempUtils;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
@@ -81,17 +80,9 @@ public class NewsActivity extends AppCompatActivity
     private static boolean sIsTimber;
     private static Handler mHandler;
 
-    private FloatingActionButton mFab;
-    private FloatingActionButton mFab2;
 
-    private ProgressBar mProgressBar;
     private ProgressBar mProgressValue;
-    private TextView mProgressText;
-
-
-    private RecyclerView mRecyclerView;
     private ViewPager mViewPager;
-
     private TabLayout mTabLayout;
 
 
@@ -101,10 +92,6 @@ public class NewsActivity extends AppCompatActivity
     // receiver
     private MessageReceiver mMessageReceiver;
     // progress
-    private boolean mIsProgressEinished;
-    private int mActivityProgress;
-    private int mServiceProgress;
-    private int mState;
     private int mUpdateCounter;
 
     // mMap
@@ -141,8 +128,6 @@ public class NewsActivity extends AppCompatActivity
         }
 
 // bind
-        mFab = findViewById(R.id.fab);
-        mFab2 = findViewById(R.id.fab2);
         mProgressValue = findViewById(R.id.progress_value);
 
         mBottomNavigation = findViewById(R.id.bottom_navigation);
@@ -151,7 +136,6 @@ public class NewsActivity extends AppCompatActivity
         mAdView = findViewById(R.id.adview_banner);
 
 // params
-        mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
         mMap = new HashMap<>();
         mMapArticles = new HashMap<>();
@@ -420,25 +404,7 @@ public class NewsActivity extends AppCompatActivity
         finish();
     }
 
-
-
     private void setupListeners() {
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-            }
-        });
-
-        mFab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
     }
 
     private void startNewsFragment(String link, String title) {

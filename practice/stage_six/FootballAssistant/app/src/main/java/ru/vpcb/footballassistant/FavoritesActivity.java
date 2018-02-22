@@ -61,21 +61,13 @@ public class FavoritesActivity extends AppCompatActivity
     private static Handler mHandler;
     private static FavoriteAsyncTask mFavoriteTask;
 
-    private FloatingActionButton mFab;
-    private FloatingActionButton mFab2;
 
-    private ProgressBar mProgressBar;
     private ProgressBar mProgressValue;
-    private TextView mProgressText;
-
-
     private RecyclerView mRecycler;
 
 
     private BottomNavigationView mBottomNavigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigationListener;
-
-
     private Map<Integer, FDFixture> mMapFixtures;
 
 
@@ -96,10 +88,7 @@ public class FavoritesActivity extends AppCompatActivity
         }
 
 // bind
-        mFab = findViewById(R.id.fab);
-        mFab2 = findViewById(R.id.fab2);
         mProgressValue = findViewById(R.id.progress_value);
-
         mBottomNavigation = findViewById(R.id.bottom_navigation);
         mRecycler = findViewById(R.id.recyclerview_main);
 

@@ -108,12 +108,7 @@ public class DetailActivity extends AppCompatActivity
     private static boolean sIsTimber;
     private static Handler mHandler;
 
-    private FloatingActionButton mFab;
-    private FloatingActionButton mFab2;
-
-    private ProgressBar mProgressBar;
     private ProgressBar mProgressValue;
-    private TextView mProgressText;
     private ImageView mToolbarLogo;
 
     private RecyclerView mRecyclerView;
@@ -129,11 +124,7 @@ public class DetailActivity extends AppCompatActivity
     // receiver
     private MessageReceiver mMessageReceiver;
     // progress
-    private boolean mIsProgressEinished;
-    private int mActivityProgress;
-    private int mServiceProgress;
-    private int mState;
-    private int mUpdateCounter;
+     private int mUpdateCounter;
 
     // mMap
     private Map<Integer, FDCompetition> mMap;
@@ -165,9 +156,6 @@ public class DetailActivity extends AppCompatActivity
     // adMob
     private AdView mAdView;
 
-
-    // test!!!
-// TODO  make parcelable for ViewPager and rotation
     private static ViewPagerData mViewPagerData;
 
     @Override
@@ -186,8 +174,6 @@ public class DetailActivity extends AppCompatActivity
         }
 
 // bind
-        mFab = findViewById(R.id.fab);
-        mFab2 = findViewById(R.id.fab2);
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
         mBottomNavigation = findViewById(R.id.bottom_navigation);
@@ -198,7 +184,6 @@ public class DetailActivity extends AppCompatActivity
         mAdView = findViewById(R.id.adview_banner);
 
 // params
-        mState = MAIN_ACTIVITY_INDEFINITE;
         mCursors = new Cursor[5];
         mWidgetWidgetId = EMPTY_INT_VALUE;
         mWidgetFixtureId = EMPTY_INT_VALUE;
@@ -647,26 +632,11 @@ public class DetailActivity extends AppCompatActivity
 
 
     private void setupListeners() {
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-            }
-        });
-        mFab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
 
 
 
-    // test!!!
-// TODO Check SQLite Date Format
     private Calendar getViewPagerDate() {
         try {
             String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
