@@ -341,6 +341,10 @@ public class MainActivity extends AppCompatActivity {
                         mServiceProgress = value;
                         setProgressValue();
                     }
+                    if(value > UPDATE_SERVICE_PROGRESS/2)  {
+                        mPoweredNewsApi.setOnClickListener(null);  // block click Listener
+                        mPoweredNewsApi.setPaintFlags(mPoweredNewsApi.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+                    }
                 } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
                     FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
                 } else {
