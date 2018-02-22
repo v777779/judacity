@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton mFab;
     private FloatingActionButton mFab2;
+    private TextView mPoweredNewsApi;
 
     private ProgressBar mProgressBar;
     private ProgressBar mProgressValue;
@@ -112,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         mProgressText = findViewById(R.id.progress_text);
         mProgressValue = findViewById(R.id.progress_value);
         mToolbarLogo = findViewById(R.id.toolbar_logo);
+        mPoweredNewsApi = findViewById(R.id.powered_news_api);
+
 
 // params
 
@@ -137,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         setupActionBar();
         setupProgress();
         setupReceiver();
+        setupListeners();
 
         refresh(getString(R.string.action_update));
 
@@ -182,7 +188,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 // methods
-
+    private void setupListeners() {
+        mPoweredNewsApi.setPaintFlags(mPoweredNewsApi.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        mPoweredNewsApi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.news_api_link)));
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
 
     private void makeTransition() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

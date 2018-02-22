@@ -12,6 +12,8 @@
     <!--progress-->
     <dimen name="progress_bar_size">50dp</dimen>
     <dimen name="progress_text_size">16sp</dimen>
+    <!--main-->
+    <dimen name="text_newsapi_size">12sp</dimen>
 
     <!--recycler_match-->
     <dimen name="image_rm_item_appbar_size">22sp</dimen>

@@ -149,6 +149,9 @@
     <string name="broadcast_notification_change">ru.vpcb.footballassistant.intent.action.DATA_NOTIFICATION_CHANGE</string>
     <string name="broadcast_notification_cancel">ru.vpcb.footballassistant.intent.action.DATA_NOTIFICATION_CANCEL</string>
 
+    <!--main-->
+    <string name="powered_news_api">powered by NewsAPI.org</string>
+    <string name="news_api_link">https://newsapi.org</string>
 
     <!--match-->
     <string name="text_sm_item_match_long_dash">\u2014</string>
@@ -300,6 +303,7 @@
 
     <!--screen1-->
     <string name="front_image_application">The Ball front image of application</string>
+    <string name="text_powered_by_news_api_dsc">NewsAPI required link to https://newsapi.org site</string>
 
     <!--screen2-->
     <string name="image_rm_item_team_logo">The Football Team Logo image</string>

@@ -39,6 +39,15 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="NewsAPI.TextToolbar" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">@dimen/text_newsapi_size</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:textColor">@color/news_api_text_color</item>
+        <item name="android:textStyle">italic|normal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="Item.TextRecycler" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">normal</item>
         <item name="android:gravity">center</item>
