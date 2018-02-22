@@ -123,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Settings2332323")
                         .build());
 
+                Intent intent = new Intent(getBaseContext(), DetailActivity.class);
+                startActivity(intent);
+
             }
         });
 
