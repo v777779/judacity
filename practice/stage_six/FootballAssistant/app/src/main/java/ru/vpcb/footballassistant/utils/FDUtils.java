@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -75,6 +76,7 @@ import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_CP_TEA
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_FIXTURES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_SOURCES;
 import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TEAMS;
+import static ru.vpcb.footballassistant.utils.Config.ADMOB_SHOW_THRESHOLD;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
@@ -104,6 +106,7 @@ import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_4;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_5;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_6;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_TIME;
+import static ru.vpcb.footballassistant.utils.Config.RANDOM_BASE_DEFAULT;
 import static ru.vpcb.footballassistant.utils.Config.TABLE_GROUP_A;
 import static ru.vpcb.footballassistant.utils.Config.TABLE_GROUP_B;
 import static ru.vpcb.footballassistant.utils.Config.TABLE_GROUP_C;
@@ -133,6 +136,8 @@ public class FDUtils {
             new SimpleDateFormat(PATTERN_MATCH_TIME, Locale.ENGLISH);
     private static final SimpleDateFormat formatMatchDateStart =
             new SimpleDateFormat(PATTERN_MATCH_DATE_START, Locale.ENGLISH);
+
+    private static Random rnd;
 
 
     private static final SimpleDateFormat formatSQLiteDate =
@@ -338,7 +343,18 @@ public class FDUtils {
         }
         return EMPTY_STRING;
     }
+// int
 
+    public static boolean isShowAdMob() {
+
+        return getRnd(RANDOM_BASE_DEFAULT) < ADMOB_SHOW_THRESHOLD;
+    }
+
+    public static int getRnd(int base){
+        if(rnd == null) rnd = new Random();
+        if(base <= 0) base = RANDOM_BASE_DEFAULT;
+        return rnd.nextInt(base);
+    }
 
     // shared preferences
     public static boolean getPrefBool(Context context, int keyId, int valueId) {

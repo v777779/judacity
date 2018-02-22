@@ -141,7 +141,8 @@
     <dimen name="widget_button_size">36dp</dimen>
     <dimen name="widget_icon_size">24dp</dimen>
 
-
+<!--admob-->
+    <dimen name="admob_height">100dp</dimen>
 
 
 

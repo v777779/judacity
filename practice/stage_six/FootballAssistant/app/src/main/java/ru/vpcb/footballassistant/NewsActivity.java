@@ -32,6 +32,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -57,6 +60,8 @@ import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.ADMOB_FADE_DURATION;
+import static ru.vpcb.footballassistant.utils.Config.ADMOB_SHOW_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
@@ -120,6 +125,8 @@ public class NewsActivity extends AppCompatActivity
     // analytics
     private FirebaseAnalytics mFirebaseAnalytics;
     private Tracker mTracker;
+    // adMob
+    private AdView mAdView;
 
 
     @Override
@@ -146,6 +153,7 @@ public class NewsActivity extends AppCompatActivity
         mBottomNavigation = findViewById(R.id.bottom_navigation);
         mViewPager = findViewById(R.id.viewpager_main);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
+        mAdView = findViewById(R.id.adview_banner);
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
@@ -165,11 +173,14 @@ public class NewsActivity extends AppCompatActivity
         setupReceiver();
         setupListeners();
         setupViewPager();
+        setAdMob();
 
 
         if (savedInstanceState == null) {
             refresh(getString(R.string.action_update));
+            showAdMob();
 
+        }else {
 
         }
 
@@ -282,6 +293,31 @@ public class NewsActivity extends AppCompatActivity
     }
 
     // methods
+    private void showAdMob() {
+        if(FDUtils.isShowAdMob()) {
+            mAdView.setVisibility(View.VISIBLE);
+            mAdView.animate().setStartDelay(ADMOB_SHOW_DURATION)
+                    .setDuration(ADMOB_FADE_DURATION)
+                    .alpha(0)
+                    .translationY(getResources().getDimension(R.dimen.admob_height))
+                    .start();
+        }else {
+            mAdView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * Setup AdMob application and banner and Interstitial Ad objects
+     * Builds both object for emulator device only.
+     */
+    private void setAdMob() {
+        MobileAds.initialize(this, getString(R.string.banner_ad_app_id));
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+    }
+
     public void fireBaseEvent(int code) {
         switch (code) {
             case FIREBASE_NEWS:

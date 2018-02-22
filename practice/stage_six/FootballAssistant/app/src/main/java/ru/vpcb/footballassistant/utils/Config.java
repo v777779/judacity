@@ -283,6 +283,11 @@ public class Config {
     public static final int FIREBASE_SHARE = 5;
     public static final int FIREBASE_NEWS_SIZE = 20;
 
+// admob
+    public static final int RANDOM_BASE_DEFAULT = 100;
+    public static final int ADMOB_SHOW_THRESHOLD = 50;
+    public static final int ADMOB_SHOW_DURATION = 15000;
+    public static final int ADMOB_FADE_DURATION = 750;
 
     // team activity
     public static final String BUNDLE_INTENT_TEAM_ID = "bundle_intent_team_id";

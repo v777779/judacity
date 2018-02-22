@@ -4,7 +4,6 @@
     <string name="title_activity_match">MatchActivity</string>
 
 
-
     <string name="title_activity_team">TeamActivity</string>
     <string name="title_activity_league">LeagueActivity</string>
     <string name="title_activity_news">NewsActivity</string>
@@ -32,7 +31,7 @@
     <string name="title_settings">Settings</string>
 
     <!--preferences-->
-<!--switch    -->
+    <!--switch    -->
     <string name="pref_webview_action_key">pref_webview_action_key</string>
     <string name="pref_webview_action_off">Default Browser</string>
     <string name="pref_webview_action_on">Built In Browser</string>
@@ -46,15 +45,15 @@
     <string name="pref_snackbar_title">Messages style</string>
     <string name="pref_snackbar_default">true</string>
 
-<!--list-->
+    <!--list-->
     <string name="pref_data_delay_time_key">pref_data_delay_time_key</string>
     <string name="pref_data_delay_time_title">Update Matches</string>
     <string name="pref_data_delay_time_default">480</string>
-<!--list-->
+    <!--list-->
     <string name="pref_news_delay_time_key">pref_news_delay_time_key</string>
     <string name="pref_news_delay_time_title">Update News</string>
     <string name="pref_news_delay_time_default">30</string>
-<!--list-->
+    <!--list-->
     <string name="pref_date_span_key">pref_fixture_dates_span_key</string>
     <string name="pref_date_span_title">Calendar width</string>
     <string name="pref_date_span_default">10</string>
@@ -100,7 +99,6 @@
     </string-array>
 
 
-
     <!--preference values-->
     <string name="pref_data_update_time_key">pref_data_update_time_key</string>
     <string name="pref_data_update_time_default">0</string>
@@ -115,7 +113,6 @@
     <string name="notification_title">Match Reminder</string>
     <string name="notification_body">%1$s vs %2$s\nDate: %3$s </string>
     <string name="notification_time">%1$02d/%2$02d/%3$04d %4$02d:%5$02d</string>
-
 
 
     <!--retrofit-->
@@ -211,8 +208,6 @@
     <string name="widget_button_update">Widget has been updated</string>
 
 
-
-
     <!--other-->
 
     <!--messages-->
@@ -279,7 +274,14 @@
     <string name="fb_news_item">News item opened</string>
     <string name="fb_news_content">Football news content</string>
 
+    <!--admob-->
+    <!--banner test-->
+    <string name="banner_ad_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_size">BANNER</string>
 
+    <!--<string name="banner_size">FULL_BANNER</string>-->
+    <!--<string name="banner_size">LEADERBOARD</string>-->
 
     <!--diagnostic-->
     <string name="get_competitions_map_null">Get competitions map must not be null</string>
@@ -310,6 +312,7 @@
     <string name="text_rm_viewpager_toolbar_back_dsc">Viewpager Title Bar Background Image</string>
 
     <string name="text_rm_widget_button_dsc">Bar with message how to fill widget</string>
+    <string name="admob_banner_dsc">AdMob Banner</string>
 
     <!--screen4-->
     <!--match-->
@@ -381,7 +384,7 @@
     <string name="text_lg_team_losses_dsc">The Number of Team Losses in League Table</string>
     <string name="text_lg_team_separator_vertical_dsc">The Vertical Separator in League Table</string>
     <string name="text_lg_team_separator_horizontal_dsc">The Horizontal Separator in League Table</string>
-<!--head-->
+    <!--head-->
     <string name="text_lg_head_team_pos_dsc">The Header  Team Position Number in League Table</string>
     <string name="text_lg_head_team_name_dsc">The Header Team Logo and Name in League Table</string>
     <string name="text_lg_head_team_matches_dsc">The Header  Number of Team Matches in League Table</string>
@@ -391,7 +394,7 @@
     <string name="text_lg_head_team_draws_dsc">The Header  Number of Team Draws in League Table</string>
     <string name="text_lg_head_team_losses_dsc">The Header  Number of Team Losses in League Table</string>
 
-<!--screen 9-->
+    <!--screen 9-->
     <string name="image_news_item_poster_dsc">The News Poster image</string>
     <string name="text_news_item_header_dsc">The News Header Text</string>
     <string name="text_news_item_body_dsc">The News Body Text</string>
@@ -497,9 +500,6 @@
         Greig Laidlaw completing the turnaround on Sunday.</string>
     <string name="text_test_news_item_time">15 hr ago</string>
     <string name="text_test_news_item_source">Fox Sports</string>
-
-
-
 
 
     <string name="large_text">

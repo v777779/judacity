@@ -35,6 +35,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -62,6 +65,8 @@ import ru.vpcb.footballassistant.widgets.MatchWidgetService;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+import static ru.vpcb.footballassistant.utils.Config.ADMOB_FADE_DURATION;
+import static ru.vpcb.footballassistant.utils.Config.ADMOB_SHOW_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_BUNDLE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_CENTER;
@@ -160,6 +165,8 @@ public class DetailActivity extends AppCompatActivity
     // analytics
     private FirebaseAnalytics mFirebaseAnalytics;
     private Tracker mTracker;
+    // adMob
+    private AdView mAdView;
 
 
     // test!!!
@@ -191,7 +198,7 @@ public class DetailActivity extends AppCompatActivity
         mViewPagerBack = findViewById(R.id.image_viewpager_back);
         mTabLayout = findViewById(R.id.toolbar_sliding_tabs);
         mWidgetBar = findViewById(R.id.match_widget_toolbar);
-
+        mAdView = findViewById(R.id.adview_banner);
 
 // params
         mState = MAIN_ACTIVITY_INDEFINITE;
@@ -212,6 +219,7 @@ public class DetailActivity extends AppCompatActivity
         setupReceiver();
         setupListeners();
         setupViewPager();
+        setAdMob();
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();
@@ -231,12 +239,15 @@ public class DetailActivity extends AppCompatActivity
             mViewPagerBack.setVisibility(View.VISIBLE);
             mViewPager.setAlpha(0);
             mTabLayout.setAlpha(0);
+
+            showAdMob();
         } else {
             mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_LOADER_DATA_BUNDLE);
             mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS);
             mViewPagerBack.setVisibility(View.INVISIBLE);
 //            mWidgetBundle = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
 //            mWidgetBundle = null;
+            mAdView.setVisibility(View.INVISIBLE);
         }
 
         mMap = new HashMap<>();
@@ -407,6 +418,33 @@ public class DetailActivity extends AppCompatActivity
 
 
     // methods
+    private void showAdMob() {
+        if(FDUtils.isShowAdMob()) {
+            mAdView.setVisibility(View.VISIBLE);
+            mAdView.animate().setStartDelay(ADMOB_SHOW_DURATION)
+                    .setDuration(ADMOB_FADE_DURATION)
+                    .alpha(0)
+                    .translationY(getResources().getDimension(R.dimen.admob_height))
+                    .start();
+        }else {
+            mAdView.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    /**
+     * Setup AdMob application and banner and Interstitial Ad objects
+     * Builds both object for emulator device only.
+     */
+    private void setAdMob() {
+        MobileAds.initialize(this, getString(R.string.banner_ad_app_id));
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+    }
+
+
     public void fireBaseEvent(int code) {
         switch (code) {
             case FIREBASE_MATCHES:
