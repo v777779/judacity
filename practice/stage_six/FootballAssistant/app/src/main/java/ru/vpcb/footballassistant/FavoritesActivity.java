@@ -13,8 +13,6 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,13 +34,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
@@ -50,7 +45,6 @@ import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -58,11 +52,7 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
 import static ru.vpcb.footballassistant.utils.Config.CP_IS_FAVORITE_SEARCH_KEY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
 import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
-import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLite;
-import static ru.vpcb.footballassistant.utils.FDUtils.setDay;
-import static ru.vpcb.footballassistant.utils.FDUtils.setZeroTime;
 
 public class FavoritesActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, ICallback, IReload {
@@ -162,7 +152,7 @@ public class FavoritesActivity extends AppCompatActivity
 
         if (cursor.getCount() == 0) {
             stopProgress();
-            FootballUtils.showMessage(this, getString(R.string.favorites_database_empty));
+            FDUtils.showMessage(this, getString(R.string.favorites_database_empty));
             return;
         }
         switch (loader.getId()) {
@@ -505,7 +495,7 @@ public class FavoritesActivity extends AppCompatActivity
                                 startActivityNews();
                                 return true;
                             case R.id.navigation_favorites:
-                                FootballUtils.showMessage(context, getString(R.string.activity_same_message));
+                                FDUtils.showMessage(context, getString(R.string.activity_same_message));
 //                                restartLoaders();
                                 return true;
                             case R.id.navigation_settings:
@@ -623,14 +613,14 @@ public class FavoritesActivity extends AppCompatActivity
 
             if (mFixture.getId() != fixture.getId() || mFixture.isFavorite() != fixture.isFavorite() ||
                     mFixture.isNotified() != fixture.isNotified()) {
-                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                FDUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }
 // notificationID does not updated when load database fisrst time and =null
             String id = mFixture.getNotificationId();
             String newId = fixture.getNotificationId();
             if (id != null && newId != null && !id.equals(newId)) {
-                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                FDUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }
 

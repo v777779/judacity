@@ -49,7 +49,6 @@ import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -174,7 +173,7 @@ public class TeamActivity extends AppCompatActivity
             setupViewPager(mViewPagerData);
         }
 
-        mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
+//        mViewPagerBack.setImageResource(FDUtils.getImageBackId());
 
 //            refresh(getString(R.string.action_update));
             getSupportLoaderManager().initLoader(FDContract.CpEntry.LOADER_ID, null, this);

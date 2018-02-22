@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.vpcb.footballassistant.data.FDPlayer;
 import ru.vpcb.footballassistant.utils.Config;
-import ru.vpcb.footballassistant.utils.Utils;
+
 
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_DARK;
 import static ru.vpcb.footballassistant.utils.Config.RT_ITEM_VIEW_TYPE_LIGHT;

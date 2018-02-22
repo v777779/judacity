@@ -3,9 +3,6 @@ package ru.vpcb.footballassistant.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.OperationApplicationException;
-import android.content.UriMatcher;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
@@ -15,28 +12,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
 import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
-import ru.vpcb.footballassistant.data.FDPlayer;
-import ru.vpcb.footballassistant.data.FDTable;
 import ru.vpcb.footballassistant.data.FDTeam;
-import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
-import ru.vpcb.footballassistant.dbase.FDContract;
-import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
-import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_DELAY;
-import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_TIMEOUT;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_TAG;
-import static ru.vpcb.footballassistant.utils.FootballUtils.isOnline;
-import static ru.vpcb.footballassistant.utils.FootballUtils.rnd;
+import static ru.vpcb.footballassistant.utils.FDUtils.getRnd;
+import static ru.vpcb.footballassistant.utils.FDUtils.isOnline;
+
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -117,49 +104,6 @@ public class UpdateService extends IntentService {
         }
 
     }
-
-// TODO check text
-    private void testWriteFixtures(Map<Integer, FDCompetition> map,
-                                   Map<Integer, FDFixture> mapFixture) throws OperationApplicationException, RemoteException {
-
-        List<FDFixture> list = new ArrayList<>(mapFixture.values());
-        FDFixture fixture = list.get(rnd.nextInt(list.size()));
-
-        int fixtureId = fixture.getId();
-        FDFixture fixture2 = FDUtils.readFixture(this, fixtureId);
-
-        fixture2.setFavorite(true);
-        FDUtils.updateFixtureProjection(this, fixture2, false); // update
-
-        FDFixture fixture3 = FDUtils.readFixture(this, fixtureId);
-        fixture3.setNotificationId("12200");
-        fixture3.setNotified(true);
-        FDUtils.updateFixtureProjection(this, fixture3, false); // update
-
-        FDFixture fixture4 = FDUtils.readFixture(this, fixtureId);
-
-//        FDUtils.writeFixtures(this,map,false);
-
-        FDFixture fixture5 = FDUtils.readFixture(this, fixtureId);
-
-        fixtureId = 714092;
-        FDFixture fixture6 = new FDFixture(fixtureId, fixture5.getCompetitionId(),
-                fixture5.getHomeTeamId(), fixture5.getAwayTeamId(), fixture5.getDate(),
-                fixture5.getStatus(), fixture5.getMatchDay(), fixture5.getHomeTeamName(),
-                fixture5.getAwayTeamName(), fixture5.getGoalsHomeTeam(), fixture5.getGoalsAwayTeam(),
-                fixture5.getHomeWin(), fixture5.getDraw(), fixture5.getAwayWin(),
-                fixture5.isFavorite(), fixture5.isNotified(), fixture5.getNotificationId(),
-                fixture5.getLeague(),fixture5.getCaption());
-
-
-
-        FDUtils.updateFixtureProjection(this, fixture6, false); // update
-        FDFixture fixture7 = FDUtils.readFixture(this, fixtureId);
-        fixtureId = 728092;
-
-
-    }
-
 
 
 }

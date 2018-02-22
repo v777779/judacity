@@ -1,10 +1,8 @@
 package ru.vpcb.footballassistant;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -50,11 +48,8 @@ import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.glide.GlideUtils;
-import ru.vpcb.footballassistant.notifications.INotification;
 import ru.vpcb.footballassistant.notifications.NotificationUtils;
-import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
@@ -66,14 +61,10 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_MATCH_HOME_TEAM;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_ID;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_NOTIFICATION_ID;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
-import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
 import static ru.vpcb.footballassistant.utils.Config.NT_FB_JOB_DISPATCHER_ID;
-import static ru.vpcb.footballassistant.utils.Config.SHOW_MESSAGE_INFINITE;
 
 public class MatchFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, ICallback, IReload {
@@ -528,7 +519,7 @@ public class MatchFragment extends Fragment implements
             @Override
             public void onClick(View view) {
                 if (mFixture == null || mFixture.getId() <= 0) {
-                    FootballUtils.showMessage(mContext, getString(R.string.matches_share_no_data_message));
+                    FDUtils.showMessage(mContext, getString(R.string.matches_share_no_data_message));
                     return;
                 }
                 int goalsHome = mFixture.getGoalsHome();
@@ -601,7 +592,7 @@ public class MatchFragment extends Fragment implements
                     mFixture.setNotificationId(id);
                     mFavoriteTask = new FavoriteAsyncTask(mContext, mFixture, MatchFragment.this);
                     mFavoriteTask.execute();
-                    FootballUtils.showMessage(mContext,
+                    FDUtils.showMessage(mContext,
                             getString(R.string.notification_set_message,
                                     FDUtils.formatMatchDateStart(mFixture.getDate())));
 
@@ -621,7 +612,7 @@ public class MatchFragment extends Fragment implements
                     } else {
                         message = getString(R.string.notification_reset_error_message);
                     }
-                    FootballUtils.showMessage(mContext, message);
+                    FDUtils.showMessage(mContext, message);
 
                 }
             }
@@ -691,14 +682,14 @@ public class MatchFragment extends Fragment implements
 
             if (mFixture.getId() != fixture.getId() || mFixture.isFavorite() != fixture.isFavorite() ||
                     mFixture.isNotified() != fixture.isNotified()) {
-                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                FDUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }
 // notificationID does not updated when load database fisrst time and =null
             String id =     mFixture.getNotificationId();
             String newId =  fixture.getNotificationId();
             if(id != null && newId != null && !id.equals(newId)){
-                FootballUtils.showMessage(context, context.getString(R.string.favorites_change_error));
+                FDUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }
 

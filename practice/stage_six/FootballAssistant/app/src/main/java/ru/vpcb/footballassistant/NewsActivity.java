@@ -56,7 +56,6 @@ import ru.vpcb.footballassistant.news.NDSource;
 import ru.vpcb.footballassistant.news.NDSources;
 import ru.vpcb.footballassistant.services.NewsService;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -279,7 +278,7 @@ public class NewsActivity extends AppCompatActivity
     @Override
     public void onComplete(View view, String link, String title) {
         if (link == null || link.isEmpty()) return;
-        if (!FootballUtils.isWebViewAction(this)) {
+        if (!FDUtils.isWebViewAction(this)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
             startActivity(intent);
         } else {
@@ -822,7 +821,7 @@ public class NewsActivity extends AppCompatActivity
                 } else if (action.equals(context.getString(R.string.broadcast_news_update_progress))) {
 
                 } else if (action.equals(context.getString(R.string.broadcast_news_no_network))) {
-                    FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
+                    FDUtils.showMessage(context, getString(R.string.matches_no_network_message));
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");
                 }
@@ -847,7 +846,7 @@ public class NewsActivity extends AppCompatActivity
                                 startActivityMatches();
                                 return true;
                             case R.id.navigation_news:
-                                FootballUtils.showMessage(context, getString(R.string.activity_same_message));
+                                FDUtils.showMessage(context, getString(R.string.activity_same_message));
                                 return true;
                             case R.id.navigation_favorites:
                                 startActivityFavorites();

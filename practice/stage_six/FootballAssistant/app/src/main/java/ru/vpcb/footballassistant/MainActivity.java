@@ -20,18 +20,16 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import ru.vpcb.footballassistant.services.NewsService;
 import ru.vpcb.footballassistant.services.UpdateService;
-import ru.vpcb.footballassistant.utils.FootballUtils;
+import ru.vpcb.footballassistant.utils.FDUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
-import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
     // _TODO Football-data  1. Key 70e68c465fd24d2e84c17aa8d71ca9b3
     //                2. Key 3dbbb32e16f747e582119f20967996bc
     // TODO Database News Contract and Table
-    // TODO Database News Read and Write Cursor Utils
-    // TODO News Retrofit2 Utils
+
+
     // TODO Database Favorites Contract and Table
-    // TODO Database Favorites Read and Write Cursor Utils
+
     // TODO Match Screen add BottomNavigation Menu
     // TODO Check Activity to Activity Stack
     // TODO Notifications set minimum delay and flex time
@@ -346,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
                         mPoweredNewsApi.setPaintFlags(mPoweredNewsApi.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                     }
                 } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
-                    FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
+                    FDUtils.showMessage(context, getString(R.string.matches_no_network_message));
                 } else {
                     throw new UnsupportedOperationException("Not yet implemented");
                 }

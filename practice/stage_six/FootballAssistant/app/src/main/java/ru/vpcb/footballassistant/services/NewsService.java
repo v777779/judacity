@@ -24,12 +24,13 @@ import ru.vpcb.footballassistant.data.IFDRetrofitAPI;
 import ru.vpcb.footballassistant.news.NDArticle;
 import ru.vpcb.footballassistant.news.NDSource;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
+
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_TAG;
-import static ru.vpcb.footballassistant.utils.FootballUtils.isOnline;
+import static ru.vpcb.footballassistant.utils.FDUtils.isOnline;
+
 
 /**
  * Exercise for course : Android Developer Nanodegree

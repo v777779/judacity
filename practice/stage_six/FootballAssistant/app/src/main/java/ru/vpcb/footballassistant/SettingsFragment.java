@@ -11,7 +11,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
-import static ru.vpcb.footballassistant.utils.FootballUtils.showMessage;
+import ru.vpcb.footballassistant.utils.FDUtils;
+
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
@@ -63,9 +64,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             String s = (String) newValue;
             if (s.equals(getString(R.string.pref_delay_time_high))) {
                 if(preference.getTitle().toString().equals(getString(R.string.pref_date_span_title))) {
-                    showMessage(getActivity(),getString(R.string.pref_date_span_high_message));
+                    FDUtils.showMessage(getActivity(),getString(R.string.pref_date_span_high_message));
                 }else {
-                    showMessage(getActivity(), getString(R.string.pref_delay_time_high_message));
+                    FDUtils.showMessage(getActivity(), getString(R.string.pref_delay_time_high_message));
                 }
             }
 

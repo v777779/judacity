@@ -1,5 +1,6 @@
 package ru.vpcb.footballassistant.utils;
 
+import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentValues;
@@ -15,8 +16,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
 import android.support.v4.util.Pair;
 import android.support.v7.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -79,6 +82,7 @@ import static ru.vpcb.footballassistant.dbase.FDContract.MATCH_PARAMETERS_TEAMS;
 import static ru.vpcb.footballassistant.utils.Config.ADMOB_SHOW_THRESHOLD;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_BET;
 import static ru.vpcb.footballassistant.utils.Config.FORMAT_MATCH_SCORE;
@@ -116,7 +120,7 @@ import static ru.vpcb.footballassistant.utils.Config.TABLE_GROUP_F;
 import static ru.vpcb.footballassistant.utils.Config.TABLE_GROUP_G;
 import static ru.vpcb.footballassistant.utils.Config.TABLE_GROUP_H;
 import static ru.vpcb.footballassistant.utils.Config.UPDATE_SERVICE_PROGRESS;
-import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
+
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -137,7 +141,7 @@ public class FDUtils {
     private static final SimpleDateFormat formatMatchDateStart =
             new SimpleDateFormat(PATTERN_MATCH_DATE_START, Locale.ENGLISH);
 
-    private static Random rnd;
+    private static Random rnd = new Random();
 
 
     private static final SimpleDateFormat formatSQLiteDate =
@@ -174,6 +178,46 @@ public class FDUtils {
 
     }
 
+    // strings
+    public static String formatString(int value) {
+        return String.format(Locale.ENGLISH, "%d", value);
+    }
+
+
+    public static String formatStringDate(Date date, String delim) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        String day = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.DAY_OF_MONTH));
+        String month = String.format(Locale.ENGLISH, "%02d", c.get(Calendar.MONTH) + 1);
+        String year = String.format(Locale.ENGLISH, "%04d", c.get(Calendar.YEAR));
+        return "" + day + delim + month + delim + year.substring(2, year.length()) + "";
+    }
+
+    public static String formatStringDate(Context context, Calendar c) {
+
+        if (c == null) return EMPTY_LONG_DATE;
+
+        return context.getString(R.string.notification_time,
+                c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH),
+                c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+    }
+
+
+
+    public static void showMessage(Context context, String s) {
+        if (!(context instanceof Activity) || s == null || s.isEmpty()) return;
+
+        try {
+            if (isSnackbarStyle(context)) {
+                Snackbar.make(((Activity) context).getWindow().getDecorView(), s, Snackbar.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+            }
+        } catch (NullPointerException e) {
+            Timber.d(context.getString(R.string.notification_empty_activity_exception, e.getMessage()));
+        }
+    }
     // stings
     public static int formatHrefToId(String href) throws NumberFormatException {
         try {
@@ -270,6 +314,16 @@ public class FDUtils {
     }
 
     // int
+    public static boolean isShowAdMob() {
+
+        return getRnd(RANDOM_BASE_DEFAULT) < ADMOB_SHOW_THRESHOLD;
+    }
+
+    public static int getRnd(int base){
+        if(rnd == null) rnd = new Random();
+        if(base <= 0) base = RANDOM_BASE_DEFAULT;
+        return rnd.nextInt(base);
+    }
 
 
     // date and time
@@ -343,20 +397,22 @@ public class FDUtils {
         }
         return EMPTY_STRING;
     }
-// int
-
-    public static boolean isShowAdMob() {
-
-        return getRnd(RANDOM_BASE_DEFAULT) < ADMOB_SHOW_THRESHOLD;
-    }
-
-    public static int getRnd(int base){
-        if(rnd == null) rnd = new Random();
-        if(base <= 0) base = RANDOM_BASE_DEFAULT;
-        return rnd.nextInt(base);
-    }
 
     // shared preferences
+    public static boolean isWebViewAction(Context context) {
+        boolean default_value = context.getString(R.string.pref_webview_action_default).equals("true");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_webview_action_key), default_value);
+    }
+
+
+    private static boolean isSnackbarStyle(Context context) {
+        boolean default_value = context.getString(R.string.pref_snackbar_default).equals("true");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_snackbar_key), default_value);
+    }
+
+
     public static boolean getPrefBool(Context context, int keyId, int valueId) {
         Resources res = context.getResources();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);

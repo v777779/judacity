@@ -3,13 +3,11 @@ package ru.vpcb.footballassistant.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import ru.vpcb.footballassistant.utils.FootballUtils;
+import ru.vpcb.footballassistant.utils.FDUtils;
 
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_PLAYER_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_TWO_DASH;
@@ -66,7 +64,7 @@ public class FDPlayer {
 
     public String getDateOfBirth() {
         if (dateOfBirth == null) return EMPTY_PLAYER_DATE;
-        return FootballUtils.formatStringDate(dateOfBirth,".");
+        return FDUtils.formatStringDate(dateOfBirth,".");
     }
 
     public String getNationality() {
@@ -76,7 +74,7 @@ public class FDPlayer {
 
     public String getContractUntil() {
         if (contractUntil == null) return EMPTY_PLAYER_DATE;
-        return FootballUtils.formatStringDate(contractUntil,".");
+        return FDUtils.formatStringDate(contractUntil,".");
     }
 
     public String getMarketValue() {

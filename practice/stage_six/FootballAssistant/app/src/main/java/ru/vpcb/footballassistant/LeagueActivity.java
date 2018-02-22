@@ -52,7 +52,6 @@ import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -196,7 +195,7 @@ public class LeagueActivity extends AppCompatActivity
 
         }
 
-        mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
+//        mViewPagerBack.setImageResource(FDUtils.getImageBackId());
 
 
         if (savedInstanceState == null) {

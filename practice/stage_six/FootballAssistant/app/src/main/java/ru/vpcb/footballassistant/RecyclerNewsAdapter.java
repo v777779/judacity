@@ -6,49 +6,32 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.vpcb.footballassistant.data.FDFixture;
 
 import ru.vpcb.footballassistant.glide.GlideUtils;
-import ru.vpcb.footballassistant.glide.SvgSoftwareLayerSetter;
 import ru.vpcb.footballassistant.news.NDArticle;
 import ru.vpcb.footballassistant.utils.Config;
-import ru.vpcb.footballassistant.utils.FootballUtils;
+import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderPng;
 import static ru.vpcb.footballassistant.glide.GlideUtils.getRequestBuilderSvg;
 import static ru.vpcb.footballassistant.utils.Config.DATE_FULL_PATTERN;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_SCORE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
-import static ru.vpcb.footballassistant.utils.Config.RM_HEAD_VIEW_TYPE;
 import static ru.vpcb.footballassistant.utils.Config.RM_ITEM_VIEW_TYPE_LIGHT;
 
 
@@ -170,7 +153,7 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
                 String link = getLink(pos);
                 String title = getTitle(pos);
                 if (link == null) {
-                    FootballUtils.showMessage(mContext,
+                    FDUtils.showMessage(mContext,
                             mContext.getString(R.string.news_no_data_message));
                     return;
                 }

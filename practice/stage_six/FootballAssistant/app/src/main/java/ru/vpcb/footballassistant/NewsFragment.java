@@ -14,11 +14,8 @@ import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.webkit.DownloadListener;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -36,13 +33,12 @@ import butterknife.Unbinder;
 import ru.vpcb.footballassistant.data.FDCompetition;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.data.FDTeam;
-import ru.vpcb.footballassistant.utils.FootballUtils;
+import ru.vpcb.footballassistant.utils.FDUtils;
 
 import static ru.vpcb.footballassistant.glide.GlideUtils.setTeamImage;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_APP_BAR_HEIGHT;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_NEWS_LINK;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_NEWS_TITLE;
-import static ru.vpcb.footballassistant.utils.Config.EMPTY_STRING;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
 
 public class NewsFragment extends Fragment implements ICallback {
@@ -118,7 +114,7 @@ public class NewsFragment extends Fragment implements ICallback {
         mTitle = args.getString(BUNDLE_NEWS_TITLE);
 
         if (mLink == null || mLink.isEmpty()) {
-            FootballUtils.showMessage(mContext, getString(R.string.news_no_data_message));
+            FDUtils.showMessage(mContext, getString(R.string.news_no_data_message));
         }
 
 // parameters
@@ -157,7 +153,7 @@ public class NewsFragment extends Fragment implements ICallback {
     // callbacks
     @Override
     public void onComplete(View view, int value) {
-        FootballUtils.showMessage(mContext, getString(R.string.text_test_recycler_click));
+        FDUtils.showMessage(mContext, getString(R.string.text_test_recycler_click));
     }
 
     @Override
@@ -172,7 +168,7 @@ public class NewsFragment extends Fragment implements ICallback {
     // methods
     private void startActivityShare() {
         if (mLink == null || mLink.isEmpty()) {
-            FootballUtils.showMessage(mContext, getString(R.string.news_no_data_message));
+            FDUtils.showMessage(mContext, getString(R.string.news_no_data_message));
             return;
         }
         String shareText = "SportNews:" + mTitle + " Link:" + mLink;
@@ -189,7 +185,7 @@ public class NewsFragment extends Fragment implements ICallback {
         if (mProgressBar != null)
             mProgressBar.setVisibility(View.INVISIBLE);
         else
-            FootballUtils.showMessage(mContext, "ProgressBar Attention");
+            FDUtils.showMessage(mContext, "ProgressBar Attention");
     }
 
 
@@ -271,7 +267,7 @@ public class NewsFragment extends Fragment implements ICallback {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-//                FootballUtils.showMessage(mContext,getString(R.string.webview_error_page_loading));
+//                FDUtils.showMessage(mContext,getString(R.string.webview_error_page_loading));
             }
         });
 

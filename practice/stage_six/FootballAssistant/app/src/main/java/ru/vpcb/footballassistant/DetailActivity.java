@@ -60,7 +60,7 @@ import ru.vpcb.footballassistant.dbase.FDProvider;
 import ru.vpcb.footballassistant.services.UpdateService;
 import ru.vpcb.footballassistant.utils.Config;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
+import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.widgets.MatchWidgetService;
 import timber.log.Timber;
 
@@ -254,7 +254,7 @@ public class DetailActivity extends AppCompatActivity
         mMapFixtures = new HashMap<>();
 
 
-        mViewPagerBack.setImageResource(FootballUtils.getImageBackId());
+//        mViewPagerBack.setImageResource(FDUtils.getImageBackId());
 
 //            refresh(getString(R.string.action_update));
         startLoaders();
@@ -380,7 +380,7 @@ public class DetailActivity extends AppCompatActivity
             MatchWidgetService.startFillWidgetAction(this, mWidgetWidgetId, fixtureId);
             mViewPagerBundle = null;
             mWidgetBar.setVisibility(View.INVISIBLE);
-            FootballUtils.showMessage(this, getString(R.string.widget_button_update));
+            FDUtils.showMessage(this, getString(R.string.widget_button_update));
             mWidgetWidgetId = EMPTY_INT_VALUE;
 
             fireBaseEvent(FIREBASE_WIDGET);  // analytics
@@ -1109,7 +1109,7 @@ public class DetailActivity extends AppCompatActivity
                 } else if (action.equals(context.getString(R.string.broadcast_data_update_progress))) {
 
                 } else if (action.equals(context.getString(R.string.broadcast_data_no_network))) {
-                    FootballUtils.showMessage(context, getString(R.string.matches_no_network_message));
+                    FDUtils.showMessage(context, getString(R.string.matches_no_network_message));
 
 
                 } else if (action.equals(getString(R.string.broadcast_notification_change))) {
@@ -1267,7 +1267,7 @@ public class DetailActivity extends AppCompatActivity
         protected void onPostExecute(ViewPagerData viewPagerData) {
             stopProgress();
             if (viewPagerData == null) {
-                FootballUtils.showMessage(DetailActivity.this, getString(R.string.matches_no_data_message));
+                FDUtils.showMessage(DetailActivity.this, getString(R.string.matches_no_data_message));
                 return;
             }
 

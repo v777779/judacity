@@ -28,12 +28,10 @@ import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import ru.vpcb.footballassistant.DetailActivity;
 import ru.vpcb.footballassistant.MainActivity;
 import ru.vpcb.footballassistant.R;
 import ru.vpcb.footballassistant.data.FDFixture;
 import ru.vpcb.footballassistant.utils.FDUtils;
-import ru.vpcb.footballassistant.utils.FootballUtils;
 import timber.log.Timber;
 
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_LONG_DASH;
@@ -50,9 +48,7 @@ import static ru.vpcb.footballassistant.utils.Config.NT_FB_JOB_CHANNEL_ID;
 import static ru.vpcb.footballassistant.utils.Config.NT_FB_JOB_DISPATCHER_ID;
 import static ru.vpcb.footballassistant.utils.Config.NT_FLEXTIME_SECONDS;
 import static ru.vpcb.footballassistant.utils.Config.NT_RANDOM_RANGE;
-import static ru.vpcb.footballassistant.utils.FootballUtils.formatString;
-import static ru.vpcb.footballassistant.utils.FootballUtils.formatStringDate;
-import static ru.vpcb.footballassistant.utils.FootballUtils.showMessage;
+import static ru.vpcb.footballassistant.utils.FDUtils.formatStringDate;
 
 /**
  * Exercise for course : Android Developer Nanodegree
@@ -96,7 +92,7 @@ public class NotificationUtils {
         int scheduleTime = (int) (matchTime - currentTime);                    //
 
         if (scheduleTime <= NT_DELAY_TIME_MINIMUM) {
-            showMessage(context, context.getString(R.string.notification_delay_time_min));
+            FDUtils.showMessage(context, context.getString(R.string.notification_delay_time_min));
             return null;
         }
 // unique ID for every job based on it time and current time seconds
