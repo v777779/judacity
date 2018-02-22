@@ -181,6 +181,7 @@ public class NewsActivity extends AppCompatActivity
             showAdMob();
 
         }else {
+            mAdView.setVisibility(View.INVISIBLE);
 
         }
 
