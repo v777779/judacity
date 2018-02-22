@@ -35,6 +35,11 @@ android {
         debug {
             signingConfig signingConfigs.debug
         }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "FootballAssistant_${variant.name}_${variant.versionName}.apk"
+            }
+        }
     }
 }
 
