@@ -227,8 +227,8 @@ public class Config {
     public static final int CALENDAR_DIALOG_ACTION_APPLY = 0;
     public static final int CALENDAR_DIALOG_ACTION_CANCEL = 1;
     public static final String BUNDLE_VIEWPAGER_POS = "bundle_viewpager_pos";
+    public static final String BUNDLE_RECYCLER_POS = "bundle_recycler_pos";
     public static final int BUNDLE_VIEWPAGER_POS_DEFAULT = 0;
-    public static final int BUNDLE_VIEWPAGER_POS_CLEAR = -1;
     public static final int BUNDLE_VIEWPAGER_SPAN_DEFAULT = 10;
     public static final int BUNDLE_VIEWPAGER_SPAN_LIMITS = 730;
 

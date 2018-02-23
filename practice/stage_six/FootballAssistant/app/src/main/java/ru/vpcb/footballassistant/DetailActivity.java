@@ -70,8 +70,8 @@ import static ru.vpcb.footballassistant.utils.Config.ADMOB_SHOW_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_BUNDLE;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATA_URI;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_CENTER;
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_RECYCLER_POS;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
-import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS_CLEAR;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_DEFAULT;
 
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_LIMITS;
@@ -124,7 +124,7 @@ public class DetailActivity extends AppCompatActivity
     // receiver
     private MessageReceiver mMessageReceiver;
     // progress
-     private int mUpdateCounter;
+    private int mUpdateCounter;
 
     // mMap
     private Map<Integer, FDCompetition> mMap;
@@ -137,6 +137,7 @@ public class DetailActivity extends AppCompatActivity
     private Cursor[] mCursors;
     private Bundle mViewPagerBundle;
     private int mViewPagerPos;
+    private int mRecyclerPos;
     private MatchFragment mMatchFragment;
     private ViewPagerAdapter mAdapter;
 
@@ -217,7 +218,8 @@ public class DetailActivity extends AppCompatActivity
             }
 
             mViewPagerBundle = getDatesSpanBundle(Calendar.getInstance());
-            mViewPagerPos = -1; // center of -span 0 span+
+            mViewPagerPos = EMPTY_INT_VALUE; // center of -span 0 span+
+            mRecyclerPos = EMPTY_INT_VALUE;
             mViewPagerBack.setVisibility(View.VISIBLE);
             mViewPager.setAlpha(0);
             mTabLayout.setAlpha(0);
@@ -225,7 +227,8 @@ public class DetailActivity extends AppCompatActivity
             showAdMob();
         } else {
             mViewPagerBundle = savedInstanceState.getBundle(BUNDLE_LOADER_DATA_BUNDLE);
-            mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS);
+            mViewPagerPos = savedInstanceState.getInt(BUNDLE_VIEWPAGER_POS,EMPTY_INT_VALUE);
+            mRecyclerPos = savedInstanceState.getInt(BUNDLE_RECYCLER_POS,EMPTY_INT_VALUE);
             mViewPagerBack.setVisibility(View.INVISIBLE);
 //            mWidgetBundle = savedInstanceState.getBundle(WIDGET_BUNDLE_INTENT_EXTRA);
 //            mWidgetBundle = null;
@@ -250,7 +253,7 @@ public class DetailActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBundle(BUNDLE_LOADER_DATA_BUNDLE, mViewPagerBundle);
         outState.putInt(BUNDLE_VIEWPAGER_POS, mViewPagerPos);
-//        outState.putBundle(WIDGET_BUNDLE_INTENT_EXTRA, mWidgetBundle);
+        outState.putInt(BUNDLE_RECYCLER_POS,mRecyclerPos);
     }
 
     @Override
@@ -384,7 +387,8 @@ public class DetailActivity extends AppCompatActivity
         try {
             if (mode == CALENDAR_DIALOG_ACTION_APPLY) {
                 mViewPagerBundle = getDatesSpanBundle(calendar);
-                mViewPagerPos = BUNDLE_VIEWPAGER_POS_CLEAR; // clear to fill
+                mViewPagerPos = EMPTY_INT_VALUE;
+                mRecyclerPos = EMPTY_INT_VALUE;
                 restartLoaders();
             }
 
@@ -401,14 +405,14 @@ public class DetailActivity extends AppCompatActivity
 
     // methods
     private void showAdMob() {
-        if(FDUtils.isShowAdMob()) {
+        if (FDUtils.isShowAdMob()) {
             mAdView.setVisibility(View.VISIBLE);
             mAdView.animate().setStartDelay(ADMOB_SHOW_DURATION)
                     .setDuration(ADMOB_FADE_DURATION)
                     .alpha(0)
                     .translationY(getResources().getDimension(R.dimen.admob_height))
                     .start();
-        }else {
+        } else {
             mAdView.setVisibility(View.INVISIBLE);
         }
 
@@ -619,7 +623,6 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-
     private void startMatchFragment(FDFixture fixture, FDTeam homeTeam, FDTeam awayTeam) {
         FragmentManager fm = getSupportFragmentManager();
         mMatchFragment = MatchFragment.newInstance(fixture, homeTeam, awayTeam);
@@ -635,8 +638,6 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-
-
     private Calendar getViewPagerDate() {
         try {
             String s = mViewPagerData.mList.get(mViewPager.getCurrentItem()).get(0).getDate();
@@ -650,10 +651,9 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-
     private void startCalendar() {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = CalendarDialog.newInstance( getViewPagerDate());
+        Fragment fragment = CalendarDialog.newInstance(getViewPagerDate());
         fm.beginTransaction()
                 .add(fragment, getString(R.string.calendar_title))
                 .commit();
@@ -669,9 +669,16 @@ public class DetailActivity extends AppCompatActivity
         RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list, mMapTeams);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mRecyclerPos = (layoutManager.findFirstVisibleItemPosition());
+            }
+        });
+
         return recyclerView;
     }
 
@@ -726,7 +733,7 @@ public class DetailActivity extends AppCompatActivity
             list.add(new ArrayList<>(fixtures.subList(last, next)));
             last = next;
             if (next == current) {
-                if (mViewPagerPos == -1)
+                if (mViewPagerPos < 0)
                     mViewPagerPos = list.size();  // index of current day records
             }
         }
@@ -776,15 +783,26 @@ public class DetailActivity extends AppCompatActivity
     }
 
 
-
     private void updateViewPager(final ViewPagerData data) {
         if (mViewPager == null || data == null) return;
 
 
         mViewPagerData = data;
         int pos = mViewPagerPos;  // swap changes pos
+        final int recyclerPos = mRecyclerPos;
+
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(pos);
+        RecyclerView recyclerView = (RecyclerView)data.mRecyclers.get(pos);
+        recyclerView.scrollToPosition(recyclerPos);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(recyclerPos >= 0 ) {
+                    mRecyclerPos = recyclerPos;
+                }
+            }
+        });
 // animation
         mViewPagerBack.animate().alpha(0).setStartDelay(VIEWPAGER_BACK_START_DELAY)
                 .setDuration(VIEWPAGER_BACK_DURATION).start();
@@ -825,8 +843,6 @@ public class DetailActivity extends AppCompatActivity
         }
 
     }
-
-
 
 
     private void stopProgress() {
