@@ -55,18 +55,6 @@ public class RecyclerMatchAdapter extends RecyclerView.Adapter<RecyclerMatchAdap
      * Span object used for RecyclerView as storage of display item parameters
      */
     private Config.Span mSpan;
-    /**
-     * Boolean is true for landscape layout
-     */
-    private boolean mIsLand;
-    /**
-     * Boolean is true for tablet with sw800dp
-     */
-    private boolean mIsWide;
-    /**
-     * Resources of activity
-     */
-    private Resources mRes;
     // test!!!
     private static int counter = 0;
 
@@ -84,11 +72,20 @@ public class RecyclerMatchAdapter extends RecyclerView.Adapter<RecyclerMatchAdap
      */
     public RecyclerMatchAdapter(Context context, List<FDFixture> list, Map<Integer, FDTeam> mapTeams) {
         mContext = context;
-        mRes = context.getResources();
+        /*
+      Resources of activity
+     */
+        Resources mRes = context.getResources();
         mList = list;
         mMapTeams = mapTeams;
-        mIsWide = mRes.getBoolean(R.bool.is_wide);
-        mIsLand = mRes.getBoolean(R.bool.is_land);
+        /*
+      Boolean is true for tablet with sw800dp
+     */
+        boolean mIsWide = mRes.getBoolean(R.bool.is_wide);
+        /*
+      Boolean is true for landscape layout
+     */
+        boolean mIsLand = mRes.getBoolean(R.bool.is_land);
         mRequestSvg = getRequestBuilderSvg(context);
          mRequestPng = getRequestBuilderPng(context);
 

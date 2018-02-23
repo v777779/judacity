@@ -56,22 +56,9 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
      * Span object used for RecyclerView as storage of display item parameters
      */
     private Config.Span mSpan;
-    /**
-     * Boolean is true for landscape layout
-     */
-    private boolean mIsLand;
-    /**
-     * Boolean is true for tablet with sw800dp
-     */
-    private boolean mIsWide;
-    /**
-     * Resources of activity
-     */
-    private Resources mRes;
 
     private List<FDFixture> mList;
     private Map<Integer, FDTeam> mMap;
-    private DateFormat mDateFormat;
     private RequestBuilder<PictureDrawable> mRequestSvg;
     private RequestBuilder<Drawable> mRequestPng;
 
@@ -83,13 +70,22 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
     public RecyclerDetailAdapter(Context context, List<FDFixture> list, Map<Integer, FDTeam> map) {
         mContext = context;
 
-        mRes = context.getResources();
+        /*
+      Resources of activity
+     */
+        Resources mRes = context.getResources();
         mList = list;
         mMap = map;
 
-        mIsWide = mRes.getBoolean(R.bool.is_wide);
-        mIsLand = mRes.getBoolean(R.bool.is_land);
-        mDateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
+        /*
+      Boolean is true for tablet with sw800dp
+     */
+        boolean mIsWide = mRes.getBoolean(R.bool.is_wide);
+        /*
+      Boolean is true for landscape layout
+     */
+        boolean mIsLand = mRes.getBoolean(R.bool.is_land);
+        DateFormat mDateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
 //        if(mRequestSvg == null) mRequestSvg = getRequestBuilderSvg(context);
 //        if(mRequestPng == null ) mRequestPng = getRequestBuilderPng(context);
 

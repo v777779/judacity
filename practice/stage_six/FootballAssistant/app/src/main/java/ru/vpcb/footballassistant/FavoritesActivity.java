@@ -59,7 +59,6 @@ public class FavoritesActivity extends AppCompatActivity
 
     private static boolean sIsTimber;
     private static Handler mHandler;
-    private static FavoriteAsyncTask mFavoriteTask;
 
 
     private ProgressBar mProgressValue;
@@ -179,7 +178,7 @@ public class FavoritesActivity extends AppCompatActivity
 
 
         fixture.setFavorite(!fixture.isFavorite());  // check/uncheck
-        mFavoriteTask = new FavoriteAsyncTask(this, fixture, this);
+        FavoriteAsyncTask mFavoriteTask = new FavoriteAsyncTask(this, fixture, this);
         mFavoriteTask.execute();
 
     }

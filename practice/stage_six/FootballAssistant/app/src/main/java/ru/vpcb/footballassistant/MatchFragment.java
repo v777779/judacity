@@ -141,8 +141,6 @@ public class MatchFragment extends Fragment implements
     @BindView(R.id.match_recycler)
     RecyclerView mRecycler;
 
-    // parameters
-    private View mRootView;
     private DetailActivity mActivity;
     private Context mContext;
     private int mAppBarHeight;
@@ -217,7 +215,7 @@ public class MatchFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.match_fragment, container, false);
+        View mRootView = inflater.inflate(R.layout.match_fragment, container, false);
         mUnbinder = ButterKnife.bind(this, mRootView);
 
         setupActionBar();

@@ -53,18 +53,6 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
      * Span object used for RecyclerView as storage of display item parameters
      */
     private Config.Span mSpan;
-    /**
-     * Boolean is true for landscape layout
-     */
-    private boolean mIsLand;
-    /**
-     * Boolean is true for tablet with sw800dp
-     */
-    private boolean mIsWide;
-    /**
-     * Resources of activity
-     */
-    private Resources mRes;
 
     private List<NDArticle> mList;
     private RequestBuilder<PictureDrawable> mRequestSvg;
@@ -79,11 +67,20 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
 
     public RecyclerNewsAdapter(Context context, List<NDArticle> list) {
         mContext = context;
-        mRes = context.getResources();
+        /*
+      Resources of activity
+     */
+        Resources mRes = context.getResources();
         mList = list;
 
-        mIsWide = mRes.getBoolean(R.bool.is_wide);
-        mIsLand = mRes.getBoolean(R.bool.is_land);
+        /*
+      Boolean is true for tablet with sw800dp
+     */
+        boolean mIsWide = mRes.getBoolean(R.bool.is_wide);
+        /*
+      Boolean is true for landscape layout
+     */
+        boolean mIsLand = mRes.getBoolean(R.bool.is_land);
         mDateFormat = new SimpleDateFormat(DATE_FULL_PATTERN, Locale.ENGLISH);
 
         mRequestSvg = getRequestBuilderSvg(context, R.drawable.fc_logo_news);

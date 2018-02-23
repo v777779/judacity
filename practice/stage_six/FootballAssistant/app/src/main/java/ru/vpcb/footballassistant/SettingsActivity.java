@@ -26,7 +26,6 @@ import android.widget.Toast;
  */
 public class SettingsActivity extends AppCompatActivity {
     private ImageView mToolbarLogo;
-    private BottomNavigationView mBottomNavigation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        mBottomNavigation = findViewById(R.id.bottom_navigation);
+        BottomNavigationView mBottomNavigation = findViewById(R.id.bottom_navigation);
         mBottomNavigation.setSelectedItemId(R.id.navigation_settings);
         mBottomNavigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -65,8 +65,6 @@ public class NewsFragment extends Fragment implements ICallback {
     // match start
 
 
-    // parameters
-    private View mRootView;
     private NewsActivity mActivity;
     private Context mContext;
     private int mAppBarHeight;
@@ -125,7 +123,7 @@ public class NewsFragment extends Fragment implements ICallback {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.news_fragment, container, false);
+        View mRootView = inflater.inflate(R.layout.news_fragment, container, false);
         mUnbinder = ButterKnife.bind(this, mRootView);
 
         setupActionBar();

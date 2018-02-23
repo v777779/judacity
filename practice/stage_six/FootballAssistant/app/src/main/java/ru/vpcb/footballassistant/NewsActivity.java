@@ -99,8 +99,6 @@ public class NewsActivity extends AppCompatActivity
     private Map<String, List<NDArticle>> mMapArticles;
 
 
-    private Cursor[] mCursors;
-    private ViewPagerData mViewPagerData;
     private int mViewPagerPos;
     private ViewPagerAdapter mAdapter;
 
@@ -136,7 +134,7 @@ public class NewsActivity extends AppCompatActivity
         mAdView = findViewById(R.id.adview_banner);
 
 // params
-        mCursors = new Cursor[5];
+        Cursor[] mCursors = new Cursor[5];
         mMap = new HashMap<>();
         mMapArticles = new HashMap<>();
         mViewPagerPos = EMPTY_INT_VALUE;
@@ -492,7 +490,7 @@ public class NewsActivity extends AppCompatActivity
         stopProgress();
         if (mViewPager == null || data == null) return;
 
-        mViewPagerData = data;
+        ViewPagerData mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(mViewPagerPos);  // works if viewpager is empty only
 

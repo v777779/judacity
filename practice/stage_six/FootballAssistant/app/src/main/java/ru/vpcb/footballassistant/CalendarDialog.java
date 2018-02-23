@@ -25,7 +25,6 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 public class CalendarDialog extends DialogFragment implements View.OnClickListener {
 
 
-    private CalendarView mCalendarView;
     private TextView mTextViewYear;
     private TextView mTextViewDate;
     private Calendar mCalendar;
@@ -69,7 +68,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         getDialog().setTitle(getString(R.string.calendar_title));
 
 
-        mCalendarView = v.findViewById(R.id.calendar_view);
+        CalendarView mCalendarView = v.findViewById(R.id.calendar_view);
         mTextViewYear = v.findViewById(R.id.calendar_year);
         mTextViewDate = v.findViewById(R.id.calendar_date);
         mCalendar = Calendar.getInstance();

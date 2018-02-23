@@ -25,7 +25,6 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 public class ViewPagerAdapter extends PagerAdapter {
     private List<View> recyclers;
     private List<String> titles;
-    private AppCompatActivity mActivity;
 
     /**
      * Constructor  created object from List<View>> data source
@@ -33,7 +32,7 @@ public class ViewPagerAdapter extends PagerAdapter {
      * @param recyclers input List<View> data source
      */
     public ViewPagerAdapter(AppCompatActivity activity, List<View> recyclers, List<String> listTitles) {
-        this.mActivity = activity;
+        AppCompatActivity mActivity = activity;
         this.recyclers = recyclers;
         this.titles = listTitles;
     }
