@@ -36,7 +36,7 @@ public interface IFDRetrofitAPI {
     /**
      * Returns parsed List<RecipeItem>  after JSON data have been downloaded
      *
-     * @param s String empry parameter
+     * @param s String empty parameter
      * @return List<RecipeItem>  list of recipes downloaded from the server
      */
 

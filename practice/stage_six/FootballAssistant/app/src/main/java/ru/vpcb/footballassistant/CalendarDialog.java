@@ -51,7 +51,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     /**
      * Creates FragmentError main View
      * Setup different layouts using mLayoutId field
-     * Setup different titile for MainActivity and DetailsActivity
+     * Setup different title for MainActivity and DetailsActivity
      *
      * @param inflater           LayoutInflater inflates layout
      * @param container          ViewGroup parent view

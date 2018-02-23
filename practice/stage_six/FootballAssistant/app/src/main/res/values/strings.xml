@@ -221,7 +221,7 @@
     <!--widgets-->
     <string name="widget_read_fixture_exception">Widget read fixture exception:%1$s</string>
 
-    <!--analythics-->
+    <!--analytics-->
     <string name="fb_matches_id">Matches</string>
     <string name="fb_matches">Opened page of matches on date: %1$s</string>
     <string name="fb_matches_content">Football matches data</string>

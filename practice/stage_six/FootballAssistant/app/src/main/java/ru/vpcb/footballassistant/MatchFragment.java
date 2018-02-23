@@ -119,7 +119,7 @@ public class MatchFragment extends Fragment implements
     @BindView(R.id.match_time_day_high)
     TextView mTextDayHigh;
     @BindView(R.id.match_time_day_middle)
-    TextView mTextDayMddle;
+    TextView mTextDayMiddle;
     @BindView(R.id.match_time_day_low)
     TextView mTextDayLow;
     @BindView(R.id.match_time_hour_high)
@@ -418,7 +418,7 @@ public class MatchFragment extends Fragment implements
             mTextStartDate.setText(FDUtils.formatMatchDateStart(mFixture.getDate()));
             if (current > time) {
                 mTextDayHigh.setText(EMPTY_DASH);
-                mTextDayMddle.setText(EMPTY_DASH);
+                mTextDayMiddle.setText(EMPTY_DASH);
                 mTextDayLow.setText(EMPTY_DASH);
                 mTextHourHigh.setText(EMPTY_DASH);
                 mTextHourLow.setText(EMPTY_DASH);
@@ -437,7 +437,7 @@ public class MatchFragment extends Fragment implements
                     mTextDayHigh.setVisibility(View.VISIBLE);
                     mTextDayHigh.setText(FDUtils.formatFromInt(a[2], EMPTY_STRING));
                 }
-                mTextDayMddle.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
+                mTextDayMiddle.setText(FDUtils.formatFromInt(a[1], EMPTY_STRING));
                 mTextDayLow.setText(FDUtils.formatFromInt(a[0], EMPTY_STRING));
 
                 a = getOrders((int) hours);
@@ -453,7 +453,7 @@ public class MatchFragment extends Fragment implements
         } else {
             mTextStartDate.setText(EMPTY_LONG_DASH);
             mTextDayHigh.setText(EMPTY_DASH);
-            mTextDayMddle.setText(EMPTY_DASH);
+            mTextDayMiddle.setText(EMPTY_DASH);
             mTextDayLow.setText(EMPTY_DASH);
             mTextHourHigh.setText(EMPTY_DASH);
             mTextHourLow.setText(EMPTY_DASH);
@@ -683,7 +683,7 @@ public class MatchFragment extends Fragment implements
                 FDUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }
-// notificationID does not updated when load database fisrst time and =null
+// notificationID does not updated when load database first time and =null
             String id =     mFixture.getNotificationId();
             String newId =  fixture.getNotificationId();
             if(id != null && newId != null && !id.equals(newId)){

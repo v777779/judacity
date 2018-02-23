@@ -263,7 +263,7 @@ public class FDProvider extends ContentProvider {
                 String _id2 = paths.get(2);
                 Selection sel;
                 // fx
-                if (p.tableName.equals(FDContract.FxEntry.TABLE_NAME)) {  // dates beetween
+                if (p.tableName.equals(FDContract.FxEntry.TABLE_NAME)) {  // dates between
                     sel = new Selection(p.tableName, p.columnId4 + " BETWEEN ? AND ?",
                             new String[]{_id, _id2});
                 } else {

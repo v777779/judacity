@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#3F51B5</color>-->
-    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+
     <color name="colorAccent">#FF4081</color>
 
-    <!--<color name="colorPrimary">#7609266c</color>-->
-    <!--<color name="colorPrimaryDark">#b2010d2a</color>-->
-    <!--<color name="colorAccent">#2a8d41</color>-->
 
     <color name="colorPrimary">#1e7e61</color>
     <color name="colorPrimaryDark">#3a5a5a</color>
-    <!--<color name="colorAccent">#2a8d41</color>-->
 
-    <!--<color name="colorPrimary">#b0096c52</color>-->
-    <!--<color name="colorPrimaryDark">#d2012a29</color>-->
     <!--toolbar-->
     <color name="colorToolbarLight">#3a9d83</color>
     <color name="colorToolbarDark">#336c5d</color>
-
-    <!--<color name="colorToolbarLight">#d035a286</color>-->
-    <!--<color name="colorToolbarDark">#d41a4847</color>-->
-
-    <!--<color name="colorToolbarLight">#d035a286</color>-->
-    <!--<color name="colorToolbarDark">#d40d3332</color>-->
-
 
     <!--progress_bar-->
     <color name="progress_back_start">#c3c3c3</color>
@@ -58,46 +44,13 @@
 
 
     <!--icon-->
-
     <color name="rm_head_card_back">#d5d5d5</color>
-
     <color name="rm_item_card_back_light">#f8f8f8</color>
     <color name="rm_item_card_back_dark">#f8f8f8</color>
 
     <color name="rm_item_status_back">#e8e8e8</color>
     <color name="rm_item_status_back_light">#f0f0f0</color>
     <color name="rm_item_status_back_dark">#e0e0e0</color>
-
-
-    <!--<color name="rm_view_border_back">#e0e0e0</color>-->
-    <!-- background glass-->
-    <!--<color name="rm_view_border_back">#f0f0f0</color>-->
-    <!--<color name="rm_item_card_back">#bdf8f8f8</color>-->
-    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
-    <!---->
-
-    <!--background solid-->
-    <!--<color name="rm_view_border_back">#e0e0e0</color>-->
-    <!--<color name="rm_item_card_back">#ffffff</color>-->
-    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
-
-    <!--background solid-->
-    <!--<color name="rm_view_border_back">#f0f0f0</color>-->
-    <!--<color name="rm_item_card_back">#f8f8f8</color>-->
-    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
-
-
-    <!--<color name="rm_item_card_back">#f7fff6</color>-->
-    <!--<color name="rm_head_card_back">#e7d7c8</color>-->
-
-    <!--<color name="rm_item_card_back">#f7fff6</color>-->
-    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
-
-    <!--<color name="rm_item_card_back">#f8f8f8</color>-->
-    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
-
-    <!--<color name="rm_item_card_back">#e8e8e8</color>-->
-    <!--<color name="rm_head_card_back">#d5d5d5</color>-->
 
     <!--navigation-->
     <color name="rm_navigation_back">#ececec</color>

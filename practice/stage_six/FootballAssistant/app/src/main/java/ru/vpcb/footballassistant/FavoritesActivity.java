@@ -388,7 +388,7 @@ public class FavoritesActivity extends AppCompatActivity
                 FDUtils.showMessage(context, context.getString(R.string.favorites_change_error));
                 return;
             }
-// notificationID does not updated when load database fisrst time and =null
+// notificationID does not updated when load database first time and =null
             String id = mFixture.getNotificationId();
             String newId = fixture.getNotificationId();
             if (id != null && newId != null && !id.equals(newId)) {

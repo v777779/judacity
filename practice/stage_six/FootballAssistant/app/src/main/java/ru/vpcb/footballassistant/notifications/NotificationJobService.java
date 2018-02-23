@@ -83,7 +83,7 @@ public class NotificationJobService extends JobService implements INotification 
         protected void onPostExecute(Void o) {
                 /*
                  * Once the AsyncTask is finished, the job is finished. To inform JobManager that
-                 * you're done, you call jobFinished with the jobParamters that were passed to your
+                 * you're done, you call jobFinished with the jobParameters that were passed to your
                  * job and a boolean representing whether the job needs to be rescheduled. This is
                  * usually if something didn't work and you want the job to try running again.
                  */

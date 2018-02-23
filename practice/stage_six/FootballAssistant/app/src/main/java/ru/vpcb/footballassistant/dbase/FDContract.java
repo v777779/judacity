@@ -361,7 +361,7 @@ public class FDContract {
             if (columnId.equals(FxEntry.COLUMN_FIXTURE_ID)) {
                 return "datetime(" + FxEntry.COLUMN_FIXTURE_DATE + ") ASC";
             } else if (columnId.equals(NaEntry.COLUMN_ARTICLE_ID)) {
-                return "datetime(" + NaEntry.COLUMN_PUBLISHED_AT + ") DESC";  // fresh record firstсвежая запись первая
+                return "datetime(" + NaEntry.COLUMN_PUBLISHED_AT + ") DESC";  // fresh record first
             } else {
                 return columnId + " ASC";
             }

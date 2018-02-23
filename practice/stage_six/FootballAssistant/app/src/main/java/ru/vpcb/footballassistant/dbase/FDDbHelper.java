@@ -28,7 +28,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
     /**
      * Creates Database of RecipeItems
      *
-     * @param db SQLiteDatabse database
+     * @param db SQLiteDatabase database
      */
     @Override
    synchronized public void onCreate(SQLiteDatabase db) {
@@ -101,7 +101,7 @@ public class FDDbHelper extends SQLiteOpenHelper {
                 FDContract.TbEntry.COLUMN_TEAM_PLAYED_GAMES + " INTEGER, " +            // int
                 FDContract.TbEntry.COLUMN_TEAM_POINTS + " INTEGER, " +                  // int
                 FDContract.TbEntry.COLUMN_TEAM_GOALS + " INTEGER, " +                   // int
-                FDContract.TbEntry.COLUMN_TEAM_GOALS_AGAINST + " INTEGERL, " +          // int
+                FDContract.TbEntry.COLUMN_TEAM_GOALS_AGAINST + " INTEGER, " +          // int
                 FDContract.TbEntry.COLUMN_TEAM_GOALS_DIFFERENCE + " INTEGER, " +        // int
                 FDContract.TbEntry.COLUMN_TEAM_WINS + " INTEGER, " +                    // int
                 FDContract.TbEntry.COLUMN_TEAM_DRAWS + " INTEGER, " +                   // int
