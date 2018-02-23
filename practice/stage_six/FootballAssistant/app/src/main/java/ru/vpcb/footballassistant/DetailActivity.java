@@ -664,7 +664,7 @@ public class DetailActivity extends AppCompatActivity
     private RecyclerView getRecycler(List<FDFixture> list) {
         Config.Span sp = Config.getDisplayMetrics(this);
 
-        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
+        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, mViewPager,false);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
         RecyclerDetailAdapter adapter = new RecyclerDetailAdapter(this, list, mMapTeams);

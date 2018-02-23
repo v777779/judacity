@@ -421,7 +421,7 @@ public class NewsActivity extends AppCompatActivity
 
 
     private RecyclerView getRecycler(List<NDArticle> list) {
-        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, null);
+        View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, mViewPager,false);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
 
         RecyclerNewsAdapter adapter = new RecyclerNewsAdapter(this, list);

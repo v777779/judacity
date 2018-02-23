@@ -65,7 +65,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_calendar, null);
+        View v = inflater.inflate(R.layout.fragment_calendar, container,false);
         v.findViewById(R.id.btn_ok).setOnClickListener(this);
         v.findViewById(R.id.btn_cancel).setOnClickListener(this);
         getDialog().setTitle(getString(R.string.calendar_title));
