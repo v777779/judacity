@@ -5,9 +5,7 @@
     android:id="@+id/content_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
-    android:background="@color/rm_view_border_back"
-    >
+    android:layout_marginTop="?attr/actionBarSize">
 
     <!--background transparent-->
 
@@ -82,7 +80,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation"
-        />
+        app:menu="@menu/navigation" />
 
 </android.support.constraint.ConstraintLayout>
