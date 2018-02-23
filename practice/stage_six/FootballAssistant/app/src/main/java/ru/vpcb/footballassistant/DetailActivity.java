@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -26,13 +25,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -57,9 +54,6 @@ import ru.vpcb.footballassistant.data.FDTeam;
 import ru.vpcb.footballassistant.dbase.FDContract;
 import ru.vpcb.footballassistant.dbase.FDLoader;
 import ru.vpcb.footballassistant.dbase.FDProvider;
-import ru.vpcb.footballassistant.services.UpdateService;
-import ru.vpcb.footballassistant.utils.Config;
-import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.utils.FDUtils;
 import ru.vpcb.footballassistant.widgets.MatchWidgetService;
 import timber.log.Timber;
@@ -73,22 +67,17 @@ import static ru.vpcb.footballassistant.utils.Config.BUNDLE_LOADER_DATE_CENTER;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_RECYCLER_POS;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_POS;
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_DEFAULT;
-
 import static ru.vpcb.footballassistant.utils.Config.BUNDLE_VIEWPAGER_SPAN_LIMITS;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_DASH;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_FIXTURE_DATE;
 import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
+import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCH;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_MATCHES;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_SHARE;
 import static ru.vpcb.footballassistant.utils.Config.FIREBASE_WIDGET;
-import static ru.vpcb.footballassistant.utils.Config.FRAGMENT_TEAM_TAG;
-import static ru.vpcb.footballassistant.utils.Config.FD_LOADERS_UPDATE_COUNTER;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_INDEFINITE;
-import static ru.vpcb.footballassistant.utils.Config.MAIN_ACTIVITY_PROGRESS;
 import static ru.vpcb.footballassistant.utils.Config.MATCH_FRAGMENT_TAG;
-
 import static ru.vpcb.footballassistant.utils.Config.NT_BUNDLE_INTENT_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_DURATION;
 import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_BACK_START_DELAY;
@@ -96,7 +85,6 @@ import static ru.vpcb.footballassistant.utils.Config.VIEWPAGER_OFF_SCREEN_PAGE_N
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_FIXTURE_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_BUNDLE_WIDGET_ID;
 import static ru.vpcb.footballassistant.utils.Config.WIDGET_INTENT_BUNDLE;
-import static ru.vpcb.footballassistant.utils.FDUtils.cFx;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLite;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateFromSQLiteZeroTime;
 import static ru.vpcb.footballassistant.utils.FDUtils.formatDateToSQLite;
@@ -111,7 +99,6 @@ public class DetailActivity extends AppCompatActivity
     private ProgressBar mProgressValue;
     private ImageView mToolbarLogo;
 
-    private RecyclerView mRecyclerView;
     private ViewPager mViewPager;
     private ImageView mViewPagerBack;
     private TabLayout mTabLayout;
@@ -119,7 +106,7 @@ public class DetailActivity extends AppCompatActivity
 
 
     private BottomNavigationView mBottomNavigation;
-    private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigationListener;
+
 
     // receiver
     private MessageReceiver mMessageReceiver;
@@ -128,9 +115,7 @@ public class DetailActivity extends AppCompatActivity
 
     // mMap
     private Map<Integer, FDCompetition> mMap;
-    private Map<Integer, List<Integer>> mMapTeamKeys;
     private Map<Integer, FDTeam> mMapTeams;
-    private Map<Integer, List<Integer>> mMapFixtureKeys;
     private Map<Integer, FDFixture> mMapFixtures;
 
 
@@ -143,7 +128,6 @@ public class DetailActivity extends AppCompatActivity
 
 
     // widget
-//    private Bundle mWidgetBundle;
     private int mWidgetWidgetId;
     private int mWidgetFixtureId;
 
@@ -236,9 +220,7 @@ public class DetailActivity extends AppCompatActivity
         }
 
         mMap = new HashMap<>();
-        mMapTeamKeys = new HashMap<>();
         mMapTeams = new HashMap<>();
-        mMapFixtureKeys = new HashMap<>();
         mMapFixtures = new HashMap<>();
 
 
@@ -508,14 +490,6 @@ public class DetailActivity extends AppCompatActivity
         return mMap;
     }
 
-    public Map<Integer, FDTeam> getMapTeams() {
-        return mMapTeams;
-    }
-
-    public Map<Integer, FDFixture> getMapFixtures() {
-        return mMapFixtures;
-    }
-
     // TODO Optimize loaders
     private void restartLoaders() {
         Bundle bundle = mViewPagerBundle;
@@ -662,7 +636,7 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private RecyclerView getRecycler(List<FDFixture> list) {
-        Config.Span sp = Config.getDisplayMetrics(this);
+//        Config.Span sp = Config.getDisplayMetrics(this);
 
         View recyclerLayout = getLayoutInflater().inflate(R.layout.recycler_main, mViewPager,false);
         RecyclerView recyclerView = recyclerLayout.findViewById(R.id.recycler_main_container);
@@ -686,8 +660,9 @@ public class DetailActivity extends AppCompatActivity
     private List<Long> getTimesList(List<FDFixture> fixtures) {
         List<Long> list = new ArrayList<>();
         for (int i = 0; i < fixtures.size(); i++) {
-            long time = formatDateFromSQLite(fixtures.get(i).getDate()).getTime();
-            list.add(time);
+            Date date = formatDateFromSQLite(fixtures.get(i).getDate());
+            if(date == null) continue;
+            list.add(date.getTime());
         }
         return list;
     }
@@ -711,15 +686,17 @@ public class DetailActivity extends AppCompatActivity
 //        Collections.sort(fixtures, cFx);
         List<List<FDFixture>> list = new ArrayList<>();
 
-        Date date;
+        Date date = null;
+        long time = 0;
         if (mViewPagerBundle != null) {
             date = formatDateFromSQLiteZeroTime(mViewPagerBundle.getString(BUNDLE_LOADER_DATE_CENTER));
-        } else {
-            date = Calendar.getInstance().getTime();
         }
 
+        if(date != null) time = date.getTime();
+        else time = Calendar.getInstance().getTimeInMillis();
+
         List<Long> times = getTimesList(fixtures);
-        current = getIndex(times, date.getTime());
+        current = getIndex(times, time);
 
         while (next < times.size() - 1) {
             date = formatDateFromSQLiteZeroTime(fixtures.get(next).getDate());
@@ -727,7 +704,7 @@ public class DetailActivity extends AppCompatActivity
                 next++;
                 continue;
             }
-            long time = date.getTime();
+            time = date.getTime();
 //            map.put(time, list.size());
             time += TimeUnit.DAYS.toMillis(1);
             next = getIndex(times, time);
@@ -998,20 +975,17 @@ public class DetailActivity extends AppCompatActivity
             try {
 
                 Map<Integer, FDCompetition> map = FDUtils.readCompetitions(cursors[0][0]);
-                Map<Integer, List<Integer>> mapTeamKeys = FDUtils.readCompetitionTeams(cursors[0][1]);
+                Map<Integer, List<Integer>> mapTeamKeys = new HashMap<>();
                 Map<Integer, FDTeam> mapTeams = FDUtils.readTeams(cursors[0][2]);
-                Map<Integer, List<Integer>> mapFixtureKeys = FDUtils.readCompetitionFixtures(cursors[0][3]);
+                Map<Integer, List<Integer>> mapFixtureKeys = new HashMap<>();
                 Map<Integer, FDFixture> mapFixtures = FDUtils.readFixtures(cursors[0][4]);
 
                 if (FDUtils.checkEmpty(map, mapTeamKeys, mapTeams, mapFixtureKeys, mapFixtures)) {
                     return null;
                 }
 
-
                 mMap = map;
-                mMapTeamKeys = mapTeamKeys;
                 mMapTeams = mapTeams;
-                mMapFixtureKeys = mapFixtureKeys;
                 mMapFixtures = mapFixtures;
                 return getViewPagerData();
 

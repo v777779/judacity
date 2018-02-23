@@ -1,7 +1,5 @@
 package ru.vpcb.footballassistant;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TextView;
-
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -32,6 +29,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     private TextView mTextViewYear;
     private TextView mTextViewDate;
     private Calendar mCalendar;
+    private ICallback mCallback;
 
     public static Fragment newInstance(Calendar calendar) {
         CalendarDialog fragment = new CalendarDialog();
@@ -62,10 +60,10 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
      * @return View of dialog
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_calendar, container,false);
+        View v = inflater.inflate(R.layout.fragment_calendar, container, false);
         v.findViewById(R.id.btn_ok).setOnClickListener(this);
         v.findViewById(R.id.btn_cancel).setOnClickListener(this);
         getDialog().setTitle(getString(R.string.calendar_title));
@@ -88,6 +86,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
             mCalendar.setTimeInMillis(time);
         }
 
+        mCallback = (ICallback)getActivity();
         mCalendarView.setDate(mCalendar.getTimeInMillis());
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -117,32 +116,15 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     public void onClick(View v) {
         String s = ((Button) v).getText().toString();
 
-        if (s.equals(getString(android.R.string.ok))) {
-            ((ICallback)getActivity()).onComplete(CALENDAR_DIALOG_ACTION_APPLY, mCalendar);
-        }
-        if (s.equals(getString(android.R.string.cancel))) {
+        if(mCallback == null) return;
 
+        if (s.equals(getString(android.R.string.ok))) {
+           mCallback.onComplete(CALENDAR_DIALOG_ACTION_APPLY, mCalendar);
         }
         dismiss();
     }
 
-
-    /**
-     * Recreates activity with SDK version support.
-     */
-    private void recreate() {
-        Activity parent = getActivity();
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            parent.recreate();
-        } else {
-            Intent intent = parent.getIntent();
-            parent.finish();
-            startActivity(intent);
-        }
-    }
-
-
-    private void setCalendarHead() {
+       private void setCalendarHead() {
         mTextViewYear.setText(getString(R.string.calendar_text_year, mCalendar.get(Calendar.YEAR)));
 
         mTextViewDate.setText(getString(R.string.calendar_text_date,

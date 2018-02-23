@@ -150,8 +150,8 @@ public class FDUtils {
                                      Map<Integer, FDFixture> mapFixtures) {
 
         if (map == null || map.isEmpty() ||
-                mapTeamKeys == null || mapTeamKeys.isEmpty() ||
-                mapFixtureKeys == null || mapFixtureKeys.isEmpty() ||
+//                mapTeamKeys == null || mapTeamKeys.isEmpty() ||
+//                mapFixtureKeys == null || mapFixtureKeys.isEmpty() ||
                 mapTeams == null || mapTeams.isEmpty() ||
                 mapFixtures == null || mapFixtures.isEmpty()) {
             return true;
