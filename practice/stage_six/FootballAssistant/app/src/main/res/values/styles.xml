@@ -88,14 +88,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Country.Item.TextRecycler" parent="Item.TextRecycler">
-        <item name="android:textSize">@dimen/text_rm_item_country_size</item>
-    </style>
-
-    <style name="League.Item.TextRecycler" parent="Item.TextRecycler">
-        <item name="android:textSize">@dimen/text_rm_item_league_size</item>
-    </style>
-
     <!--match-->
     <style name="Match.TextRecycler" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">normal</item>
@@ -169,15 +161,6 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="Letter.Match.TextRecycler" parent="Match.TextRecycler">
-        <item name="android:textSize">@dimen/text_sm_item_start_letter_size</item>
-
-    </style>
-
-    <style name="Start.Letter.Match.TextRecycler" parent="Letter.Match.TextRecycler">
-        <item name="android:textColor">@color/match_start_letter</item>
-    </style>
-
     <style name="Subscript.Match.TextRecycler" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_item_start_subscript_size</item>
         <item name="android:textColor">@color/match_start_subscript</item>
@@ -217,13 +200,6 @@
     </style>
 
     <!--recycler-->
-    <style name="Head.Recycler.Match" parent="Match.Light.TextRecycler">
-        <item name="android:textSize">@dimen/text_sm_recycler_head_size</item>
-        <item name="android:textColor">@color/match_recycler_head_text</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textStyle">bold|italic</item>
-        <item name="android:lines">1</item>
-    </style>
 
     <style name="Score.Item.Recycler.Match" parent="Match.TextRecycler">
         <item name="android:textSize">@dimen/text_sm_recycler_score_size</item>
@@ -268,9 +244,6 @@
     </style>
 
     <!--team-->
-    <style name="Home.Team.TextRecycler" parent="Match.Light.TextRecycler">
-        <item name="android:textSize">@dimen/text_tm_item_team_size</item>
-    </style>
 
 
     <style name="Status.Team.TextRecycler" parent="Match.Light.TextRecycler">
@@ -283,119 +256,12 @@
     </style>
 
     <!--player-->
-    <style name="Player.TextRecycler" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textStyle">normal</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/player_recycler_text</item>
-        <item name="android:textSize">@dimen/text_tm_item_player_size</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="Name.Item.Player" parent="Player.TextRecycler">
-        <item name="android:textSize">@dimen/text_tm_item_player_name_size</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textStyle">bold</item>
-        <!--<item name="android:lines">2</item>-->
-
-    </style>
-
-    <style name="Position.Item.Player" parent="Player.TextRecycler">
-        <item name="android:textSize">@dimen/text_tm_item_player_position_size</item>
-        <item name="android:textColor">@color/player_recycler_position_text</item>
-        <item name="android:background">@drawable/player_position_back</item>
-        <item name="android:minEms">@integer/text_tm_item_position_min</item>
-        <item name="android:paddingTop">@dimen/margin_micro</item>
-        <item name="android:paddingBottom">@dimen/margin_micro</item>
-        <!--<item name="android:fontFamily">sans-serif-light</item>-->
-        <!--<item name="android:textStyle">bold</item>-->
-    </style>
-
-    <style name="Number.Item.Player" parent="Player.TextRecycler">
-        <item name="android:textSize">@dimen/text_tm_item_player_number_size</item>
-        <item name="android:background">@drawable/player_icon_back</item>
-        <!--<item name="android:fontFamily">sans-serif-light</item>-->
-        <!--<item name="android:textStyle">bold</item>-->
-    </style>
-
-    <style name="Date.Item.Player" parent="Player.TextRecycler">
-        <item name="android:textSize">@dimen/text_tm_item_player_date_size</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Sub.Item.Player" parent="Player.TextRecycler">
-        <item name="android:textSize">@dimen/text_tm_item_player_sub_size</item>
-        <item name="android:textColor">@color/player_recycler_sub_text</item>
-    </style>
-
-    <style name="National.Item.Player" parent="Player.TextRecycler">
-        <item name="android:textSize">@dimen/text_tm_item_player_national_size</item>
-        <item name="android:textColor">@color/player_recycler_national_text</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textStyle">bold</item>
-
-    </style>
 
 
     <!--league-->
-    <style name="League.TextRecycler" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textStyle">normal</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/league_item_text</item>
-        <item name="android:textSize">@dimen/text_lg_item_size</item>
-        <item name="android:ellipsize">end</item>
-    </style>
 
-    <style name="Head.League.TextRecycler" parent="League.TextRecycler">
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Pos.Head.League" parent="Head.League.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_item_head_team_pos_size</item>
-        <item name="android:textColor">@color/league_lg_item_head_team_pos</item>
-    </style>
-
-    <style name="Name.Head.League" parent="Head.League.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_item_head_team_name_size</item>
-        <item name="android:textColor">@color/league_lg_item_head_team_name</item>
-        <item name="android:lines">2</item>
-
-    </style>
-
-    <style name="Value.Head.League" parent="Head.League.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_item_head_team_value_size</item>
-        <item name="android:textColor">@color/league_lg_item_head_team_value</item>
-    </style>
-
-
-    <style name="Pos.Item.League" parent="League.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_item_team_pos_size</item>
-        <item name="android:textColor">@color/league_lg_item_team_pos</item>
-    </style>
-
-    <style name="Name.Item.League" parent="League.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_item_team_name_size</item>
-        <item name="android:textColor">@color/league_lg_item_team_name</item>
-        <item name="android:lines">3</item>
-    </style>
-
-    <style name="Value.Item.League" parent="League.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_item_team_value_size</item>
-        <item name="android:textColor">@color/league_lg_item_team_value</item>
-    </style>
 
     <!--toolbar-->
-    <style name="Country.League.Toolbar" parent="Match.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_toolbar_country_size</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="Name.League.Toolbar" parent="Match.Light.TextRecycler">
-        <item name="android:textSize">@dimen/text_lg_toolbar_league_size</item>
-        <item name="android:gravity">top|center</item>
-        <item name="android:lines">2</item>
-    </style>
 
     <!--news-->
     <style name="News.TextRecycler" parent="TextAppearance.AppCompat.Medium">
@@ -513,12 +379,6 @@
         <item name="android:background">@color/color_dialog_head_back</item>
         <item name="android:textAppearance">@style/Color.TextHead</item>
         <item name="android:padding">@dimen/margin_normal</item>
-    </style>
-
-    <style name="Custom.Dialog" parent="@style/Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowNoTitle">false</item>
-        <item name="android:windowTitleStyle">@style/Dialog.Title</item>
-        <item name="android:buttonStyle">@style/dialog_button_style</item>
     </style>
 
 

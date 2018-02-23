@@ -1,25 +1,19 @@
 <resources>
     <string name="app_name">Football</string>
     <string name="title_activity_detail">DetailActivity</string>
-    <string name="title_activity_match">MatchActivity</string>
 
 
-    <string name="title_activity_team">TeamActivity</string>
-    <string name="title_activity_league">LeagueActivity</string>
     <string name="title_activity_news">NewsActivity</string>
     <string name="title_activity_favorites">FavoritesActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!--titles-->
     <string name="screen_match">Matches</string>
-    <string name="screen_team">Team</string>
-    <string name="screen_league">Leaue</string>
     <string name="screen_news">News</string>
     <string name="screen_favorites">Favorites</string>
     <string name="screen_settings">Settings</string>
 
     <!--menu-->
-    <string name="action_settings">Settings</string>
     <string name="action_calendar">Calendar</string>
     <string name="action_share">Share</string>
     <string name="action_reload">Reload</string>
@@ -122,11 +116,8 @@
     <!--action-->
     <string name="action_update">ru.vpcb.footballassistant.intent.action.ACTION_UPDATE</string>
     <string name="action_force_update">ru.vpcb.footballassistant.intent.action.ACTION_FORCE_UPDATE</string>
-    <string name="action_refresh">ru.vpcb.footballassistant.intent.action.ACTION_REFRESH</string>
-    <string name="action_cancel">ru.vpcb.footballassistant.intent.action.ACTION_CANCEL</string>
 
     <!--extra-->
-    <string name="extra_empty_cursor">ru.vpcb.footballassistant.intent.extra.EMPTY_CURSOR</string>
     <string name="extra_progress_counter">ru.vpcb.footballassistant.intent.extra.PROGRESS_COUNTER</string>
 
 
@@ -136,31 +127,26 @@
     <string name="broadcast_data_update_finished">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_FINISHED</string>
     <string name="broadcast_data_no_network">ru.vpcb.footballassistant.intent.action.DATA_NO_NETWORK</string>
     <string name="broadcast_data_update_error">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_ERROR</string>
-    <string name="broadcast_data_no_network_empty">ru.vpcb.footballassistant.intent.action.DATA_NO_NETWORK_EMPTY</string>
     <string name="broadcast_data_update_progress">ru.vpcb.footballassistant.intent.action.DATA_UPDATE_PROGRESS</string>
 
     <string name="broadcast_news_update_started">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_STARTED</string>
     <string name="broadcast_news_update_finished">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_FINISHED</string>
     <string name="broadcast_news_no_network">ru.vpcb.footballassistant.intent.action.NEWS_NO_NETWORK</string>
     <string name="broadcast_news_update_error">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_ERROR</string>
-    <string name="broadcast_news_no_network_empty">ru.vpcb.footballassistant.intent.action.NEWS_NO_NETWORK_EMPTY</string>
     <string name="broadcast_news_update_progress">ru.vpcb.footballassistant.intent.action.NEWS_UPDATE_PROGRESS</string>
 
     <string name="broadcast_notification_change">ru.vpcb.footballassistant.intent.action.DATA_NOTIFICATION_CHANGE</string>
-    <string name="broadcast_notification_cancel">ru.vpcb.footballassistant.intent.action.DATA_NOTIFICATION_CANCEL</string>
 
     <!--main-->
     <string name="powered_news_api">powered by NewsAPI.org</string>
     <string name="news_api_link">https://newsapi.org</string>
 
     <!--match-->
-    <string name="text_sm_item_match_long_dash">\u2014</string>
     <string name="text_sm_item_match_start_header">THE MATCH STARTS IN</string>
     <string name="text_sm_item_match_subscript_days">days</string>
     <string name="text_sm_item_match_subscript_hours">hours</string>
     <string name="text_sm_item_match_subscript_mins">minutes</string>
 
-    <string name="text_sm_item_match_league_underline"><u>%1$s</u></string>
     <string name="action_share_match_message">Match: %1$s, League: %2$s, Competition: %3$s,
          Home: %4$s, Away: %5$s, Score( %6$s:%7$s ), Status: %8$s"</string>
 
@@ -178,24 +164,11 @@
     <string name="text_sm_item_meeting">MEETINGS</string>
 
     <!--player-->
-    <string name="text_tm_item_player_sub_birthday">birthday</string>
-    <string name="text_tm_item_player_sub_contract">contract end</string>
-    <string name="text_tm_item_player_sub_number">number</string>
-    <string name="text_tm_item_player_nationality">[ \u2014 ]</string>
 
     <!--league-->
     <!--head-->
-    <string name="text_lg_head_team_pos">№</string>
-    <string name="text_lg_head_team_name">Club Name</string>
-    <string name="text_lg_head_team_matches">M</string>
-    <string name="text_lg_head_team_points">P</string>
-    <string name="text_lg_head_team_goals">G</string>
-    <string name="text_lg_head_team_wins">W</string>
-    <string name="text_lg_head_team_draws">D</string>
-    <string name="text_lg_head_team_losses">L</string>
 
     <!--news-->
-    <string name="text_news_item_head_underlined"> <u> %1$s </u> </string>
     <string name="text_news_item_time_min">%1$dm</string>
     <string name="text_news_item_time_hour">%1$dh</string>
     <string name="text_news_item_time_empty">\u2014</string>
@@ -208,7 +181,6 @@
     <string name="widget_empty_time">- : -</string>
 
     <string name="widget_head_text">Click to choose match</string>
-    <string name="widget_body_text">Ingredients List</string>
     <string name="widget_button">Select and Click on Match to fill widget</string>
     <string name="widget_button_update">Widget has been updated</string>
 
@@ -222,11 +194,9 @@
     <string name="matches_no_network_message">Error network connection</string>
     <string name="news_no_data_message">There is no news on this link</string>
 
-    <string name="webview_error_page_loading">Error page loading detected</string>
     <string name="notification_set_message">Notification: %1$s</string>
     <string name="notification_reset_message">Removed from date: %1$s</string>
     <string name="notification_reset_error_message">Notification cannot be removed</string>
-    <string name="notification_reset_id_message">Notification not set or wrong id</string>
     <string name="read_shared_preference_exception">Read shared preference exception</string>
     <string name="progress_bar_message">"ProgressBar Attention"</string>
 
@@ -237,21 +207,15 @@
     <string name="load_database">LoadDatabase exception(%1$d,%2$d): %3$s</string>
     <string name="load_database_news">LoadDatabase exception(%1$d,%2$s): %3$s</string>
     <string name="write_database">WriteDatabase exception(%1$d,%2$d): %3$s</string>
-    <string name="write_database_news">WriteDatabase exception(%1$d,%2$s): %3$s</string>
-    <string name="content_provider_insert">Content provider insert exception: </string>
     <string name="read_database_exception">ReadDatabase exception: %1$s</string>
     <string name="favorites_database_exception">Favorites or Notification database exception: %1$s</string>
     <string name="favorites_change_error">Favorite state not changed!</string>
-    <string name="notification_change_error">Notification state not changed!</string>
-    <string name="notification_date_passed">Notification cannot be set, match already finished.</string>
     <string name="favorites_database_empty">Favorites list is empty!</string>
     <string name="unknown_uri">Unknown uri: %1$s"</string>
     <string name="unknown_loader_id">Unknown id: %1$d"</string>
 
     <string name="calendar_set_date_exception">Calendar set date exception: %1$s</string>
-    <string name="viewpager_tab_exception">Tab Layout Titles exception: %1$s</string>
 
-    <string name="recycler_team_image_exception">RecyclerView Team Image and Name set exception: %1$s</string>
     <string name="notification_empty_activity_exception">Notification empty activity window exception: %1$s</string>
 
     <!--widgets-->
@@ -291,7 +255,6 @@
     <!--<string name="banner_size">LEADERBOARD</string>-->
 
     <!--diagnostic-->
-    <string name="get_competitions_map_null">Get competitions map must not be null</string>
 
     <!--progress-->
     <string name="progress_constant">100</string>
@@ -345,18 +308,12 @@
     <string name="text_sm_item_match_date_hours">The Match Date Hours</string>
     <string name="text_sm_item_match_date_mins">The Match Date Minutes</string>
 
-    <string name="text_sm_item_match_day_subscript">The Match Date Day Subscript</string>
-    <string name="text_sm_item_match_hour_subscript">The Match Date Hour Subscript</string>
-    <string name="text_sm_item_match_min_subscript">The Match Date Minute Subscript</string>
-
     <string name="text_character_letter">The Letter</string>
-    <string name="text_character_dash">The Dash Line</string>
     <string name="text_sm_item_match_full_date">The Match Start Full Date and Time</string>
     <!--bet-->
     <string name="text_sm_item_match_bet">The Football and Betting</string>
     <string name="text_sm_item_match_bet_sub_wins">The Subscript Win</string>
     <string name="text_sm_item_match_bet_sub_draws">The Subscript Draw</string>
-    <string name="text_sm_item_match_bet_sub_losses">The Subscript Loss</string>
 
     <!--recycler-->
     <string name="text_sm_item_prev_meetings">Previous Meetings Header</string>
@@ -365,42 +322,11 @@
 
     <!--screen7-->
     <!--player-->
-    <string name="image_tm_item_player_flag_dsc">The Country Flag of Player</string>
-    <string name="text_tm_item_player_name_dsc">The Player Name and Second Name</string>
-    <string name="text_tm_item_player_number_dsc">The Player Number</string>
-    <string name="text_tm_item_player_position_dsc">The Player Position in a Team</string>
-    <string name="text_tm_item_player_birthday_dsc">The Player Birthday Date</string>
-    <string name="text_tm_item_player_contract_dsc">The Player Contract End Date</string>
-
-    <string name="text_tm_item_player_sub_position_dsc">The Player Subscript Position</string>
-    <string name="text_tm_item_player_sub_birthday_dsc">The Player Subscript Birthday Date</string>
-    <string name="text_tm_item_player_sub_contract_dsc">The Player Subscript Contract End Date</string>
-    <string name="text_tm_item_player_sub_number_dsc">The Player Subscript Number</string>
-    <string name="text_tm_item_player_nationality_dsc">The nationality of Player</string>
 
     <!--screen8-->
     <!--league-->
     <!--item-->
-    <string name="text_lg_team_pos_dsc">The Team Position Number in League Table</string>
-    <string name="image_lg_team_logo_dsc">The Team Logo in League Table</string>
-    <string name="text_lg_team_name_dsc">The Team Name in League Table</string>
-    <string name="text_lg_team_matches_dsc">The Number of Team Matches in League Table</string>
-    <string name="text_lg_team_points_dsc">The Number of Team Points in League Table</string>
-    <string name="text_lg_team_goals_dsc">The Number of Team Goals in League Table</string>
-    <string name="text_lg_team_wins_dsc">The Number of Team Wins in League Table</string>
-    <string name="text_lg_team_draws_dsc">The Number of Team Draws in League Table</string>
-    <string name="text_lg_team_losses_dsc">The Number of Team Losses in League Table</string>
-    <string name="text_lg_team_separator_vertical_dsc">The Vertical Separator in League Table</string>
-    <string name="text_lg_team_separator_horizontal_dsc">The Horizontal Separator in League Table</string>
     <!--head-->
-    <string name="text_lg_head_team_pos_dsc">The Header  Team Position Number in League Table</string>
-    <string name="text_lg_head_team_name_dsc">The Header Team Logo and Name in League Table</string>
-    <string name="text_lg_head_team_matches_dsc">The Header  Number of Team Matches in League Table</string>
-    <string name="text_lg_head_team_points_dsc">The Header  Number of Team Points in League Table</string>
-    <string name="text_lg_head_team_goals_dsc">The Header  Number of Team Goals in League Table</string>
-    <string name="text_lg_head_team_wins_dsc">The Header  Number of Team Wins in League Table</string>
-    <string name="text_lg_head_team_draws_dsc">The Header  Number of Team Draws in League Table</string>
-    <string name="text_lg_head_team_losses_dsc">The Header  Number of Team Losses in League Table</string>
 
     <!--screen 9-->
     <string name="image_news_item_poster_dsc">The News Poster image</string>
@@ -415,7 +341,6 @@
     <!--competition-->
 
     <!--dialog-->
-    <string name="dialog_title">Dialog</string>
 
     <!--calendar-->
     <string name="calendar_title">Calendar</string>
@@ -428,15 +353,7 @@
     <string name="text_test_rm_item_team_away">Manchester United Junior League FC</string>
     <string name="text_test_rm_item_match_time">19:05</string>
     <string name="text_test_rm_item_match_date">20/01/18</string>
-    <string name="text_test_rm_item_league_code">FAC</string>
     <string name="text_test_rm_item_league">Premier League 2017/18</string>
-    <string name="text_test_rm_item_league2">Champions League 2017/18</string>
-    <string name="text_test_rm_item_league3">League One 2017/18</string>
-    <string name="text_test_rm_item_league4">League Two 2017/18</string>
-    <string name="text_test_rm_item_favorites">Favorite matches</string>
-
-    <string name="text_test_calendar_line1">2017</string>
-    <string name="text_test_calendar_line2">Thu, Apr 3</string>
 
 
     <string name="text_test_sm_item_match_country">England</string>
@@ -447,9 +364,7 @@
     <string name="text_test_sm_item_match_number_3_5">3.5</string>
     <string name="text_test_sm_item_match_number_4_0">4.0</string>
 
-    <string name="text_test_sm_item_match_finished">FINISHED</string>
     <string name="text_test_sm_item_match_timed">TIMED</string>
-    <string name="text_test_sm_item_match_cancelled">CANCELLED</string>
     <string name="text_test_sm_item_match_scheduled">SCHEDULED</string>
 
     <string name="text_test_sm_item_match_date">Sat, 20 Jan 2018</string>
@@ -457,47 +372,6 @@
     <string name="text_test_sm_match_recycler_date">20 Jan 2018</string>
     <string name="text_test_sm_match_recycler_score">1 : 0</string>
 
-    <string name="text_test_tm_item_player_name">Michael Dawson</string>
-    <string name="text_test_tm_item_player_number">21</string>
-    <string name="text_test_tm_item_player_position">Centre-Back</string>
-    <string name="text_test_tm_item_player_birthday">18.11.83</string>
-    <string name="text_test_tm_item_player_contract">30.06.18</string>
-
-    <string name="text_test_tm_item_player_name2">Paul McShane</string>
-    <string name="text_test_tm_item_player_number2">15</string>
-    <string name="text_test_tm_item_player_position2">Centre-Back</string>
-    <string name="text_test_tm_item_player_birthday2">06.01.86</string>
-    <string name="text_test_tm_item_player_contract2">30.06.18</string>
-
-    <string name="text_test_lg_item_team_pos_1">1</string>
-    <string name="text_test_lg_item_team_pos_2">2</string>
-    <string name="text_test_lg_item_team_pos_3">3</string>
-    <string name="text_test_lg_item_team_pos_4">4</string>
-    <string name="text_test_lg_item_team_pos_5">5</string>
-
-    <string name="text_test_lg_item_team_pos_22">22</string>
-    <string name="text_test_lg_item_team_pos_65">65</string>
-    <string name="text_test_lg_item_team_pos_12">12</string>
-    <string name="text_test_lg_item_team_pos_77">77</string>
-    <string name="text_test_lg_item_team_pos_82">82</string>
-    <string name="text_test_lg_item_team_pos_34">34</string>
-
-    <string name="text_test_lg_item_team_pos_122">122</string>
-    <string name="text_test_lg_item_team_pos_165">165</string>
-    <string name="text_test_lg_item_team_pos_112">112</string>
-    <string name="text_test_lg_item_team_pos_177">177</string>
-    <string name="text_test_lg_item_team_pos_182">182</string>
-    <string name="text_test_lg_item_team_pos_134">134</string>
-
-    <string name="text_test_lg_item_team_pos_7">7</string>
-    <string name="text_test_lg_item_team_pos_8">8</string>
-
-
-    <string name="text_test_lg_item_team_name_1">Eintracht Braunschweig FC Junior League</string>
-    <string name="text_test_lg_item_team_name_2">Manchester United Junior League FC</string>
-    <string name="text_test_lg_item_team_name_3">Team Name 3</string>
-    <string name="text_test_lg_item_team_name_4">Team Name 4</string>
-    <string name="text_test_lg_item_team_name_5">Team Name 5</string>
 
     <string name="text_test_recycler_click">Recycler Item Clicked</string>
 
@@ -508,11 +382,6 @@
         Greig Laidlaw completing the turnaround on Sunday.</string>
     <string name="text_test_news_item_time">15 hr ago</string>
     <string name="text_test_news_item_source">Fox Sports</string>
-
-
-    <string name="large_text">
-
-    </string>
 
 
 </resources>

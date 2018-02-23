@@ -73,7 +73,6 @@
         tools:text="@string/text_test_sm_item_match_number_0" />
 
     <TextView
-        android:id="@+id/match_time_sub_days"
         style="@style/Start.Subscript.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -142,7 +141,6 @@
         tools:text="@string/text_test_sm_item_match_number_0" />
 
     <TextView
-        android:id="@+id/match_time_sub_mins"
         style="@style/Start.Subscript.Match.TextRecycler"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -167,7 +165,6 @@
 
 
     <android.support.constraint.Guideline
-        android:id="@+id/guide_v1a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -181,7 +178,6 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guide_v3a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

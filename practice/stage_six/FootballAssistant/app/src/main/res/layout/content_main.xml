@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -75,7 +74,6 @@
         app:layout_constraintTop_toTopOf="@+id/progress_value" />
 
     <ImageView
-        android:id="@+id/front_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:contentDescription="@string/front_image_application"

@@ -27,7 +27,6 @@
     <!--android:background="?attr/selectableItemBackgroundBorderless"-->
 
     <LinearLayout
-        android:id="@+id/widget_linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
@@ -39,7 +38,6 @@
 
 
         <LinearLayout
-            android:id="@+id/widget_linear_left"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_micro"
@@ -68,7 +66,6 @@
 
             <!--android:background="?attr/selectableItemBackgroundBorderless"-->
             <LinearLayout
-                android:id="@+id/widget_linear_icons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -105,7 +102,6 @@
 
 
         <LinearLayout
-            android:id="@+id/widget_linear_center"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/margin_micro"
@@ -131,7 +127,6 @@
                 android:text="@string/widget_empty_long_dash" />
 
             <LinearLayout
-                android:id="@+id/widget_linear_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -175,7 +170,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/widget_linear_right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_micro"

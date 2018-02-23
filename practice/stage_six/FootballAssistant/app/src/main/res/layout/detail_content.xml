@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize">
@@ -23,7 +22,6 @@
         app:layout_constraintTop_toTopOf="@+id/guide_h1" />
 
     <ImageView
-        android:id="@+id/toolbar_sliding_back"
         android:layout_width="0dp"
         android:layout_height="@dimen/sliding_tabs_height"
         android:contentDescription="@string/text_rm_viewpager_toolbar_back_dsc"
@@ -130,7 +128,6 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/text_rm_item_widget_bar"
             style="@style/Bar.Widget.Match"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

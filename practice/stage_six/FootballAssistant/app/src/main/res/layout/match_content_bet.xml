@@ -114,7 +114,6 @@
         app:layout_constraintTop_toTopOf="@+id/match_bet_away_back" />
 
     <TextView
-        android:id="@+id/match_sub_home"
         style="@style/Start.Subscript.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -125,7 +124,6 @@
         app:layout_constraintTop_toBottomOf="@+id/match_bet_home_back" />
 
     <TextView
-        android:id="@+id/match_sub_draw"
         style="@style/Start.Subscript.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -136,7 +134,6 @@
         app:layout_constraintTop_toBottomOf="@+id/match_bet_draw_back" />
 
     <TextView
-        android:id="@+id/match_sub_away"
         style="@style/Start.Subscript.Match.TextRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -151,7 +148,6 @@
         app:layout_constraintTop_toBottomOf="@+id/match_bet_away_back" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guide_v1b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -165,7 +161,6 @@
         app:layout_constraintGuide_percent="0.50" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guide_v3b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

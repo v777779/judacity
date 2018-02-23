@@ -248,10 +248,6 @@ public class DetailActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            startActivitySettings();
-            return true;
-        }
         if (id == R.id.action_calendar) {
             startCalendar();
             return true;

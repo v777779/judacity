@@ -9,18 +9,16 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 
 import ru.vpcb.footballassistant.services.NewsService;
 import ru.vpcb.footballassistant.services.UpdateService;
@@ -95,17 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -141,8 +128,7 @@ public class MainActivity extends AppCompatActivity {
     private void makeTransition() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
-
-        //        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 //        if (getResources().getBoolean(R.bool.transition_light)) {
 //            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
 //        }
