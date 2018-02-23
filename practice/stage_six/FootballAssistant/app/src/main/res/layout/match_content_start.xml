@@ -94,7 +94,7 @@
         android:layout_marginTop="12dp"
         android:background="@drawable/match_time_back"
         android:contentDescription="@string/text_sm_item_match_date_hours"
-        app:layout_constraintEnd_toStartOf="@+id/guide_v2"
+        app:layout_constraintEnd_toStartOf="@+id/guide_v2a"
         app:layout_constraintTop_toBottomOf="@+id/match_start_header"
         tools:text="@string/text_test_sm_item_match_number_1" />
 
@@ -170,21 +170,21 @@
 
 
     <android.support.constraint.Guideline
-        android:id="@+id/guide_v1"
+        android:id="@+id/guide_v1a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.10" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guide_v2"
+        android:id="@+id/guide_v2a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guide_v3"
+        android:id="@+id/guide_v3a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
