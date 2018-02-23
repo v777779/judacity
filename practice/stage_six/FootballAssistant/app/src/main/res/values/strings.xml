@@ -161,6 +161,8 @@
     <string name="text_sm_item_match_subscript_mins">minutes</string>
 
     <string name="text_sm_item_match_league_underline"><u>%1$s</u></string>
+    <string name="action_share_match_message">Match: %1$s, League: %2$s, Competition: %3$s,
+         Home: %4$s, Away: %5$s, Score( %6$s:%7$s ), Status: %8$s"</string>
 
     <!--bet-->
     <string name="text_sm_item_match_letter_w">W</string>
@@ -198,7 +200,7 @@
     <string name="text_news_item_time_hour">%1$dh</string>
     <string name="text_news_item_time_empty">\u2014</string>
     <string name="text_news_item_separator">|</string>
-
+    <string name="action_share_news_message">Football Assistant News: %1$s  href:%2$s"</string>
 
     <!--widget-->
     <string name="widget_empty_dash">-</string>
@@ -219,17 +221,19 @@
     <string name="matches_share_no_data_message">There is no data on this match</string>
     <string name="matches_no_network_message">Error network connection</string>
     <string name="news_no_data_message">There is no news on this link</string>
-    <string name="action_share_news_message">Football Assistant News: %1$  href:%2$s"</string>
+
     <string name="webview_error_page_loading">Error page loading detected</string>
     <string name="notification_set_message">Notification: %1$s</string>
     <string name="notification_reset_message">Removed from date: %1$s</string>
     <string name="notification_reset_error_message">Notification cannot be removed</string>
     <string name="notification_reset_id_message">Notification not set or wrong id</string>
+    <string name="read_shared_preference_exception">Read shared preference exception</string>
+    <string name="progress_bar_message">"ProgressBar Attention"</string>
 
 
     <!--exception-->
     <string name="update_content_error">Update content error: %1$s</string>
-    <string name="get_competitions_teams_null">Get competitions teams null exception: </string>
+    <string name="get_competitions_teams_null">Get competitions teams null exception: %1$s</string>
     <string name="load_database">LoadDatabase exception(%1$d,%2$d): %3$s</string>
     <string name="load_database_news">LoadDatabase exception(%1$d,%2$s): %3$s</string>
     <string name="write_database">WriteDatabase exception(%1$d,%2$d): %3$s</string>
@@ -489,7 +493,7 @@
     <string name="text_test_lg_item_team_pos_8">8</string>
 
 
-    <string name="text_test_lg_item_team_name_1">Eintracht Braunschweig FC Junior League sdfd sdfd sdfdsf</string>
+    <string name="text_test_lg_item_team_name_1">Eintracht Braunschweig FC Junior League</string>
     <string name="text_test_lg_item_team_name_2">Manchester United Junior League FC</string>
     <string name="text_test_lg_item_team_name_3">Team Name 3</string>
     <string name="text_test_lg_item_team_name_4">Team Name 4</string>
@@ -497,7 +501,7 @@
 
     <string name="text_test_recycler_click">Recycler Item Clicked</string>
 
-    <string name="text_test_news_item_head">Scotland fights back to beat France 32-26</string>
+    <string name="text_test_news_item_head">Scotland fights back to beat France 32&#8211;26</string>
     <string name="text_test_news_item_body">EDINBURGH, Scotland (AP)  Scotland rebounded from its
         mauling in Wales by fighting back to beat France 32-26 in Six Nations rugby at
         Murrayfield, with a string of successful penalty kicks by recalled scrumhalf

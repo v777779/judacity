@@ -164,6 +164,7 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_star_border"
         android:visibility="gone"
+        android:contentDescription="@string/text_sm_item_match_icon_favorite"
         app:layout_constraintBottom_toTopOf="@+id/match_sub_away"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/match_bet_away_back" />

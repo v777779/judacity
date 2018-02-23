@@ -18,6 +18,7 @@ import com.bumptech.glide.RequestBuilder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -83,7 +84,7 @@ public class RecyclerNewsAdapter extends RecyclerView.Adapter<RecyclerNewsAdapte
 
         mIsWide = mRes.getBoolean(R.bool.is_wide);
         mIsLand = mRes.getBoolean(R.bool.is_land);
-        mDateFormat = new SimpleDateFormat(DATE_FULL_PATTERN);
+        mDateFormat = new SimpleDateFormat(DATE_FULL_PATTERN, Locale.ENGLISH);
 
         mRequestSvg = getRequestBuilderSvg(context, R.drawable.fc_logo_news);
         mRequestPng = getRequestBuilderPng(context, R.drawable.fc_logo_news);

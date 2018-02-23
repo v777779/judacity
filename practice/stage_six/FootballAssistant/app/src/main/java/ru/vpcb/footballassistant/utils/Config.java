@@ -487,7 +487,7 @@ public class Config {
 
         if (spanHeight < MIN_HEIGHT) spanHeight = MIN_HEIGHT;
 
-        int minWidth = (int) (MIN_WIDTH);  // horizontal
+        int minWidth = MIN_WIDTH;  // horizontal
         if (spanWidth < minWidth) spanWidth = minWidth;
 
 // vertical

@@ -546,6 +546,7 @@ public class DetailActivity extends AppCompatActivity
             dateSpan = Integer.valueOf(stringDateSpan);
 
         } catch (NumberFormatException e) {
+            Timber.d(getString(R.string.read_shared_preference_exception));
         }
         return dateSpan;
     }

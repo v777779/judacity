@@ -2165,7 +2165,7 @@ public class FDUtils {
             try {
                 map.putAll(getTeams(context, competition, forceUpdate));
             } catch (NumberFormatException | NullPointerException | IOException e) {
-                Timber.d(context.getString(R.string.get_competitions_teams_null) + e.getMessage());
+                Timber.d(context.getString(R.string.get_competitions_teams_null,e.getMessage()));
             }
         }
         return map;

@@ -171,7 +171,7 @@ public class NewsFragment extends Fragment implements ICallback {
             FDUtils.showMessage(mContext, getString(R.string.news_no_data_message));
             return;
         }
-        String shareText = "SportNews:" + mTitle + " Link:" + mLink;
+        String shareText = getString(R.string.action_share_news_message,mTitle,mLink);
         startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                 .setType("text/plain")
                 .setText(shareText)
@@ -185,7 +185,7 @@ public class NewsFragment extends Fragment implements ICallback {
         if (mProgressBar != null)
             mProgressBar.setVisibility(View.INVISIBLE);
         else
-            FDUtils.showMessage(mContext, "ProgressBar Attention");
+            FDUtils.showMessage(mContext, getString(R.string.progress_bar_message));
     }
 
 

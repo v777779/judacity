@@ -7,8 +7,7 @@
     android:layout_gravity="top|center_horizontal"
     android:clickable="true"
     android:focusable="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ru.vpcb.footballassistant.MatchActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

@@ -523,17 +523,17 @@ public class MatchFragment extends Fragment implements
                     return;
                 }
                 int goalsHome = mFixture.getGoalsHome();
-                int goalsAway = mFixture.getGoalsHome();
+                int goalsAway = mFixture.getGoalsAway();
 
-                String shareText = "Match: " +
-                        FDUtils.formatMatchDateStart(mFixture.getDate()) + ", League:" +
-                        mFixture.getLeague() + ", Competition: " +
-                        mFixture.getCaption() + ", Home: " +
-                        mFixture.getHomeTeamName() + ", Away: " +
-                        mFixture.getAwayTeamName() + ", Score( " +
-                        (goalsHome < 0 ? EMPTY_DASH : goalsHome) + ":" +
-                        (goalsAway < 0 ? EMPTY_DASH : goalsAway) + " ), Status: " +
-                        mFixture.getStatus();
+                String shareText = getString(R.string.action_share_match_message,
+                        FDUtils.formatMatchDateStart(mFixture.getDate()) ,
+                        mFixture.getLeague(),
+                        mFixture.getCaption(),
+                        mFixture.getHomeTeamName(),
+                        mFixture.getAwayTeamName(),
+                        (goalsHome < 0 ? EMPTY_DASH : String.valueOf(goalsHome)),
+                        (goalsAway < 0 ? EMPTY_DASH : String.valueOf(goalsAway)),
+                        mFixture.getStatus());
 
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                         .setType("text/plain")

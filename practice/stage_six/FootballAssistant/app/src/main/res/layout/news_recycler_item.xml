@@ -47,7 +47,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/text_news_item_header_dsc"
-            android:text="@string/text_test_news_item_head"
+            tools:text="@string/text_test_news_item_head"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guide_v1"
             app:layout_constraintTop_toTopOf="parent" />
@@ -61,7 +61,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/text_news_item_body_dsc"
-            android:text="@string/text_test_news_item_body"
+            tools:text="@string/text_test_news_item_body"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -77,7 +77,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@string/text_news_item_source_dsc"
-            android:text="@string/text_test_news_item_source"
+            tools:text="@string/text_test_news_item_source"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guide_v1"
             app:layout_constraintStart_toEndOf="@+id/text_news_item_separator" />
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:contentDescription="@string/text_news_item_time_dsc"
-            android:text="@string/text_test_news_item_time"
+            tools:text="@string/text_test_news_item_time"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -101,7 +101,7 @@
             android:layout_marginBottom="2dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@string/text_news_item_separator_dsc"
-            android:text="@string/text_news_item_separator"
+            tools:text="@string/text_news_item_separator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/text_news_item_time" />
 
