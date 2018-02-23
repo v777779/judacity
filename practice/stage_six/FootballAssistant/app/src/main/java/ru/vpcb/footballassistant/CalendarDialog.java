@@ -16,7 +16,9 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static ru.vpcb.footballassistant.utils.Config.BUNDLE_CALENDAR_DATA;
 import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPLY;
+import static ru.vpcb.footballassistant.utils.Config.EMPTY_INT_VALUE;
 
 
 /**
@@ -25,17 +27,19 @@ import static ru.vpcb.footballassistant.utils.Config.CALENDAR_DIALOG_ACTION_APPL
  */
 public class CalendarDialog extends DialogFragment implements View.OnClickListener {
 
-    private ICallback mCallback;
+
     private CalendarView mCalendarView;
     private TextView mTextViewYear;
     private TextView mTextViewDate;
     private Calendar mCalendar;
 
-    public static Fragment newInstance(ICallback callback, Calendar calendar) {
+    public static Fragment newInstance(Calendar calendar) {
         CalendarDialog fragment = new CalendarDialog();
         fragment.setStyle(R.style.Dialog_Title, R.style.Calendar_Dialog);
-        fragment.mCallback = callback;
-        fragment.mCalendar = calendar;
+        Bundle bundle = new Bundle();
+        bundle.putLong(BUNDLE_CALENDAR_DATA, calendar.getTimeInMillis());
+        fragment.setArguments(bundle);
+
         return fragment;
     }
 
@@ -70,9 +74,19 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         mCalendarView = v.findViewById(R.id.calendar_view);
         mTextViewYear = v.findViewById(R.id.calendar_year);
         mTextViewDate = v.findViewById(R.id.calendar_date);
-
-        if (mCalendar == null) mCalendar = Calendar.getInstance();
-
+        mCalendar = Calendar.getInstance();
+        long time = EMPTY_INT_VALUE;
+        if (savedInstanceState == null) {
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                time = bundle.getLong(BUNDLE_CALENDAR_DATA, EMPTY_INT_VALUE);
+            }
+        } else {
+            time = savedInstanceState.getLong(BUNDLE_CALENDAR_DATA, EMPTY_INT_VALUE);
+        }
+        if (time != EMPTY_INT_VALUE) {
+            mCalendar.setTimeInMillis(time);
+        }
 
         mCalendarView.setDate(mCalendar.getTimeInMillis());
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -89,6 +103,11 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         return v;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(BUNDLE_CALENDAR_DATA, mCalendar.getTimeInMillis());
+    }
 
     /**
      * OnClick method, recreate MainActivity on RETRY or finish() any activity on EXIT.
@@ -99,7 +118,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         String s = ((Button) v).getText().toString();
 
         if (s.equals(getString(android.R.string.ok))) {
-            mCallback.onComplete(CALENDAR_DIALOG_ACTION_APPLY, mCalendar);
+            ((ICallback)getActivity()).onComplete(CALENDAR_DIALOG_ACTION_APPLY, mCalendar);
         }
         if (s.equals(getString(android.R.string.cancel))) {
 

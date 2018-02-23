@@ -250,6 +250,8 @@ public class Config {
     public static final String BUNDLE_LOADER_DATA_ID2 = "bundle_loader_data_second_id";
     public static final String BUNDLE_LOADER_DATE_CENTER = "bundle_loader_date_center";
     public static final String BUNDLE_LOADER_DATA_URI = "bundle_loader_data_uri";
+// calendar
+    public static final String BUNDLE_CALENDAR_DATA = "bundle_calendar_data";
 
     // match fragment
     public static final String MATCH_FRAGMENT_TAG = "match_fragment";

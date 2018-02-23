@@ -653,7 +653,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void startCalendar() {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = CalendarDialog.newInstance(this, getViewPagerDate());
+        Fragment fragment = CalendarDialog.newInstance( getViewPagerDate());
         fm.beginTransaction()
                 .add(fragment, getString(R.string.calendar_title))
                 .commit();
