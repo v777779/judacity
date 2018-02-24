@@ -28,13 +28,10 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     /**
      * Constructor  created object from List<View>> data source
-     *
-     * @param recyclers input List<View> data source
      */
-    public ViewPagerAdapter(AppCompatActivity activity, List<View> recyclers, List<String> listTitles) {
-        AppCompatActivity mActivity = activity;
-        this.recyclers = recyclers;
-        this.titles = listTitles;
+    public ViewPagerAdapter() {
+        this.recyclers = null;
+        this.titles = null;
     }
 
     @Override
@@ -56,7 +53,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        if(recyclers == null) return 0;
+        if (recyclers == null) return 0;
         return recyclers.size();
     }
 

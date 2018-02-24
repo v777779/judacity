@@ -290,6 +290,7 @@ public class FDProvider extends ContentProvider {
         throw new UnsupportedOperationException(getContext().getString(R.string.unknown_uri, uri.toString()));
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static Uri buildLoaderIdUri(Context context, int id, String itemId, String itemId2) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             if (id == p.id) {
@@ -300,6 +301,7 @@ public class FDProvider extends ContentProvider {
     }
 
 
+    @SuppressWarnings("SameParameterValue")
     public static Uri buildLoaderIdUri(Context context, int id, long itemId, long itemId2) {
         for (FDContract.FDParams p : FDContract.MATCH_PARAMETERS) {
             if (id == p.id) {

@@ -52,20 +52,19 @@ public class GlideUtils {
 
     public static void setTeamImage(int id, ImageView imageView, Map<Integer, FDTeam> map,
                                     RequestBuilder<PictureDrawable> requestBuilder,
-                                    RequestBuilder<Drawable> requestBuilderCommon,
-                                    int resourceId) {
+                                    RequestBuilder<Drawable> requestBuilderCommon) {
         if (map == null || id <= 0) return;
         if (imageView == null) return;
 
         FDTeam team = map.get(id);
         if(team == null) {
-            imageView.setImageResource(resourceId);
+            imageView.setImageResource(R.drawable.fc_logo);
             return;
         }
 
         String imageURL = team.getCrestURL();
         if (imageURL == null || imageURL.isEmpty()) {
-            imageView.setImageResource(resourceId);
+            imageView.setImageResource(R.drawable.fc_logo);
             return;
         }
 

@@ -257,8 +257,8 @@ public class RecyclerMatchAdapter extends RecyclerView.Adapter<RecyclerMatchAdap
             setText(mTextDate, formatMatchDate(fixture.getDate()));
             setText(mTextStatus, fixture.getStatus());
 
-            setTeamImage(fixture.getHomeTeamId(), mImageHome, mMapTeams, mRequestSvg, mRequestPng, R.drawable.fc_logo);
-            setTeamImage(fixture.getAwayTeamId(), mImageAway, mMapTeams, mRequestSvg, mRequestPng, R.drawable.fc_logo);
+            setTeamImage(fixture.getHomeTeamId(), mImageHome, mMapTeams, mRequestSvg, mRequestPng);
+            setTeamImage(fixture.getAwayTeamId(), mImageAway, mMapTeams, mRequestSvg, mRequestPng);
 
             if (fixture.isFavorite() && mImageFavorite != null) {
                 mImageFavorite.setImageResource(R.drawable.ic_star);

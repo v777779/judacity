@@ -8,7 +8,6 @@ import static ru.vpcb.footballassistant.utils.Config.ND_EVERYTHING_GET;
 import static ru.vpcb.footballassistant.utils.Config.ND_HEADLINES_GET;
 import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_CATEGORY;
-import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_LANGUAGE;
 import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_PAGE;
 import static ru.vpcb.footballassistant.utils.Config.ND_QUERY_SOURCE;
 import static ru.vpcb.footballassistant.utils.Config.ND_SOURCES_GET;
@@ -50,9 +49,8 @@ public interface INDRetrofitAPI {
 
     // request with queries   "baseURL/sources?language=en&category=sports&apiKey=key_string"
     @GET(ND_SOURCES_GET)
-    Call<NDSources> getSources(@Query(ND_QUERY_LANGUAGE) String language,
-                              @Query(ND_QUERY_CATEGORY) String category,
-                              @Query(ND_QUERY_API_KEY) String key
+    Call<NDSources> getSources(@Query(ND_QUERY_CATEGORY) String category,
+                               @Query(ND_QUERY_API_KEY) String key
 
     );
 }

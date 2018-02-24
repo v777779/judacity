@@ -720,8 +720,7 @@ public class DetailActivity extends AppCompatActivity
             titles.add(getRecyclerTitle(listFixtures));
         }
 
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, current, list, map);
-        return viewPagerData;
+        return new ViewPagerData(recyclers, titles, current, list, map);
     }
 
     private String getRecyclerTitle(List<FDFixture> list) {
@@ -734,7 +733,7 @@ public class DetailActivity extends AppCompatActivity
 
 
     private void setupViewPager() {
-        mAdapter = new ViewPagerAdapter(this, null, null);
+        mAdapter = new ViewPagerAdapter();
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

@@ -308,12 +308,11 @@ public class MatchFragment extends Fragment implements
     // methods
     private void updateFixture() {
         if (mFixture == null || mMapFixtures == null) return;
-        FDFixture fixture = mMapFixtures.get(mFixture.getId());
 
 //        if (fixture == null || fixture.getId() != mFixture.getId()) return;
 //        fixture.set_League(mFixture.getLeague());
 //        fixture.set_Caption(mFixture.getCaption());
-        mFixture = fixture;
+        mFixture = mMapFixtures.get(mFixture.getId());
     }
 
     private void restartLoaders() {

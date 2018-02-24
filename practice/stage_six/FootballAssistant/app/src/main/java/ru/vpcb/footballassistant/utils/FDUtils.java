@@ -85,7 +85,6 @@ import static ru.vpcb.footballassistant.utils.Config.LEAGUE_CODES;
 import static ru.vpcb.footballassistant.utils.Config.ND_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.ND_BASE_URI;
 import static ru.vpcb.footballassistant.utils.Config.ND_CATEGORY_SPORT;
-import static ru.vpcb.footballassistant.utils.Config.ND_LANGUAGE_EN;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_DATE_SQLITE_ZERO_TIME;
 import static ru.vpcb.footballassistant.utils.Config.PATTERN_MATCH_DATE;
@@ -97,7 +96,6 @@ import static ru.vpcb.footballassistant.utils.Config.EMPTY_MATCH_TIME;
 import static ru.vpcb.footballassistant.utils.Config.FD_BASE_URI;
 import static ru.vpcb.footballassistant.utils.Config.FD_API_KEY;
 import static ru.vpcb.footballassistant.utils.Config.LOAD_DB_DELAY;
-import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_1;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_4;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_5;
 import static ru.vpcb.footballassistant.utils.Config.EXCEPTION_CODE_6;
@@ -149,24 +147,18 @@ public class FDUtils {
                                      Map<Integer, List<Integer>> mapFixtureKeys,
                                      Map<Integer, FDFixture> mapFixtures) {
 
-        if (map == null || map.isEmpty() ||
+        return map == null || map.isEmpty() ||
 //                mapTeamKeys == null || mapTeamKeys.isEmpty() ||
 //                mapFixtureKeys == null || mapFixtureKeys.isEmpty() ||
                 mapTeams == null || mapTeams.isEmpty() ||
-                mapFixtures == null || mapFixtures.isEmpty()) {
-            return true;
-        }
-        return false;
+                mapFixtures == null || mapFixtures.isEmpty();
 
     }
 
     public static boolean checkEmpty(Map<String, NDSource> map,
                                      Map<String, List<NDArticle>> mapArticles) {
-        if (map == null || map.isEmpty() ||
-                mapArticles == null || mapArticles.isEmpty()) {
-            return true;
-        }
-        return false;
+        return map == null || map.isEmpty() ||
+                mapArticles == null || mapArticles.isEmpty();
 
     }
 
@@ -176,6 +168,7 @@ public class FDUtils {
     }
 
 
+    @SuppressWarnings("SameParameterValue")
     public static String formatStringDate(Date date, String delim) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -311,6 +304,7 @@ public class FDUtils {
         return getRnd(RANDOM_BASE_DEFAULT) < ADMOB_SHOW_THRESHOLD;
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static int getRnd(int base) {
         if (rnd == null) rnd = new Random();
         if (base <= 0) base = RANDOM_BASE_DEFAULT;
@@ -413,8 +407,7 @@ public class FDUtils {
     public static boolean getPrefBool(Context context, int keyId, int valueId) {
         Resources res = context.getResources();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean value = sp.getBoolean(res.getString(keyId), res.getBoolean(valueId));
-        return value;
+        return sp.getBoolean(res.getString(keyId), res.getBoolean(valueId));
     }
 
     public static int getPrefString(Context context, int keyId, int defaultId) {
@@ -538,6 +531,7 @@ public class FDUtils {
         return context.getString(R.string.load_database, code, id, message);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static String formatLoad(Context context, int code, FDTeam team, String message) {
         int id = -1;
         if (team == null) id = team.getId();
@@ -548,10 +542,12 @@ public class FDUtils {
         return context.getString(R.string.load_database, code, id, message);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static String formatLoad(Context context, int code, String id, String message) {
         return context.getString(R.string.load_database_news, code, id, message);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static String formatWrite(Context context, int code, int id, String message) {
         return context.getString(R.string.write_database, code, id, message);
     }
@@ -641,10 +637,8 @@ public class FDUtils {
         String language = cursor.getString(FDDbHelper.INsEntry.COLUMN_SOURCE_LANGUAGE);
         String country = cursor.getString(FDDbHelper.INsEntry.COLUMN_COUNTRY);
 
-        NDSource source = new NDSource(id, source_name, description, sourceURL,
+        return new NDSource(id, source_name, description, sourceURL,
                 category, language, category, country);
-
-        return source;
     }
 
     public static Map<String, NDSource> readSources(Cursor cursor) {
@@ -690,10 +684,9 @@ public class FDUtils {
         String publishedAt = cursor.getString(FDDbHelper.INaEntry.COLUMN_PUBLISHED_AT);
 
         NDSource source = new NDSource(source_id, source_name, author);
-        NDArticle article = new NDArticle(id, source, author,
-                title, description, articleURL, imageURL, publishedAt);
 
-        return article;
+        return new NDArticle(id, source, author,
+                title, description, articleURL, imageURL, publishedAt);
     }
 
     public static Map<String, List<NDArticle>> readArticles(Cursor cursor) {
@@ -767,11 +760,10 @@ public class FDUtils {
         int numberOfGames = cursor.getInt(FDDbHelper.ICpEntry.COLUMN_NUMBER_GAMES);
         String lastUpdated = cursor.getString(FDDbHelper.ICpEntry.COLUMN_LAST_UPDATE);
 // TODO Check Date Format
-        FDCompetition competition = new FDCompetition(id, caption, league,
+
+        return new FDCompetition(id, caption, league,
                 year, currentMatchDay, numberOfMatchDays, numberOfTeams,
                 numberOfGames, lastUpdated);
-
-        return competition;
     }
 
     public static FDCompetition readCompetition(Context context, int id) {
@@ -900,12 +892,10 @@ public class FDUtils {
         String league = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_LEAGUE);
         String caption = cursor.getString(FDDbHelper.IFxEntry.COLUMN_FIXTURE_CAPTION);
 
-        FDFixture fixture = new FDFixture(id, competitionId, homeTeamId, awayTeamId,
+        return new FDFixture(id, competitionId, homeTeamId, awayTeamId,
                 date, status, matchday, homeTeamName, awayTeamName,
                 goalsHomeTeam, goalsAwayTeam, homeWin, draw, awayWin,
                 isFavorite, isNotified, notificationId, league, caption);
-
-        return fixture;
     }
 
     public static FDFixture readFixture(Context context, String id) {
@@ -1526,18 +1516,19 @@ public class FDUtils {
     }
 
     // not insert, just update
-    public static ContentProviderResult[] updateFixtureProjection(Context context, FDFixture fixture,
-                                                                  boolean forceDelete)
+    @SuppressWarnings("SameParameterValue")
+    public static void updateFixtureProjection(Context context, FDFixture fixture,
+                                               boolean forceDelete)
             throws OperationApplicationException, RemoteException {
-        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, updateFixtureProjection(fixture));
+        context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, updateFixtureProjection(fixture));
     }
 
     // teams
-    public static ContentProviderResult[] writeFixtures(
+    public static void writeFixtures(
             Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 
-        if (map == null || map.size() == 0) return null;
+        if (map == null || map.size() == 0) return ;
 
         ArrayList<ContentProviderOperation> listOperations = new ArrayList<>();
 
@@ -1556,17 +1547,19 @@ public class FDUtils {
                 listOperations.addAll(operations);
             }
         }
-        return context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
+         context.getContentResolver().applyBatch(FDContract.CONTENT_AUTHORITY, listOperations);
     }
 
     // write database
 // sources
+    @SuppressWarnings("SameParameterValue")
     public static void writeDatabaseSources(Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
         writeSources(context, map, forceDelete);
     }
 
     // articles
+    @SuppressWarnings("SameParameterValue")
     public static void writeDatabaseArticles(Context context, Map<String, NDSource> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
         writeArticles(context, map, forceDelete);
@@ -1583,6 +1576,7 @@ public class FDUtils {
 
 // competitions
 
+    @SuppressWarnings("SameParameterValue")
     public static void writeDatabase(Context context, Map<Integer, FDCompetition> map, boolean forceDelete)
             throws OperationApplicationException, RemoteException {
 
@@ -1720,6 +1714,7 @@ public class FDUtils {
      * @param context Context of calling activity
      * @return boolean status of connection, true if connected, false if not
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) return false;
@@ -1786,9 +1781,10 @@ public class FDUtils {
             throws NullPointerException, IOException {
 
         INDRetrofitAPI retrofitAPI = setupRetrofitNews();
-        return retrofitAPI.getSources(ND_LANGUAGE_EN, ND_CATEGORY_SPORT, ND_API_KEY).execute().body();
+        return retrofitAPI.getSources(ND_CATEGORY_SPORT, ND_API_KEY).execute().body();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static NDNews loadListArticles(NDSource source, int page)
             throws NullPointerException, IOException {
         if (source == null || page <= 0) return null;
@@ -2054,7 +2050,7 @@ public class FDUtils {
             try {
                 map.putAll(getTeams(context, competition, forceUpdate));
             } catch (NumberFormatException | NullPointerException | IOException e) {
-                Timber.d(context.getString(R.string.get_competitions_teams_null,e.getMessage()));
+                Timber.d(context.getString(R.string.get_competitions_teams_null, e.getMessage()));
             }
         }
         return map;

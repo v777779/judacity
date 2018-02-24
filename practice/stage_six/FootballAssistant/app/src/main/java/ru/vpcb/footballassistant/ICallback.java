@@ -27,6 +27,7 @@ public interface ICallback {
      *  Performs callback processing for FragmentError
      *  in DetailActivity
      */
+    @SuppressWarnings("SameParameterValue")
     void onComplete(int mode, Calendar calendar);
 
     void onComplete(View view, String link, String title);

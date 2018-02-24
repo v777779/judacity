@@ -453,14 +453,13 @@ public class NewsActivity extends AppCompatActivity
         }
         mViewPagerPos = selected;
 
-        ViewPagerData viewPagerData = new ViewPagerData(recyclers, titles, 3, null, null);
-        return viewPagerData;
+        return new ViewPagerData(recyclers, titles, 3, null, null);
     }
 
 
 
     private void setupViewPager() {
-        mAdapter = new ViewPagerAdapter(this, null, null);
+        mAdapter = new ViewPagerAdapter();
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_NUMBER);  //    ATTENTION  Prevents Adapter Exception
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -490,7 +489,6 @@ public class NewsActivity extends AppCompatActivity
         stopProgress();
         if (mViewPager == null || data == null) return;
 
-        ViewPagerData mViewPagerData = data;
         ((ViewPagerAdapter) mViewPager.getAdapter()).swap(data.mRecyclers, data.mTitles);
         mViewPager.setCurrentItem(mViewPagerPos);  // works if viewpager is empty only
 
@@ -639,6 +637,7 @@ public class NewsActivity extends AppCompatActivity
         private Map<Long, Integer> mMap;
 
 
+        @SuppressWarnings("SameParameterValue")
         public ViewPagerData(List<View> recyclers, List<String> titles, int pos,
                              List<List<FDFixture>> list,
                              Map<Long, Integer> map) {

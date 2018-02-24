@@ -280,9 +280,9 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
             setText(mTextDate, formatMatchDate(fixture.getDate()));
             setText(mTextStatus, fixture.getStatus());
             setTeamImage(fixture.getHomeTeamId(),
-                    mImageHome, mMap, mRequestSvg, mRequestPng,R.drawable.fc_logo);
+                    mImageHome, mMap, mRequestSvg, mRequestPng);
             setTeamImage(fixture.getAwayTeamId(),
-                    mImageAway, mMap, mRequestSvg, mRequestPng,R.drawable.fc_logo);
+                    mImageAway, mMap, mRequestSvg, mRequestPng);
 
             if(fixture.isFavorite()) {
                 mImageFavorite.setImageResource(R.drawable.ic_star);

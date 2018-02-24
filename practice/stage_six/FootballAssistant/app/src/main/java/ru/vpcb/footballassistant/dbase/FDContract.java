@@ -342,6 +342,7 @@ public class FDContract {
             this.columnId6 = columnId6;
         }
 
+        @SuppressWarnings("SameParameterValue")
         public FDParams(int id, String tableName, int tableMatcher,
                         int tableIdMatcher, String columnId,
                         int tableIdMatcher2, String columnId2, String columnId3,

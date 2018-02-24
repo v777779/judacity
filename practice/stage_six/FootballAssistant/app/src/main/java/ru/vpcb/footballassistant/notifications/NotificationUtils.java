@@ -189,10 +189,9 @@ public class NotificationUtils {
                 id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_cancel,
+        return new NotificationCompat.Action(R.drawable.ic_cancel,
                 context.getString(android.R.string.cancel),
                 cancelPendingIntent);
-        return action;
     }
 
     private static NotificationCompat.Action applyAction(Context context, int id) {
@@ -205,10 +204,9 @@ public class NotificationUtils {
                 id,
                 intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
-        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_check,
+        return new NotificationCompat.Action(R.drawable.ic_check,
                 context.getString(android.R.string.ok),
                 applyPendingIntent);
-        return action;
     }
 
     private static PendingIntent contentIntent(Context context, int id) {
