@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -196,6 +197,8 @@ public class NewsFragment extends Fragment implements ICallback {
     private void bindViews() {
         mTextToolbar.setText(mTitle);
         mWebView.loadUrl(mLink);
+        mWebView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+
 //        WebSettings webSettings = mWebView.getSettings();
 //        webSettings.setJavaScriptEnabled(true);
     }
